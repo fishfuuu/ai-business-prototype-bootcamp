@@ -115,6 +115,18 @@ Claude Code在本项目中的工作规则、安全边界和完成标准。
 
 第一课的操作流程、需求模板和验收标准。
 
+### docs/主管 AI 原型制作训练营.md
+
+原始10课课程设计稿，作为历史来源保留。
+
+### docs/COURSE_ROADMAP.md
+
+当前正式课程路线图、课程顺序、目标、成果和维护规则。
+
+### docs/LESSON_TEMPLATE.md
+
+第2至第10课编写时使用的统一课程模板。
+
 ### references/
 
 从原财务项目归档的只读参考文件。
@@ -127,10 +139,13 @@ Claude Code在本项目中的工作规则、安全边界和完成标准。
 D:\AILearning
 ├── docs
 │   ├── COMPONENT_CATALOG.md
+│   ├── COURSE_ROADMAP.md
 │   ├── DESIGN_ALIGNMENT_AUDIT.md
 │   ├── DESIGN_ALIGNMENT_DECISIONS.md
 │   ├── DESIGN_ALIGNMENT_FINAL_REPORT.md
-│   └── LESSON_01_GUIDE.md
+│   ├── LESSON_01_GUIDE.md
+│   ├── LESSON_TEMPLATE.md
+│   └── 主管 AI 原型制作训练营.md
 ├── references
 ├── scripts
 │   └── verify-project.ps1

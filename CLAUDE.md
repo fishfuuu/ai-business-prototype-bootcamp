@@ -27,6 +27,18 @@
 
 `docs/LESSON_01_GUIDE.md`
 
+进行课程设计、课程文档或学员包任务时，还必须阅读：
+
+- `docs/COURSE_ROADMAP.md`
+- `docs/LESSON_TEMPLATE.md`
+
+课程内容规则：
+
+- 不得绕过 `COURSE_ROADMAP` 重新设计 10 课顺序
+- 新课程文件必须使用 `LESSON_TEMPLATE`
+- 不得把计划中的 Skill 写成已经安装或验证
+- 原始课程稿保持只读，不得删除或重写
+
 不得在未检查现有组件的情况下重复创建相同组件。
 
 ## 3. 第一课需求确认
