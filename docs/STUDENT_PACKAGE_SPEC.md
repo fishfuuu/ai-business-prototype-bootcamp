@@ -192,10 +192,11 @@ artifacts/student-packages/
    - 用 `git cat-file -e "<commit>:<path>"` 证明 Source Commit 中存在必备路径
    - 写入 `VERSION.txt`、`PACKAGE_MANIFEST.txt`、`SHA256SUMS.txt`
    - 执行禁止路径检查与高置信敏感内容扫描
+   - 教师专属路径、仓库标识与协作痕迹必须扫描**所有**学员包支持的文本类型（`.md`、`.txt`、`.json`、`.ts`、`.vue`、`.js`、`.scss`、`.css`、`.html`、`.bat`、`.ps1`、`.gitignore`），不仅限于 Markdown 文档；`CONTRIBUTING.md` 字符串规则仅允许 `scripts/verify-student-project.ps1` 作为精确例外（该脚本合法将其列为禁止路径）
    - 生成 ZIP 与外部 `.sha256`
    - **不**提交、**不**推送
    - **不**覆盖已存在的同名 ZIP / `.sha256`
-   - 导出失败时删除**本次**新产生的不完整 ZIP / `.sha256`，并清理临时目录；不得删除执行前已存在的产物
+   - 导出失败时：删除本次产生的**任何**部分 ZIP 或部分 `.sha256`（因执行前已确认目标路径不存在，失败时存在的目标文件即属本次产物）；并清理临时目录；**不得**删除执行前已存在的产物
 6. 产物目录默认被 Git 忽略，**不得**提交 ZIP 或校验文件。
 
 ---
@@ -249,7 +250,7 @@ Delivery Mode: ZIP learner package
 5. `PACKAGE_MANIFEST.txt` 与实际文件列表一致。
 6. 包内文件 SHA256 与 `SHA256SUMS.txt` 一致（发放前教师复核）。
 7. ZIP 文件 SHA256 与外部 `.sha256` 一致。
-8. 高置信扫描：私钥头、`github_pat_` / `ghp_` / `AKIA…` / `sk-…`、教师路径与仓库标识等。
+8. 高置信扫描：私钥头、`github_pat_` / `ghp_` / `AKIA…` / `sk-…`；教师路径、仓库标识与协作痕迹须覆盖全部支持的文本类型（不仅 Markdown）。
 9. 在解压根目录执行 `npm ci`。
 10. 执行：
 

@@ -157,18 +157,36 @@ function Invoke-SensitiveContentScan {
         @{ Name = "OPENAI_STYLE_SK"; Pattern = 'sk-[A-Za-z0-9]{20,}' }
     )
 
-    # Teacher-only content rules apply to learner-facing docs only.
-    # Scripts may legitimately list prohibited path names (e.g. CONTRIBUTING.md)
-    # as exclusion checks without embedding teacher collaboration prose.
+    # Teacher-only content rules scan all supported text types.
+    # TEACHER_CONTRIBUTING allows exactly one path exception: the student
+    # verification script may list CONTRIBUTING.md as a prohibited path.
     $teacherContentRules = @(
-        @{ Name = "TEACHER_FINANCE_PATH"; Pattern = 'C:\\Users\\Administrator\\Desktop\\财务经营分析系统' },
-        @{ Name = "TEACHER_REPO_SLUG"; Pattern = 'fishfuuu/ai-business-prototype-training' },
-        @{ Name = "TEACHER_GIT_PULL_MAIN"; Pattern = 'git pull --ff-only origin main' },
-        @{ Name = "TEACHER_COURSE_BRANCH_PATTERN"; Pattern = 'course/lesson-XX-' },
-        @{ Name = "TEACHER_CONTRIBUTING"; Pattern = 'CONTRIBUTING\.md' }
+        @{
+            Name = "TEACHER_FINANCE_PATH"
+            Pattern = 'C:\\Users\\Administrator\\Desktop\\财务经营分析系统'
+            ExcludedPaths = @()
+        },
+        @{
+            Name = "TEACHER_REPO_SLUG"
+            Pattern = 'fishfuuu/ai-business-prototype-training'
+            ExcludedPaths = @()
+        },
+        @{
+            Name = "TEACHER_GIT_PULL_MAIN"
+            Pattern = 'git pull --ff-only origin main'
+            ExcludedPaths = @()
+        },
+        @{
+            Name = "TEACHER_COURSE_BRANCH_PATTERN"
+            Pattern = 'course/lesson-XX-'
+            ExcludedPaths = @()
+        },
+        @{
+            Name = "TEACHER_CONTRIBUTING"
+            Pattern = 'CONTRIBUTING\.md'
+            ExcludedPaths = @("scripts/verify-student-project.ps1")
+        }
     )
-
-    $docExtensions = @(".md", ".txt", ".html")
 
     $files = Get-ChildItem -LiteralPath $PackageRoot -Recurse -File -Force | Where-Object {
         $ext = $_.Extension.ToLowerInvariant()
@@ -177,7 +195,6 @@ function Invoke-SensitiveContentScan {
 
     foreach ($file in $files) {
         $rel = Get-RelativePathUnix -BasePath $PackageRoot -FullPath $file.FullName
-        $ext = $file.Extension.ToLowerInvariant()
         $text = [System.IO.File]::ReadAllText($file.FullName)
 
         foreach ($rule in $credentialRules) {
@@ -186,11 +203,13 @@ function Invoke-SensitiveContentScan {
             }
         }
 
-        if ($docExtensions -contains $ext) {
-            foreach ($rule in $teacherContentRules) {
-                if ($text -match $rule.Pattern) {
-                    throw "Sensitive content scan failed in '$rel' (rule: $($rule.Name))."
-                }
+        foreach ($rule in $teacherContentRules) {
+            $excluded = @($rule.ExcludedPaths)
+            if ($excluded -contains $rel) {
+                continue
+            }
+            if ($text -match $rule.Pattern) {
+                throw "Sensitive content scan failed in '$rel' (rule: $($rule.Name))."
             }
         }
     }
@@ -304,8 +323,6 @@ $snapshotDir = Join-Path $stagingRoot "snapshot"
 $packageRoot = Join-Path $stagingRoot $packageBaseName
 $archiveZip = Join-Path $stagingRoot "source-archive.zip"
 
-$createdZipThisRun = $false
-$createdShaThisRun = $false
 $exportSucceeded = $false
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
@@ -443,13 +460,11 @@ try {
     if (-not (Test-Path -LiteralPath $zipPath)) {
         throw "ZIP was not created: $zipPath"
     }
-    $createdZipThisRun = $true
 
     Write-Step "Writing external ZIP SHA256"
     $zipHash = Get-FileSha256Hex -Path $zipPath
     $shaContent = "$zipHash  $packageBaseName.zip"
     [System.IO.File]::WriteAllText($zipShaPath, $shaContent + [Environment]::NewLine, $utf8NoBom)
-    $createdShaThisRun = $true
 
     $zipInfo = Get-Item -LiteralPath $zipPath
     $fileCount = (Get-ChildItem -LiteralPath $packageRoot -Recurse -File).Count
@@ -477,12 +492,14 @@ try {
     Write-Host "Did not commit, push, or upload."
 }
 finally {
+    # Targets were proven absent at start; if export failed, any existing ZIP/sha
+    # at those paths was produced by this run and must be removed.
     if (-not $exportSucceeded) {
-        if ($createdZipThisRun -and (Test-Path -LiteralPath $zipPath)) {
+        if (Test-Path -LiteralPath $zipPath) {
             Remove-Item -LiteralPath $zipPath -Force -ErrorAction SilentlyContinue
             Write-Host "Removed incomplete ZIP created this run: $zipPath"
         }
-        if ($createdShaThisRun -and (Test-Path -LiteralPath $zipShaPath)) {
+        if (Test-Path -LiteralPath $zipShaPath) {
             Remove-Item -LiteralPath $zipShaPath -Force -ErrorAction SilentlyContinue
             Write-Host "Removed incomplete checksum created this run: $zipShaPath"
         }
