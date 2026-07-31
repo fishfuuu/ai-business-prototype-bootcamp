@@ -228,22 +228,82 @@ npm run dev
 - 添加忽略注释
 - 删除失败功能
 
-## 13. Git规则
+## 13. Git与协作规则
 
-当前阶段不得自行初始化Git。
+本项目已经初始化Git，并连接私有GitHub课程仓库。
 
-Git初始化、首次提交、标签和后续写操作必须由用户明确授权。
+默认稳定分支：
 
-未经授权禁止：
+```text
+main
+```
 
-- `git init`
-- `git add`
-- `git commit`
-- `git push`
-- `git reset`
-- `git clean`
-- `git checkout`
-- `git restore`
+`main` 只保存已经验证、可以正式教学的课程内容。
+
+课程开发必须从最新 `main` 创建独立分支：
+
+```text
+course/lesson-XX-<topic>
+```
+
+文档修改使用：
+
+```text
+docs/<topic>
+```
+
+底座修复使用：
+
+```text
+fix/<topic>
+```
+
+开始修改前应检查：
+
+```powershell
+git status
+git branch --show-current
+```
+
+创建任务分支前应执行：
+
+```powershell
+git switch main
+git pull --ff-only origin main
+```
+
+代码完成后至少执行：
+
+```powershell
+npm run typecheck
+npm run build
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-project.ps1
+```
+
+未经用户明确授权，不得：
+
+- 直接向 `main` 推送课程修改
+- 合并Pull Request
+- 创建、移动或删除课程标签
+- 删除本地或远程分支
+- 修改远程仓库配置
+- 执行强制推送
+- 重写已经推送的历史
+
+始终禁止：
+
+```text
+git push --force
+git push --force-with-lease
+git reset --hard
+git clean -fd
+git clean -fdx
+git tag -f
+```
+
+完整协作规范见：
+
+`CONTRIBUTING.md`
 
 ## 14. 第一版原型完成标准
 

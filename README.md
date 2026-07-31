@@ -156,6 +156,58 @@ D:\AILearning
 └── vite.config.ts
 ```
 
+## 仓库协作
+
+本仓库是私有的教师课程母仓库。
+
+稳定、已经验证并可用于教学的课程内容合并到：
+
+```text
+main
+```
+
+每一节课程使用独立分支开发：
+
+```text
+course/lesson-XX-<topic>
+```
+
+只修改文档时使用：
+
+```text
+docs/<topic>
+```
+
+修复培训底座时使用：
+
+```text
+fix/<topic>
+```
+
+标准流程：
+
+```text
+从main创建分支
+→ 完成课程或修改
+→ typecheck
+→ build
+→ verify-project
+→ 推送工作分支
+→ 创建Pull Request
+→ 审查
+→ 合并main
+```
+
+不同主管的实际业务原型和作业应放在独立仓库，不直接合并到本课程仓库的 `main`。
+
+详细协作规则：
+
+`CONTRIBUTING.md`
+
+Pull Request提交时应使用：
+
+`.github/pull_request_template.md`
+
 ## 使用原则
 
 1. 先描述业务问题，再讨论页面功能。
