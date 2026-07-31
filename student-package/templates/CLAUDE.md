@@ -1,8 +1,8 @@
-# AI Business Prototype Starter
+# AI Business Prototype Starter（学员规则）
 
 ## 1. 项目用途
 
-这是一个企业业务系统原型培训项目。
+这是一个企业业务系统原型**培训学员项目**。
 
 主要目标是帮助业务人员通过 Claude Code：
 
@@ -18,27 +18,17 @@
 
 每次开始任务前，依次阅读：
 
-1. `README.md`
-2. `DESIGN.md`
-3. `docs/COMPONENT_CATALOG.md`
-4. 与本次任务直接相关的页面和组件
+1. `START_HERE.md`
+2. `README.md`
+3. `DESIGN.md`
+4. `docs/COMPONENT_CATALOG.md`
+5. 与本次任务直接相关的页面和组件
 
 涉及第一课时，还应阅读：
 
 `docs/LESSON_01_GUIDE.md`
 
-进行课程设计、课程文档或学员包任务时，还必须阅读：
-
-- `docs/COURSE_ROADMAP.md`
-- `docs/LESSON_TEMPLATE.md`
-- `docs/STUDENT_PACKAGE_SPEC.md`
-
-课程内容规则：
-
-- 不得绕过 `COURSE_ROADMAP` 重新设计 10 课顺序
-- 新课程文件必须使用 `LESSON_TEMPLATE`
-- 不得把计划中的 Skill 写成已经安装或验证
-- 原始课程稿保持只读，不得删除或重写
+使用 Claude Code 时遵守本文件全文。
 
 不得在未检查现有组件的情况下重复创建相同组件。
 
@@ -86,7 +76,7 @@
 
 当前阶段禁止引入：
 
-- Agent框架
+- Agent 框架
 - MCP
 - LangChain
 - LangGraph
@@ -101,22 +91,15 @@
 
 ## 6. 安全边界
 
-原财务项目：
-
-`C:\Users\Administrator\Desktop\财务经营分析系统`
-
-该目录永远视为只读，不得修改、移动、删除、格式化或写入文件。
-
-`references/` 是已经归档的原始参考副本，只读，不得修改。
-
 禁止：
 
-- 复制真实 `.env`
-- 写入Token、密码、密钥或数据库配置
+- 复制或创建含真实密钥的 `.env`
+- 写入 Token、密码、密钥或数据库配置
 - 请求真实业务接口
 - 使用真实客户、订单、员工或经营数据
-- 删除或覆盖用户已有文件
-- 执行危险Git命令
+- 删除或覆盖用户已有重要文件（除非用户明确要求）
+
+所有演示数据必须为虚构模拟数据。
 
 ## 7. 设计规则
 
@@ -131,7 +114,7 @@
 - 优先复用现有布局和通用组件
 - 遵循统一字号、间距、圆角和图表色板
 - 不建立第二套视觉体系
-- 不使用大面积渐变、玻璃拟态、发光边框或3D图表
+- 不使用大面积渐变、玻璃拟态、发光边框或 3D 图表
 
 ## 8. 现有组件优先
 
@@ -177,21 +160,21 @@
 
 示例数据优先放在页面内部或 `src/mock-data/`。
 
-## 10. AI能力展示
+## 10. AI 能力展示
 
-需要展示AI能力时，必须说明：
+需要展示 AI 能力时，必须说明：
 
-- AI读取什么信息
-- AI生成什么结果
+- AI 读取什么信息
+- AI 生成什么结果
 - 是否需要人工确认
 - 是否会执行写入
 - 失败时如何处理
 
-模拟AI能力必须标记：
+模拟 AI 能力必须标记：
 
 `AI能力演示 · 未连接真实服务`
 
-不要把普通统计、筛选或固定规则包装成AI。
+不要把普通统计、筛选或固定规则包装成 AI。
 
 ## 11. 修改范围原则
 
@@ -223,6 +206,12 @@ npm run typecheck
 npm run build
 ```
 
+或一键：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-student-project.ps1
+```
+
 两项均通过后才能声称任务完成。
 
 涉及页面或交互时，再执行：
@@ -241,93 +230,12 @@ npm run dev
 - 添加忽略注释
 - 删除失败功能
 
-## 13. Git与协作规则
+## 13. 学员包说明
 
-本项目已经初始化Git，并连接私有GitHub课程仓库。
-
-默认稳定分支：
-
-```text
-main
-```
-
-`main` 只保存已经验证、可以正式教学的课程内容。
-
-课程开发必须从最新 `main` 创建独立分支：
-
-```text
-course/lesson-XX-<topic>
-```
-
-文档修改使用：
-
-```text
-docs/<topic>
-```
-
-底座修复使用：
-
-```text
-fix/<topic>
-```
-
-开始修改前应检查：
-
-```powershell
-git status
-git branch --show-current
-```
-
-创建任务分支前应执行：
-
-```powershell
-git switch main
-git pull --ff-only origin main
-```
-
-代码完成后至少执行：
-
-```powershell
-npm run typecheck
-npm run build
-powershell -ExecutionPolicy Bypass -File .\scripts\verify-project.ps1
-```
-
-未经用户明确授权，不得：
-
-- 直接向 `main` 推送课程修改
-- 合并Pull Request
-- 创建、移动或删除课程标签
-- 删除本地或远程分支
-- 修改远程仓库配置
-- 执行强制推送
-- 重写已经推送的历史
-
-始终禁止：
-
-```text
-git push --force
-git push --force-with-lease
-git reset --hard
-git clean -fd
-git clean -fdx
-git tag -f
-```
-
-完整协作规范见：
-
-`CONTRIBUTING.md`
-
-## 学员包规则
-
-- 学员包必须通过 `scripts/export-student-package.ps1` 导出。
-- 禁止手工压缩教师仓库作为正式学员包。
-- 学员包使用白名单，不复制完整仓库。
-- 学员包必须替换为学员版 README、CLAUDE 和验证脚本。
-- 不得导出 `references`、教师治理文档、Git 历史和敏感配置。
-- 学员包必须记录 Source Commit 和 SHA256。
-- 未完成独立解压验证不得声称可发放。
-- ZIP 生成物不得提交 Git。
+- 本包为标准学员 ZIP 交付，通常**不含** Git 历史。
+- 不要求学员推送到教师课程母仓库。
+- 作业提交方式以课程教师安排为准（例如压缩作业目录、独立仓库等）。
+- 包版本与来源提交见 `VERSION.txt`。
 
 ## 14. 第一版原型完成标准
 
@@ -350,4 +258,4 @@ git tag -f
 - 真实数据同步
 - 数据库
 - 生产部署
-- 复杂AI Agent
+- 复杂 AI Agent

@@ -28,6 +28,3 @@ Desktop.ini
 # Temporary files
 *.tmp
 *.temp
-
-# Student package export artifacts (never commit ZIPs or checksums)
-artifacts/student-packages/
