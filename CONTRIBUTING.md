@@ -308,6 +308,18 @@ docs/COMPONENT_CATALOG.md
 
 单个页面的业务口径不得写入通用组件。
 
+## 课程文档协作
+
+- 课程结构变更必须更新 `docs/COURSE_ROADMAP.md`
+- 新课必须使用 `docs/LESSON_TEMPLATE.md`
+- 单节课使用独立课程分支（`course/lesson-XX-<topic>`）
+- 纯路线图或模板调整使用 `docs/<topic>` 分支
+- 课程文件必须说明学员成果、验证方式和范围外内容
+- Skills 必须记录来源和版本；未验证前不得标为已安装
+- 个人学员作业不得进入课程母仓库 `main`
+- ZIP 包必须来自明确 commit 或 tag
+- 原始课程稿 `docs/主管 AI 原型制作训练营.md` 不得删除或重写
+
 ## 11. Commit规范
 
 推荐类型：
