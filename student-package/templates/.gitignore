@@ -28,3 +28,7 @@ Desktop.ini
 # Temporary files
 *.tmp
 *.temp
+
+# Local learner backups
+local-backups/
+*-backup-*/
