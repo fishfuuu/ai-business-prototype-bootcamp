@@ -1,0 +1,143 @@
+@import 'tailwindcss';
+
+:root {
+  /*
+   * 财务项目基础设计Token
+   * 权威来源：
+   * references/original-design/DESIGN.md
+   * references/original-styles/core/tailwind.css
+   */
+
+  /* 主色：参考 original-styles/core/tailwind.css 亮色 :root */
+  --art-primary: oklch(0.7 0.23 260);
+
+  /*
+   * 业务语义色（DESIGN.md §3.2）
+   * 与 Element Plus el-light.scss 主题色并行，不互相覆盖
+   * green-600 / amber-500 / red-500 的 Tailwind 默认 hex
+   */
+  --art-success: #16a34a;
+  --art-warning: #f59e0b;
+  --art-danger: #ef4444;
+
+  /* 参考文件存在 --art-info */
+  --art-info: oklch(0.58 0.03 254.1);
+
+  /* 页面/卡片背景：参考 --default-bg-color / --default-box-color */
+  --art-page-bg: #fafbfc;
+  --art-card-bg: #ffffff;
+
+  /*
+   * 灰阶：参考亮色 --art-gray-*
+   * 参考文件无独立 --art-gray-50，gray-50 与 gray-100 同为 #f9fafb
+   */
+  --art-gray-50: #f9fafb;
+  --art-gray-100: #f9fafb;
+  --art-gray-200: #f2f4f5;
+  --art-gray-500: #949eb7;
+  --art-gray-900: #323251;
+
+  --art-border-card: var(--art-gray-100);
+  --art-border-default: var(--art-gray-200);
+
+  --art-text-primary: var(--art-gray-900);
+  --art-text-secondary: var(--art-gray-500);
+
+  --art-radius-panel: 12px;
+  --art-radius-card: 8px;
+  --art-radius-control: 6px;
+
+  /* 参考 @theme --shadow-panel / --shadow-dialog 亮色值 */
+  --art-shadow-panel: 0 8px 24px rgba(26, 37, 64, 0.08);
+  --art-shadow-dialog: 0 12px 32px rgba(26, 37, 64, 0.14);
+
+  /*
+   * 财务项目图表规范色（DESIGN.md §3.10 / §7.4）
+   * 与 Element Plus 主题色分开管理
+   */
+
+  --art-chart-good: #18a058;
+  --art-chart-warn: #f59e0b;
+  --art-chart-bad: #dc2626;
+  --art-chart-nodata: #9ca3af;
+
+  --art-chart-axis-label: #687385;
+  --art-chart-split-line: #edf0f5;
+  --art-chart-series-primary: #1f78d1;
+  --art-chart-series-secondary: #2563eb;
+
+  /*
+   * 培训底座旧Token兼容层
+   * 新代码不得继续新增prototype变量。
+   * 后续组件分批改为直接使用art变量。
+   */
+
+  --prototype-primary: var(--art-primary);
+  --prototype-success: var(--art-success);
+  --prototype-warning: var(--art-warning);
+  --prototype-danger: var(--art-danger);
+
+  --prototype-page-bg: var(--art-page-bg);
+  --prototype-card-bg: var(--art-card-bg);
+  --prototype-border: var(--art-border-card);
+
+  --prototype-text-primary: var(--art-text-primary);
+  --prototype-text-secondary: var(--art-text-secondary);
+
+  --prototype-radius: var(--art-radius-panel);
+  --prototype-shadow: var(--art-shadow-panel);
+}
+
+@theme {
+  --color-primary: var(--art-primary);
+  --color-success: var(--art-success);
+  --color-warning: var(--art-warning);
+  --color-danger: var(--art-danger);
+  --color-info: var(--art-info);
+
+  --color-art-page: var(--art-page-bg);
+  --color-art-card: var(--art-card-bg);
+
+  --color-art-gray-50: var(--art-gray-50);
+  --color-art-gray-100: var(--art-gray-100);
+  --color-art-gray-200: var(--art-gray-200);
+  --color-art-gray-500: var(--art-gray-500);
+  --color-art-gray-900: var(--art-gray-900);
+
+  --shadow-panel: var(--art-shadow-panel);
+  --shadow-dialog: var(--art-shadow-dialog);
+
+  --radius-panel: var(--art-radius-panel);
+  --radius-card: var(--art-radius-card);
+  --radius-control: var(--art-radius-control);
+}
+
+@layer utilities {
+  .financial-value {
+    font-family:
+      "Fira Code",
+      ui-monospace,
+      SFMono-Regular,
+      Consolas,
+      "Liberation Mono",
+      monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prototype-card {
+    border: 1px solid var(--art-border-card);
+    border-radius: var(--art-radius-panel);
+    background: var(--art-card-bg);
+    box-shadow: var(--art-shadow-panel);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
