@@ -320,6 +320,22 @@ docs/COMPONENT_CATALOG.md
 - ZIP 包必须来自明确 commit 或 tag
 - 原始课程稿 `docs/主管 AI 原型制作训练营.md` 不得删除或重写
 
+## 学员包协作
+
+- 学员包导出机制使用 feat 分支和 PR 维护。
+- 正式包必须来自明确 commit 或 tag。
+- 导出脚本和模板属于受审查源码。
+- ZIP 产物和 sha256 不提交仓库。
+- 每个版本必须独立解压、`npm ci`、typecheck 和 build。
+- 已发放包不得覆盖。
+- 修订后提升版本。
+- 不把教师 README、CLAUDE、`references` 或协作规则发给普通学员。
+- 发放前由课程负责人批准。
+
+规范详见：
+
+`docs/STUDENT_PACKAGE_SPEC.md`
+
 ## 11. Commit规范
 
 推荐类型：

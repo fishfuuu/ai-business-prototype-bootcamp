@@ -127,6 +127,10 @@ Claude Code在本项目中的工作规则、安全边界和完成标准。
 
 第2至第10课编写时使用的统一课程模板。
 
+### docs/STUDENT_PACKAGE_SPEC.md
+
+标准学员 ZIP 包的包含范围、排除范围、版本、校验和发放规则。
+
 ### references/
 
 从原财务项目归档的只读参考文件。
@@ -145,10 +149,14 @@ D:\AILearning
 │   ├── DESIGN_ALIGNMENT_FINAL_REPORT.md
 │   ├── LESSON_01_GUIDE.md
 │   ├── LESSON_TEMPLATE.md
+│   ├── STUDENT_PACKAGE_SPEC.md
 │   └── 主管 AI 原型制作训练营.md
 ├── references
 ├── scripts
+│   ├── export-student-package.ps1
 │   └── verify-project.ps1
+├── student-package
+│   └── templates
 ├── src
 │   ├── assets
 │   ├── components
@@ -170,6 +178,32 @@ D:\AILearning
 ├── package.json
 └── vite.config.ts
 ```
+
+## 导出学员ZIP包
+
+说明：
+
+- 只有教师和课程维护者使用。
+- 普通学员不需要执行。
+- 导出必须来自明确 Git ref。
+- 生成产物位于 `artifacts/student-packages` 并被 Git 忽略。
+
+示例：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File `
+  .\scripts\export-student-package.ps1 `
+  -CourseState "lesson-01-start" `
+  -Version "v0.1.0" `
+  -SourceRef "HEAD"
+```
+
+说明：
+
+- 不会提交或推送。
+- 不会自动覆盖同名包。
+- 需要按 `docs/STUDENT_PACKAGE_SPEC.md` 验证后才能发放。
+- 本地生成的 ZIP 仅为候选产物，在负责人批准前不是正式发布包。
 
 ## 仓库协作
 

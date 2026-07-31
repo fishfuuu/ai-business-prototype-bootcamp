@@ -29,5 +29,6 @@ Desktop.ini
 *.tmp
 *.temp
 
-# Student package export artifacts (never commit ZIPs or checksums)
-artifacts/student-packages/
+# Local learner backups
+local-backups/
+*-backup-*/
