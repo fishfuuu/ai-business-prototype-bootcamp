@@ -35,9 +35,9 @@
 4. 启动 Claude Code 并准备输入指令。
 
 > 💡 **通用组件用途速查**：如果在设计页面时不知道项目提供了哪些现成组件，可以随时查阅下图：
-> 
+>
 > ![通用组件用途速查](./assets/lesson-01/component-map.png)
-> 
+>
 > **文字说明**：项目内置了 KpiCard(指标卡)、FilterPanel(筛选栏)、StatusTag(状态标签)、DataTable(明细表)、SimpleLineChart(折线图)、SimpleBarChart(柱状图)与 SimplePieChart(饼图)等通用组件，可直接复用。
 
 ---
