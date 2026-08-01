@@ -6,12 +6,11 @@
 
 ## 📖 文档阅读分工规则
 
-为了防止不同角色和任务读取混淆，请严格遵守以下分工：
+为了防止不同角色和任务读取混淆，请严格遵守以下收敛分工：
 
 ### 1. 人类学员进行页面制作时
-* **必读文件**：
-  * [docs/LESSON_01_GUIDE.md](./docs/LESSON_01_GUIDE.md)（实操工作手册）
-  * [docs/LESSON_01_AI_BASICS.md](./docs/LESSON_01_AI_BASICS.md)（概念参考中与当前 Task 对应部分）
+* **必读文件（学员唯一文档）**：
+  * [docs/LESSON_01_GUIDE.md](./docs/LESSON_01_GUIDE.md)（学员指南：知识概念与 Task 1–4 实操合一）
 
 ### 2. Claude Code 执行页面代码修改任务时
 * **重点读取**：
@@ -19,13 +18,11 @@
   * `DESIGN.md`（设计规范）
   * `docs/COMPONENT_CATALOG.md`（通用组件目录）
   * 任务相关的具体源码文件（如 `src/router/index.ts`）
-* **注意**：Claude 不需要把 `docs/LESSON_01_AI_BASICS.md` 当作代码实现规范。
 
 ### 3. 进行课程设计、教师备课、复盘或维护时
 * **必须查阅**：
-  * `docs/LESSON_01_TEACHER_PLAN.md`（教师教案）
-  * `docs/LESSON_01_GUIDE.md`（学员手册）
-  * `docs/LESSON_01_AI_BASICS.md`（基础概念）
+  * `docs/LESSON_01_TEACHER_PLAN.md`（教师唯一教案）
+  * `docs/LESSON_01_GUIDE.md`（学员指南合一卡）
   * `docs/COURSE_ROADMAP.md`（路线图）
   * `docs/LESSON_TEMPLATE.md`（课程模板）
   * `docs/STUDENT_PACKAGE_SPEC.md`（学员包规范）

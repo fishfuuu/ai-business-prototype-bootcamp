@@ -184,7 +184,7 @@ Claude Code 实现
 
 ### 第 1 课：从业务问题创建第一个系统页面
 
-**与执行版关系：** 学员操作以 `docs/LESSON_01_GUIDE.md` 与 `docs/LESSON_01_AI_BASICS.md` 为准；本节保留教师视角与路线图基线。
+**与执行版关系：** 学员操作以合一卡 `docs/LESSON_01_GUIDE.md` 为准；本节保留教师视角与路线图基线。
 
 #### 核心目标
 
