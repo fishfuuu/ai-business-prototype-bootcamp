@@ -23,12 +23,14 @@
 3. `docs/COMPONENT_CATALOG.md`
 4. 与本次任务直接相关的页面和组件
 
-涉及第一课时，还应阅读：
+普通学员进行第一课业务页面制作时，只需阅读：
 
 `docs/LESSON_01_GUIDE.md`
 
-进行课程设计、课程文档或学员包任务时，还必须阅读：
+进行第一课课程设计、教师备课、试讲复盘或教学材料维护时，必须阅读：
 
+- `docs/LESSON_01_TEACHER_PLAN.md`
+- `docs/LESSON_01_GUIDE.md`
 - `docs/COURSE_ROADMAP.md`
 - `docs/LESSON_TEMPLATE.md`
 - `docs/STUDENT_PACKAGE_SPEC.md`
