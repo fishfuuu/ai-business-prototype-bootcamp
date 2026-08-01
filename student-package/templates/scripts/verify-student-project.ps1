@@ -23,6 +23,7 @@ $requiredFiles = @(
     "START_HERE.md",
     "docs\COMPONENT_CATALOG.md",
     "docs\LESSON_01_GUIDE.md",
+    "docs\LESSON_01_AI_BASICS.md",
     "docs\assets\lesson-01\lesson-flow.png",
     "docs\assets\lesson-01\page-layout.png",
     "docs\assets\lesson-01\component-map.png",

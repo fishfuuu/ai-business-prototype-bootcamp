@@ -22,6 +22,7 @@ $requiredFiles = @(
     "README.md",
     "docs\COMPONENT_CATALOG.md",
     "docs\LESSON_01_GUIDE.md",
+    "docs\LESSON_01_AI_BASICS.md",
     "docs\LESSON_01_TEACHER_PLAN.md",
     "docs\assets\lesson-01\lesson-flow.png",
     "docs\assets\lesson-01\page-layout.png",
