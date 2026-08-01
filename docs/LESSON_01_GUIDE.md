@@ -36,9 +36,7 @@
 一句话记住 Agent 的工作原理：
 > **Claude Code 是一个以 LLM 为大脑、以 Prompt 和 CLAUDE.md 为眼睛/耳朵、以 Tools 为手脚、具有自主 ReAct 动态探索能力，并在 Workflow（业务阶段顺序与人在回路盖章卡口）中接受主管控制的 Agent。**
 
-![根据首期学员成果整理的结构示意图](./assets/lesson-01/first-cohort-example.png)
-
-> **文字说明**：上图为根据第一期运营主管成果整理的“达人投产监控工作台”结构示意图，包含侧边栏菜单、指标卡片与数据表。本图为模拟数据成果示意，不是标准答案，你的系统将完全由你的业务思考决定。
+![第一课自然语言协作六步闭环](./assets/lesson-01/lesson-flow.png)
 
 ---
 
@@ -112,9 +110,7 @@
 
 > ⚠️ **跨课程概念厘清**：`CLAUDE.md`（本课）是给开发助手 Claude 准备的项目校规。到了第 7–8 课，当我们引入独立评审专家 Codex 时，我们还会给它准备专属的审查手册——`AGENTS.md`。
 
-🔍 **操作前必看**：在给 Claude 发送指令前，请先用 30 秒点击查看图片 [component-map.png](./assets/lesson-01/component-map.png)，了解 `KpiCard`（指标卡）、`DataTable`（明细表）和 `FilterPanel`（筛选栏）的样式。
-
-![通用组件用途速查](./assets/lesson-01/component-map.png)
+🔍 **查阅项目通用组件库**：你可以在项目根目录中查看权威文档 [docs/COMPONENT_CATALOG.md](./COMPONENT_CATALOG.md)，了解项目内置可直接复用的通用组件。
 
 ### 复制并发送给 Claude Code（只读指令）：
 
@@ -151,10 +147,6 @@
 * **Agent（自主执行）** 拥有极强的**动态自主性**。面对目标时，它能自己拆解步骤、调用 Tools、通过 ReAct 自自我纠错，而不是死板按脚本执行的自动化程序。
 * **Workflow 顺序与人在回路 (Human-in-the-Loop)** 规定了从“需求 -> 方案 -> 执行 -> 验证”的业务推进顺序。在进入代码修改前，Agent **必须暂停，等待主管人在回路盖章授权**。
 * **自动化裁判脚本**：`verify-student-project.ps1` 是训练营预置的**“自动化裁判脚本”**，而不是 Claude 临时写的。每次修改完代码，Claude 都会调用这个裁判来自我检查有没有把项目改崩溃。
-
-![标准企业页面骨架](./assets/lesson-01/page-layout.png)
-
-> **文字说明**：标准企业页面通常由页面说明/筛选条件/主要操作、KPI 指标卡区、主要图表区和明细表格区组成。第一版最低标准：一个页面、一个核心业务信息区、一个可操作入口、Mock Data 模拟数据、可运行。
 
 ### 步骤 1：行使主管裁决权（发送裁决指令）
 ```text

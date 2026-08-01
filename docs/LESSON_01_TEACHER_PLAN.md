@@ -64,10 +64,10 @@
 | --- | --- | --- |
 | 教师演示环境 | 已完成 | 本地安装 Node.js 20.19.0 或更高版本、Claude Code |
 | 演示离线预录视频 | 计划录制 / 授课前备置 | 3 分钟“订单超时预警台”连续演示视频（授课前建议讲师录制作为网络/API 延迟双保险） |
-| 示例成果展示图 | 已完成 | `docs/assets/lesson-01/first-cohort-example.png` |
+| 示例成果展示图 | 已完成 | `docs/assets/lesson-01/lesson-flow.png` |
 | 核心关系示意图 | 已完成 | `docs/assets/lesson-01/lesson-flow.png` |
 | 5-8分钟微型演示案 | 已完成 | “订单履约超时监控”连续演示案（含 5 个暂停点） |
-| 视觉支持素材 | 已完成 | 4 张标准 PNG 素材位于 `docs/assets/lesson-01/` |
+| 视觉支持素材 | 已完成 | 1 张标准 PNG 全景关系图位于 `docs/assets/lesson-01/lesson-flow.png` |
 | 学员知识概念与实操卡 | 已完成 | `docs/LESSON_01_GUIDE.md`（合二为一学员唯一文档） |
 | 历史包 v0.1.4 记录 | 已记录 | 提示：工程合格但教学设计被过度压缩，不批准发放 |
 | 优化候选包 | 待生成 | `v0.1.5，待 main 合并后生成` |
