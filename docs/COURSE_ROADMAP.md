@@ -188,8 +188,10 @@ Claude Code 实现
 
 #### 核心目标
 
-第一节课结束时，学员不仅能够做出按自己业务想法创造出的系统页面，还能理解并复述 **LLM、Tools、Agent、ReAct 与 Workflow** 在系统制作中的作用。
-轻量建立 AI Agent 基础概念，但不引入深度框架源码、Git 或复杂 API 开发。
+- 能够在页面制作过程中准确识别 LLM、Tools、Agent、ReAct 和 Workflow。
+- 能够通过 Workflow 确认门禁有效控制 Agent。
+- 完成至少 1 次人在回路的高质量 ReAct 微调闭环。
+- 运行一键验证脚本（`verify-student-project.ps1`）显示 PASS。
 
 #### 课堂内容
 
