@@ -1,0 +1,10 @@
+{
+  "name": "lesson-02-fallback-fixture",
+  "version": "0.1.0",
+  "description": "Fallback seed content for Lesson 02 fallback package generation.",
+  "targetFiles": {
+    "page": "src/pages/OrderWarningPage.vue",
+    "routeMarker": "src/router/index.ts",
+    "sidebarMarker": "src/components/layout/AppSidebar.vue"
+  }
+}

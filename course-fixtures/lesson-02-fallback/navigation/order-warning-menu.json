@@ -1,0 +1,7 @@
+{
+  "menuItem": {
+    "title": "供应商履约预警",
+    "path": "/order-warning",
+    "icon": "Warning"
+  }
+}

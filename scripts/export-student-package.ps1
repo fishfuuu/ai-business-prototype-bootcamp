@@ -19,7 +19,9 @@ param(
 
     [string]$SourceRef = "HEAD",
 
-    [string]$OutputDirectory
+    [string]$OutputDirectory,
+
+    [string]$PackageProfile = "lesson-01-start"
 )
 
 $ErrorActionPreference = "Stop"
@@ -226,8 +228,8 @@ Write-Host "CourseState:  $CourseState"
 Write-Host "Version:      $Version"
 Write-Host "SourceRef:    $SourceRef"
 
-if ($CourseState -notmatch '^lesson-\d{2}-(start|complete)$') {
-    throw "Invalid CourseState. Must match ^lesson-\d{2}-(start|complete)$ (e.g. lesson-01-start)."
+if ($CourseState -notmatch '^lesson-\d{2}-(fallback-)?(start|complete)$') {
+    throw "Invalid CourseState. Must match ^lesson-\d{2}-(fallback-)?(start|complete)$ (e.g. lesson-01-start or lesson-02-fallback-start)."
 }
 
 if ($Version -notmatch '^v\d+\.\d+\.\d+$') {
@@ -292,6 +294,14 @@ $publicExists = Test-GitPathExists -Commit $sourceCommit -GitPath "public"
 if ($publicExists) {
     Write-Host "Optional path present in Source Commit: public"
     $archivePaths.Add("public")
+}
+
+if ($PackageProfile -eq "lesson-02-fallback-start") {
+    $fixtureExists = Test-GitPathExists -Commit $sourceCommit -GitPath "course-fixtures/lesson-02-fallback"
+    if ($fixtureExists) {
+        Write-Host "Adding course-fixtures/lesson-02-fallback to archive paths"
+        $archivePaths.Add("course-fixtures/lesson-02-fallback")
+    }
 }
 
 if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
@@ -365,6 +375,20 @@ try {
         $publicDst = Join-Path $packageRoot "public"
         if (Test-Path -LiteralPath $publicSrc) {
             Copy-Item -LiteralPath $publicSrc -Destination $publicDst -Recurse -Force
+        }
+    }
+
+    if ($PackageProfile -eq "lesson-02-fallback-start") {
+        Write-Step "Merging Lesson 02 Fallback Fixtures from snapshot"
+        $fixtureSnap = Join-Path $snapshotDir "course-fixtures\lesson-02-fallback"
+        $fixturePage = Join-Path $fixtureSnap "pages\OrderWarningPage.vue"
+        if (Test-Path -LiteralPath $fixturePage) {
+            $pageDst = Join-Path $packageRoot "src\pages\OrderWarningPage.vue"
+            $pageDstDir = Split-Path -Parent $pageDst
+            if (-not (Test-Path -LiteralPath $pageDstDir)) {
+                New-Item -ItemType Directory -Path $pageDstDir -Force | Out-Null
+            }
+            Copy-Item -LiteralPath $fixturePage -Destination $pageDst -Force
         }
     }
 

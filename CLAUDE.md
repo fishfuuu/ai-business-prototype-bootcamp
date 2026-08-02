@@ -8,8 +8,10 @@
 
 | 角色 | 推荐阅读路径 | 说明 |
 | --- | --- | --- |
-| **人类学员** | [docs/LESSON_01_GUIDE.md](file:///d:/AILearning/docs/LESSON_01_GUIDE.md) | **学员端唯一合一卡**，融合基础概念与 Task 1–4 实操指引。 |
-| **教师 / 助教** | [docs/LESSON_01_TEACHER_PLAN.md](file:///d:/AILearning/docs/LESSON_01_TEACHER_PLAN.md) | **教师端唯一教案**，包含 90 分钟节奏、5 个演示暂停点与 22 节治理标准。 |
+| **人类学员 (Lesson 01)** | [docs/LESSON_01_GUIDE.md](file:///d:/AILearning/docs/LESSON_01_GUIDE.md) | 第一课学员合一卡 (从零创建原型与人机协作)。 |
+| **人类学员 (Lesson 02)** | [docs/LESSON_02_GUIDE.md](file:///d:/AILearning/docs/LESSON_02_GUIDE.md) | **第二课学员合一卡** (参考图美化、DESIGN.md 铁律与裁决)。 |
+| **教师 / 助教 (Lesson 01)** | [docs/LESSON_01_TEACHER_PLAN.md](file:///d:/AILearning/docs/LESSON_01_TEACHER_PLAN.md) | 第一课 22 节标准教案与 90 分钟控场表。 |
+| **教师 / 助教 (Lesson 02)** | [docs/LESSON_02_TEACHER_PLAN.md](file:///d:/AILearning/docs/LESSON_02_TEACHER_PLAN.md) | **第二课 22 节标准教案** (含 5 个固定演示暂停点)。 |
 | **工程维护者** | [docs/COURSE_ROADMAP.md](file:///d:/AILearning/docs/COURSE_ROADMAP.md) | 课程路线图与工程双轨交付规范。 |
 
 ---
