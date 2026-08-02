@@ -422,7 +422,7 @@ try {
 
     # Overlay Merging for PackageProfile: lesson-02-fallback-start
     if ($PackageProfile -eq "lesson-02-fallback-start") {
-        Write-Step "Merging Lesson 02 Fallback Fixtures Overlay with Manifest Verification"
+        Write-Step "Merging Lesson 02 Fallback Fixtures Overlay with Strict Scope Verification"
         
         $fixtureSnap = Join-Path $snapshotDir "course-fixtures\lesson-02-fallback"
         $manifestPath = Join-Path $fixtureSnap "fixture-manifest.json"
@@ -441,7 +441,35 @@ try {
             throw "Manifest runtimeBaseCommit '$runtimeBaseCommit' is not an ancestor of SourceCommit '$sourceCommit'."
         }
 
-        # 2. Precheck all overlayFiles operations using Normalized LF SHA256 Hash Comparison
+        # 2. Strict Overlay Fileset Equivalence Assertion (Blocker Fix #2)
+        $overlayDir = Join-Path $fixtureSnap "overlay"
+        if (-not (Test-Path -LiteralPath $overlayDir)) {
+            throw "Overlay directory missing: course-fixtures/lesson-02-fallback/overlay"
+        }
+
+        $actualOverlayFiles = Get-ChildItem -Path $overlayDir -Recurse -File | ForEach-Object {
+            "overlay/" + $_.FullName.Substring($overlayDir.Length + 1).Replace("\", "/")
+        } | Sort-Object
+
+        $manifestSources = @($manifest.overlayFiles | ForEach-Object { $_.source }) | Sort-Object
+
+        # Check duplicate sources or targets in manifest
+        $manifestTargets = @($manifest.overlayFiles | ForEach-Object { $_.target }) | Sort-Object
+        if (($manifestSources | Select-Object -Unique).Count -ne $manifestSources.Count) {
+            throw "Duplicate source paths detected in fixture-manifest.json!"
+        }
+        if (($manifestTargets | Select-Object -Unique).Count -ne $manifestTargets.Count) {
+            throw "Duplicate target paths detected in fixture-manifest.json!"
+        }
+
+        $actualOverlayStr = $actualOverlayFiles -join "`n"
+        $manifestSourcesStr = $manifestSources -join "`n"
+
+        if ($actualOverlayStr -ne $manifestSourcesStr) {
+            throw "Overlay scope failure: Actual overlay disk files set does not equal fixture-manifest.json overlayFiles.source set!"
+        }
+
+        # 3. Precheck all overlayFiles operations using Normalized LF SHA256 Hash Comparison
         $appliedChanges = @()
         foreach ($ov in $manifest.overlayFiles) {
             $op = $ov.operation
@@ -473,7 +501,7 @@ try {
             $appliedChanges += $ov.target
         }
 
-        # 3. Apply overlay files to packageRoot
+        # 4. Apply overlay files to packageRoot
         foreach ($ov in $manifest.overlayFiles) {
             $ovSrc = Join-Path $fixtureSnap ($ov.source -replace '/', '\')
             $ovDst = Join-Path $packageRoot ($ov.target -replace '/', '\')
@@ -535,32 +563,44 @@ try {
     )
     [System.IO.File]::WriteAllLines((Join-Path $packageRoot "VERSION.txt"), $versionLines, $utf8NoBom)
 
-    Write-Step "Building PACKAGE_MANIFEST.txt and SHA256SUMS.txt (Deterministic contract)"
-    # Step A: Collect all files except SHA256SUMS.txt
-    $allFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Sort-Object FullName
+    Write-Step "Building PACKAGE_MANIFEST.txt and SHA256SUMS.txt (Closed-Set Contract)"
+    # Collect all existing files in packageRoot
+    $existingPkgFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Sort-Object FullName
     $manifestLines = New-Object System.Collections.Generic.List[string]
 
-    foreach ($file in $allFiles) {
+    foreach ($file in $existingPkgFiles) {
         $rel = Get-RelativePathUnix -BasePath $packageRoot -FullPath $file.FullName
         $manifestLines.Add($rel)
     }
-    # Manifest includes PACKAGE_MANIFEST.txt itself
+    # Manifest contains PACKAGE_MANIFEST.txt and SHA256SUMS.txt
     $manifestLines.Add("PACKAGE_MANIFEST.txt")
+    $manifestLines.Add("SHA256SUMS.txt")
     $sortedManifestLines = $manifestLines | Sort-Object
 
     [System.IO.File]::WriteAllLines((Join-Path $packageRoot "PACKAGE_MANIFEST.txt"), $sortedManifestLines, $utf8NoBom)
 
-    # Step B: Compute SHA256 for all files including PACKAGE_MANIFEST.txt, excluding only SHA256SUMS.txt
-    $finalFilesForSum = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Where-Object { $_.Name -ne "SHA256SUMS.txt" } | Sort-Object FullName
+    # SHA256SUMS contains hashes for all files in PACKAGE_MANIFEST except SHA256SUMS.txt itself
+    $filesForSha = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Where-Object { $_.Name -ne "SHA256SUMS.txt" } | Sort-Object FullName
     $sumLines = New-Object System.Collections.Generic.List[string]
 
-    foreach ($file in $finalFilesForSum) {
+    foreach ($file in $filesForSha) {
         $rel = Get-RelativePathUnix -BasePath $packageRoot -FullPath $file.FullName
         $hash = Get-FileSha256Hex -Path $file.FullName
         $sumLines.Add("$hash  $rel")
     }
 
     [System.IO.File]::WriteAllLines((Join-Path $packageRoot "SHA256SUMS.txt"), $sumLines, $utf8NoBom)
+
+    # Assert exact closed-set equivalence
+    $actualPackageDiskFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | ForEach-Object {
+        Get-RelativePathUnix -BasePath $packageRoot -FullPath $_.FullName
+    } | Sort-Object
+
+    $declaredPackageManifestFiles = Get-Content -Path (Join-Path $packageRoot "PACKAGE_MANIFEST.txt") | Sort-Object
+
+    if (($actualPackageDiskFiles -join "`n") -ne ($declaredPackageManifestFiles -join "`n")) {
+        throw "Student package export assertion failed: Disk files set does not equal PACKAGE_MANIFEST.txt!"
+    }
 
     Write-Step "Safety check (after metadata)"
     Invoke-PackageSafetyCheck -PackageRoot $packageRoot -Phase "post-metadata"
