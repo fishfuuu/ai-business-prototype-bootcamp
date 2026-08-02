@@ -40,11 +40,39 @@ if (-not (Test-Path $metadataDir)) {
     throw "Package is corrupted: metadata directory is missing."
 }
 
-# 3. Read package manifest and checksums
+# 3. Read and verify package metadata manifest and checksums (Anti-Tamper Precheck)
+$manifestFile = Join-Path $metadataDir "PACKAGE_MANIFEST.txt"
 $checksumsFile = Join-Path $metadataDir "SHA256SUMS.txt"
+
+if (-not (Test-Path $manifestFile)) {
+    throw "Package manifest file is missing: metadata/PACKAGE_MANIFEST.txt"
+}
 if (-not (Test-Path $checksumsFile)) {
     throw "Package checksums file is missing: metadata/SHA256SUMS.txt"
 }
+
+# Verify every file listed in SHA256SUMS.txt against its actual hash
+$checksumLines = Get-Content -Path $checksumsFile -ErrorAction Stop
+foreach ($line in $checksumLines) {
+    if ([string]::IsNullOrWhiteSpace($line)) { continue }
+    $parts = $line -split '\s+', 2
+    if ($parts.Length -ne 2) {
+        throw "Invalid checksum line format in metadata/SHA256SUMS.txt: $line"
+    }
+    $expectedHash = $parts[0].Trim().ToLowerInvariant()
+    $relPath = $parts[1].Trim().Replace('/', '\')
+    
+    $localFilePath = Join-Path $packageRoot $relPath
+    if (-not (Test-Path $localFilePath)) {
+        throw "Package verification failed: File declared in SHA256SUMS.txt is missing: $relPath"
+    }
+    
+    $actualHash = (Get-FileHash -Path $localFilePath -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($actualHash -ne $expectedHash) {
+        throw "Package integrity failure! Checksum mismatch on '$relPath'. Expected: $expectedHash, Actual: $actualHash"
+    }
+}
+Write-Host "[PASS] Package integrity verified. All package files match SHA256SUMS.txt."
 
 # 4. Precheck target files and conflicts (No Clobber Rule)
 $payloadDocsDirNormalized = [System.IO.Path]::GetFullPath($payloadDocsDir).TrimEnd('\')
@@ -56,10 +84,10 @@ foreach ($file in $payloadFiles) {
     $relPath = $normFullName.Substring($payloadDocsDirNormalized.Length + 1)
     $targetPath = Join-Path $targetDir ("docs\" + $relPath)
     
-    $sourceHash = (Get-FileHash -Path $normFullName -Algorithm SHA256).Hash.ToLower()
+    $sourceHash = (Get-FileHash -Path $normFullName -Algorithm SHA256).Hash.ToLowerInvariant()
     
     if (Test-Path $targetPath) {
-        $targetHash = (Get-FileHash -Path $targetPath -Algorithm SHA256).Hash.ToLower()
+        $targetHash = (Get-FileHash -Path $targetPath -Algorithm SHA256).Hash.ToLowerInvariant()
         if ($sourceHash -eq $targetHash) {
             $copyPlan += @{
                 SourcePath = $normFullName
@@ -91,7 +119,7 @@ function Get-SrcManifest($projectDir) {
     $manifest = @()
     foreach ($f in $files) {
         $rel = $f.FullName.Substring($srcDir.Length + 1).Replace("\", "/")
-        $hash = (Get-FileHash -Path $f.FullName -Algorithm SHA256).Hash.ToLower()
+        $hash = (Get-FileHash -Path $f.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
         $manifest += "$rel::$hash"
     }
     return $manifest

@@ -59,6 +59,19 @@ function Get-FileSha256Hex {
     return (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 
+function Get-NormalizedContentSha256Hex {
+    param([string]$Path)
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+    if ($text -match '\r\n') {
+        $text = $text -replace "`r`n", "`n"
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($text)
+    }
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    $hashBytes = $sha256.ComputeHash($bytes)
+    return [System.BitConverter]::ToString($hashBytes).Replace('-', '').ToLowerInvariant()
+}
+
 function Test-GitPathExists {
     param(
         [string]$Commit,
@@ -231,8 +244,15 @@ Write-Host "PackageProfile: $PackageProfile"
 Write-Host "Version:        $Version"
 Write-Host "SourceRef:      $SourceRef"
 
-if ($CourseState -notmatch '^lesson-\d{2}-(fallback-)?(start|complete)$') {
-    throw "Invalid CourseState. Must match ^lesson-\d{2}-(fallback-)?(start|complete)$ (e.g. lesson-01-start or lesson-02-start)."
+# Strictly restore original CourseState regex contract
+if ($CourseState -notmatch '^lesson-\d{2}-(start|complete)$') {
+    throw "Invalid CourseState. Must match ^lesson-\d{2}-(start|complete)$ (e.g. lesson-01-start or lesson-02-start)."
+}
+
+# Strict PackageProfile validation
+$allowedProfiles = @("", "lesson-02-fallback-start")
+if (-not [string]::IsNullOrWhiteSpace($PackageProfile) -and ($allowedProfiles -notcontains $PackageProfile)) {
+    throw "Unknown or unsupported PackageProfile: '$PackageProfile'."
 }
 
 if ($Version -notmatch '^v\d+\.\d+\.\d+$') {
@@ -421,7 +441,7 @@ try {
             throw "Manifest runtimeBaseCommit '$runtimeBaseCommit' is not an ancestor of SourceCommit '$sourceCommit'."
         }
 
-        # 2. Precheck all overlayFiles operations
+        # 2. Precheck all overlayFiles operations using Normalized LF SHA256 Hash Comparison
         $appliedChanges = @()
         foreach ($ov in $manifest.overlayFiles) {
             $op = $ov.operation
@@ -441,9 +461,9 @@ try {
                 if (-not (Test-Path -LiteralPath $ovDst)) {
                     throw "Overlay 'replace' operation failed: Target file does not exist at '$($ov.target)'."
                 }
-                $dstHash = Get-FileSha256Hex -Path $ovDst
+                $dstHash = Get-NormalizedContentSha256Hex -Path $ovDst
                 if ($ov.expectedBaseSha256 -and ($dstHash -ne $ov.expectedBaseSha256.ToLowerInvariant())) {
-                    throw "Overlay 'replace' operation failed: Target file '$($ov.target)' hash ($dstHash) does not match expectedBaseSha256 ($($ov.expectedBaseSha256))."
+                    throw "Overlay 'replace' operation failed: Target file '$($ov.target)' normalized hash ($dstHash) does not match expectedBaseSha256 ($($ov.expectedBaseSha256))."
                 }
             }
             else {
@@ -515,19 +535,31 @@ try {
     )
     [System.IO.File]::WriteAllLines((Join-Path $packageRoot "VERSION.txt"), $versionLines, $utf8NoBom)
 
-    Write-Step "Building PACKAGE_MANIFEST.txt and SHA256SUMS.txt"
+    Write-Step "Building PACKAGE_MANIFEST.txt and SHA256SUMS.txt (Deterministic contract)"
+    # Step A: Collect all files except SHA256SUMS.txt
     $allFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Sort-Object FullName
     $manifestLines = New-Object System.Collections.Generic.List[string]
-    $sumLines = New-Object System.Collections.Generic.List[string]
 
     foreach ($file in $allFiles) {
         $rel = Get-RelativePathUnix -BasePath $packageRoot -FullPath $file.FullName
         $manifestLines.Add($rel)
+    }
+    # Manifest includes PACKAGE_MANIFEST.txt itself
+    $manifestLines.Add("PACKAGE_MANIFEST.txt")
+    $sortedManifestLines = $manifestLines | Sort-Object
+
+    [System.IO.File]::WriteAllLines((Join-Path $packageRoot "PACKAGE_MANIFEST.txt"), $sortedManifestLines, $utf8NoBom)
+
+    # Step B: Compute SHA256 for all files including PACKAGE_MANIFEST.txt, excluding only SHA256SUMS.txt
+    $finalFilesForSum = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Where-Object { $_.Name -ne "SHA256SUMS.txt" } | Sort-Object FullName
+    $sumLines = New-Object System.Collections.Generic.List[string]
+
+    foreach ($file in $finalFilesForSum) {
+        $rel = Get-RelativePathUnix -BasePath $packageRoot -FullPath $file.FullName
         $hash = Get-FileSha256Hex -Path $file.FullName
         $sumLines.Add("$hash  $rel")
     }
 
-    [System.IO.File]::WriteAllLines((Join-Path $packageRoot "PACKAGE_MANIFEST.txt"), $manifestLines, $utf8NoBom)
     [System.IO.File]::WriteAllLines((Join-Path $packageRoot "SHA256SUMS.txt"), $sumLines, $utf8NoBom)
 
     Write-Step "Safety check (after metadata)"
