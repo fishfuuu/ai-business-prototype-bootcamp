@@ -167,7 +167,7 @@ Claude Code 实现
 
 | 课次 | 主题 | 核心能力 | 主要工具或 Skill | 可见成果 | 工程化重点 |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 从零创造自己的业务系统 | 把业务问题变成可运行首页 | Claude Code | 系统名称、菜单、首页、核心模块雏形 | 模拟数据；先可运行 |
+| 1 | 从业务问题创建第一个系统页面 | 理解 LLM/Tools/Agent/ReAct/Workflow 基础概念并完成首页制作 | Claude Code | 系统名称、菜单、首页、可运行雏形、概念复述 | 模拟数据；人工确认门禁；先可运行 |
 | 2 | 用参考图做出像样的企业页面 | 用参考图与设计规则控制页面 | Claude Code；`frontend-design`（计划使用，正式授课前需完成名称、来源和版本验证） | 参考图优化后的页面；设计取舍说明 | 引入并遵守 `DESIGN.md` |
 | 3 | 让 Agent 帮助自己想清楚需求 | 从模糊想法到可执行功能卡 | Claude Code；`grill-me`（计划使用，正式授课前需完成名称、来源和版本验证） | 业务功能卡 | 使用者、问题、范围、验收 |
 | 4 | 把大需求拆成连续的小成功 | 分步实现与逐步验证 | Claude Code；`incremental-implementation`（计划使用，正式授课前需完成名称、来源和版本验证） | 3–5 步完成的功能 | 确认计划→实现一步→验证一步 |
@@ -175,21 +175,23 @@ Claude Code 实现
 | 6 | 学会定位和修复问题 | 复现→根因→最小修复 | Claude Code；`diagnosing-bugs`（计划使用，正式授课前需完成名称、来源和版本验证） | 问题报告与修复证据 | 不盲目试错、不顺便重构 |
 | 7 | 让 Agent 实际操作页面完成验收 | 真页面验收 | Claude Code：`webapp-testing`；Codex：`playwright-interactive`（均计划使用，正式授课前需完成名称、来源和版本验证） | Claude 与 Codex 验收记录 | 验收证据与未验证项 |
 | 8 | Claude Code 开发，Codex 独立审查 | 双 Agent 分工 | Claude Code；Codex：`code-review-and-quality`（计划使用，正式授课前需完成名称、来源和版本验证） | 实现→审查→判断→修复闭环 | 阻断/重要/建议分级 |
-| 9 | 判断系统中哪些位置适合加入 AI | 普通功能 / AI / Agent 边界 | Claude Code | AI 机会卡与优先场景 | 输入输出、人工确认、失败处理 |
+| 9 | 业务 Agent 场景判断与产品设计 | 普通功能 / AI 辅助 / Agent 自动化边界判断与方案设计 | Claude Code | Agent 场景矩阵与产品方案 | 输入输出、人工确认、失败处理 |
 | 10 | 加入第一个 AI 功能并沉淀业务 Skill | 首个可确认 AI 功能 + 业务方法沉淀 | Claude Code；`skill-creator`（计划使用，正式授课前需完成名称、来源和版本验证） | AI Demo、业务 Skill、IT 交接清单 | Prompt 资产化、AI 边界、IT 交接 |
 
 ---
 
 ## 7. 每课详细路线
 
-### 第 1 课：从零创造自己的业务系统
+### 第 1 课：从业务问题创建第一个系统页面
 
-**与执行版关系：** 学员操作以 `docs/LESSON_01_GUIDE.md` 为准；本节保留教师视角与原稿目标。
+**与执行版关系：** 学员操作以合一卡 `docs/LESSON_01_GUIDE.md` 为准；本节保留教师视角与路线图基线。
 
 #### 核心目标
 
-第一节课结束时，学员需要产生明确感受：这个系统是按照我的业务想法创造出来的。
-不讲 Skill、Git、前端框架、数据库或 AI Agent。
+- 能够在页面制作过程中准确识别 LLM、Tools、Agent、ReAct 和 Workflow。
+- 能够通过 Workflow 确认门禁有效控制 Agent。
+- 完成至少 1 次人在回路的高质量 ReAct 微调闭环。
+- 运行一键验证脚本（`verify-student-project.ps1`）显示 PASS。
 
 #### 课堂内容
 
