@@ -112,26 +112,26 @@ try {
     )
     [System.IO.File]::WriteAllLines((Join-Path $metadataDir "VERSION.txt"), $versionLines, $utf8NoBom)
 
-    # 7. Generate PACKAGE_MANIFEST.txt & SHA256SUMS.txt (Deterministic contract)
-    # Step A: Collect all files except SHA256SUMS.txt
-    $payloadFiles = Get-ChildItem -Path $packageStaging -Recurse -File | Sort-Object { $_.FullName }
+    # 7. Generate PACKAGE_MANIFEST.txt & SHA256SUMS.txt (Exact Closed-Set Contract)
+    $existingFiles = Get-ChildItem -Path $packageStaging -Recurse -File | Sort-Object { $_.FullName }
     $manifestLines = New-Object System.Collections.Generic.List[string]
 
-    foreach ($file in $payloadFiles) {
+    foreach ($file in $existingFiles) {
         $relPath = $file.FullName.Substring($packageStaging.Length + 1).Replace("\", "/")
         $manifestLines.Add($relPath)
     }
-    # Manifest includes PACKAGE_MANIFEST.txt itself
+    # PACKAGE_MANIFEST.txt includes PACKAGE_MANIFEST.txt itself AND SHA256SUMS.txt
     $manifestLines.Add("metadata/PACKAGE_MANIFEST.txt")
+    $manifestLines.Add("metadata/SHA256SUMS.txt")
     $sortedManifestLines = $manifestLines | Sort-Object
 
     [System.IO.File]::WriteAllLines((Join-Path $metadataDir "PACKAGE_MANIFEST.txt"), $sortedManifestLines, $utf8NoBom)
 
-    # Step B: Compute SHA256 for all files including PACKAGE_MANIFEST.txt, excluding only SHA256SUMS.txt
-    $finalFilesForSum = Get-ChildItem -Path $packageStaging -Recurse -File | Where-Object { $_.Name -ne "SHA256SUMS.txt" } | Sort-Object { $_.FullName }
+    # Compute SHA256 for all files in PACKAGE_MANIFEST.txt except SHA256SUMS.txt itself
     $sumLines = New-Object System.Collections.Generic.List[string]
+    $filesForSha = Get-ChildItem -Path $packageStaging -Recurse -File | Where-Object { $_.Name -ne "SHA256SUMS.txt" } | Sort-Object { $_.FullName }
 
-    foreach ($file in $finalFilesForSum) {
+    foreach ($file in $filesForSha) {
         $relPath = $file.FullName.Substring($packageStaging.Length + 1).Replace("\", "/")
         $hash = (Get-FileHash -Path $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
         $sumLines.Add("$hash  $relPath")
@@ -139,10 +139,24 @@ try {
 
     [System.IO.File]::WriteAllLines((Join-Path $metadataDir "SHA256SUMS.txt"), $sumLines, $utf8NoBom)
 
-    # 8. Create ZIP archive
+    # 8. Assert exact closed-set equivalence: Actual Staging files == PACKAGE_MANIFEST.txt
+    $actualStagingFiles = Get-ChildItem -Path $packageStaging -Recurse -File | ForEach-Object {
+        $_.FullName.Substring($packageStaging.Length + 1).Replace("\", "/")
+    } | Sort-Object
+
+    $declaredManifestFiles = Get-Content -Path (Join-Path $metadataDir "PACKAGE_MANIFEST.txt") | Sort-Object
+
+    $actualStr = $actualStagingFiles -join "`n"
+    $declaredStr = $declaredManifestFiles -join "`n"
+
+    if ($actualStr -ne $declaredStr) {
+        throw "Materials package export assertion failed: Actual staging files set does not equal PACKAGE_MANIFEST.txt."
+    }
+
+    # 9. Create ZIP archive
     Compress-Archive -Path "$packageStaging\*" -DestinationPath $targetZipPath -CompressionLevel Optimal
 
-    # 9. Create external ZIP SHA256 checksum file
+    # 10. Create external ZIP SHA256 checksum file
     $zipHash = (Get-FileHash -Path $targetZipPath -Algorithm SHA256).Hash.ToLowerInvariant()
     [System.IO.File]::WriteAllText($targetShaPath, "$zipHash  $zipName`n", $utf8NoBom)
 

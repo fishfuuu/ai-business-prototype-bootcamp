@@ -40,7 +40,7 @@ if (-not (Test-Path $metadataDir)) {
     throw "Package is corrupted: metadata directory is missing."
 }
 
-# 3. Read and verify package metadata manifest and checksums (Anti-Tamper Precheck)
+# 3. Closed-Set Package Integrity Assertion
 $manifestFile = Join-Path $metadataDir "PACKAGE_MANIFEST.txt"
 $checksumsFile = Join-Path $metadataDir "SHA256SUMS.txt"
 
@@ -51,17 +51,35 @@ if (-not (Test-Path $checksumsFile)) {
     throw "Package checksums file is missing: metadata/SHA256SUMS.txt"
 }
 
+# Assert Actual Package Files Set == PACKAGE_MANIFEST.txt
+$actualPackageFiles = Get-ChildItem -Path $packageRoot -Recurse -File | ForEach-Object {
+    $_.FullName.Substring($packageRoot.Length + 1).Replace("\", "/")
+} | Sort-Object
+
+$declaredManifestFiles = Get-Content -Path $manifestFile | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object
+
+$actualStr = $actualPackageFiles -join "`n"
+$declaredStr = $declaredManifestFiles -join "`n"
+
+if ($actualStr -ne $declaredStr) {
+    throw "Package integrity failure: Actual package files set does not equal metadata/PACKAGE_MANIFEST.txt!"
+}
+
 # Verify every file listed in SHA256SUMS.txt against its actual hash
-$checksumLines = Get-Content -Path $checksumsFile -ErrorAction Stop
+$checksumLines = Get-Content -Path $checksumsFile | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+$checksumFilesDeclared = New-Object System.Collections.Generic.List[string]
+
 foreach ($line in $checksumLines) {
-    if ([string]::IsNullOrWhiteSpace($line)) { continue }
     $parts = $line -split '\s+', 2
     if ($parts.Length -ne 2) {
         throw "Invalid checksum line format in metadata/SHA256SUMS.txt: $line"
     }
     $expectedHash = $parts[0].Trim().ToLowerInvariant()
     $relPath = $parts[1].Trim().Replace('/', '\')
+    $relUnix = $parts[1].Trim().Replace('\', '/')
     
+    $checksumFilesDeclared.Add($relUnix)
+
     $localFilePath = Join-Path $packageRoot $relPath
     if (-not (Test-Path $localFilePath)) {
         throw "Package verification failed: File declared in SHA256SUMS.txt is missing: $relPath"
@@ -72,7 +90,16 @@ foreach ($line in $checksumLines) {
         throw "Package integrity failure! Checksum mismatch on '$relPath'. Expected: $expectedHash, Actual: $actualHash"
     }
 }
-Write-Host "[PASS] Package integrity verified. All package files match SHA256SUMS.txt."
+
+# Assert SHA256SUMS Set == PACKAGE_MANIFEST Set - SHA256SUMS.txt
+$expectedSumSet = $declaredManifestFiles | Where-Object { $_ -ne "metadata/SHA256SUMS.txt" } | Sort-Object
+$actualSumSet = $checksumFilesDeclared | Sort-Object
+
+if (($expectedSumSet -join "`n") -ne ($actualSumSet -join "`n")) {
+    throw "Package integrity failure: metadata/SHA256SUMS.txt declaration set does not equal (PACKAGE_MANIFEST.txt - SHA256SUMS.txt)!"
+}
+
+Write-Host "[PASS] Package integrity verified. Closed-set manifest & SHA256SUMS match 100%."
 
 # 4. Precheck target files and conflicts (No Clobber Rule)
 $payloadDocsDirNormalized = [System.IO.Path]::GetFullPath($payloadDocsDir).TrimEnd('\')
