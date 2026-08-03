@@ -303,7 +303,7 @@ $runtimeWhitelist = @(
     "docs/PROJECT_STATE.md",
     "docs/COMPONENT_CATALOG.md",
     "docs/LESSON_01_GUIDE.md",
-    "docs/assets/lesson-01/lesson-flow.png"
+    "docs/assets/lesson-01/lesson-01-flow.png"
 )
 
 if ($PackageProfile -eq "lesson-02-fallback-start") {

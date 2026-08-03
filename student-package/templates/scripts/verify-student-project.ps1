@@ -24,7 +24,7 @@ $requiredFiles = @(
     "docs\PROJECT_STATE.md",
     "docs\COMPONENT_CATALOG.md",
     "docs\LESSON_01_GUIDE.md",
-    "docs\assets\lesson-01\lesson-flow.png",
+    "docs\assets\lesson-01\lesson-01-flow.png",
     "src\main.ts",
     "src\App.vue",
     "src\router\index.ts",
