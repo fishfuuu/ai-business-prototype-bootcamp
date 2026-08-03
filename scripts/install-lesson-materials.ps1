@@ -31,7 +31,7 @@ foreach ($req in $requiredTargetFiles) {
 Write-Host "[PASS] Target project validity check passed."
 
 # 2. Locate package payload and metadata directories
-$packageRoot = Join-Path $scriptRoot "."
+$packageRoot = (Get-Item $scriptRoot).FullName
 $payloadDocsDir = Join-Path $packageRoot "payload\docs"
 $metadataDir = Join-Path $packageRoot "metadata"
 
@@ -64,7 +64,6 @@ $actualStr = $actualPackageFiles -join "`n"
 $declaredStr = $declaredManifestFiles -join "`n"
 
 if ($actualStr -ne $declaredStr) {
-    [System.IO.File]::WriteAllText("C:\Users\Administrator\AppData\Local\Temp\manifest-debug.txt", "ACTUAL:`n$actualStr`n`nDECLARED:`n$declaredStr")
     throw "Package integrity failure: Actual package files set does not equal metadata/PACKAGE_MANIFEST.txt!"
 }
 
