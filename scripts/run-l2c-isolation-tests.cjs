@@ -319,7 +319,7 @@ for (const p of prohibitedL1) {
 const requiredL1Whitelist = [
   'package.json', 'package-lock.json', 'vite.config.ts', 'tsconfig.json', 'index.html',
   'DESIGN.md', 'START_HERE.md', 'README.md', 'CLAUDE.md', '.gitignore',
-  'docs/COMPONENT_CATALOG.md', 'docs/LESSON_01_GUIDE.md', 'docs/assets/lesson-01/lesson-01-flow.png',
+  'docs/PROJECT_STATE.md', 'docs/COMPONENT_CATALOG.md', 'docs/LESSON_01_GUIDE.md', 'docs/assets/lesson-01/lesson-01-flow.png',
   'scripts/verify-student-project.ps1', 'src/App.vue', 'src/main.ts'
 ];
 for (const req of requiredL1Whitelist) {
@@ -328,7 +328,21 @@ for (const req of requiredL1Whitelist) {
   }
 }
 
-console.log('[PASS] Test 6 Passed: Lesson 01 default export deep SHA256, closed-set, whitelist & prohibited boundaries verified 100%.');
+// 6. Assert PROJECT_STATE.md defaults in exported student package
+const psContent = fs.readFileSync(path.join(pkg01Root, 'docs/PROJECT_STATE.md'), 'utf8');
+if (psContent.includes('L01') && psContent.includes('| PASS')) {
+  throw new Error('Test 6 Failed: Exported docs/PROJECT_STATE.md defaults to PASS status!');
+}
+if (psContent.includes('[x] 使用模拟数据')) {
+  throw new Error('Test 6 Failed: Exported docs/PROJECT_STATE.md defaults to checked [x] boxes!');
+}
+
+// 7. Execute verify-student-project.ps1, typecheck, and build on unzipped student package
+console.log('\n--> Executing verify-student-project.ps1 on unzipped Lesson 01 default package...');
+const studentVerifyScript = path.join(pkg01Root, 'scripts/verify-student-project.ps1');
+execSync(`powershell -ExecutionPolicy Bypass -File "${studentVerifyScript}"`, { cwd: pkg01Root, stdio: 'inherit' });
+
+console.log('[PASS] Test 6 Passed: Lesson 01 default export deep SHA256, closed-set, PROJECT_STATE.md defaults, student verify, typecheck & build verified 100%.');
 
 // Clean up test zips
 cleanArtifact('v0.1.0');

@@ -111,9 +111,15 @@
 
 ### 🎮 节点 1 存档动作（在喊授权口令前执行）：
 在将裁决矩阵发送给 AI 之前，先完成**【节点 1 游戏手动存档 Save】**：
-1. 在 VSCode / Cursor 左侧点击 **源代码管理 (Source Control)** 面板；
-2. 在顶部消息框输入：`lesson-02-before-refactor`；
-3. 点击 **✓ 提交 (Commit)**（或在终端输入 `git commit -am "lesson-02-before-refactor"`）。锁定第一课完成态里程碑。
+1. 打开 PowerShell 终端；
+2. 依次运行以下安全存档指令：
+   ```powershell
+   git status
+   git add .
+   git diff --cached
+   git commit -m "baseline: complete lesson 1 prototype"
+   ```
+   锁定第一课完成态基线提交！
 
 ### 复制并发送给 Claude Code（主管裁决与授权模板）：
 
@@ -143,10 +149,10 @@
 ### 🚨 监视与一键读档救急（Diff & Discard）：
 - AI 修改代码后，点击侧边栏变更的文件列表打开 **Diff 红绿视图**，监视是否有第一课的核心业务代码被误删；
 - **如果满意**：准备进入 Task 4；
-- **如果 AI 改崩代码**：点击变更文件旁的 **Discard Changes (放弃更改 / 小反转箭头图标)**，或在终端运行 `git checkout .`，1 秒无损读档恢复原状！
+- **如果 AI 改崩代码**：在 VS Code 源代码管理面板中找到该文件，点击右侧的 **Discard Changes (放弃更改 / 反转箭头图标)**，安全恢复修改前状态！
 
 ### 🚩 本步检查 (Checklist)
-- [ ] 已完成节点 1 手动存档 `lesson-02-before-refactor`。
+- [ ] 已完成节点 1 手动存档 `baseline: complete lesson 1 prototype`。
 - [ ] 仅对许可的页面进行视觉重构，没有改变业务计算公式与模拟数据字段。
 
 ---
@@ -163,7 +169,16 @@
 3. 截取包含试衣镜高颜页面与 PowerShell `[PASS]` 结果的画面，保存文件至：
    `local-backups/lesson-02-evidence/lesson-02-screenshot.png`；
 4. **🎮 节点 2 完结存档动作**：
-   - 验证 `[PASS]` 后，在 VSCode 源代码管理框输入 `lesson-02-complete`，点击 **✓ 提交 (Commit)**（或在终端输入 `git commit -am "lesson-02-complete"`）。锁定第二课完结里程碑！
+   - 验证 `[PASS]` 后，在 PowerShell 终端运行以下安全指令保存成果版本：
+     ```powershell
+     git status
+     git diff
+     git add .
+     git diff --cached
+     git commit -m "style: complete lesson 2 visual refactor"
+     git log --oneline -5
+     ```
+     锁定第二课完结成果里程碑！
 
 ---
 

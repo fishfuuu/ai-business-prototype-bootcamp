@@ -37,7 +37,7 @@ ZIP 包是**教学交付物**，不是仓库的替代品。双轨交付定位不
 | 运行时代码 | `src/**`（不含 `node_modules`、`dist`） |
 | 可选静态资源 | Source Commit 中若存在 `public/`，则一并纳入 |
 | 设计规范 | 根目录 `DESIGN.md` |
-| 学员可读课程文档 | 当前课程状态所需文档，例如第一课起点包中的 `docs/COMPONENT_CATALOG.md`、合一卡 `docs/LESSON_01_GUIDE.md` 以及视觉素材图片 `docs/assets/lesson-01/lesson-flow.png` |
+| 学员可读课程文档 | 当前课程状态所需文档，例如 `docs/PROJECT_STATE.md`、`docs/COMPONENT_CATALOG.md`、合一卡 `docs/LESSON_01_GUIDE.md` 以及视觉素材图片 `docs/assets/lesson-01/lesson-01-flow.png` |
 | 学员版说明 | 由 **Source Commit 中** `student-package/templates/**` 生成的 `START_HERE.md`、`README.md`、`CLAUDE.md`、`.gitignore` |
 | 学员验证脚本 | `scripts/verify-student-project.ps1`（同样来自 Source Commit 模板） |
 | 包元数据 | `VERSION.txt`、`PACKAGE_MANIFEST.txt`、`SHA256SUMS.txt` |

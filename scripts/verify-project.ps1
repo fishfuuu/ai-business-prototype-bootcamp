@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 
@@ -59,32 +59,78 @@ for ($s=1; $s -le 22; $s++) {
 Write-Host "[PASS] Required files are present and LESSON_02_TEACHER_PLAN.md matches 22-section structure."
 Write-Host ""
 
-Write-Host "[1.5/5] Checking Authoritative Roadmap & Manuscript Consistency..."
+Write-Host "[1.5/5] Running Layered Contract Assertions across Roadmap & Execution Docs..."
 
-# 1. Authoritative roadmap check (COURSE_ROADMAP.md)
+# 1. Authoritative Roadmap (COURSE_ROADMAP.md) Contract Assertions
 $authRoadmap = Get-Content "docs\COURSE_ROADMAP.md" -Encoding UTF8 -Raw
-$roadmapKeywords = @(
-    "PROJECT_STATE.md",
-    "git init",
-    "git commit",
-    "git diff",
-    "AGENTS.md",
-    "CLAUDE.md"
+
+$roadmapContracts = @(
+    "唯一权威执行版",
+    "单次指令",
+    "工程护栏",
+    "受控 Agent 循环",
+    "工作记忆",
+    "外部长期记忆",
+    "版本证据",
+    "Grounding",
+    "确定性",
+    "概率性",
+    "可重复验证",
+    "回归风险",
+    "受控 AI 功能闭环",
+    "独立审查上下文隔离",
+    "最多 2 轮"
 )
-foreach ($kw in $roadmapKeywords) {
+
+foreach ($kw in $roadmapContracts) {
     if ($authRoadmap -notmatch [regex]::Escape($kw)) {
-        throw "Authoritative COURSE_ROADMAP.md is missing keyword: $kw"
+        throw "Authoritative COURSE_ROADMAP.md is missing contract term: $kw"
     }
 }
 
-# 2. Manuscript check (主管 AI 原型制作训练营.md)
-$manuscriptPath = (Get-ChildItem "docs\*.md" | Where-Object { $_.Name -like "*AI*.md" }).FullName
-$manuscript = Get-Content $manuscriptPath -Encoding UTF8 -Raw
+# 2. Manuscript Disclaimer Check
+$manuscript = Get-Content "docs\主管 AI 原型制作训练营.md" -Encoding UTF8 -Raw
 if ($manuscript -notmatch [regex]::Escape("COURSE_ROADMAP.md")) {
     throw "Manuscript is missing reference to authoritative COURSE_ROADMAP.md"
 }
 
-Write-Host "[PASS] Authoritative COURSE_ROADMAP.md and Manuscript pass consistency checks."
+# 3. PROJECT_STATE.md Contract Assertions (Must default to '待开始', unchecked checkboxes, no '.env.local' conflict)
+$projectState = Get-Content "docs\PROJECT_STATE.md" -Encoding UTF8 -Raw
+if ($projectState -match "L01.*\| PASS") {
+    throw "PROJECT_STATE.md should not default lesson statuses to PASS."
+}
+if ($projectState -notmatch "待开始") {
+    throw "PROJECT_STATE.md must default lesson statuses to '待开始'."
+}
+if ($projectState -match "\[x\] 使用模拟数据") {
+    throw "PROJECT_STATE.md checkboxes should default to unchecked '[ ]'."
+}
+if ($projectState -match "\.env\.local") {
+    throw "PROJECT_STATE.md contains prohibited '.env.local' string."
+}
+
+# 4. Lesson 01 Layered Assertions (Work Memory, Tools sandboxing, HITL)
+$l1Guide = Get-Content "docs\LESSON_01_GUIDE.md" -Encoding UTF8 -Raw
+if ($l1Guide -notmatch [regex]::Escape("PROJECT_STATE.md")) {
+    throw "LESSON_01_GUIDE.md missing PROJECT_STATE.md step."
+}
+if ($l1Guide -notmatch [regex]::Escape("Tools 权限沙箱")) {
+    throw "LESSON_01_GUIDE.md missing Tools permission sandboxing explanation."
+}
+
+# 5. Lesson 02 Layered Assertions (Visual Harness, safe Git, no 'commit -am', no 'git checkout .')
+$l2Guide = Get-Content "docs\LESSON_02_GUIDE.md" -Encoding UTF8 -Raw
+if ($l2Guide -match [regex]::Escape("commit -am")) {
+    throw "LESSON_02_GUIDE.md contains dangerous 'commit -am' command."
+}
+if ($l2Guide -match [regex]::Escape("git checkout .")) {
+    throw "LESSON_02_GUIDE.md contains dangerous 'git checkout .' command."
+}
+if ($l2Guide -notmatch [regex]::Escape("Discard Changes")) {
+    throw "LESSON_02_GUIDE.md missing Discard Changes UI instructions."
+}
+
+Write-Host "[PASS] Layered Contract Assertions across Roadmap & Execution Docs passed 100%."
 Write-Host ""
 
 Write-Host "[2/5] Checking protected design reference..."
