@@ -337,10 +337,17 @@ if (psContent.includes('[x] 使用模拟数据')) {
   throw new Error('Test 6 Failed: Exported docs/PROJECT_STATE.md defaults to checked [x] boxes!');
 }
 
-// 7. Execute verify-student-project.ps1, typecheck, and build on unzipped student package
-console.log('\n--> Executing verify-student-project.ps1 on unzipped Lesson 01 default package...');
+// 7. Execute npm ci, verify-student-project.ps1, typecheck, and build on unzipped student package
+console.log('\n--> Executing npm ci & verify-student-project.ps1 on unzipped Lesson 01 default package...');
+execSync('npm ci', { cwd: pkg01Root, stdio: 'inherit' });
 const studentVerifyScript = path.join(pkg01Root, 'scripts/verify-student-project.ps1');
 execSync(`powershell -ExecutionPolicy Bypass -File "${studentVerifyScript}"`, { cwd: pkg01Root, stdio: 'inherit' });
+execSync('npm run typecheck', { cwd: pkg01Root, stdio: 'inherit' });
+execSync('npm run build', { cwd: pkg01Root, stdio: 'inherit' });
+
+if (!fs.existsSync(path.join(pkg01Root, 'dist/index.html'))) {
+  throw new Error('Test 6 Failed: dist/index.html missing after Lesson 01 default package build.');
+}
 
 console.log('[PASS] Test 6 Passed: Lesson 01 default export deep SHA256, closed-set, PROJECT_STATE.md defaults, student verify, typecheck & build verified 100%.');
 
