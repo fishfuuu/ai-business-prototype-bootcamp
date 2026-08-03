@@ -156,11 +156,11 @@ Claude Code 项目护栏 (`CLAUDE.md`)
 ### 核心目标
 让学员学会使用参考图、现有系统和草图控制页面效果，并掌握基础 Git 存档与恢复习惯。
 
-### 课堂步骤 (严格 90 分钟)
-- **任务 1：提取结构与基线存档 (18 分钟)**：检查 `git status`；必要时 `git init`；提交第一课成果与 `PROJECT_STATE.md`（基线提交）；分析参考图信息层级。
-- **任务 2：规范映射 (20 分钟)**：结合 `DESIGN.md` 设计规范，映射 Token 与组件，禁止继承参考图杂乱颜色。
-- **任务 3：视觉裁决与修改 (35 分钟)**：下达 Keep / Omit / Remove / Modify 指令，使用 `frontend-design` 完成重构。
-- **任务 4：对比验证与成果存档 (17 分钟)**：运行验证；查看 `git diff` 确认范围；`git add` & `git commit` 保存成果版本；运行 `git log --oneline` 查看历史。
+### 课堂步骤 (标准课堂 90 分钟，学员实操 50 分钟)
+- **Task 1：提取结构与基线存档 (15 分钟)**：检查 `git status`；必要时 `git init`；提交第一课成果与 `PROJECT_STATE.md`（基线提交）；分析参考图信息层级。
+- **Task 2：规范映射 (15 分钟)**：结合 `DESIGN.md` 设计规范，映射 Token 与组件，禁止继承参考图杂乱颜色。
+- **Task 3：视觉裁决与修改 (10 分钟)**：下达 Keep / Omit / Remove / Modify 指令，使用 `frontend-design` 完成重构。
+- **Task 4：对比验证与成果存档 (10 分钟)**：运行验证；查看 `git diff` 确认范围；`git add` & `git commit` 保存成果版本；运行 `git log --oneline` 查看历史。
 
 ### 工程化内容
 1. 引入 `DESIGN.md` 页面设计规则。

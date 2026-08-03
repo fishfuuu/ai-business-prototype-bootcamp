@@ -21,6 +21,7 @@ $requiredFiles = @(
     "DESIGN.md",
     "README.md",
     "START_HERE.md",
+    "docs\PROJECT_STATE.md",
     "docs\COMPONENT_CATALOG.md",
     "docs\LESSON_01_GUIDE.md",
     "docs\assets\lesson-01\lesson-flow.png",

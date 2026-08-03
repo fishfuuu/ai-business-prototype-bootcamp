@@ -26,6 +26,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
+$OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 function Write-Step {
     param([string]$Message)
@@ -298,6 +300,7 @@ $runtimeWhitelist = @(
     "start-project.bat",
     "DESIGN.md",
     "src",
+    "docs/PROJECT_STATE.md",
     "docs/COMPONENT_CATALOG.md",
     "docs/LESSON_01_GUIDE.md",
     "docs/assets/lesson-01/lesson-flow.png"

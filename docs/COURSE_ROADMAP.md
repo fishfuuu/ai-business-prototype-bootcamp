@@ -169,11 +169,11 @@ Claude Code 增量实现 -> Candidate Commit -> Codex 独立审查 Diff -> 主�
 
 ### 第 2 课：用参考图与设计规则做出像样的企业页面
 * **定位**：根据业务目的选择最契合的信息结构与参考图，完成标准化视觉美化，并掌握基础 Git 存档操作。
-* **课堂时间分配 (严格控制 90 分钟)**：
-  - **任务 1：提取结构与基线存档 (18 分钟)**：检查 `git status`；必要时 `git init`；提交第一课成果与 `PROJECT_STATE.md`（基线提交）；分析参考图信息层级。
-  - **任务 2：规范映射 (20 分钟)**：结合 `DESIGN.md` 设计规范，映射 Token 与组件，禁止继承参考图杂乱颜色。
-  - **任务 3：视觉裁决与修改 (35 分钟)**：主管下达 Keep / Omit / Remove / Modify 取舍指令，授权 Agent 使用 `frontend-design` 重构。
-  - **任务 4：对比验证与成果存档 (17 分钟)**：运行验证；查看 `git diff` 确认范围；`git add` & `git commit` 保存成果版本；运行 `git log --oneline` 查看历史。
+* **课堂时间分配 (标准课堂 90 分钟，学员实操 50 分钟)**：
+  - **Task 1：提取结构与基线存档 (15 分钟)**：检查 `git status`；必要时 `git init`；提交第一课成果与 `PROJECT_STATE.md`（基线提交）；分析参考图信息层级。
+  - **Task 2：规范映射 (15 分钟)**：结合 `DESIGN.md` 设计规范，映射 Token 与组件，禁止继承参考图杂乱颜色。
+  - **Task 3：视觉裁决与修改 (10 分钟)**：主管下达 Keep / Omit / Remove / Modify 取舍指令，授权 Agent 使用 `frontend-design` 重构。
+  - **Task 4：对比验证与成果存档 (10 分钟)**：运行验证；查看 `git diff` 确认范围；`git add` & `git commit` 保存成果版本；运行 `git log --oneline` 查看历史。
 * **Git 教学边界**：只教 `git status`, `git init`, `git add`, `git commit`, `git log --oneline`, `git diff` 6 个本地命令。不教 GitHub 分支、PR、Merge 或 Rebase。
 
 ---
