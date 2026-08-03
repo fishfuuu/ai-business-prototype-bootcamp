@@ -64,8 +64,7 @@ $actualStr = $actualPackageFiles -join "`n"
 $declaredStr = $declaredManifestFiles -join "`n"
 
 if ($actualStr -ne $declaredStr) {
-    Write-Host "DEBUG ACTUAL STR: [$actualStr]"
-    Write-Host "DEBUG DECLARED STR: [$declaredStr]"
+    [System.IO.File]::WriteAllText("C:\Users\Administrator\AppData\Local\Temp\manifest-debug.txt", "ACTUAL:`n$actualStr`n`nDECLARED:`n$declaredStr")
     throw "Package integrity failure: Actual package files set does not equal metadata/PACKAGE_MANIFEST.txt!"
 }
 
