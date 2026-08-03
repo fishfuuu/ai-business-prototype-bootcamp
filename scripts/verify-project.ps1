@@ -57,6 +57,25 @@ for ($s=1; $s -le 22; $s++) {
 Write-Host "[PASS] Required files are present and LESSON_02_TEACHER_PLAN.md matches 22-section structure."
 Write-Host ""
 
+Write-Host "[1.5/5] Checking Roadmap Document for Dark Line Consistency..."
+$roadmapPath = (Get-ChildItem "docs\*.md" | Where-Object { $_.Name -like "*AI*.md" }).FullName
+$roadmap = Get-Content $roadmapPath -Encoding UTF8 -Raw
+$keywords = @(
+    "PROJECT_STATE.md",
+    "git init",
+    "git commit",
+    "git diff",
+    "AGENTS.md",
+    "CLAUDE.md"
+)
+foreach ($kw in $keywords) {
+    if ($roadmap -notmatch [regex]::Escape($kw)) {
+        throw "Roadmap is missing critical dark line keyword: $kw"
+    }
+}
+Write-Host "[PASS] Roadmap contains all dark line keywords."
+Write-Host ""
+
 Write-Host "[2/5] Checking protected design reference..."
 
 $designReference = "references\original-design\DESIGN.md"
