@@ -20,6 +20,8 @@ $requiredFiles = @(
     "CLAUDE.md",
     "DESIGN.md",
     "README.md",
+    "docs\COURSE_ROADMAP.md",
+    "docs\PROJECT_STATE.md",
     "docs\COMPONENT_CATALOG.md",
     "docs\LESSON_01_GUIDE.md",
     "docs\LESSON_01_TEACHER_PLAN.md",
@@ -57,10 +59,11 @@ for ($s=1; $s -le 22; $s++) {
 Write-Host "[PASS] Required files are present and LESSON_02_TEACHER_PLAN.md matches 22-section structure."
 Write-Host ""
 
-Write-Host "[1.5/5] Checking Roadmap Document for Dark Line Consistency..."
-$roadmapPath = (Get-ChildItem "docs\*.md" | Where-Object { $_.Name -like "*AI*.md" }).FullName
-$roadmap = Get-Content $roadmapPath -Encoding UTF8 -Raw
-$keywords = @(
+Write-Host "[1.5/5] Checking Authoritative Roadmap & Manuscript Consistency..."
+
+# 1. Authoritative roadmap check (COURSE_ROADMAP.md)
+$authRoadmap = Get-Content "docs\COURSE_ROADMAP.md" -Encoding UTF8 -Raw
+$roadmapKeywords = @(
     "PROJECT_STATE.md",
     "git init",
     "git commit",
@@ -68,12 +71,20 @@ $keywords = @(
     "AGENTS.md",
     "CLAUDE.md"
 )
-foreach ($kw in $keywords) {
-    if ($roadmap -notmatch [regex]::Escape($kw)) {
-        throw "Roadmap is missing critical dark line keyword: $kw"
+foreach ($kw in $roadmapKeywords) {
+    if ($authRoadmap -notmatch [regex]::Escape($kw)) {
+        throw "Authoritative COURSE_ROADMAP.md is missing keyword: $kw"
     }
 }
-Write-Host "[PASS] Roadmap contains all dark line keywords."
+
+# 2. Manuscript check (主管 AI 原型制作训练营.md)
+$manuscriptPath = (Get-ChildItem "docs\*.md" | Where-Object { $_.Name -like "*AI*.md" }).FullName
+$manuscript = Get-Content $manuscriptPath -Encoding UTF8 -Raw
+if ($manuscript -notmatch [regex]::Escape("COURSE_ROADMAP.md")) {
+    throw "Manuscript is missing reference to authoritative COURSE_ROADMAP.md"
+}
+
+Write-Host "[PASS] Authoritative COURSE_ROADMAP.md and Manuscript pass consistency checks."
 Write-Host ""
 
 Write-Host "[2/5] Checking protected design reference..."
