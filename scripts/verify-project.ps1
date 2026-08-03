@@ -23,7 +23,14 @@ $requiredFiles = @(
     "docs\COMPONENT_CATALOG.md",
     "docs\LESSON_01_GUIDE.md",
     "docs\LESSON_01_TEACHER_PLAN.md",
-    "docs\assets\lesson-01\lesson-flow.png",
+    "docs/assets/lesson-01/lesson-01-flow.png",
+    "docs\LESSON_02_GUIDE.md",
+    "docs\LESSON_02_TEACHER_PLAN.md",
+    "docs\LESSON_02_MATERIALS_PACKAGE_ADDENDUM.md",
+    "docs\assets\lesson-02\lesson-02-flow.png",
+    "docs\assets\lesson-02\ref-monitor-decision.png",
+    "docs\assets\lesson-02\ref-task-workflow.png",
+    "docs\assets\lesson-02\ref-operation-tool.png",
     "src\main.ts",
     "src\App.vue",
     "src\router\index.ts"
@@ -39,7 +46,15 @@ if (-not (Test-Path "node_modules")) {
     throw "node_modules is missing. Run npm install first."
 }
 
-Write-Host "[PASS] Required files are present."
+# Verify Teacher Plan 22-section structure
+$tp2 = Get-Content "docs\LESSON_02_TEACHER_PLAN.md" -Encoding UTF8 -Raw
+for ($s=1; $s -le 22; $s++) {
+    if ($tp2 -notmatch "## $s\.") {
+        throw "LESSON_02_TEACHER_PLAN.md is missing section header: ## $s."
+    }
+}
+
+Write-Host "[PASS] Required files are present and LESSON_02_TEACHER_PLAN.md matches 22-section structure."
 Write-Host ""
 
 Write-Host "[2/5] Checking protected design reference..."

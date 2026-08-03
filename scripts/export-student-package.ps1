@@ -8,7 +8,7 @@
   learner templates) is taken from the same Source Commit via git archive.
   Uncommitted working-tree changes never enter the ZIP.
   Does not commit, push, or overwrite existing packages.
-  See docs/STUDENT_PACKAGE_SPEC.md.
+  See docs/STUDENT_PACKAGE_SPEC.md and docs/LESSON_02_MATERIALS_PACKAGE_ADDENDUM.md.
 #>
 param(
     [Parameter(Mandatory = $true)]
@@ -19,7 +19,9 @@ param(
 
     [string]$SourceRef = "HEAD",
 
-    [string]$OutputDirectory
+    [string]$OutputDirectory,
+
+    [string]$PackageProfile
 )
 
 $ErrorActionPreference = "Stop"
@@ -57,12 +59,24 @@ function Get-FileSha256Hex {
     return (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 
+function Get-NormalizedContentSha256Hex {
+    param([string]$Path)
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+    if ($text -match '\r\n') {
+        $text = $text -replace "`r`n", "`n"
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($text)
+    }
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    $hashBytes = $sha256.ComputeHash($bytes)
+    return [System.BitConverter]::ToString($hashBytes).Replace('-', '').ToLowerInvariant()
+}
+
 function Test-GitPathExists {
     param(
         [string]$Commit,
         [string]$GitPath
     )
-    # git writes "path does not exist" to stderr; do not let that become a terminating error.
     $prevEap = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
@@ -100,11 +114,18 @@ function Invoke-PackageSafetyCheck {
         ".vite",
         "artifacts",
         "student-package",
+        "course-fixtures",
+        "fixture-manifest.json",
         "CONTRIBUTING.md",
         "scripts\verify-project.ps1",
         "scripts\export-student-package.ps1",
+        "scripts\export-lesson-materials.ps1",
+        "scripts\install-lesson-materials.ps1",
         "docs\COURSE_ROADMAP.md",
         "docs\LESSON_TEMPLATE.md",
+        "docs\LESSON_01_TEACHER_PLAN.md",
+        "docs\LESSON_02_TEACHER_PLAN.md",
+        "docs\LESSON_02_MATERIALS_PACKAGE_ADDENDUM.md",
         "docs\主管 AI 原型制作训练营.md",
         "docs\DESIGN_ALIGNMENT_AUDIT.md",
         "docs\DESIGN_ALIGNMENT_DECISIONS.md",
@@ -147,7 +168,6 @@ function Invoke-SensitiveContentScan {
         ".html", ".bat", ".ps1", ".gitignore"
     )
 
-    # High-confidence credential rules (all scanned text types).
     $credentialRules = @(
         @{ Name = "PEM_PRIVATE_KEY"; Pattern = '-----BEGIN PRIVATE KEY-----' },
         @{ Name = "RSA_PRIVATE_KEY"; Pattern = '-----BEGIN RSA PRIVATE KEY-----' },
@@ -157,9 +177,6 @@ function Invoke-SensitiveContentScan {
         @{ Name = "OPENAI_STYLE_SK"; Pattern = 'sk-[A-Za-z0-9]{20,}' }
     )
 
-    # Teacher-only content rules scan all supported text types.
-    # TEACHER_CONTRIBUTING allows exactly one path exception: the student
-    # verification script may list CONTRIBUTING.md as a prohibited path.
     $teacherContentRules = @(
         @{
             Name = "TEACHER_FINANCE_PATH"
@@ -221,13 +238,21 @@ Set-Location $repoRoot
 Write-Host "========================================"
 Write-Host "Export Student Package"
 Write-Host "========================================"
-Write-Host "Repo:         $repoRoot"
-Write-Host "CourseState:  $CourseState"
-Write-Host "Version:      $Version"
-Write-Host "SourceRef:    $SourceRef"
+Write-Host "Repo:           $repoRoot"
+Write-Host "CourseState:    $CourseState"
+Write-Host "PackageProfile: $PackageProfile"
+Write-Host "Version:        $Version"
+Write-Host "SourceRef:      $SourceRef"
 
+# Strictly restore original CourseState regex contract
 if ($CourseState -notmatch '^lesson-\d{2}-(start|complete)$') {
-    throw "Invalid CourseState. Must match ^lesson-\d{2}-(start|complete)$ (e.g. lesson-01-start)."
+    throw "Invalid CourseState. Must match ^lesson-\d{2}-(start|complete)$ (e.g. lesson-01-start or lesson-02-start)."
+}
+
+# Strict PackageProfile validation
+$allowedProfiles = @("", "lesson-02-fallback-start")
+if (-not [string]::IsNullOrWhiteSpace($PackageProfile) -and ($allowedProfiles -notcontains $PackageProfile)) {
+    throw "Unknown or unsupported PackageProfile: '$PackageProfile'."
 }
 
 if ($Version -notmatch '^v\d+\.\d+\.\d+$') {
@@ -253,7 +278,17 @@ $sourceCommit = $sourceCommit.Trim()
 
 Write-Host "SourceCommit: $sourceCommit"
 
-# Runtime whitelist (must exist in Source Commit)
+# Determine Package Base Name
+if ($PackageProfile -eq "lesson-02-fallback-start") {
+    if ($CourseState -ne "lesson-02-start") {
+        throw "PackageProfile 'lesson-02-fallback-start' requires CourseState 'lesson-02-start'."
+    }
+    $packageBaseName = "ai-business-prototype-lesson-02-fallback-start-$Version"
+} else {
+    $packageBaseName = "ai-business-prototype-$CourseState-$Version"
+}
+
+# Runtime whitelist
 $runtimeWhitelist = @(
     "package.json",
     "package-lock.json",
@@ -267,6 +302,16 @@ $runtimeWhitelist = @(
     "docs/LESSON_01_GUIDE.md",
     "docs/assets/lesson-01/lesson-flow.png"
 )
+
+if ($PackageProfile -eq "lesson-02-fallback-start") {
+    $runtimeWhitelist += @(
+        "docs/LESSON_02_GUIDE.md",
+        "docs/assets/lesson-02/lesson-02-flow.png",
+        "docs/assets/lesson-02/ref-monitor-decision.png",
+        "docs/assets/lesson-02/ref-task-workflow.png",
+        "docs/assets/lesson-02/ref-operation-tool.png"
+    )
+}
 
 $requiredTemplates = @(
     "student-package/templates/START_HERE.md",
@@ -294,6 +339,14 @@ if ($publicExists) {
     $archivePaths.Add("public")
 }
 
+if ($PackageProfile -eq "lesson-02-fallback-start") {
+    $fixtureExists = Test-GitPathExists -Commit $sourceCommit -GitPath "course-fixtures/lesson-02-fallback"
+    if (-not $fixtureExists) {
+        throw "Required fixture directory missing in SourceCommit: course-fixtures/lesson-02-fallback"
+    }
+    $archivePaths.Add("course-fixtures/lesson-02-fallback")
+}
+
 if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
     $artifactDir = Join-Path $repoRoot "artifacts\student-packages"
 }
@@ -304,7 +357,6 @@ else {
     $artifactDir = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $OutputDirectory))
 }
 
-$packageBaseName = "ai-business-prototype-$CourseState-$Version"
 $zipPath = Join-Path $artifactDir "$packageBaseName.zip"
 $zipShaPath = Join-Path $artifactDir "$packageBaseName.zip.sha256"
 
@@ -368,6 +420,102 @@ try {
         }
     }
 
+    # Overlay Merging for PackageProfile: lesson-02-fallback-start
+    if ($PackageProfile -eq "lesson-02-fallback-start") {
+        Write-Step "Merging Lesson 02 Fallback Fixtures Overlay with Strict Scope Verification"
+        
+        $fixtureSnap = Join-Path $snapshotDir "course-fixtures\lesson-02-fallback"
+        $manifestPath = Join-Path $fixtureSnap "fixture-manifest.json"
+        
+        if (-not (Test-Path -LiteralPath $manifestPath)) {
+            throw "Fixture manifest missing: course-fixtures/lesson-02-fallback/fixture-manifest.json"
+        }
+
+        $manifestRaw = [System.IO.File]::ReadAllText($manifestPath)
+        $manifest = ConvertFrom-Json $manifestRaw
+
+        # 1. Verify runtimeBaseCommit is ancestor or equals
+        $runtimeBaseCommit = $manifest.runtimeBaseCommit
+        & git merge-base --is-ancestor $runtimeBaseCommit $sourceCommit
+        if ($LASTEXITCODE -ne 0) {
+            throw "Manifest runtimeBaseCommit '$runtimeBaseCommit' is not an ancestor of SourceCommit '$sourceCommit'."
+        }
+
+        # 2. Strict Overlay Fileset Equivalence Assertion (Blocker Fix #2)
+        $overlayDir = Join-Path $fixtureSnap "overlay"
+        if (-not (Test-Path -LiteralPath $overlayDir)) {
+            throw "Overlay directory missing: course-fixtures/lesson-02-fallback/overlay"
+        }
+
+        $actualOverlayFiles = Get-ChildItem -Path $overlayDir -Recurse -File | ForEach-Object {
+            "overlay/" + $_.FullName.Substring($overlayDir.Length + 1).Replace("\", "/")
+        } | Sort-Object
+
+        $manifestSources = @($manifest.overlayFiles | ForEach-Object { $_.source }) | Sort-Object
+
+        # Check duplicate sources or targets in manifest
+        $manifestTargets = @($manifest.overlayFiles | ForEach-Object { $_.target }) | Sort-Object
+        if (($manifestSources | Select-Object -Unique).Count -ne $manifestSources.Count) {
+            throw "Duplicate source paths detected in fixture-manifest.json!"
+        }
+        if (($manifestTargets | Select-Object -Unique).Count -ne $manifestTargets.Count) {
+            throw "Duplicate target paths detected in fixture-manifest.json!"
+        }
+
+        $actualOverlayStr = $actualOverlayFiles -join "`n"
+        $manifestSourcesStr = $manifestSources -join "`n"
+
+        if ($actualOverlayStr -ne $manifestSourcesStr) {
+            throw "Overlay scope failure: Actual overlay disk files set does not equal fixture-manifest.json overlayFiles.source set!"
+        }
+
+        # 3. Precheck all overlayFiles operations using Normalized LF SHA256 Hash Comparison
+        $appliedChanges = @()
+        foreach ($ov in $manifest.overlayFiles) {
+            $op = $ov.operation
+            $ovSrc = Join-Path $fixtureSnap ($ov.source -replace '/', '\')
+            $ovDst = Join-Path $packageRoot ($ov.target -replace '/', '\')
+
+            if (-not (Test-Path -LiteralPath $ovSrc)) {
+                throw "Overlay source file missing: $($ov.source)"
+            }
+
+            if ($op -eq "add") {
+                if ($ov.expectedTargetAbsent -and (Test-Path -LiteralPath $ovDst)) {
+                    throw "Overlay 'add' operation failed: Target file already exists at '$($ov.target)'."
+                }
+            }
+            elseif ($op -eq "replace") {
+                if (-not (Test-Path -LiteralPath $ovDst)) {
+                    throw "Overlay 'replace' operation failed: Target file does not exist at '$($ov.target)'."
+                }
+                $dstHash = Get-NormalizedContentSha256Hex -Path $ovDst
+                if ($ov.expectedBaseSha256 -and ($dstHash -ne $ov.expectedBaseSha256.ToLowerInvariant())) {
+                    throw "Overlay 'replace' operation failed: Target file '$($ov.target)' normalized hash ($dstHash) does not match expectedBaseSha256 ($($ov.expectedBaseSha256))."
+                }
+            }
+            else {
+                throw "Unsupported overlay operation '$op' in fixture-manifest.json."
+            }
+
+            $appliedChanges += $ov.target
+        }
+
+        # 4. Apply overlay files to packageRoot
+        foreach ($ov in $manifest.overlayFiles) {
+            $ovSrc = Join-Path $fixtureSnap ($ov.source -replace '/', '\')
+            $ovDst = Join-Path $packageRoot ($ov.target -replace '/', '\')
+            $dstParent = Split-Path -Parent $ovDst
+            if (-not (Test-Path -LiteralPath $dstParent)) {
+                New-Item -ItemType Directory -Path $dstParent -Force | Out-Null
+            }
+            Copy-Item -LiteralPath $ovSrc -Destination $ovDst -Force
+            Write-Host " Applied Overlay [$($ov.operation)]: $($ov.target)"
+        }
+        
+        Write-Host "[PASS] All $( $appliedChanges.Length ) Overlay operations applied cleanly."
+    }
+
     Write-Step "Applying student templates from snapshot (same Source Commit)"
     $templateSnap = Join-Path $snapshotDir "student-package\templates"
     $templateMap = @(
@@ -405,6 +553,7 @@ try {
     $versionLines = @(
         "Package: AI Business Prototype Starter",
         "Course State: $CourseState",
+        "Package Profile: $PackageProfile",
         "Version: $Version",
         "Source Ref: $SourceRef",
         "Source Commit: $sourceCommit",
@@ -414,98 +563,72 @@ try {
     )
     [System.IO.File]::WriteAllLines((Join-Path $packageRoot "VERSION.txt"), $versionLines, $utf8NoBom)
 
-    Write-Step "Building PACKAGE_MANIFEST.txt and SHA256SUMS.txt"
-    $allFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Sort-Object FullName
+    Write-Step "Building PACKAGE_MANIFEST.txt and SHA256SUMS.txt (Closed-Set Contract)"
+    # Collect all existing files in packageRoot
+    $existingPkgFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Sort-Object FullName
     $manifestLines = New-Object System.Collections.Generic.List[string]
-    $sumLines = New-Object System.Collections.Generic.List[string]
 
-    foreach ($file in $allFiles) {
+    foreach ($file in $existingPkgFiles) {
         $rel = Get-RelativePathUnix -BasePath $packageRoot -FullPath $file.FullName
         $manifestLines.Add($rel)
+    }
+    # Manifest contains PACKAGE_MANIFEST.txt and SHA256SUMS.txt
+    $manifestLines.Add("PACKAGE_MANIFEST.txt")
+    $manifestLines.Add("SHA256SUMS.txt")
+    $sortedManifestLines = $manifestLines | Sort-Object
+
+    [System.IO.File]::WriteAllLines((Join-Path $packageRoot "PACKAGE_MANIFEST.txt"), $sortedManifestLines, $utf8NoBom)
+
+    # SHA256SUMS contains hashes for all files in PACKAGE_MANIFEST except SHA256SUMS.txt itself
+    $filesForSha = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Where-Object { $_.Name -ne "SHA256SUMS.txt" } | Sort-Object FullName
+    $sumLines = New-Object System.Collections.Generic.List[string]
+
+    foreach ($file in $filesForSha) {
+        $rel = Get-RelativePathUnix -BasePath $packageRoot -FullPath $file.FullName
         $hash = Get-FileSha256Hex -Path $file.FullName
         $sumLines.Add("$hash  $rel")
     }
 
-    $manifestPath = Join-Path $packageRoot "PACKAGE_MANIFEST.txt"
-    $sumsPath = Join-Path $packageRoot "SHA256SUMS.txt"
+    [System.IO.File]::WriteAllLines((Join-Path $packageRoot "SHA256SUMS.txt"), $sumLines, $utf8NoBom)
 
-    $finalManifest = New-Object System.Collections.Generic.List[string]
-    foreach ($line in $manifestLines) { $finalManifest.Add($line) }
-    $finalManifest.Add("PACKAGE_MANIFEST.txt")
-    $finalManifest.Add("SHA256SUMS.txt")
-    $sortedManifest = $finalManifest | Sort-Object
-    [System.IO.File]::WriteAllLines($manifestPath, $sortedManifest, $utf8NoBom)
-
-    $sumLines.Add("$((Get-FileSha256Hex -Path $manifestPath))  PACKAGE_MANIFEST.txt")
-    $sortedSums = $sumLines | Sort-Object { ($_ -split '  ', 2)[1] }
-    [System.IO.File]::WriteAllLines($sumsPath, $sortedSums, $utf8NoBom)
-
-    $onDisk = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | ForEach-Object {
+    # Assert exact closed-set equivalence
+    $actualPackageDiskFiles = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | ForEach-Object {
         Get-RelativePathUnix -BasePath $packageRoot -FullPath $_.FullName
     } | Sort-Object
-    $manifestOnDisk = Get-Content -LiteralPath $manifestPath -Encoding UTF8 | Where-Object { $_.Trim() -ne "" } | Sort-Object
-    $diskSet = [System.Collections.Generic.HashSet[string]]::new([string[]]$onDisk, [StringComparer]::Ordinal)
-    $manSet = [System.Collections.Generic.HashSet[string]]::new([string[]]$manifestOnDisk, [StringComparer]::Ordinal)
-    if ($diskSet.Count -ne $manSet.Count -or -not $diskSet.SetEquals($manSet)) {
-        throw "PACKAGE_MANIFEST.txt does not match staged file list."
+
+    $declaredPackageManifestFiles = Get-Content -Path (Join-Path $packageRoot "PACKAGE_MANIFEST.txt") | Sort-Object
+
+    if (($actualPackageDiskFiles -join "`n") -ne ($declaredPackageManifestFiles -join "`n")) {
+        throw "Student package export assertion failed: Disk files set does not equal PACKAGE_MANIFEST.txt!"
     }
 
     Write-Step "Safety check (after metadata)"
     Invoke-PackageSafetyCheck -PackageRoot $packageRoot -Phase "post-metadata"
 
-    Write-Step "High-confidence sensitive content scan"
+    Write-Step "Sensitive content scan"
     Invoke-SensitiveContentScan -PackageRoot $packageRoot
 
-    Write-Step "Creating ZIP (single top-level directory)"
-    Compress-Archive -Path $packageRoot -DestinationPath $zipPath -CompressionLevel Optimal
-    if (-not (Test-Path -LiteralPath $zipPath)) {
-        throw "ZIP was not created: $zipPath"
-    }
+    Write-Step "Compressing to ZIP"
+    Compress-Archive -LiteralPath $packageRoot -DestinationPath $zipPath -CompressionLevel Optimal
 
-    Write-Step "Writing external ZIP SHA256"
+    Write-Step "Writing ZIP checksum"
     $zipHash = Get-FileSha256Hex -Path $zipPath
-    $shaContent = "$zipHash  $packageBaseName.zip"
-    [System.IO.File]::WriteAllText($zipShaPath, $shaContent + [Environment]::NewLine, $utf8NoBom)
-
-    $zipInfo = Get-Item -LiteralPath $zipPath
-    $fileCount = (Get-ChildItem -LiteralPath $packageRoot -Recurse -File).Count
+    [System.IO.File]::WriteAllText($zipShaPath, "$zipHash  $packageBaseName.zip`n", $utf8NoBom)
 
     $exportSucceeded = $true
-
-    Write-Host ""
-    Write-Host "========================================"
-    Write-Host "Export completed (local candidate only)"
-    Write-Host "========================================"
-    Write-Host "Package:       $packageBaseName"
-    Write-Host "Course State:  $CourseState"
-    Write-Host "Version:       $Version"
-    Write-Host "Source Ref:    $SourceRef"
-    Write-Host "Source Commit: $sourceCommit"
-    Write-Host "ZIP:           $zipPath"
-    Write-Host "ZIP Size:      $($zipInfo.Length) bytes"
-    Write-Host "ZIP SHA256:    $zipHash"
-    Write-Host "Files in pkg:  $fileCount"
-    Write-Host "Checksum:      $zipShaPath"
-    Write-Host "Output Dir:    $artifactDir"
-    Write-Host ""
-    Write-Host "This package is NOT automatically a formal release."
-    Write-Host "Validate per docs/STUDENT_PACKAGE_SPEC.md before distribution."
-    Write-Host "Did not commit, push, or upload."
+    Write-Step "Export Complete"
+    Write-Host "ZIP:    $zipPath"
+    Write-Host "SHA256: $zipShaPath ($zipHash)"
 }
 finally {
-    # Targets were proven absent at start; if export failed, any existing ZIP/sha
-    # at those paths was produced by this run and must be removed.
     if (-not $exportSucceeded) {
         if (Test-Path -LiteralPath $zipPath) {
             Remove-Item -LiteralPath $zipPath -Force -ErrorAction SilentlyContinue
-            Write-Host "Removed incomplete ZIP created this run: $zipPath"
         }
         if (Test-Path -LiteralPath $zipShaPath) {
             Remove-Item -LiteralPath $zipShaPath -Force -ErrorAction SilentlyContinue
-            Write-Host "Removed incomplete checksum created this run: $zipShaPath"
         }
     }
-
     if (Test-Path -LiteralPath $stagingRoot) {
         Remove-Item -LiteralPath $stagingRoot -Recurse -Force -ErrorAction SilentlyContinue
     }

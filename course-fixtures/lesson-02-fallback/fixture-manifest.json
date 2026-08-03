@@ -1,0 +1,23 @@
+{
+  "runtimeBaseCommit": "b0d4a52fe5bb72d8f8765df6e0d27103fd296b73",
+  "overlayFiles": [
+    {
+      "operation": "add",
+      "source": "overlay/src/pages/OrderWarningPage.vue",
+      "target": "src/pages/OrderWarningPage.vue",
+      "expectedTargetAbsent": true
+    },
+    {
+      "operation": "replace",
+      "source": "overlay/src/router/index.ts",
+      "target": "src/router/index.ts",
+      "expectedBaseSha256": "ecf42f1db072cb3f02e7a21a7927c603ae12588c970e694d878989d22e0f288b"
+    },
+    {
+      "operation": "replace",
+      "source": "overlay/src/components/layout/AppSidebar.vue",
+      "target": "src/components/layout/AppSidebar.vue",
+      "expectedBaseSha256": "a1c952f7774730a6e7b8e4cf3f3f9488f1cc933e676dc047bf0d734a946b7030"
+    }
+  ]
+}
