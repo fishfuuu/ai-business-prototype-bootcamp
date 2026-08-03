@@ -319,7 +319,7 @@ for (const p of prohibitedL1) {
 const requiredL1Whitelist = [
   'package.json', 'package-lock.json', 'vite.config.ts', 'tsconfig.json', 'index.html',
   'DESIGN.md', 'START_HERE.md', 'README.md', 'CLAUDE.md', '.gitignore',
-  'docs/COMPONENT_CATALOG.md', 'docs/LESSON_01_GUIDE.md', 'docs/assets/lesson-01/lesson-flow.png',
+  'docs/COMPONENT_CATALOG.md', 'docs/LESSON_01_GUIDE.md', 'docs/assets/lesson-01/lesson-01-flow.png',
   'scripts/verify-student-project.ps1', 'src/App.vue', 'src/main.ts'
 ];
 for (const req of requiredL1Whitelist) {
