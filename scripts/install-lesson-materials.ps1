@@ -64,6 +64,8 @@ $actualStr = $actualPackageFiles -join "`n"
 $declaredStr = $declaredManifestFiles -join "`n"
 
 if ($actualStr -ne $declaredStr) {
+    Write-Host "DEBUG ACTUAL STR: [$actualStr]"
+    Write-Host "DEBUG DECLARED STR: [$declaredStr]"
     throw "Package integrity failure: Actual package files set does not equal metadata/PACKAGE_MANIFEST.txt!"
 }
 
