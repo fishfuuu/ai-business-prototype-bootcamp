@@ -33,6 +33,8 @@ $requiredFiles = @(
     "docs\assets\lesson-02\ref-monitor-decision.png",
     "docs\assets\lesson-02\ref-task-workflow.png",
     "docs\assets\lesson-02\ref-operation-tool.png",
+    "docs\LESSON_03_GUIDE.md",
+    "docs\LESSON_03_TEACHER_PLAN.md",
     "src\main.ts",
     "src\App.vue",
     "src\router\index.ts"
@@ -56,7 +58,14 @@ for ($s=1; $s -le 22; $s++) {
     }
 }
 
-Write-Host "[PASS] Required files are present and LESSON_02_TEACHER_PLAN.md matches 22-section structure."
+$tp3 = Get-Content "docs\LESSON_03_TEACHER_PLAN.md" -Encoding UTF8 -Raw
+for ($s=1; $s -le 22; $s++) {
+    if ($tp3 -notmatch "## $s\.") {
+        throw "LESSON_03_TEACHER_PLAN.md is missing section header: ## $s."
+    }
+}
+
+Write-Host "[PASS] Required files are present and Teacher Plans match 22-section structure."
 Write-Host ""
 
 Write-Host "[1.5/5] Running Layered Contract Assertions across Roadmap & Execution Docs..."
@@ -128,6 +137,15 @@ if ($l2Guide -match [regex]::Escape("git checkout .")) {
 }
 if ($l2Guide -notmatch [regex]::Escape("Discard Changes")) {
     throw "LESSON_02_GUIDE.md missing Discard Changes UI instructions."
+}
+
+# 6. Lesson 03 Layered Assertions (grill-me Skill, Data Contract, 4 Elements)
+$l3Guide = Get-Content "docs\LESSON_03_GUIDE.md" -Encoding UTF8 -Raw
+if ($l3Guide -notmatch [regex]::Escape("grill-me")) {
+    throw "LESSON_03_GUIDE.md missing grill-me Skill reference."
+}
+if ($l3Guide -notmatch [regex]::Escape("数据契约")) {
+    throw "LESSON_03_GUIDE.md missing Data Contract reference."
 }
 
 Write-Host "[PASS] Layered Contract Assertions across Roadmap & Execution Docs passed 100%."
