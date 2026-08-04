@@ -15,13 +15,22 @@ If a question can be answered by exploring the codebase or existing docs (like `
 
 When executing `grill-me` for business prototype requirements:
 
-1. **Strict Non-Destructive Execution**: Do NOT modify `src/` code during the interview process.
-2. **One Question at a Time**: Ask exactly 1 question per turn with your recommended option.
-3. **Four Core Elements & Data Contract**:
-   - Resolve **Goal** (business pain point and target user).
-   - Resolve **Boundaries & Out of Scope** (what to build vs. what NOT to build).
-   - Resolve **Risks & Data Contract** (fields, types, sensitivity levels, business rules).
-   - Resolve **Stop Conditions** (expected business inputs/outputs).
-4. **Deliverables Output**:
-   - Save the finalized feature card to `docs/BUSINESS_FEATURE_CARD.md`.
-   - Output the corresponding TypeScript contract draft to `src/types/prototype-contract.d.ts`.
+1. **Phase 1: Questioning (Strict Read-Only)**:
+   - Do NOT modify any files under `src/` or `docs/` during the interview.
+   - Read existing codebase/docs first to avoid redundant questions.
+   - Ask exactly 1 question per turn with your recommended option.
+   - Resolve **Goal**, **Boundaries & Out of Scope**, **Risks & Data Contract** (fields, types, sensitivity), and **Stop Conditions** (Given-When-Then format).
+
+2. **Phase 2: Read-Only Preview (Task 3A)**:
+   - Output text previews of `BUSINESS_FEATURE_CARD.md`, `src/types/prototype-contract.d.ts`, and `src/mocks/prototype-data.ts` in chat ONLY.
+   - Do NOT write to disk during preview.
+   - Stop and explicitly instruct the user to provide the HITL confirmation stamp code if they approve the proposal.
+
+3. **Phase 3: HITL Authorization Gate & File Assets Writing (Task 3B)**:
+   - ONLY write files after receiving the EXACT HITL confirmation stamp prompt:
+     `同意方案，请开始落盘功能卡与契约资产`
+   - Upon receiving the exact prompt, write:
+     - `docs/BUSINESS_FEATURE_CARD.md`
+     - `src/types/prototype-contract.d.ts`
+     - `src/mocks/prototype-data.ts`
+   - Strictly prohibit modifying any other files outside these 3 specified paths.

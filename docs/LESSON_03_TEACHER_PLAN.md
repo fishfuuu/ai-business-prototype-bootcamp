@@ -36,7 +36,7 @@
 2. **构建与锁定** 驱动受控 Agent 循环的前置 **4 大要素（Goal 目标、Boundaries 边界、Risks 风险、Stop Conditions 停止条件）**。
 3. **推导与标记** 包含 7 维属性与敏感等级（写给 IT 部门看）的《轻量数据契约卡》。
 4. **生成与交付** 业务文档 `docs/BUSINESS_FEATURE_CARD.md` 与 TypeScript 类型接口草稿 `src/types/prototype-contract.d.ts`。
-5. **执行** 工程校验 `verify-project.ps1`，完成阶段 Git 稳定存档与退场测试卡。
+5. **执行** 工程校验 `verify-student-project.ps1`，完成阶段 Git 稳定存档与退场测试卡。
 
 ---
 
@@ -85,7 +85,7 @@
 | 35–45 分钟 | 10 分钟 | Task 1：需求追问 | 学员选择原型类型，唤醒 `grill-me`，完成 3~5 轮结构化追问 |
 | 45–60 分钟 | 15 分钟 | Task 2：数据契约 | 梳理基础数据契约卡与三类原型专属扩展契约（强调敏感等级是给未来 IT 看的） |
 | 60–75 分钟 | 15 分钟 | Task 3A/3B：契约预览与 HITL 落盘 | 定义 Stop Conditions，只读预览方案，下达 HITL 盖章口令落盘 `BUSINESS_FEATURE_CARD.md` 与契约资产 |
-| 75–85 分钟 | 10 分钟 | Task 4：验证与 Commit | 更新 `PROJECT_STATE.md`，运行 `verify-project.ps1`，完成 Git 稳定提交 |
+| 75–85 分钟 | 10 分钟 | Task 4：验证与 Commit | 更新 `PROJECT_STATE.md`，运行 `verify-student-project.ps1`，完成 Git 稳定提交 |
 | 85–90 分钟 | 5 分钟 | 总结验证与 Exit Ticket | 填记卡，完成退场测试（为什么在写代码前要先生成 TS 类型文件？） |
 
 ---
@@ -121,9 +121,9 @@
 * **硬核解析**：人在回路 (HITL) 门禁与强类型/运行时数据双死锁！`.d.ts` 锁定编译期静态类型，`prototype-data.ts` 提供运行时真实种子数据，彻底杜绝第 4 课写页面时 AI 再次凭空脑补假数据（消除数据与类型漂移）。
 
 ### 暂停点 5：资产落盘与 Git 稳定存档 (Task 4 阶段)
-* **教师动作**：演示写入 `docs/BUSINESS_FEATURE_CARD.md`，运行 `verify-project.ps1` 输出 `[PASS]`，并执行 `git commit`。
+* **教师动作**：演示写入 `docs/BUSINESS_FEATURE_CARD.md`，运行 `verify-student-project.ps1` 输出 `[PASS]`，运行 `git commit` 提交，并通过 `git log -1 --oneline` 确认成果 Commit。
 * **教师提问**：“第三课结束时，我们为第四课开发留下了哪些确定性资产？”
-* **硬核解析**：留下了《业务功能卡》骨架、数据契约海关报关单、TypeScript 强类型草稿、Mock 种子数据与稳定 Git 快照。
+* **硬核解析**：留下了《业务功能卡》骨架、数据契约海关报关单、TypeScript 强类型草稿、Mock 种子数据与稳定 Git 快照凭证。该 Commitment 成果 SHA 将在第四课初始化时填入 L04 的“前置基线 Git SHA”中。
 
 ---
 
@@ -156,7 +156,7 @@
 ## 14. 工程化内容
 
 * **强类型契约**：使用 `prototype-contract.d.ts` 约束数据定义。
-* **防护审计**：通过 `verify-project.ps1` 校验资产文件存在性与模板规范。
+* **防护审计**：通过 `verify-student-project.ps1` 校验资产文件存在性与模板规范。
 
 ---
 
@@ -164,7 +164,7 @@
 
 - [ ] **`BUSINESS_FEATURE_CARD.md` 验证**：包含 Goal, Boundary, Risk, Stop Conditions。
 - [ ] **`prototype-contract.d.ts` 验证**：生成的 TypeScript 类型强绑定。
-- [ ] **`PROJECT_STATE.md` 验证**：记录 PASS 状态与 Git SHA。
+- [ ] **`PROJECT_STATE.md` 验证**：记录 PASS 状态与前置基线 Git SHA。
 - [ ] **自动化校验**：`verify-student-project.ps1` 输出 `[PASS]`。
 
 ---
@@ -173,15 +173,16 @@
 
 1. 包含 4 大要素的 `docs/BUSINESS_FEATURE_CARD.md`；
 2. 包含 7 维属性与敏感度的《轻量数据契约卡》；
-3. `src/types/prototype-contract.d.ts` TypeScript 类型草稿；
-4. 获得 PowerShell 验证脚本的 `[PASS]` 结论与 Git 完结存档。
+3. `src/types/prototype-contract.d.ts` 类型草稿与 `src/mocks/prototype-data.ts` 种子数据；
+4. 通过 `verify-student-project.ps1` 的 `[PASS]` 验证证据与 Git 提交；
+5. 更新 `docs/PROJECT_STATE.md` 保持连续性。
 
 ---
 
 ## 17. 课后作业
 
-* **内容**：针对自己的原型，增加 1 个边界外项 (Out of Scope) 说明，并在数据契约中补充 1 个异常状态的示例值。
-* **完成标准**：运行 `verify-project.ps1` 输出 `[PASS]`。
+* **内容**：针对自身部门的另一个痛点，用 `grill-me` 输出第二份《业务功能卡》草稿。
+* **完成标准**：运行 `verify-student-project.ps1` 输出 `[PASS]`。
 
 ---
 

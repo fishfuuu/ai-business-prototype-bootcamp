@@ -152,7 +152,7 @@
 ## 14. 工程化内容
 
 * **零杂色注入**：强迫 Agent 100% 使用 `--art-*` 变量。
-* **防护审计**：支持通过 `verify-student-project.ps1` 自动化断言规范合法性。
+* **防护审计**：通过 `verify-student-project.ps1` 进行结构存在性与编译构建校验，并可选唤醒 `design-lint` 技能进行 Agent 视觉规范审计。
 
 ---
 

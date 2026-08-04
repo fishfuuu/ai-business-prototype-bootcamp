@@ -168,9 +168,9 @@ try {
             }
             Copy-Item -Path $item.SourcePath -Destination $item.TargetPath -Force
             $newCreatedFiles += $item.TargetPath
-            Write-Host " Installed: docs\$($item.RelPath)"
+            Write-Host " Installed: $($item.RelPath)"
         } else {
-            Write-Host " Skipped (Unchanged): docs\$($item.RelPath)"
+            Write-Host " Skipped (Unchanged): $($item.RelPath)"
         }
     }
 }
