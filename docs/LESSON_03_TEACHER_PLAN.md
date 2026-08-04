@@ -84,7 +84,7 @@
 | 25–35 分钟 | 10 分钟 | 概念核对 | 对照【四步概念卡】提问，确认学员理解 Prompting vs. Skill Harness、海关报关单比喻、敏感度标记 |
 | 35–45 分钟 | 10 分钟 | Task 1：需求追问 | 学员选择原型类型，唤醒 `grill-me`，完成 3~5 轮结构化追问 |
 | 45–60 分钟 | 15 分钟 | Task 2：数据契约 | 梳理基础数据契约卡与三类原型专属扩展契约（强调敏感等级是给未来 IT 看的） |
-| 60–75 分钟 | 15 分钟 | Task 3：功能卡与 TS 草稿 | 定义前置 Stop Conditions，生成 `BUSINESS_FEATURE_CARD.md` 与 `prototype-contract.d.ts` |
+| 60–75 分钟 | 15 分钟 | Task 3A/3B：契约预览与 HITL 落盘 | 定义 Stop Conditions，只读预览方案，下达 HITL 盖章口令落盘 `BUSINESS_FEATURE_CARD.md` 与契约资产 |
 | 75–85 分钟 | 10 分钟 | Task 4：验证与 Commit | 更新 `PROJECT_STATE.md`，运行 `verify-project.ps1`，完成 Git 稳定提交 |
 | 85–90 分钟 | 5 分钟 | 总结验证与 Exit Ticket | 填记卡，完成退场测试（为什么在写代码前要先生成 TS 类型文件？） |
 
@@ -115,10 +115,10 @@
 * **教师提问**：“我们现在用的是 Mock 假数据，为什么还要认真标记‘严禁发送 AI’的敏感等级？”
 * **硬核解析**：这是写给未来 IT 部门的 **生产网关脱敏规约 (Sanitization Guardrail)**！提前告知 IT 生产环境真实上线时，网关必须在物理层切断该敏感字段，禁止送入任何公共大模型 API。
 
-### 暂停点 4：Given-When-Then 断言与契约双落盘 (Task 3 阶段)
-* **教师动作**：在大屏幕上打开 `src/types/prototype-contract.d.ts` 与 `src/mocks/prototype-data.ts` 两个文件。
-* **教师提问**：“我们还没写一行 Vue 代码，为什么要先进行 TypeScript 类型与种子数据的双落盘？”
-* **硬核解析**：强类型与运行时数据双死锁！`.d.ts` 锁定编译期静态类型，`prototype-data.ts` 提供运行时真实种子数据，彻底杜绝第 4 课写页面时 AI 再次凭空脑补假数据（消除数据与类型漂移）。
+### 暂停点 4：方案只读预览、HITL 盖章口令与双落盘 (Task 3A/3B 阶段)
+* **教师动作**：展示 Agent 在 Task 3A 输出只读预览方案后停顿，教师提示学员“未授权前 Agent 被物理阻断”；讲师输入授权口令 **`同意方案，请开始落盘功能卡与契约资产`**（Task 3B），展示 Agent 自动落盘 `docs/BUSINESS_FEATURE_CARD.md`、`src/types/prototype-contract.d.ts` 与 `src/mocks/prototype-data.ts`。
+* **教师提问**：“我们还没写一行 Vue 代码，为什么要先经过 HITL 盖章授权，再进行 TypeScript 类型与种子数据的双落盘？”
+* **硬核解析**：人在回路 (HITL) 门禁与强类型/运行时数据双死锁！`.d.ts` 锁定编译期静态类型，`prototype-data.ts` 提供运行时真实种子数据，彻底杜绝第 4 课写页面时 AI 再次凭空脑补假数据（消除数据与类型漂移）。
 
 ### 暂停点 5：资产落盘与 Git 稳定存档 (Task 4 阶段)
 * **教师动作**：演示写入 `docs/BUSINESS_FEATURE_CARD.md`，运行 `verify-project.ps1` 输出 `[PASS]`，并执行 `git commit`。
@@ -149,7 +149,7 @@
 | Skill 名称 | `teaching-lesson-plan` & `teacher-plan-architect` & `grill-me` |
 | Skill 用途 | 约束需求追问流程、Goal/Boundary/Risk/Stop 4 要素解构、零代码修改门禁 |
 | 来源仓库 | 项目内置 (`.claude/skills/grill-me/SKILL.md`) |
-| 验证状态 | 已验证 Clean |
+| 验证状态 | 静态检查与构建通过；课堂实测状态待课程候选包隔离验证 |
 
 ---
 

@@ -32,11 +32,11 @@ Write-Host "[PASS] Target project validity check passed."
 
 # 2. Locate package payload and metadata directories
 $packageRoot = (Get-Item $scriptRoot).FullName
-$payloadDocsDir = Join-Path $packageRoot "payload\docs"
+$payloadDir = Join-Path $packageRoot "payload"
 $metadataDir = Join-Path $packageRoot "metadata"
 
-if (-not (Test-Path $payloadDocsDir)) {
-    throw "Package is corrupted: payload/docs directory is missing."
+if (-not (Test-Path $payloadDir)) {
+    throw "Package is corrupted: payload directory is missing."
 }
 if (-not (Test-Path $metadataDir)) {
     throw "Package is corrupted: metadata directory is missing."
@@ -104,14 +104,14 @@ if (($expectedSumSet -join "`n") -ne ($actualSumSet -join "`n")) {
 Write-Host "[PASS] Package integrity verified. Closed-set manifest & SHA256SUMS match 100%."
 
 # 4. Precheck target files and conflicts (No Clobber Rule)
-$payloadDocsDirNormalized = [System.IO.Path]::GetFullPath($payloadDocsDir).TrimEnd('\')
-$payloadFiles = Get-ChildItem -Path $payloadDocsDirNormalized -Recurse -File | Sort-Object { $_.FullName }
+$payloadDirNormalized = [System.IO.Path]::GetFullPath($payloadDir).TrimEnd('\')
+$payloadFiles = Get-ChildItem -Path $payloadDirNormalized -Recurse -File | Sort-Object { $_.FullName }
 $copyPlan = @() # Elements: @{ SourcePath, TargetPath, RelPath, Status ('NEW', 'SKIP') }
 
 foreach ($file in $payloadFiles) {
     $normFullName = [System.IO.Path]::GetFullPath($file.FullName)
-    $relPath = $normFullName.Substring($payloadDocsDirNormalized.Length + 1)
-    $targetPath = Join-Path $targetDir ("docs\" + $relPath)
+    $relPath = $normFullName.Substring($payloadDirNormalized.Length + 1)
+    $targetPath = Join-Path $targetDir $relPath
     
     $sourceHash = (Get-FileHash -Path $normFullName -Algorithm SHA256).Hash.ToLowerInvariant()
     

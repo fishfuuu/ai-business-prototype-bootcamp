@@ -196,7 +196,7 @@ Agent 接收授权口令后，自动将方案分别落盘至：
 
 1. 打开 `docs/PROJECT_STATE.md`，更新以下内容：
    - 将 **L03 课程状态** 改为 `PASS`；
-   - 在 **稳定 Git Commit SHA** 填写 `待提交`；
+   - 在 **前置基线 Git SHA** 确认记有第二课完结的 Commit SHA；
    - 填写 **下一课输入**：“以 `BUSINESS_FEATURE_CARD.md` 与 `prototype-contract.d.ts` 为依据开启第 4 课开发”。
 2. 在 PowerShell 中运行学员校验脚本：
    `powershell -ExecutionPolicy Bypass -File .\scripts\verify-student-project.ps1`
@@ -208,7 +208,7 @@ Agent 接收授权口令后，自动将方案分别落盘至：
    git commit -m "feat: complete lesson 3 requirement, data contract cards and ts interface draft"
    git log --oneline -5
    ```
-4. 运行 `git log -1 --oneline`，确认最新的 Commit SHA 作为本阶段不可变快照凭证。
+4. 运行 `git log -1 --oneline` 确认本次生成的本课落盘 Commit SHA，该 SHA 将作为第 4 课的前置基线凭证。
 
 ---
 

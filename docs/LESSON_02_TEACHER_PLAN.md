@@ -145,7 +145,7 @@
 | Skill 名称 | `teaching-lesson-plan` & `teacher-plan-architect` & `design-lint` |
 | 行业对比说明 | **刻意不适用** `UI UX Pro Max` 等发散生成型 Skill。本课核心是向主管证明：企业级 AI 应用的最高境界不是让 AI 自由发挥，而是用确定的 `DESIGN.md` 规范（Harness）与 `design-lint` 约束 AI。 |
 | 来源仓库 | 项目内置 (`.claude/skills/design-lint/SKILL.md`) |
-| 验证状态 | 已验证 Clean |
+| 验证状态 | 静态检查与构建通过；课堂实测状态待课程候选包隔离验证 |
 
 ---
 

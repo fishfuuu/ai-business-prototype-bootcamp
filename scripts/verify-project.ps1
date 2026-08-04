@@ -51,6 +51,11 @@ if (-not (Test-Path "node_modules")) {
     throw "node_modules is missing. Run npm install first."
 }
 
+# Assert out-of-scope find-skills is removed
+if (Test-Path ".claude\skills\find-skills\SKILL.md") {
+    throw "Prohibited out-of-scope Skill found: .claude/skills/find-skills/SKILL.md must be removed from Lessons 01-03 PR."
+}
+
 # Verify Teacher Plan 22-section structure
 $tp2 = Get-Content "docs\LESSON_02_TEACHER_PLAN.md" -Encoding UTF8 -Raw
 for ($s=1; $s -le 22; $s++) {
@@ -119,7 +124,7 @@ if ($projectState -match "\.env\.local") {
     throw "PROJECT_STATE.md contains prohibited '.env.local' string."
 }
 
-# 4. Lesson 01 Layered Assertions (Work Memory, Tools sandboxing, HITL, Image link)
+# 4. Lesson 01 Layered Assertions (Work Memory, Tools sandboxing, HITL, Image link, Skill=None)
 $l1Guide = Get-Content "docs\LESSON_01_GUIDE.md" -Encoding UTF8 -Raw
 if ($l1Guide -notmatch [regex]::Escape("PROJECT_STATE.md")) {
     throw "LESSON_01_GUIDE.md missing PROJECT_STATE.md step."
@@ -131,7 +136,12 @@ if ($l1Guide -notmatch [regex]::Escape("lesson-01-flow.png")) {
     throw "LESSON_01_GUIDE.md image link must point to lesson-01-flow.png."
 }
 
-# 5. Lesson 02 Layered Assertions (Visual Harness, tailwind.css runtime Token, safe Git, Discard Changes)
+$l1TeacherPlan = Get-Content "docs\LESSON_01_TEACHER_PLAN.md" -Encoding UTF8 -Raw
+if ($l1TeacherPlan -notmatch [regex]::Escape("本课学员 Skill 名称 | 无")) {
+    throw "LESSON_01_TEACHER_PLAN.md must declare student Skill as None (无)."
+}
+
+# 5. Lesson 02 Layered Assertions (Visual Harness, tailwind.css runtime Token, safe Git, Discard Changes, no var(--art-Primary) casing bug)
 $l2Guide = Get-Content "docs\LESSON_02_GUIDE.md" -Encoding UTF8 -Raw
 if ($l2Guide -match [regex]::Escape("commit -am")) {
     throw "LESSON_02_GUIDE.md contains dangerous 'commit -am' command."
@@ -145,8 +155,11 @@ if ($l2Guide -notmatch [regex]::Escape("Discard Changes")) {
 if ($l2Guide -notmatch [regex]::Escape("tailwind.css")) {
     throw "LESSON_02_GUIDE.md must explain runtime CSS Tokens in tailwind.css."
 }
+if ($l2Guide -cmatch [regex]::Escape("var(--art-Primary)")) {
+    throw "LESSON_02_GUIDE.md contains invalid uppercase CSS variable 'var(--art-Primary)'. Must be lowercase 'var(--art-primary)'."
+}
 
-# 6. Lesson 03 Layered Assertions (grill-me Skill, Data Contract, verify-student-project.ps1, no hardcoded path)
+# 6. Lesson 03 Layered Assertions (grill-me Skill, Data Contract, Task 3A/3B HITL, verify-student-project.ps1, no hardcoded path)
 $l3Guide = Get-Content "docs\LESSON_03_GUIDE.md" -Encoding UTF8 -Raw
 if ($l3Guide -notmatch [regex]::Escape("grill-me")) {
     throw "LESSON_03_GUIDE.md missing grill-me Skill reference."
@@ -159,6 +172,23 @@ if ($l3Guide -match "cd d:\\AILearning") {
 }
 if ($l3Guide -notmatch [regex]::Escape("verify-student-project.ps1")) {
     throw "LESSON_03_GUIDE.md must instruct students to run verify-student-project.ps1."
+}
+if ($l3Guide -notmatch [regex]::Escape("Task 3A")) {
+    throw "LESSON_03_GUIDE.md must contain explicit Task 3A read-only preview step."
+}
+
+$l3TeacherPlan = Get-Content "docs\LESSON_03_TEACHER_PLAN.md" -Encoding UTF8 -Raw
+if ($l3TeacherPlan -notmatch [regex]::Escape("Task 3A/3B")) {
+    throw "LESSON_03_TEACHER_PLAN.md must synchronize Task 3A/3B HITL workflow."
+}
+
+# 7. Student Export Script Whitelist Assertions
+$exportScript = Get-Content "scripts\export-lesson-materials.ps1" -Encoding UTF8 -Raw
+if ($exportScript -notmatch [regex]::Escape("LESSON_03_GUIDE.md")) {
+    throw "export-lesson-materials.ps1 must include LESSON_03_GUIDE.md in student export whitelist."
+}
+if ($exportScript -notmatch [regex]::Escape("grill-me")) {
+    throw "export-lesson-materials.ps1 must include grill-me skill in student export whitelist."
 }
 
 Write-Host "[PASS] Layered Contract Assertions across Roadmap & Execution Docs passed 100%."

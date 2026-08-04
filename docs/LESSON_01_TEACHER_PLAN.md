@@ -145,13 +145,9 @@
 
 | 项 | 内容 |
 | --- | --- |
-| Skill 名称 | `teaching-lesson-plan` & `teacher-plan-architect` |
-| Skill 用途 | 约束教学设计标准、布鲁姆动词、【四步概念公式】与 5 暂停点控场 |
-| 来源仓库 | `skills.sh` 与 项目内置 |
-| 固定版本或 commit | v1.0.0 |
-| 安装状态 | 已安装 (`.agents/skills/teaching-lesson-plan` & `.claude/skills/teacher-plan-architect`) |
-| 验证状态 | 待提交合并后验证 |
-| 无 Skill 时的替代方法 | 严格遵守【四步概念公式】与 22 节教案结构手册 |
+| 本课学员 Skill 名称 | 无（第一课专注于基础概念与 Tools 沙箱授权） |
+| 验证状态 | 不适用 |
+| 教案维护与治理工具 | `teaching-lesson-plan` & `teacher-plan-architect`（仓库维护者教案工程工具，非学员调用 Skill） |
 
 ---
 
