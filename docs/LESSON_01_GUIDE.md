@@ -41,7 +41,7 @@
 一句话记住 Agent 的底层协作模型：
 > **Claude Code 是一个以 LLM 为大脑、以 Prompt 和 CLAUDE.md 为眼睛/耳朵、以 Tools 为手脚，能够在已授权范围内组织多步行动、调用 Tools，并依据工具返回或验证结果进行 ReAct 调整，同时在 Workflow 中接受主管控制的执行者。**
 
-![第一课自然语言协作六步闭环](./assets/lesson-01/lesson-flow.png)
+![第一课自然语言协作六步闭环](./assets/lesson-01/lesson-01-flow.png)
 
 ---
 
@@ -129,8 +129,8 @@
 
 🚩 **本步检查 (Checklist)**：
 - [ ] Agent 准确复述了你的业务需求。
-- [ ] 初始化打开并填写 `docs/PROJECT_STATE.md`（记录系统名称、原型类型与核心业务问题）。
-- [ ] 终端未触发任何 `write_file` 或代码修改（LLM 仅在大脑中推演）。
+- [ ] 源码层面未触发任何 Vue/JS 代码修改（LLM 仅在大脑中推演业务逻辑）。
+- [ ] 手动或授权 Agent 初始化填写 `docs/PROJECT_STATE.md` 文档（记录系统名称、原型类型与核心业务问题）。
 
 ---
 

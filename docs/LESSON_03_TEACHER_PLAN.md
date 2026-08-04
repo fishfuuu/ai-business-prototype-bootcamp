@@ -10,11 +10,11 @@
 | 建议时长 | 90 分钟（成果展示 8m，微型演示 17m，概念核对 10m，学员实操 45m，总结验证 10m） |
 | 前置课程 | 第 2 课：用参考图与设计规则做出像样的企业页面 |
 | 对应路线图 | [COURSE_ROADMAP.md](COURSE_ROADMAP.md) 第 3 课 |
-| 课程状态 | 已重构升级（硬核概念公式与 5 暂停点版） |
-| 课程负责人 | AI 训练营教学组 |
+| 课程状态 | 草稿 V2 / 待合入 |
+| 课程负责人 | 待指定 |
 | 最后复核日期 | 2026-08-04 |
-| 学员包版本 | v0.1.0+ |
-| 来源 commit | main 最新 HEAD |
+| 学员包版本 | 待本次变更合并后确定 |
+| 来源 commit | 待本次变更合并后填写 |
 
 ---
 
@@ -162,10 +162,10 @@
 
 ## 15. 验证和证据
 
-- [x] **`BUSINESS_FEATURE_CARD.md` 验证**：包含 Goal, Boundary, Risk, Stop Conditions。
-- [x] **`prototype-contract.d.ts` 验证**：生成的 TypeScript 类型强绑定。
-- [x] **`PROJECT_STATE.md` 验证**：记录 PASS 状态与 Git SHA。
-- [x] **自动化校验**：`verify-project.ps1` 输出 `[PASS]`。
+- [ ] **`BUSINESS_FEATURE_CARD.md` 验证**：包含 Goal, Boundary, Risk, Stop Conditions。
+- [ ] **`prototype-contract.d.ts` 验证**：生成的 TypeScript 类型强绑定。
+- [ ] **`PROJECT_STATE.md` 验证**：记录 PASS 状态与 Git SHA。
+- [ ] **自动化校验**：`verify-student-project.ps1` 输出 `[PASS]`。
 
 ---
 

@@ -103,6 +103,10 @@
 5. **Mock 数据降级保护桥梁 (Mock Fallback Bridge)**：
    第 9~10 课真 AI 接口连接失败、网络超时或非法返回时，系统自动降级回 Mock Data 结构化渲染，保证 100% 演示不白屏崩盘。
 
+> [!NOTE]
+> **关于后续课程 (第 4–10 课) 架构演进说明**：  
+> 本 PR 集中交付 **第 1–3 课 V2 重构** 与基础能力建设。路线图中所提及的第 4–10 课 Subagent 演进、Browser/API MCP 插座配置 (`.claude/mcp_config.json`) 及 Mock 降级保护机制，属于**后续课程规划预告 (Future Architecture Roadmap)**，尚未在当前分支中落地实装，不得作为当前 1–3 课已具备的教学承诺。
+
 ---
 
 ## 5. 10 课演进总览与能力矩阵
@@ -162,7 +166,7 @@
   2. 选择“A. 监控与决策型 / B. 任务与流程型 / C. 操作工具型”原型方向并输入业务上下文。
   3. **初始化 `docs/PROJECT_STATE.md`**：记录系统名称、使用者、原型类型、核心业务问题及敏感级别。
   4. 遵照模拟数据红线，体验 ReAct 感知微调 Loop，生成首个包含侧栏菜单与 Mock 数据信息的系统雏形。
-* **执行文档**：[LESSON_01_GUIDE_V2.md](LESSON_01_GUIDE_V2.md) 与 [LESSON_01_TEACHER_PLAN_V2.md](LESSON_01_TEACHER_PLAN_V2.md)。
+* **执行文档**：[LESSON_01_GUIDE.md](LESSON_01_GUIDE.md) 与 [LESSON_01_TEACHER_PLAN.md](LESSON_01_TEACHER_PLAN.md)。
 
 ---
 
@@ -173,7 +177,7 @@
   2. **Task 2：规范映射 (15 分钟)**：**物理点开 `DESIGN.md` 查看字典**，映射 Token 与组件，事实锚定到规范。
   3. **Task 3：视觉裁决与重构 (10 分钟)**：**节点 1 Git 存档 `baseline: complete lesson 1 prototype`**；主管下达 Keep / Omit / Remove / Modify 裁决，发送授权口令重构页面；监视 Diff 红绿视图，一键 Discard 还原。
   4. **Task 4：对比验证与成果存档 (10 分钟)**：试衣镜对比与 1 次人在回路微调；运行验证 `verify-student-project.ps1` 输出 `[PASS]`；**节点 2 Git 存档 `style: complete lesson 2 visual refactor`**。
-* **执行文档**：[LESSON_02_GUIDE_V2.md](LESSON_02_GUIDE_V2.md) 与 [LESSON_02_TEACHER_PLAN_V2.md](LESSON_02_TEACHER_PLAN_V2.md)。
+* **执行文档**：[LESSON_02_GUIDE.md](LESSON_02_GUIDE.md) 与 [LESSON_02_TEACHER_PLAN.md](LESSON_02_TEACHER_PLAN.md)。
 
 ---
 

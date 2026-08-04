@@ -47,10 +47,10 @@
 * **IT 沟通与交接价值**：向 IT 说明：“我们理解 LLM 输出来源于概率采样，因此必须在前端构建确定性的约束层来限制 Token 猜想”。
 
 ### ② Design Token (设计令牌/规范变量)
-* **硬核工程定义**：设计系统中将具体物理视觉数值（如 Hex 色值 `#1890ff`、像素值 `16px`）抽象并封装为具业务语义的标准化 CSS/SCSS 变量（如 `--art-primary`、`--art-spacing-md`）。
-* **底层运作机制**：在项目 `DESIGN.md` 中建立全站统一的全局变量映射字典。Agent 生成代码时，禁止使用硬编码色值，必须调用 `var(--art-primary)`。
-* **具象业务比喻**：它是发给 AI 画家的 **“固定调色盘与戒尺”**。我们强行用确定的业务规范（Design Token）死死收敛 AI 算力词块（AI Token）的随机猜测！
-* **IT 沟通与交接价值**：向 IT 说明：“原型视觉样式 100% 映射至 `--art-*` Design Tokens，支持主题全局一键切换，无硬编码废料”。
+* **硬核工程定义**：设计系统中将具体物理视觉数值（如 OKLCH 色值 `oklch(0.7 0.23 260)`、像素值 `16px`）抽象并封装为具业务语义的标准化 CSS 变量（如 `--art-primary`、`--art-radius-card`）。
+* **底层运作机制**：`DESIGN.md` 说明规范约束，正式物理 CSS 变量定义在 `src/assets/styles/tailwind.css` 中。Agent 生成代码时，禁止使用硬编码色值，必须调用 `var(--art-primary)`。
+* **具象业务比喻**：它是发给 AI 画家的 **“固定调色盘与戒尺”**。我们强行用确定的业务规范（Design Token）收敛 AI 算力词块（AI Token）的随机猜测！
+* **IT 沟通与交接价值**：向 IT 说明：“原型视觉样式映射至 `--art-*` Design Tokens，支持主题全局一键切换，无硬编码废料”。
 
 ### ③ Agent 多模态能力与业务能力迁移 (Multimodal Capabilities)
 * **硬核工程定义**：模型同时具备处理文本和高维图像 Token 的交叉注意力机制（Cross-Attention），能够直接解构图像中的空间布局、组件边界与视觉层级。
@@ -95,12 +95,16 @@
 
 ## 3. Task 2：设计规范映射卡 (15 分钟)
 
-### 👁️ 动手物理阅读：点开 `DESIGN.md` 感受 Design Token
-**请在左侧文件树中点击打开 `DESIGN.md` 文件**。你会看到里面并没有长篇大论，而是像查字典一样的“键值对”：
-- 看到 `--art-primary: #1890ff` 了吗？这就是 **Design Token（设计令牌）**。
-- `--art-primary` 是**令牌名（代表业务语义，比如“品牌主色”）**，`#1890ff` 是**实际色值**。
-- **业务价值**：如果有一天公司品牌升级要换成“中国红”，程序员绝对不需要去几十个页面里查找替换，只需要在这个 `DESIGN.md` 字典里修改一处，全站瞬间自动变色！
-- **用 Token 管控 AI**：因此，我们绝不能让 AI 写死颜色，必须强制它去“查这个字典”，引用 `--art-primary`。
+### 👁️ 动手物理阅读：点开 `DESIGN.md` 查看设计规范字典
+
+**请在左侧文件树中点击打开 `DESIGN.md` 文件**。你会看到里面并没有长篇大论，而是像查字典一样的设计规范：
+- **规范说明 vs 运行时定义**：`DESIGN.md` 是项目的**视觉规范说明书 (Design Harness)**，用来给人类与 Agent 提供统一约束；而真正被浏览器加载的物理 CSS 变量保存在 **`src/assets/styles/tailwind.css`** 中。
+- **Token 字典映射**：在 `DESIGN.md` 与 `tailwind.css` 中，可以看到 `--art-primary: oklch(0.7 0.23 260)`：
+  - `--art-primary` 是**令牌名 (Design Token Name)**，代表业务语义（品牌主色）；
+  - `oklch(0.7 0.23 260)` 是**实际色值定义**；
+  - 组件在代码中统一通过 **`var(--art-primary)`** 引用 Token。
+- **业务价值**：如果有一天公司品牌升级要换主题色，程序员绝对不需要去几十个 Vue 页面里查找替换硬编码，只需要在 `src/assets/styles/tailwind.css` 字典里修改一处 Token 色值，全站所有引用 `var(--art-primary)` 的页面瞬间自动变色！
+- **用 Token 管控 AI**：因此，我们绝不能让 AI 在页面中写死 Hex 颜色代码，必须强制它去“查字典”，引用 `var(--art-Primary)` 等标准化 Token。
 
 ### 复制并发送给 Agent（规范映射 Prompt）：
 ```text

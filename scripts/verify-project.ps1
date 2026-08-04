@@ -25,7 +25,7 @@ $requiredFiles = @(
     "docs\COMPONENT_CATALOG.md",
     "docs\LESSON_01_GUIDE.md",
     "docs\LESSON_01_TEACHER_PLAN.md",
-    "docs/assets/lesson-01/lesson-01-flow.png",
+    "docs\assets\lesson-01\lesson-01-flow.png",
     "docs\LESSON_02_GUIDE.md",
     "docs\LESSON_02_TEACHER_PLAN.md",
     "docs\LESSON_02_MATERIALS_PACKAGE_ADDENDUM.md",
@@ -119,7 +119,7 @@ if ($projectState -match "\.env\.local") {
     throw "PROJECT_STATE.md contains prohibited '.env.local' string."
 }
 
-# 4. Lesson 01 Layered Assertions (Work Memory, Tools sandboxing, HITL)
+# 4. Lesson 01 Layered Assertions (Work Memory, Tools sandboxing, HITL, Image link)
 $l1Guide = Get-Content "docs\LESSON_01_GUIDE.md" -Encoding UTF8 -Raw
 if ($l1Guide -notmatch [regex]::Escape("PROJECT_STATE.md")) {
     throw "LESSON_01_GUIDE.md missing PROJECT_STATE.md step."
@@ -127,8 +127,11 @@ if ($l1Guide -notmatch [regex]::Escape("PROJECT_STATE.md")) {
 if ($l1Guide -notmatch [regex]::Escape("Tools 权限沙箱")) {
     throw "LESSON_01_GUIDE.md missing Tools permission sandboxing explanation."
 }
+if ($l1Guide -notmatch [regex]::Escape("lesson-01-flow.png")) {
+    throw "LESSON_01_GUIDE.md image link must point to lesson-01-flow.png."
+}
 
-# 5. Lesson 02 Layered Assertions (Visual Harness, safe Git, no 'commit -am', no 'git checkout .')
+# 5. Lesson 02 Layered Assertions (Visual Harness, tailwind.css runtime Token, safe Git, Discard Changes)
 $l2Guide = Get-Content "docs\LESSON_02_GUIDE.md" -Encoding UTF8 -Raw
 if ($l2Guide -match [regex]::Escape("commit -am")) {
     throw "LESSON_02_GUIDE.md contains dangerous 'commit -am' command."
@@ -139,14 +142,23 @@ if ($l2Guide -match [regex]::Escape("git checkout .")) {
 if ($l2Guide -notmatch [regex]::Escape("Discard Changes")) {
     throw "LESSON_02_GUIDE.md missing Discard Changes UI instructions."
 }
+if ($l2Guide -notmatch [regex]::Escape("tailwind.css")) {
+    throw "LESSON_02_GUIDE.md must explain runtime CSS Tokens in tailwind.css."
+}
 
-# 6. Lesson 03 Layered Assertions (grill-me Skill, Data Contract, 4 Elements)
+# 6. Lesson 03 Layered Assertions (grill-me Skill, Data Contract, verify-student-project.ps1, no hardcoded path)
 $l3Guide = Get-Content "docs\LESSON_03_GUIDE.md" -Encoding UTF8 -Raw
 if ($l3Guide -notmatch [regex]::Escape("grill-me")) {
     throw "LESSON_03_GUIDE.md missing grill-me Skill reference."
 }
 if ($l3Guide -notmatch [regex]::Escape("数据契约")) {
     throw "LESSON_03_GUIDE.md missing Data Contract reference."
+}
+if ($l3Guide -match "cd d:\\AILearning") {
+    throw "LESSON_03_GUIDE.md contains prohibited hardcoded path."
+}
+if ($l3Guide -notmatch [regex]::Escape("verify-student-project.ps1")) {
+    throw "LESSON_03_GUIDE.md must instruct students to run verify-student-project.ps1."
 }
 
 Write-Host "[PASS] Layered Contract Assertions across Roadmap & Execution Docs passed 100%."

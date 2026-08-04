@@ -91,9 +91,9 @@
 
 ## 2. 准备工作与前置检查
 
-1. 打开 PowerShell 终端，进入项目目录 `cd d:\AILearning`。
+1. 打开 PowerShell 终端，进入项目根目录。
 2. 运行一键校验脚本，确认前两课工程状态健康：
-   `powershell -ExecutionPolicy Bypass -File .\scripts\verify-project.ps1`
+   `powershell -ExecutionPolicy Bypass -File .\scripts\verify-student-project.ps1`
 3. 检查 `docs/PROJECT_STATE.md`，确认上一课状态为 `PASS` 且记有 Git Commit SHA。
 
 ---
@@ -110,12 +110,12 @@
 我的业务痛点与一句话需求是：【例如：运营主管每天需要手动统计超时未履约的订单，效率低且容易漏单，希望能有一个自动预警和催单工作台】
 
 请按照 grill-me 规范，每次只问我 1 个最关键的问题，帮我理清目标、边界与核心字段。
-在需求澄清完毕前，绝对不要修改任何代码。
+在需求澄清完毕前，绝对不要修改任何代码与文件。
 ```
 
 🚩 **本步检查 (Checklist)**：
 - [ ] Agent 严格遵循了 `grill-me` 规则，**每次只问了 1 个问题**。
-- [ ] 终端未触发任何代码修改（Agent 仅在需求追问阶段）。
+- [ ] 终端未触发任何代码修改（Agent 保持纯只读需求追问状态）。
 
 🚨 **防错救急路径 (Skill 装载降级救援)**：
 > 如果 Agent 一次抛出了 2 个以上问题，或者擅自开启了文件修改，说明 Skill 未成功激活。请立即发送：  
@@ -151,46 +151,44 @@
    - 【任务流程型】：发起/处理角色、业务状态机(草稿->待处理->已完成)、允许动作、驳回/撤销规则
    - 【操作工具型】：输入结构、校验规则、处理逻辑、输出结构、HITL 人工确认点
 
-请生成表格呈报给我确认。
+先不要写入文件，仅输出内容方案预览呈报给我确认。
 ```
 
 🚩 **本步检查 (Checklist)**：
 - [ ] 数据契约表包含了完整的 7 维属性与敏感等级。
 - [ ] 包含了所选原型类型的专属扩展契约。
+- [ ] 未触发任何磁盘写操作。
 
 ---
 
-## 5. Task 3：生成功能卡、TS 类型与 Mock 种子数据双落盘 (15 分钟)
+## 5. Task 3：功能卡、TS 类型与 Mock 种子数据只读预览与 HITL 盖章落盘 (15 分钟)
 
-**目标**：输出 `docs/BUSINESS_FEATURE_CARD.md`，并同步落盘 TypeScript 接口文件 `src/types/prototype-contract.d.ts` 与运行时种子数据文件 `src/mocks/prototype-data.ts`。
+**目标**：在 Task 3A 预览待生成的内容，经主管下达 HITL 口令后，在 Task 3B 完成《业务功能卡》、TypeScript 接口草稿 `src/types/prototype-contract.d.ts` 与种子数据 `src/mocks/prototype-data.ts` 的自动落盘。
 
-💡 **【工程物理真相】：为什么要双落盘（类型 + 种子数据）？**
-> `.d.ts` 类型文件只在编译时起作用，无法提供界面渲染所需的实际数据。如果不导出种子数据，第 4 课写 Vue 页面时 Agent 依然会凭空脑补假数据（导致字段值与类型随机漂移）。因此，必须实现 **“类型 + 种子数据” 双落盘**！
-
-### 复制并发送给 Agent：
+### Task 3A：只读方案汇总与预览指令
 ```text
 请将前面的讨论成果汇总：
 
-1. 生成最终的 Markdown 文档《业务功能卡》，保存至 docs/BUSINESS_FEATURE_CARD.md。
-   包含以下 4 个部分：
-   - 目标 (Goal)：业务背景与核心痛点
-   - 边界 (Boundaries)：核心模块与明确不做范围 (Out of Scope)
-   - 风险 (Risks)：敏感等级与禁止修改的计算规则
-   - 前置 Stop Conditions (必须使用 Given-When-Then 确定性模板，严禁无从断言的口号形容词)：
-     * [断言 1] Given (前置状态) -> When (用户触发动作) -> Then (期望页面响应与状态改变)
-     * [断言 2] Given (异常输入) -> When (提交触发) -> Then (期望校验预警/报错提示)
+1. 拟定 Markdown 文档《业务功能卡》内容预览（包含 Goal、Boundaries、Risks、Given-When-Then 格式的 Stop Conditions）。
+2. 拟定 TypeScript 接口草稿（src/types/prototype-contract.d.ts）与 Mock 种子数据（src/mocks/prototype-data.ts）的导出代码预览。
 
-2. 双落盘契约资产（供第 4 课开发直接 import，杜绝数据漂移）：
-   (1) 根据数据契约，在 src/types/prototype-contract.d.ts 中生成 TypeScript 接口定义草稿；
-   (2) 在 src/mocks/prototype-data.ts 中生成实现该接口的 Mock 种子数据导出（如 export const mockData = [...]）。
-
-生成后请自动将文件保存到位。
+请只输出预览方案，等待我回复许可口令，严禁提前写入文件。
 ```
+
+在收到 Agent 输出预览无误后，发送 **HITL 授权盖章口令**：  
+👉 **`同意方案，请开始落盘功能卡与契约资产`**
+
+### Task 3B：接收授权，落盘契约文件
+Agent 接收授权口令后，自动将方案分别落盘至：
+- `docs/BUSINESS_FEATURE_CARD.md`
+- `src/types/prototype-contract.d.ts`
+- `src/mocks/prototype-data.ts`
 
 🚩 **本步检查 (Checklist)**：
 - [ ] `docs/BUSINESS_FEATURE_CARD.md` 已保存，前置 Stop Conditions 采用了 `Given-When-Then` 确定性模板。
 - [ ] `src/types/prototype-contract.d.ts` 已保存（静态类型契约）。
 - [ ] `src/mocks/prototype-data.ts` 已保存（运行时种子数据）。
+- [ ] 严格遵守了 HITL 盖章授权门禁（未授权不擅写文件）。
 
 ---
 
@@ -198,10 +196,10 @@
 
 1. 打开 `docs/PROJECT_STATE.md`，更新以下内容：
    - 将 **L03 课程状态** 改为 `PASS`；
-   - 在 **稳定 Git Commit SHA** 留空，待提交后填入；
+   - 在 **稳定 Git Commit SHA** 填写 `待提交`；
    - 填写 **下一课输入**：“以 `BUSINESS_FEATURE_CARD.md` 与 `prototype-contract.d.ts` 为依据开启第 4 课开发”。
-2. 在 PowerShell 中运行项目验证脚本：
-   `powershell -ExecutionPolicy Bypass -File .\scripts\verify-project.ps1`
+2. 在 PowerShell 中运行学员校验脚本：
+   `powershell -ExecutionPolicy Bypass -File .\scripts\verify-student-project.ps1`
 3. 确认输出 `[PASS]`，在 PowerShell 中运行 Git 提交指令：
    ```powershell
    git status
@@ -210,7 +208,7 @@
    git commit -m "feat: complete lesson 3 requirement, data contract cards and ts interface draft"
    git log --oneline -5
    ```
-4. 将提交后的 Commit SHA（前 7 位）填回 `docs/PROJECT_STATE.md` L03 行。
+4. 运行 `git log -1 --oneline`，确认最新的 Commit SHA 作为本阶段不可变快照凭证。
 
 ---
 
