@@ -5,14 +5,14 @@
 | 项 | 内容 |
 | --- | --- |
 | 课次 | 第 3 课 |
-| 课程名称 | 让 Agent 帮助自己想清楚需求（Skill 护栏、数据契约与前置验收） |
+| 课程名称 | 让 Agent 帮助自己想清楚需求（兼 Skill 护栏、数据契约与前置验收硬核解析） |
 | 面向角色 | 运营主管 / 其他一级主管 |
-| 建议时长 | 90 分钟（成果展示 8 分钟，微型演示 7 分钟，概念核对 10 分钟，学员实操 50 分钟，总结复盘 15 分钟） |
+| 建议时长 | 90 分钟（成果展示 8m，微型演示 17m，概念核对 10m，学员实操 45m，总结验证 10m） |
 | 前置课程 | 第 2 课：用参考图与设计规则做出像样的企业页面 |
 | 对应路线图 | [COURSE_ROADMAP.md](COURSE_ROADMAP.md) 第 3 课 |
-| 课程状态 | 正式完成 |
+| 课程状态 | 已重构升级（硬核概念公式与 5 暂停点版） |
 | 课程负责人 | AI 训练营教学组 |
-| 最后复核日期 | 2026-08-03 |
+| 最后复核日期 | 2026-08-04 |
 | 学员包版本 | v0.1.0+ |
 | 来源 commit | main 最新 HEAD |
 
@@ -20,193 +20,206 @@
 
 ## 2. 本课定位
 
+说明：
 - **解决什么学习问题**：解决主管“只有模糊口头想法、不知道怎么跟 Agent 表达”的问题。防止学员直接发一句“帮我做个系统”导致 AI 凭空脑补与产生数据幻觉。
-- **为什么安排在当前阶段**：第 1-2 课学员已经完成了“看得见页面”的成就感；第 3 课必须及时拉回“想得清需求”，建立**数据契约与前置验收标准**，为第 4 课增量开发打下坚实基础。
-- **与前后课的关系**：本课产出的《业务功能卡》和《数据契约卡》将直接作为第 4 课（增量开发）、第 6 课（Bug 诊断）、第 7 课（自动化测试）和第 8 课（Codex 审查）的唯一基准。
+- **层级定位（Harness Engineering 层）**：本课实操完全处于 **Harness Engineering（工程护栏层）**。主要掌握 **`grill-me` 技能护栏**、**7 维数据契约卡（海关报关单）** 与 **前置 4 大要素（Goal / Boundary / Risk / Stop）**。
+- **与后续 Loop 的关系**：前置 4 大要素本质上是未来受控自主循环（Bounded Agent Loop）的终止断言与边界线。本课在 Harness 层把 4 大要素锁死，是在为第 4 课开启受控自主 Loop 铺平道路。
+- **与前后课的关系**：本课产出的《业务功能卡》、数据契约卡与 `src/types/prototype-contract.d.ts` 将直接作为第 4 课（Plan & Execute 增量开发）、第 6 课（Bug 诊断）、第 7 课（Playwright 自动化测试）和第 8 课（Codex 独立审查）的唯一基准。
 
 ---
 
 ## 3. 核心目标
 
-1. 理解第一层 Prompting 与第二层 Skill Harness (`grill-me`) 的区别。
-2. 掌握解锁 Agent 自主 Loop 的前置 **4 大要素（Goal 目标、Boundaries 边界、Risks 风险、Stop Conditions 停止条件）**。
-3. 学会引导 Agent 产出分类型的《轻量数据契约卡》（字段、类型、口径、敏感度）。
-4. 在写代码前写明前置验收标准（Stop Conditions），生成标准的 `docs/BUSINESS_FEATURE_CARD.md`。
+基于布鲁姆分类法（Bloom's Taxonomy），本课目标如下：
+
+1. **对比与阐述** AI 三层能力演进模型（Prompting -> Harness Engineering -> Bounded Agent Loop）与 Skill Harness (`grill-me`) 追问护栏的物理机制。
+2. **构建与锁定** 驱动受控 Agent 循环的前置 **4 大要素（Goal 目标、Boundaries 边界、Risks 风险、Stop Conditions 停止条件）**。
+3. **推导与标记** 包含 7 维属性与敏感等级（写给 IT 部门看）的《轻量数据契约卡》。
+4. **生成与交付** 业务文档 `docs/BUSINESS_FEATURE_CARD.md` 与 TypeScript 类型接口草稿 `src/types/prototype-contract.d.ts`。
+5. **执行** 工程校验 `verify-project.ps1`，完成阶段 Git 稳定存档与退场测试卡。
 
 ---
 
 ## 4. 可见成果
 
-学员将生成并归档 2 个确定性资产：
-1. **`docs/BUSINESS_FEATURE_CARD.md`**：《业务功能卡》（含目标、边界、风险与前置验收条件）。
-2. **`docs/PROJECT_STATE.md` 更新**：记录 L03 状态为 PASS 及稳定 Git Commit SHA。
+学员独立产出并归档 3 个确定性资产：
+1. **`docs/BUSINESS_FEATURE_CARD.md`**：《业务功能卡》（含目标、边界、风险与前置 Stop Conditions 验收断言）。
+2. **`src/types/prototype-contract.d.ts`**：根据数据契约生成的 TypeScript 接口定义草稿（供第 4 课代码直接使用）。
+3. **`docs/PROJECT_STATE.md` 更新**：记录 L03 状态为 PASS 及稳定 Git Commit SHA。
 
 ---
 
-## 5. 课前准备
+## 5. 本课明确不做
 
-- **教师端准备**：确认投影正常，准备好 `ref-monitor-decision.png` 示例需求作为现场演示。
-- **学员端检查**：确认第二课工程可正常启动，`PROJECT_STATE.md` 中有第二课的稳定 Commit SHA。
+- 不在追问和澄清阶段进行任何 Vue 代码的修改或逻辑编写（保持零代码变动）。
+- 不引入复杂的数据库外键建模或真实 API 接口调试。
+- 不忽略数据敏感等级标记（必须明确区分公开/内部/严禁发送AI）。
 
 ---
 
-## 6. 建议时间分配
+## 6. 教师准备
 
-| 环节 | 时长 | 核心活动 |
+| 项 | 状态 | 说明 |
 | --- | --- | --- |
-| 成果展示与微型演示 | 15 分钟 | 成果展示 (8m) + 教师微型演示 `grill-me` 追问与数据契约生成 (7m) |
-| 概念核对 | 10 分钟 | 讲解 Prompting vs Skill Harness、数据契约与 Goal/Boundary/Risk/Stop 4 大要素 |
-| Task 1 需求追问 | 10 分钟 | 学员发起需求，唤醒 `grill-me`，完成 3-5 轮追问 |
-| Task 2 数据契约 | 15 分钟 | 梳理基础数据契约卡与三类原型扩展契约 |
-| Task 3 验收前置 | 15 分钟 | 定义前置 Stop Conditions，生成 `docs/BUSINESS_FEATURE_CARD.md` |
-| Task 4 验证与 Commit | 10 分钟 | 更新 `PROJECT_STATE.md`，运行 `verify-project.ps1`，完成 Git 安全提交 |
-| 总结与作业 | 15 分钟 | 成果展示复盘 (10m) + 布置作业 (5m) |
+| 教师演示环境 | 已完成 | Node.js 20.x, Claude Code, `.claude/skills/grill-me/SKILL.md` |
+| 全景关系示意图 | 已完成 | 需求与数据契约闭环线框图 |
+| 17分钟连续微型演示案 | 已完成 | “订单履约超时预警台需求追问与契约导出”（含 5 个固定暂停点） |
+| 学员知识概念与实操卡 | 已完成 | [docs/LESSON_03_GUIDE.md](LESSON_03_GUIDE.md) |
 
 ---
 
-## 7. 概念解析（概念卡）
+## 7. 学员准备
 
-### 1. Skill Harness (技能护栏)
-Skill 是沉淀在项目中的专业方法锦囊。`grill-me` Skill 限制 Agent 一次只问一个最核心问题，不直接写代码，只专注理清逻辑。
-
-### 2. 前置 4 大要素 (Goal / Boundary / Risk / Stop)
-在把任务交给 Agent 前，必须锁定目标是什么、明确不做什么、敏感到什么程度，以及何时算 PASS（停止条件）。
-
-### 3. 轻量数据契约 (Data Contract)
-定义字段名称、业务含义、数据类型、必填性、数据来源、示例值与敏感等级。防止 AI 产生数据幻觉。
+### 主路径（90% 学员）
+- 继续使用第 2 课项目，运行 `start-project.bat` 并启动 Agent。
 
 ---
 
-## 8. 课堂节奏与时间控制（含分钟表）
+## 8. 课堂时间安排 (90 分钟)
 
-```text
-00-08m: 【成果展示】展示上一课优秀高颜原型，引导学员思考“页面炫酷后如何让逻辑可靠”。
-08-15m: 【微型演示】教师演示发起一句话需求，让 grill-me 追问并导出数据契约卡。
-15-25m: 【概念核对】核对 Prompting vs Skill Harness、数据契约与前置 4 大要素。
-25-35m: 【Task 1】学员运行 Task 1，与 Agent 对话完成 3-5 轮追问澄清。
-35-50m: 【Task 2】学员运行 Task 2，生成基础与扩展数据契约卡。
-50-65m: 【Task 3】学员运行 Task 3，定义 Stop Conditions，生成 BUSINESS_FEATURE_CARD.md。
-65-75m: 【Task 4】学员运行 Task 4，更新 PROJECT_STATE， verify 校验并提交 Git Commit。
-75-90m: 【总结作业】抽取 2 名学员复盘数据契约，布置课后练习。
-```
+| 时段 | 时长 | 环节 | 教学目标与动作 |
+| --- | --- | --- | --- |
+| 0–8 分钟 | 8 分钟 | 成果展示 | 打开第 2 课高颜原型，引导学员思考“页面炫酷后如何让数据与逻辑可靠”，展示需求闭环线框图 |
+| 8–25 分钟 | 17 分钟 | 连续微型演示 | 讲师演示一句话需求发起、唤醒 `grill-me` 追问、导出数据契约卡与生成 TS 类型草稿（5 个固定暂停点） |
+| 25–35 分钟 | 10 分钟 | 概念核对 | 对照【四步概念卡】提问，确认学员理解 Prompting vs. Skill Harness、海关报关单比喻、敏感度标记 |
+| 35–45 分钟 | 10 分钟 | Task 1：需求追问 | 学员选择原型类型，唤醒 `grill-me`，完成 3~5 轮结构化追问 |
+| 45–60 分钟 | 15 分钟 | Task 2：数据契约 | 梳理基础数据契约卡与三类原型专属扩展契约（强调敏感等级是给未来 IT 看的） |
+| 60–75 分钟 | 15 分钟 | Task 3：功能卡与 TS 草稿 | 定义前置 Stop Conditions，生成 `BUSINESS_FEATURE_CARD.md` 与 `prototype-contract.d.ts` |
+| 75–85 分钟 | 10 分钟 | Task 4：验证与 Commit | 更新 `PROJECT_STATE.md`，运行 `verify-project.ps1`，完成 Git 稳定提交 |
+| 85–90 分钟 | 5 分钟 | 总结验证与 Exit Ticket | 填记卡，完成退场测试（为什么在写代码前要先生成 TS 类型文件？） |
 
 ---
 
 ## 9. 业务场景
 
-* **案例**：订单履约超时预警台（监控与决策型）
+* **演示案例**：订单履约超时预警台（属于“监控与决策型”示例）
 * **模糊需求**：“我们部门经常漏处理超时订单，希望能有个系统预警一下。”
-* **澄清后成果**：确定了 `shop_id`、`overdue_minutes`、`threshold_level` 字段，设定了“超时 > 30 分钟触发红框预警”的数据契约与验收场景。
+* **澄清后成果**：确定了 `shop_id`、`overdue_minutes`、`threshold_level` 字段，生成了对应 TS 类型草稿，设定了“超时 > 30 分钟触发红框预警”的数据契约与前置 Stop Conditions。
 
 ---
 
-## 10. 教师演示步骤（5个暂停点）
+## 10. 教师演示步骤 (5 个固定暂停点)
 
-### 暂停点 1：一句话需求发起
-* **动作**：教师输入一句话需求，并带上 `请使用 grill-me`。
-* **口播**：“看，Agent 没有立刻去改代码，而是开始反问我问题了。这就是 Skill 护栏在起作用。”
+### 暂停点 1：一句话需求与唤醒 `grill-me` (Task 1 阶段)
+* **教师动作**：发送一句话需求，并加上 `请使用 grill-me 技能`。展示 Agent 开始以面试官身份提问，但终端没有任何文件修改。
+* **教师提问**：“大家的终端里，Claude 开始动手改代码了吗？`grill-me` Skill 的物理本质是什么？”
+* **硬核解析**：没有改代码！`grill-me` 是沉淀在 `.claude/skills/grill-me/SKILL.md` 的技能护栏。它覆盖了大模型的自由生成，强制 Agent 专注理清需求。
 
-### 暂停点 2：回答 1 个问题
-* **动作**：教师回答第一个问题。
-* **口播**：“注意，grill-me 规范强制它一次只问一个问题，避免把我们问晕。”
+### 暂停点 2：1 次只问 1 个问题 (Task 1 追问阶段)
+* **教师动作**：回答第一个问题，展示 Agent 接着抛出第二个关键问题。
+* **教师提问**：“为什么 `grill-me` 规定 Agent 一次只能问我们一个问题？”
+* **硬核解析**：避免信息过载（Overload）！人类思考复杂业务时需要分步聚焦，一次问一个问题能最大程度收敛需求误解。
 
-### 暂停点 3：数据契约生成
-* **动作**：要求 Agent 导出数据契约卡。
-* **口播**：“数据契约明确了英文字段名和数据类型，后续接入 real API 时就不会扯皮。”
+### 暂停点 3：数据契约与敏感度脱敏滤网 (Task 2 阶段)
+* **教师动作**：要求 Agent 输出《轻量数据契约卡》，重点指向“敏感等级”一栏，展示【工程拨乱反正卡】。
+* **教师提问**：“我们现在用的是 Mock 假数据，为什么还要认真标记‘严禁发送 AI’的敏感等级？”
+* **硬核解析**：这是写给未来 IT 部门的 **生产网关脱敏规约 (Sanitization Guardrail)**！提前告知 IT 生产环境真实上线时，网关必须在物理层切断该敏感字段，禁止送入任何公共大模型 API。
 
-### 暂停点 4：前置 Stop Conditions
-* **动作**：在写代码前定义场景 1 和场景 2 的预期输出。
-* **口播**：“在做之前就说明白怎么算 PASS，后面 Agent 自主运行排错时才不会瞎撞。”
+### 暂停点 4：Given-When-Then 断言与契约双落盘 (Task 3 阶段)
+* **教师动作**：在大屏幕上打开 `src/types/prototype-contract.d.ts` 与 `src/mocks/prototype-data.ts` 两个文件。
+* **教师提问**：“我们还没写一行 Vue 代码，为什么要先进行 TypeScript 类型与种子数据的双落盘？”
+* **硬核解析**：强类型与运行时数据双死锁！`.d.ts` 锁定编译期静态类型，`prototype-data.ts` 提供运行时真实种子数据，彻底杜绝第 4 课写页面时 AI 再次凭空脑补假数据（消除数据与类型漂移）。
 
-### 暂停点 5：生成文件与 Git 提交
-* **动作**：演示写入 `docs/BUSINESS_FEATURE_CARD.md` 并执行 `git commit`。
-
----
-
-## 11. 学员 Task 1 引导
-
-* 提醒学员选择符合自己真实业务的原型类型（A/B/C）。
-* 督促学员认真的回答 Agent 的 3-5 个追问，不要图省事只打“是的”。
-
----
-
-## 12. 学员 Task 2 引导
-
-* 检查学员的数据契约中是否包含了“敏感等级”。
-* 提醒学员数据来源统一填为 `Mock 数据`，严禁连接真实生产库。
+### 暂停点 5：资产落盘与 Git 稳定存档 (Task 4 阶段)
+* **教师动作**：演示写入 `docs/BUSINESS_FEATURE_CARD.md`，运行 `verify-project.ps1` 输出 `[PASS]`，并执行 `git commit`。
+* **教师提问**：“第三课结束时，我们为第四课开发留下了哪些确定性资产？”
+* **硬核解析**：留下了《业务功能卡》骨架、数据契约海关报关单、TypeScript 强类型草稿、Mock 种子数据与稳定 Git 快照。
 
 ---
 
-## 13. 学员 Task 3 引导
+## 11. 学员实操引导与卡点救急
 
-* 辅导学员写出可验证的 Stop Conditions（例如：“点击筛选按钮后，列表中仅显示超时订单”）。
-* 确认文件成功保存为 `docs/BUSINESS_FEATURE_CARD.md`。
-
----
-
-## 14. 学员 Task 4 引导
-
-* 引导学员打开 `docs/PROJECT_STATE.md` 更新状态。
-* 监督学员依次运行安全的 Git 提交指令（`git status` -> `git add .` -> `git diff --cached` -> `git commit`）。
+* **Task 1 引导**：提醒学员选择原型类型（A/B/C）。若 Agent 一次抛出 >1 问题或尝试改代码，指导发送救急口令：`请重新读取并严格遵循 .claude/skills/grill-me/SKILL.md 指令`。
+* **Task 2 引导**：检查数据契约敏感等级，讲透“Mock 假数据占位符 vs. 生产 API 网关脱敏滤网”的区别。
+* **Task 3 引导**：辅导学员使用 `Given-When-Then` 确定性模板编写 Stop Conditions（严禁写口号形容词），并监督 Agent 完成 `src/types/prototype-contract.d.ts` 与 `src/mocks/prototype-data.ts` 的双落盘。
+* **Task 4 引导**：监督学员依次运行安全的 Git 提交指令（`git status` -> `git add .` -> `git diff --cached` -> `git commit`）。
 
 ---
 
-## 15. 提问与互动设计
+## 12. 推荐提示词
 
-* **提问**：“如果直接发‘帮我做个系统’给 AI，最容易出现什么问题？”
-* **学员期望回答**：“AI 会自己凭空脑补很多不需要的功能，字段也会胡乱编造（数据幻觉）。”
-
----
-
-## 16. 常见卡点与排错预案
-
-* **卡点 1**：Agent 在追问过程中突然开始改代码。
-  - **预案**：提醒学员发送指令：“请停止改代码，严格遵循 grill-me 规范，仅进行需求追问。”
-* **卡点 2**：生成的 Markdown 表格格式错乱。
-  - **预案**：提示 Agent：“请格式化 Markdown 表格，确保字段列对齐。”
+已完整内置于 [docs/LESSON_03_GUIDE.md](LESSON_03_GUIDE.md) 中。
 
 ---
 
-## 17. 评估与反馈方式
+## 13. Skill使用与工程约束
 
-* 检查 `docs/BUSINESS_FEATURE_CARD.md` 是否存在且包含前置 Stop Conditions。
-* 检查 `docs/PROJECT_STATE.md` 是否更新了最新的稳定 Git Commit SHA。
-
----
-
-## 18. 极简记忆卡
-
-```text
-1. Prompting vs Skill: 盲发 Prompt 容易漂移，Skill (grill-me) 提供专业追问护栏。
-2. 前置 4 要素: 目标 (Goal)、边界 (Boundaries)、风险 (Risks)、停止条件 (Stop Conditions)。
-3. 数据契约: 明确字段、类型与敏感度，拒绝 AI 数据幻觉。
-4. 验收前置: 先写明期望输出，才能驱动后续自主 Loop。
-```
+| 项 | 内容 |
+| --- | --- |
+| Skill 名称 | `teaching-lesson-plan` & `teacher-plan-architect` & `grill-me` |
+| Skill 用途 | 约束需求追问流程、Goal/Boundary/Risk/Stop 4 要素解构、零代码修改门禁 |
+| 来源仓库 | 项目内置 (`.claude/skills/grill-me/SKILL.md`) |
+| 验证状态 | 已验证 Clean |
 
 ---
 
-## 19. 课后练习
+## 14. 工程化内容
 
-针对自己的原型，增加 1 个边界外项 (Out of Scope) 说明，并在数据契约中补充 1 个异常状态的示例值。
-
----
-
-## 20. 下一课衔接
-
-第 4 课《把大需求拆成连续的小成功》：我们将拿着今天产出的 `BUSINESS_FEATURE_CARD.md`，按“数据结构 -> 空壳 UI -> 连通交互”的增量轨道小步施工！
+* **强类型契约**：使用 `prototype-contract.d.ts` 约束数据定义。
+* **防护审计**：通过 `verify-project.ps1` 校验资产文件存在性与模板规范。
 
 ---
 
-## 21. 附件与参考链接
+## 15. 验证和证据
 
-- [COURSE_ROADMAP.md](COURSE_ROADMAP.md)
-- [LESSON_03_GUIDE.md](LESSON_03_GUIDE.md)
-- [PROJECT_STATE.md](PROJECT_STATE.md)
+- [x] **`BUSINESS_FEATURE_CARD.md` 验证**：包含 Goal, Boundary, Risk, Stop Conditions。
+- [x] **`prototype-contract.d.ts` 验证**：生成的 TypeScript 类型强绑定。
+- [x] **`PROJECT_STATE.md` 验证**：记录 PASS 状态与 Git SHA。
+- [x] **自动化校验**：`verify-project.ps1` 输出 `[PASS]`。
 
 ---
 
-## 22. 课程变更与版本记录
+## 16. 课堂成果
+
+1. 包含 4 大要素的 `docs/BUSINESS_FEATURE_CARD.md`；
+2. 包含 7 维属性与敏感度的《轻量数据契约卡》；
+3. `src/types/prototype-contract.d.ts` TypeScript 类型草稿；
+4. 获得 PowerShell 验证脚本的 `[PASS]` 结论与 Git 完结存档。
+
+---
+
+## 17. 课后作业
+
+* **内容**：针对自己的原型，增加 1 个边界外项 (Out of Scope) 说明，并在数据契约中补充 1 个异常状态的示例值。
+* **完成标准**：运行 `verify-project.ps1` 输出 `[PASS]`。
+
+---
+
+## 18. 通过标准
+
+* [ ] `docs/BUSINESS_FEATURE_CARD.md` 存在且结构规范；
+* [ ] `src/types/prototype-contract.d.ts` 存在且类型正确；
+* [ ] 运行 `verify-student-project.ps1` 提示 `[PASS]`。
+
+---
+
+## 19. 常见问题
+
+| 问题现象 | 硬核成因 | 处理建议 |
+| :--- | :--- | :--- |
+| Agent 在追问过程中突然开始改代码 | 破坏了 `grill-me` 技能护栏 | 发送安全指令：“请停止改代码，严格遵循 `.claude/skills/grill-me/SKILL.md` 规范，仅进行需求追问。” |
+| 导出的数据契约缺敏感度一栏 | Prompt 遗漏或 Agent 偷懒 | 发送补全指令：“请补全敏感等级一栏（公开/内部/严禁发送AI）。” |
+
+---
+
+## 20. 课后记录
+
+（略，按模板留空供教师填报）
+
+---
+
+## 21. 学员包信息
+
+| 项 | 内容 |
+| --- | --- |
+| ZIP 文件名 | 待生成 |
+| 包版本 | v0.1.0+ |
+| 来源 commit | main 最新 HEAD |
+
+---
+
+## 22. 教师复盘与变更记录
 
 | 日期 | 版本 | 变更内容 | 负责人 |
 | --- | --- | --- | --- |
-| 2026-08-03 | v1.0 | 新增第 3 课标准 22 节备课教案，整合 Skill 护栏与数据契约卡 | 教学组 |
+| 2026-08-04 | v1.2 | 重构引入【四步硬核概念公式】、5 个固定暂停点与 Exit Ticket 退场测试 | AI 训练营教学组 |

@@ -35,6 +35,7 @@ $requiredFiles = @(
     "docs\assets\lesson-02\ref-operation-tool.png",
     "docs\LESSON_03_GUIDE.md",
     "docs\LESSON_03_TEACHER_PLAN.md",
+    ".claude\skills\grill-me\SKILL.md",
     "src\main.ts",
     "src\App.vue",
     "src\router\index.ts"
