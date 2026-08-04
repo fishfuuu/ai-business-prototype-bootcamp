@@ -1,10 +1,10 @@
 # 主管 AI 原型制作训练营课程路线图
 
-状态：Official Execution v1.1（AI 工程概念升级、暗线全量织入与超级业务 PM 定位版）  
-更新时间：2026-08-03  
+状态：Official Execution v1.3（Subagent 演进、MCP 暗线、高阶工程防错 5 规则与四步硬核公式升级版）  
+更新时间：2026-08-04  
 
 内容来源与权威说明：
-- `docs/COURSE_ROADMAP.md`：**结合当前仓库状态、超级业务 PM 定位、AI 工程概念体系与暗线矩阵整理后的唯一权威执行版（Authoritative Execution Plan）。**
+- `docs/COURSE_ROADMAP.md`：**结合当前仓库状态、超级业务 PM 定位、Agent 三代架构演进、Subagent 演进暗线、MCP 暗线、工程防错 5 规则与【四步概念公式】整理后的唯一权威执行版（Authoritative Execution Plan）。**
 - `docs/主管 AI 原型制作训练营.md`：**保留为历史课程设计来源与背景文案原稿（Historical Design Manuscript），必须引用本权威执行版。**
 
 ---
@@ -28,8 +28,18 @@
 
 训练营帮助主管实现三层 AI 协作能力跨越：
 - **第一层：Prompting (单次指令)** —— 通过单次指令描述任务，理解裸 Prompt 局限。
-- **第二层：Harness Engineering (工程护栏)** —— 通过规则 (`CLAUDE.md`)、文件 (`PROJECT_STATE.md`)、Skills (`grill-me`)、测试 (`verify-project.ps1`)、权限与工作流约束 Agent 执行。
+- **第二层：Harness Engineering (工程护栏)** —— 通过规则 (`CLAUDE.md`)、文件 (`PROJECT_STATE.md`)、Skills (`grill-me`, `design-lint`)、测试 (`verify-project.ps1`)、权限与工作流约束 Agent 执行。
 - **第三层：Bounded Agent Loop (受控 Agent 循环)** —— 在明确目标、边界、工具、风险和停止条件下，让 Agent 进行受控自主循环，主管在关口行使人在回路 (HITL) 盖章。
+
+---
+
+### 教学设计与概念解析四步范式 (Pedagogical 4-Step Formula)
+
+为解决概念浮于表面与比喻失真问题，全课程所有硬核概念（LLM, Tools, Agent, ReAct, Tokens, MCP, Git, Linters）统一执行**【四步概念解析公式】**：
+1. **硬核工程定义 (Engineering Definition)**：使用标准的 IT/软件工程术语，讲清物理本质。
+2. **底层运作机制 (Underlying Mechanism)**：解释代码、内存、接口或数据在底层的实际流转逻辑。
+3. **具象业务比喻 (Business Metaphor)**：建立大脑记忆锚点，降低心理门槛。
+4. **IT 沟通与交接价值 (Handoff Value)**：明确主管学完后向 IT 汇报与交接时的具体表达。
 
 ---
 
@@ -49,29 +59,28 @@
 | 第一批对象 | 运营主管 |
 | 后续扩展 | 可复用于其他一级主管 / 业务负责人 |
 | 每周建议投入 | 1–2 小时 |
-| 标准课堂 | 约 90 分钟（教师导学与演练 40 分钟，学员实操约 50 分钟） |
-| 作业 | 控制在 30–45 分钟 |
-| 理论讲解 | 不超过 25 分钟 |
-| 实操比例 | 每节课至少一半时间由学员实际操作 |
+| 标准课堂 | 约 90 分钟（成果展示 8 分钟，微型演示 17 分钟，概念核对 10 分钟，学员实操 45 分钟，总结验证 10 分钟） |
+| 控场设置 | 每节课包含 **5 个固定暂停提问点 (Pause Points)** |
+| 测评方式 | 每节课包含 **Exit Ticket (退场测试卡)** 与 **常见概念误区表 (Misconceptions)** |
 | 成果要求 | 每节课必须产生肉眼可见成果 |
 
 ---
 
 ## 3. 工具分工与角色契约
 
-### 1. Claude Code（主要实施者）
-- 需求理解与方案复述
-- 页面与组件创建
-- 交互逻辑修改与增量实现
+### 1. Claude Code（主要实施者 / 开发 Agent）
+- 需求解构与方案推演
+- 页面与组件增量创建
+- 执行 **ReAct 范式**、**Plan & Execute 范式** 与 **Subagent 调度**
 - 本地调试与自测验证 (`verify-project.ps1`)
 
-### 2. Codex（独立审查者）
+### 2. Codex（独立审查者 / 审计 Agent）
 - 从第 8 课开始正式引入（基于 `AGENTS.md` 规范）
 - **独立审查上下文隔离**：新建独立会话，仅调取已确认需求、稳定 Commit 与 Candidate Commit 的 Diff
 - 审查隐患、逻辑越界与未授权的范围修改，只读不修改代码
 - 提供独立审查意见（阻断/重要/建议）
 
-### 3. 主管（最终裁决者 / 人在回路盖章官）
+### 3. 主管（最终裁决者 / 人在回路盖章官 / 中央调度系统）
 - 掌控 Workflow 推进阶段
 - 行使 Keep / Omit / Remove / Modify 裁决权
 - 对 Codex 审查意见做出四个决定：接受、拒绝、延期、超出本次范围
@@ -79,18 +88,24 @@
 
 ---
 
-## 4. 交付模式
+## 4. 高阶工程防错 5 大防护规则 (Robustness & Patch Rules)
 
-### 双轨交付
+为防止教学实操中出现卡死、白屏、死循环和弹窗风暴，全课程严格注入 5 大高阶防错机制：
 
-**教师和维护者**
-- 使用私有 GitHub 课程母仓库
-- 通过分支、PR 和标签维护稳定版本
+1. **Subagent 超时熔断规则 (Subagent Lifecycle & Timeout Rule)**：
+   派发给子智能体（如静默测试 Subagent）的独立任务必须设置物理超时阈值（如 `DurationSeconds: 60`），超时自动释放，决不挂起主 Agent。
+2. **Subagent 预授权与只读沙箱规则 (Subagent Read-only Sandbox Rule)**：
+   静默后台运行的 Subagent 仅继承只读工具权限 (Read-only Tools)，写权限修改动作必须返回主 Agent 界面由主管签署 HITL 口令确认。
+3. **Subagent 产物强制物理落盘规则 (Disk Persistence Rule)**：
+   Subagent 产出的所有测试截图、DOM 操作日志与检查报告，必须物理落盘写入本地磁盘目录（`local-backups/`）与 `PROJECT_STATE.md`，决不随 Context 重置而蒸发。
+4. **双 Agent 两轮仲裁门禁 (2-Round HITL Arbitration Rule)**：
+   第 8 课开发 Agent 与只读审查 Agent 辩论超过 2 轮时，强制阻断自动循环，引发主管 CEO 仲裁盖章。
+5. **Mock 数据降级保护桥梁 (Mock Fallback Bridge)**：
+   第 9~10 课真 AI 接口连接失败、网络超时或非法返回时，系统自动降级回 Mock Data 结构化渲染，保证 100% 演示不白屏崩盘。
 
-**普通学员**
-- 默认使用标准 ZIP 学员包
-- 不强制安装 Git 或注册 GitHub（第 2 课教本地 Git 命令，GitHub 远程仓库作为进阶可选能力）
-- 首次使用需运行 `npm ci` 安装依赖，双击 `start-project.bat` 在 `http://127.0.0.1:8888` 本地预览
+> [!NOTE]
+> **关于后续课程 (第 4–10 课) 架构演进说明**：  
+> 本 PR 集中交付 **第 1–3 课 V2 重构** 与基础能力建设。路线图中所提及的第 4–10 课 Subagent 演进、Browser/API MCP 插座配置 (`.claude/mcp_config.json`) 及 Mock 降级保护机制，属于**后续课程规划预告 (Future Architecture Roadmap)**，尚未在当前分支中落地实装，不得作为当前 1–3 课已具备的教学承诺。
 
 ---
 
@@ -98,18 +113,18 @@
 
 ### 10 课演进总览
 
-| 阶段 | 课次 | 明线主题 | 三层能力成熟度与暗线要求 | 主要工具/Skill | 可见成果 |
+| 阶段 | 课次 | 明线主题 | 三层能力成熟度与暗线要求 | Agent 架构与工具演进 | 可见成果 |
 | --- | --- | --- | --- | --- | --- |
-| **一、界面与外观** | **1** | 从业务问题创建第一个系统页面 | **Prompting → Loop 初体验**；Tools 权限沙箱；模拟数据红线；**初始化 `PROJECT_STATE.md`** | Claude Code | 可运行系统雏形、侧栏菜单、模拟数据、`PROJECT_STATE.md` |
-| | **2** | 用参考图与设计规则做出像样的页面 | **视觉 Harness (`DESIGN.md`) & 事实锚定 (Grounding)**；实操 50 分钟 (15+15+10+10m)；**Git 首个版本证据** | Claude Code；`frontend-design` | 高颜原型、`DESIGN.md`、首个 Git 稳定 Commit |
-| **二、需求与结构** | **3** | 让 Agent 帮助自己想清楚需求 | **Prompt vs Skill Harness (`grill-me`)**；前置 **Goal/Boundary/Risk/Stop 4 大要素**；**数据契约卡** | Claude Code；`grill-me` | 分类型《业务功能卡》与数据契约卡 |
-| | **4** | 把大需求拆成连续的小成功 | **架构 Harness 驱动增量 Loop**；数据接口意识（4 种状态）；**可重复验证与回归风险 (Regression)** | Claude Code；`incremental-implementation` | 包含 3–5 步连贯实现与 Commit 的业务模块 |
-| **三、防崩与排错** | **5** | 建立不会轻易失控的项目 | **工程 Harness (`CLAUDE.md`)**；**三分记忆模型**（工作记忆 Context、外部长期记忆、Git 版本证据）；重置窗口 (`/clear`) | Claude Code | 带项目护栏与 Git 恢复能力的稳定系统 |
-| | **6** | 学会定位和修复问题 | **事实锚定排错**；五层诊断卡；**有界排错 Loop (最多2轮，不得改断言，未过呈交证据)** | Claude Code；`diagnosing-bugs` | 带有五层 Bug 诊断与回归证据的系统 |
-| **四、双 Agent 验收** | **7** | 让 Agent 实际操作页面完成验收 | **断言 Harness 自动化**；将 L3 停止条件转为 Playwright 自动化断言；**可复核证据链** | Claude Code: `webapp-testing`；Playwright | 带有四类可复核证据链的验收记录 |
-| **五、AI 融入与交付** | **8** | Claude Code 开发，Codex 独立审查 | **独立审查上下文隔离 (`AGENTS.md`)**；只读审查 Candidate Commit；主管 4 种裁决 | Claude Code；Codex: `code-review-and-quality` | 经过双 Agent 审计与主管裁决的代码 |
-| | **9** | 业务 Agent 场景判断与产品设计 | **确定性 vs. 概率性逻辑切割**；AI 隐私边界与 HITL 人工确认门禁（禁止自动写库） | Claude Code | 带 AI 契约与 HITL 人工确认点的场景矩阵 |
-| | **10** | 落地有限 AI 功能与 IT 交接 | **受控 AI 功能闭环**（输入->处理->草稿->人工确认->兜底）；**《IT 原型交接包》**；[*可选* Skill 封装] | Claude Code；`skill-creator` (可选) | 可点真 AI 演示原型 + 《IT 原型交接包》 |
+| **一、界面与外观** | **1** | 从业务问题创建第一个系统页面 | **Prompting → Loop 初体验**；Tools 权限沙箱；模拟数据红线；初始化 `PROJECT_STATE.md` | **ReAct 范式** (单步自修)；Tools 沙箱与 127.0.0.1 试衣镜 | 可运行系统雏形、侧栏菜单、模拟数据、`PROJECT_STATE.md` |
+| | **2** | 用参考图与设计规则做出像样的页面 | **视觉 Harness (`DESIGN.md`) & 事实锚定**；**双 Token 制衡**；物理点开 `DESIGN.md`；Git 节点1/2存档 | **ReAct 范式**；**MCP/Plugin 概念启蒙**；`design-lint` | 高颜原型、`DESIGN.md`、首个 Git 稳定 Commit |
+| **二、需求与结构** | **3** | 让 Agent 帮助自己想清楚需求 | **Prompt vs Skill Harness (`grill-me`)**；前置 **Goal/Boundary/Risk/Stop 4 大要素**；数据契约卡 | **ReAct + Skill 约束**；`grill-me` | 分类型《业务功能卡》与数据契约卡草稿 |
+| | **4** | 把大需求拆成连续的小成功 | **架构 Harness 驱动增量 Loop**；数据接口意识（4 种状态）；可重复验证与回归风险 | **Plan & Execute 范式**；**后台静默 Verifier Subagent** (跑自测) | 包含 3–5 步连贯实现与 Commit 的业务模块 |
+| **三、防崩与排错** | **5** | 建立不会轻易失控的项目 | **工程 Harness (`CLAUDE.md`)**；**三分记忆模型**（Context、长期文件、Git 证据）；窗口重置 (`/clear`) | **Plan & Execute 范式**；`CLAUDE.md` 项目护栏 | 带项目护栏与 Git 恢复能力的稳定系统 |
+| | **6** | 学会定位和修复问题 | **事实锚定排错**；五层诊断卡；**有界排错 Loop (最多2轮，不得改断言)** | **ReAct 有界自修**；Console/日志锚定 | 带有五层 Bug 诊断与回归证据的系统 |
+| **四、双 Agent 验收** | **7** | 让 Agent 实际操作页面完成验收 | **断言 Harness 自动化**；停止条件转 Playwright 自动化断言；四类可复核证据链 | **Subagent + Browser MCP** (Browser-Tester 抓截图) | 带有四类可复核证据链的验收记录 |
+| **五、AI 融入与交付** | **8** | Claude Code 开发，Codex 独立审查 | **独立审查上下文隔离 (`AGENTS.md`)**；只读审查 Candidate Commit；**2 轮仲裁门禁** | **Multi-Agent 范式** (开发 Agent + Codex 审计) | 经过双 Agent 审计与主管裁决的代码 |
+| | **9** | 业务 Agent 场景判断与产品设计 | **确定性 vs. 概率性逻辑切割**；AI 隐私边界与 HITL 人工确认门禁；**Mock 降级保护** | **Multi-Agent + API MCP 插座**；结构化 JSON 草稿 | 带 AI 契约与 HITL 人工确认点的场景矩阵 |
+| | **10** | 落地有限 AI 功能与 IT 交接 | **受控 AI 功能闭环**；**数据通道 MCP 配置** (`.claude/mcp_config.json`)；《IT 原型交接包》 | **Multi-Agent + MCP 架构**；`find-skills` (选型) | 可点真 AI 演示原型 + 《IT 原型交接包》 |
 
 ---
 
@@ -117,11 +132,13 @@
 
 | 暗线 | 引入 (Introduction) | 强化 (Reinforcement) | 验证/交付 (Verification/Handoff) |
 | :--- | :--- | :--- | :--- |
-| **Git 版本证据** | 第2课初始化、游戏存档比喻、基线与成果提交 | 第4课每步 Commit、第5课恢复稳定提交 | 第8课基于 Commit/Diff 审查、第10课交付版本 |
+| **Agent 架构演进** | **第 1~2 课：ReAct 范式**（Thought -> Action -> Observation 单步反馈） | **第 4 课：Plan & Execute + Subagent**（静默自测子智能体） | **第 8~10 课：Multi-Agent 范式**（开发 Agent 与审查 Agent 独立上下文隔离） |
+| **Subagent 演进线** | **第 4 课：Verifier Subagent**（静默后台跑脚本，保护主 Context 记忆） | **第 7 课：Browser-Tester Subagent**（挂载 MCP 跑 Playwright 抓截图，落盘销毁） | **第 8 课：Codex Reviewer**（独立会话只读审查与 2 轮仲裁门禁） |
+| **MCP 与 Plugin 扩展** | **第 1~2 课：Tools vs Plugins vs MCP**（了解概念与沙箱权限） | **第 7 课：Browser MCP / 网页控制**（Playwright 驱动浏览器自动化点击） | **第 9~10 课：DB/API MCP 插座配置**（`.claude/mcp_config.json` 与《IT 原型交接包》） |
+| **Git 版本证据** | 第2课初始化、SL游戏存档比喻、节点1/2提交 | 第4课每步 Commit、第5课恢复稳定提交 | 第8课基于 Commit/Diff 审查、第10课交付版本 |
 | **数据契约与接口** | 第3课定义字段/类型/敏感度/三类原型契约 | 第4课实现页面 4 种状态、第6课定位接口层 Bug | 第10课写入《IT 原型交接包》 |
 | **安全边界与沙箱** | 第1课模拟数据红线与 Tools 沙箱授权 | 第5课 `CLAUDE.md` 项目护栏（依赖/密钥/框架） | 第9、10课 AI 隐私、结构化输出与 HITL 人工确认 |
 | **验收设计与断言** | 第3课定义前置验收标准与停止条件 | 第4课分步验证、第6课修复回归 | 第7课四类可复核证据自动化、第8课独立审查 |
-| **状态与排错** | 第3课定义业务状态 | 第4课实现 UI 状态 | 第6课五层诊断卡与有界排错（最多 2 轮） |
 
 ---
 
@@ -143,9 +160,9 @@
 ## 6. 每课详细路线
 
 ### 第 1 课：从业务问题创建第一个系统页面
-* **定位**：零基础学员建立三类业务原型分类认知、AI Agent 人机协作认知、Tools 权限沙箱与模拟数据安全红线。
+* **定位**：零基础学员建立三类业务原型分类认知、AI Agent 人机协作认知、ReAct 单步范式、Tools 权限沙箱与模拟数据安全红线。
 * **主要内容**：
-  1. 工具预检与沙箱授权：确认工程环境正常，理解终端命令授权是主管作为 CEO 审批 Agent 使用“手脚”（Tools）。
+  1. 工具预检与沙箱授权：确认工程环境正常，用【四步概念公式】解析 LLM、Tools、Agent、ReAct、Workflow 的底层物理机制。
   2. 选择“A. 监控与决策型 / B. 任务与流程型 / C. 操作工具型”原型方向并输入业务上下文。
   3. **初始化 `docs/PROJECT_STATE.md`**：记录系统名称、使用者、原型类型、核心业务问题及敏感级别。
   4. 遵照模拟数据红线，体验 ReAct 感知微调 Loop，生成首个包含侧栏菜单与 Mock 数据信息的系统雏形。
@@ -154,13 +171,13 @@
 ---
 
 ### 第 2 课：用参考图与设计规则做出像样的企业页面
-* **定位**：根据业务目的选择信息结构与参考图，完成视觉 Harness 重构，掌握事实锚定 (Grounding) 与 Git 首个版本证据。
-* **课堂时间分配 (标准课堂 90 分钟，学员实操 50 分钟)**：
-  - **Task 1：提取结构与基线存档 (15 分钟)**：检查 `git status`；`git add .` -> `git diff --cached` -> `git commit -m "baseline: complete lesson 1 prototype"` 提交第一课成果与 `PROJECT_STATE.md`（基线提交）；分析参考图信息层级。
-  - **Task 2：规范映射 (15 分钟)**：结合 `DESIGN.md` 设计规范（视觉 Harness），映射 Token 与组件，事实锚定到规范，禁止继承参考图杂乱颜色。
-  - **Task 3：视觉裁决与修改 (10 分钟)**：主管下达 Keep / Omit / Remove / Modify 指令，授权 Agent 重构；如需放弃修改，在 VS Code UI 中使用 Discard Changes。
-  - **Task 4：对比验证与成果存档 (10 分钟)**：运行验证；`git status` -> `git diff` -> `git add .` -> `git diff --cached` -> `git commit -m "style: complete lesson 2 visual refactor"` 保存成果；`git log --oneline -5` 查看历史。
-* **Git 教学边界**：只教本地安全提交流程，不使用 `git commit -am`，不教全项目 `git checkout .`，不教 GitHub 分支与远程合并。
+* **定位**：根据业务目的选择信息结构与参考图，完成视觉 Harness 重构，掌握 AI Token 随机性与 Design Token 制衡、多模态能力迁移、物理点开 `DESIGN.md` 与 Git 节点 1/2 存档证据。
+* **主要内容**：
+  1. **Task 1：结构提取 (15 分钟)**：多模态提取参考图首屏布局与视觉主次，100% 过滤杂色。
+  2. **Task 2：规范映射 (15 分钟)**：**物理点开 `DESIGN.md` 查看字典**，映射 Token 与组件，事实锚定到规范。
+  3. **Task 3：视觉裁决与重构 (10 分钟)**：**节点 1 Git 存档 `baseline: complete lesson 1 prototype`**；主管下达 Keep / Omit / Remove / Modify 裁决，发送授权口令重构页面；监视 Diff 红绿视图，一键 Discard 还原。
+  4. **Task 4：对比验证与成果存档 (10 分钟)**：试衣镜对比与 1 次人在回路微调；运行验证 `verify-student-project.ps1` 输出 `[PASS]`；**节点 2 Git 存档 `style: complete lesson 2 visual refactor`**。
+* **执行文档**：[LESSON_02_GUIDE.md](LESSON_02_GUIDE.md) 与 [LESSON_02_TEACHER_PLAN.md](LESSON_02_TEACHER_PLAN.md)。
 
 ---
 
@@ -168,74 +185,69 @@
 * **定位**：对比单次 Prompt 与 Skill Harness（`grill-me`），前置锁定 Goal/Boundary/Risk/Stop 4 大要素，完成数据契约与前置验收标准。
 * **主要内容**：
   1. 使用 `grill-me` Skill 进行 3–5 轮追问对话，体会一次只问一个问题的约束，产出《业务功能卡》。
-  2. **轻量数据契约卡**：明确字段名称、业务含义、数据类型、是否必填、数据来源（Mock/未来API）、示例值、校验规则、敏感等级。
-  3. **三类原型契约扩展**：
-     - *监控决策型*：增加指标口径、时间范围、对比基准、异常阈值、下钻维度。
-     - *任务流程型*：增加角色、业务状态、允许动作、状态迁移规则、驳回/撤销。
-     - *操作工具型*：增加输入结构、校验规则、处理逻辑、输出结构、失败状态。
-  4. **前置停止条件与验收标准**：在前置契约中写明客观验收步骤，为后续自主 Loop 打下基础。
+  2. **轻量数据契约卡**：明确字段名称、业务含义、数据类型、是否必填、数据来源（Mock/未来API）、示例值、校验规则、敏感等级，生成 TypeScript 类型草稿 (`src/types/prototype-contract.d.ts`)。
+  3. **前置停止条件与验收标准**：在前置契约中写明客观验收步骤，为后续自主 Loop 打下基础。
 
 ---
 
 ### 第 4 课：把大需求拆成连续的小成功
-* **定位**：架构 Harness 驱动增量 Loop，建立“数据接口意识”与“可重复验证与回归风险”观念。
+* **定位**：引入 **Plan & Execute 范式（规划与执行解耦）** 与 **静默 Verifier Subagent**，使用 `implementation_plan.md` 架构 Harness 驱动增量 Loop，建立“数据接口意识”与“可重复验证与回归风险”观念。
 * **主要内容**：
-  1. 将《业务功能卡》拆解为 3–5 个连续小步骤。
-  2. **数据接口意识**：明确“页面不是数据源，真实数据未来由 API 提供”。坚持 Mock 数据，显式实现 4 种页面状态：`Loading`（正在获取）、`Empty`（没有数据）、`Success`（正常显示）、`Error`（获取失败）。
-  3. **固定增量 Loop**：定义数据结构 -> 编写空壳 UI -> 连通数据与交互 -> 运行验证脚本（防范回归风险） -> `git commit` 保存一步，保护 Context 内存。
+  1. **解析 Plan & Execute 范式**：对比 ReAct 单步盲找，Plan & Execute 要求先生成 `implementation_plan.md` 施工图纸，经主管审批后解耦分步执行。
+  2. **引入 Verifier Subagent**：主 Agent 专注写 Vue 代码，自动派发只读工具权限的静默子智能体在后台独立的 Context 里跑 `typecheck` 和测试脚本，保护主脑记忆不被大量终端日志污染。
+  3. 将《业务功能卡》拆解为 3–5 个连续小步骤，实现 `Loading`、`Empty`、`Success`、`Error` 4 种页面状态。
+  4. **固定增量 Loop**：定义数据结构 -> 编写空壳 UI -> 连通数据与交互 -> Subagent 静默验证 -> `git commit` 保存一步。
 
 ---
 
 ### 第 5 课：建立不会轻易失控的项目
-* **定位**：建立 Vue 项目心理地图、工程 Harness（`CLAUDE.md`）与三分记忆模型。
+* **定位**：建立 Vue 项目心理地图、工程 Harness（`CLAUDE.md`）、Plan & Execute 深入与三分记忆模型。
 * **核心内容**：
   1. 识别 Vue 3 项目 3 个核心盒子（页面 `pages/`、组件 `components/`、导航 `router/`）。
   2. **引入 `CLAUDE.md` 工程护栏**：明确未经授权不得安装新依赖、不得修改环境变量/密钥、不得更换框架。
-  3. **三类原型分支护栏**：锁定 Store / 状态机 / 算法核心逻辑。
-  4. **三分记忆模型与窗口重置**：区分工作记忆（Context 窗口）、外部长期记忆（`PROJECT_STATE.md` 等文件）与版本证据（Git Commit）。教主管在成果写入文件并 Git 提交后，**放心重置窗口 (`/clear`)**。指定文件恢复使用 `git restore <具体文件>`。
+  3. **三分记忆模型与窗口重置**：区分工作记忆（Context 窗口）、外部长期记忆（`PROJECT_STATE.md` 等文件）与版本证据（Git Commit）。教主管在成果写入文件并 Git 提交后，**放心重置窗口 (`/clear`)**。
 
 ---
 
 ### 第 6 课：学会定位和修复问题
-* **定位**：事实锚定排错与有界排错 Loop。
+* **定位**：事实锚定排错与 ReAct 有界排错 Loop。
 * **核心内容**：
   1. **事实锚定 (Grounding)**：将 Console / PowerShell 报错日志精准注入 Context 作为排错线索，拒绝盲目凭空猜测。
   2. **五层诊断卡**：①页面与样式层 ②组件与状态层 ③路由与页面层 ④数据与接口层 ⑤环境与依赖层。
-  3. **有界排错 Loop 规范**：最多 2 轮自动修复，每轮只能修改确认范围，每轮后检查 `git diff`，不得修改验收标准与测试断言。若 2 轮后仍未通过，终止 Loop 并呈报证据，由主管裁决继续、缩小范围或升级处理。
+  3. **有界排错 Loop 规范**：最多 2 轮自动修复，每轮只能修改确认范围，每轮后检查 `git diff`，不得修改验收标准与测试断言。若 2 轮后仍未通过，终止 Loop 并呈报证据，由主管裁决。
 
 ---
 
 ### 第 7 课：让 Agent 实际操作页面完成验收
-* **定位**：断言 Harness 自动化，生成四类可复核证据。
+* **定位**：断言 Harness 自动化，引入 **`Browser-Tester Subagent` + Browser MCP (Playwright)**，生成四类可复核证据。
 * **主要内容**：
-  1. 将第 3 课定义的前置停止条件转化为 `webapp-testing` / Playwright 自动化断言脚本。
-  2. **产出四类可复核证据链**：
-     - 视觉证据：前后对比截图
-     - 行为证据：DOM 操作与测试记录
-     - 工程证据：`verify-project.ps1` Clean 证明
-     - 范围证据：`git diff` 改动清单
+  1. **引入 Browser-Tester Subagent + MCP 插座**：主 Agent 派发带有超时熔断机制（60s）的测试子智能体，独占挂载 Playwright MCP 插座，在独立窗口里操控试衣镜 DOM 进行点击与截屏。
+  2. **物理落盘强制保护**：测试生成的截图与 DOM 日志强制物理落盘写进 `local-backups/lesson-07-evidence/`，子智能体携细节自动销毁，只向主管呈现精炼《自动化验收审计报告》。
+  3. **产出四类可复核证据链**：视觉证据（前后对比截图）、行为证据（DOM 操作记录）、工程证据（`verify-project.ps1` Clean 证明）、范围证据（`git diff` 改动清单）。
 
 ---
 
 ### 第 8 课：Claude Code 开发，Codex 独立审查
-* **定位**：独立审查上下文隔离与双 Agent 协作。
+* **定位**：引入 **Multi-Agent 范式（多智能体角色隔离与交叉审计）**，基于 `AGENTS.md` 规范与 **2 轮仲裁门禁**。
 * **主要内容**：
-  1. **引入 `AGENTS.md` 审查规范**：新建独立审查会话，仅向 Codex 提供已确认需求、稳定 Commit 与 Candidate Commit 的 Diff 及验收标准。Codex 只读，不修改代码。
-  2. **审查与裁决流程**：Claude Code 完成开发并提交 Candidate Commit -> Codex 独立审查 Diff -> 主管做 4 种裁决（接受/拒绝/延期/超出范围） -> Claude 在新 Commit 中修复。
+  1. **解析 Multi-Agent 范式与 2 轮仲裁门禁**：开发 Agent（写权限） + 审查 Agent（只读独立会话）对立审计。如果双方辩论超过 2 轮，系统阻断辩论引发主管 CEO 强制仲裁。
+  2. **审查与裁决流程**：Claude Code 完成开发提交 Candidate Commit -> Codex 独立审查 Diff -> 主管做 4 种裁决（接受/拒绝/延期/超出范围） -> Claude 在新 Commit 中修复。
 
 ---
 
 ### 第 9 课：业务 Agent 场景判断与产品设计
-* **定位**：确定性 vs. 概率性逻辑切割，设定 AI 隐私与 HITL 门禁。
+* **定位**：确定性 vs. 概率性逻辑切割，设定 AI 隐私与 API MCP 插座，HITL 门禁，**Mock 降级保护**。
 * **主要内容**：
-  1. **逻辑切割**：规则计算、状态流转、数据保存由**确定性代码（不可交给无约束生成）**实现；总结、提取、草稿由**概率性 AI** 实现。
-  2. **AI 安全边界与 HITL 门禁**：敏感字段严禁发送 AI；AI 输出必须为 JSON 结构化草稿；未经主管人工确认，绝对禁止直接写库。
+  1. **逻辑切割**：规则计算、状态流转、数据保存由**确定性代码**实现；总结、提取、草稿由**概率性 AI** 实现。
+  2. **Mock 降级保护桥梁 (Mock Fallback Bridge)**：接入真实 AI API 时，强制写入降级兜底逻辑，若网络超时或 API 返回非法，自动切回 Mock Data 渲染，保证 100% 不白屏。
+  3. **AI 安全边界与 HITL 门禁**：敏感字段严禁发送 AI；AI 输出必须为 JSON 结构化草稿；未经主管人工确认，绝对禁止直接写库。
 
 ---
 
 ### 第 10 课：落地有限 AI 功能与 IT 交接
-* **定位**：受控 AI 功能闭环落地、可选 Skill 扩展与 《IT 原型交接包》 交付。
+* **定位**：受控 Multi-Agent + MCP 架构闭环落地、《IT 原型交接包》 交付与 Skill 生态选型（`find-skills`）。
 * **主要内容**：
   1. **落地受控 AI 功能闭环**：实现一个有限输入 -> AI 处理 -> 结构化草稿 -> 主管人在回路 (HITL) 人工确认/编辑 -> 兜底生效的完整演示。
-  2. **[可选扩展] 封装业务 Skill**：学有余力的学员可使用 `skill-creator` 封装提示词，Skill 始终作为加速工具。
-  3. **输出《IT 原型交接包》**：整理全量长期记忆资产（页面流程、数据契约、AI 确认点、四类可复核证据链及未实现清单），交付 IT 部门。
+  2. **MCP 架构设计与配置**：教主管编写 `.claude/mcp_config.json` 插座配置说明，明确生产环境数据库连接方式。
+  3. **[可选扩展] 社区 Skill 选型**：使用 `find-skills` 搜索社区优秀 Skill（如 `review-testing`, `pdf-docx-processing`），指导主管后续自主拓展能力。
+  4. **输出《IT 原型交接包》**：整理全量长期记忆资产（页面流程、数据契约、MCP 接口指南、AI 确认点、四类可复核证据链及未实现清单），交付 IT 部门。

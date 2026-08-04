@@ -70,34 +70,34 @@ try {
     }
     [System.IO.File]::WriteAllLines($installerPath, $installerContent, $utf8NoBom)
 
-    # 5. Extract payload/docs/ files from SourceCommit via git archive
+    # 5. Extract payload/ files (docs and skills) from SourceCommit via git archive
     $gitArchiveZip = Join-Path $tempDir "git-archive.zip"
-    & git archive --format=zip -o $gitArchiveZip $sourceCommit docs
+    & git archive --format=zip -o $gitArchiveZip $sourceCommit docs .claude/skills/grill-me
     if ($LASTEXITCODE -ne 0) {
-        throw "git archive for docs failed on SourceCommit $sourceCommit."
+        throw "git archive for docs & skills failed on SourceCommit $sourceCommit."
     }
     
     $archiveExtractDir = Join-Path $tempDir "git-archive-extracted"
     Expand-Archive -Path $gitArchiveZip -DestinationPath $archiveExtractDir -Force
     
-    $extractedDocs = Join-Path $archiveExtractDir "docs"
-    if (-not (Test-Path $extractedDocs)) {
-        throw "Extracted git archive does not contain docs/ directory."
-    }
-    Copy-Item -Path "$extractedDocs\*" -Destination $payloadDocsDir -Recurse -Force
+    $payloadStagingDir = Join-Path $packageStaging "payload"
+    New-Item -ItemType Directory -Path $payloadStagingDir -Force | Out-Null
+    Copy-Item -Path "$archiveExtractDir\*" -Destination $payloadStagingDir -Recurse -Force
 
-    # Filter to only keep second-lesson relevant docs in payload
+    # Filter to only keep second & third lesson relevant docs & skills in payload
     $allowedRelativePaths = @(
-        "LESSON_02_GUIDE.md",
-        "assets\lesson-02\lesson-02-flow.png",
-        "assets\lesson-02\ref-monitor-decision.png",
-        "assets\lesson-02\ref-task-workflow.png",
-        "assets\lesson-02\ref-operation-tool.png"
+        "docs\LESSON_02_GUIDE.md",
+        "docs\assets\lesson-02\lesson-02-flow.png",
+        "docs\assets\lesson-02\ref-monitor-decision.png",
+        "docs\assets\lesson-02\ref-task-workflow.png",
+        "docs\assets\lesson-02\ref-operation-tool.png",
+        "docs\LESSON_03_GUIDE.md",
+        ".claude\skills\grill-me\SKILL.md"
     )
 
-    $allExtractedFiles = Get-ChildItem -Path $payloadDocsDir -Recurse -File
+    $allExtractedFiles = Get-ChildItem -Path $payloadStagingDir -Recurse -File
     foreach ($file in $allExtractedFiles) {
-        $relPath = $file.FullName.Substring($payloadDocsDir.Length + 1)
+        $relPath = $file.FullName.Substring($payloadStagingDir.Length + 1)
         if ($allowedRelativePaths -notcontains $relPath) {
             Remove-Item -Path $file.FullName -Force
         }
