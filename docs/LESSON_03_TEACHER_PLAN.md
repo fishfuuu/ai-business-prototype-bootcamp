@@ -45,7 +45,7 @@
 学员独立产出并归档 3 个确定性资产：
 1. **`docs/BUSINESS_FEATURE_CARD.md`**：《业务功能卡》（含目标、边界、风险与前置 Stop Conditions 验收断言）。
 2. **`src/types/prototype-contract.d.ts`**：根据数据契约生成的 TypeScript 接口定义草稿（供第 4 课代码直接使用）。
-3. **`docs/PROJECT_STATE.md` 更新**：记录 L03 状态为 PASS 及稳定 Git Commit SHA。
+3. **`docs/PROJECT_STATE.md` 更新**：记录 L03 状态为 `PASS` 与前置基线 Git SHA。
 
 ---
 
@@ -156,7 +156,7 @@
 ## 14. 工程化内容
 
 * **强类型契约**：使用 `prototype-contract.d.ts` 约束数据定义。
-* **防护审计**：通过 `verify-student-project.ps1` 校验资产文件存在性与模板规范。
+* **防护审计**：通过 `verify-student-project.ps1` 验证基础工程合法性、TypeScript 类型与 build 构建；配合人工契约检查核对《业务功能卡》Goal/Boundary/Risk/Stop Conditions 4 项结构。
 
 ---
 
