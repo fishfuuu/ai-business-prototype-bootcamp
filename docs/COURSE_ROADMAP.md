@@ -104,10 +104,11 @@
    第 9~10 课真 AI 接口连接失败、网络超时或非法返回时，系统自动降级回 Mock Data 结构化渲染，保证 100% 演示不白屏崩盘。
 
 > [!NOTE]
-> **关于各阶段课程（第 1–10 课）基线与进展说明**：  
-> - **第 1—3 课已进入当前正式基线**；
-> - **第 4 课已形成候选课程内容与工程实现**，处于待复核、待合入和待试讲状态；
-> - **第 5—10 课为后续规划**。路线图中所提及的 Subagent 演进、Browser/API MCP 插座配置 (`.claude/mcp_config.json`) 及 Mock 降级保护机制，属于后续课程规划预告。
+> **关于各阶段课程（第 1–10 课）基线与进展双维度状态说明**：  
+> - **第 1—2 课**：`Repository Content Status: BASELINE` | `Teaching Validation Status: PILOT_PASSED`
+> - **第 3 课 (V2.1 修订版)**：`Repository Content Status: CANDIDATE` (第3课既有基线存在，本轮 V2.1 修订为候选状态) | `Teaching Validation Status: PILOT_PENDING`
+> - **第 4 课**：`Repository Content Status: CANDIDATE` (候选课程内容与工程实现就绪，待复核合入) | `Teaching Validation Status: PILOT_PENDING`
+> - **第 5—10 课**：`Repository Content Status: PLANNED` | `Teaching Validation Status: NOT_TESTED`
 
 ---
 
@@ -187,7 +188,7 @@
 * **定位**：对比单次 Prompt 与 Skill Harness（`grill-me`），前置锁定 6 大要素（目标、问题定义、边界、风险、Given-When-Then 验收场景、停止条件），校验阻断门禁，将数据契约统一落盘至 `docs/BUSINESS_FEATURE_CARD.md` 并生成 TypeScript 类型草稿。
 * **主要内容**：
   1. 使用 `grill-me` Skill 进行 3–5 分支、5–7 轮追问对话，体会一次只问一个问题的约束，区分 `[事实]`、`[决定]`、`[假设]` 与 `[待确认]` 事项。
-  2. **校验阻断性待确认事项门禁 (Blocking Gate)**：核心角色、关键字段来源、业务规则、敏感数据处理方式、In Scope 边界与至少 1 个 Given-When-Then 场景必须确认，否则不可落盘。
+  2. **校验阻断性待确认事项强校验门禁 (Fail-Closed Blocking Gate)**：核心角色、关键字段来源、业务规则、敏感数据处理方式、In Scope 边界与至少 1 个 Given-When-Then 场景必须确认，未通过输出 `BLOCKING_GATE_FAILED` 拒绝落盘。
   3. **精准区分 Acceptance Criteria 与 Stop Conditions**：Given-When-Then 专门用于描述功能正确性验收场景；Stop Conditions 专门用于描述 Agent 触发熔断暂停并呈报主管的条件。
   4. **数据契约收扣与契约冻结规则**：在 `docs/BUSINESS_FEATURE_CARD.md` 中嵌入完整数据契约表，生成 TypeScript 类型草稿 (`src/types/prototype-contract.d.ts`) 与 Mock 数据 (`src/mocks/prototype-data.ts`)。主管验收 PASS 后契约冻结。
   5. **三层验收与选择性暂存**：通过工程验证、契约验证、主管验收三层关口，更新 `docs/PROJECT_STATE.md`，使用 `git add --` 暂存指定 4 个资产并提交。
@@ -201,7 +202,7 @@
   1. **解析 Plan & Execute 范式**：先生成 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 实施计划，经主管审批授权后分步执行。
   2. **精准区分 2D 状态**：区分页面技术呈现状态 (Loading/Empty/Error/Success) 与业务流程状态 (待处理/处理中/已阻塞/已完成)。
   3. **落地 Step 1 调试切片**：结合三类原型方向落地首个切片，植入页面技术状态调试器，完成 4 种界面点击验证。
-  4. **三层验收与优雅暂停**：结合后台 Verifier 静默自测、人工页面点击与主管业务验收完成一次完整版本归档 (Commit A 源码 + Commit B 状态推进)；自测失败时标记 `BLOCKED` 并保留日志。
+  4. **三层验收与干净工作树恢复**：结合后台 Verifier 静默自测、人工页面点击与主管业务验收完成一次完整版本归档 (Commit A 源码 + Commit B 状态推进)；自测或页面验证失败时，导出 `.patch` 补丁，执行 `git restore` 恢复干净源码，仅提交 Commit B 状态并将步骤标记为 `BLOCKED`。
 * **执行文档**：[LESSON_04_GUIDE.md](LESSON_04_GUIDE.md) 与 [LESSON_04_TEACHER_PLAN.md](LESSON_04_TEACHER_PLAN.md)。
 
 ---
@@ -212,7 +213,7 @@
 ---
 
 ### 第 6 课：学会定位和修复问题
-* **定位**：事实锚定排错、五层诊断卡与有界排错 Loop（最多 2 轮，不得擅自修改前置断言）。
+* **定位**：事实锚定排错、五层诊断卡、重新应用 `step-N-blocked.patch` 与有界排错 Loop（最多 2 轮，不得擅自修改前置断言）。
 
 ---
 

@@ -10,7 +10,8 @@
 | 建议时长 | 90 分钟 |
 | 前置课程 | 第 2 课：用参考图与设计规则做出像样的页面 |
 | 对应路线图 | `docs/COURSE_ROADMAP.md` 第 3 课 |
-| 课程状态 | 草稿V2 / 待试讲 |
+| 仓库内容状态 (Repository Status) | CANDIDATE (既有基线存在，本轮 V2.1 修订为候选状态) |
+| 教学验证状态 (Teaching Status) | PILOT_PENDING (草稿 V2 / 待试讲) |
 | 课程负责人 | 待指定 |
 | 最后复核日期 | 2026-08-05 |
 | 学员包版本 | 待生成 |
@@ -28,7 +29,7 @@
 1. 掌握 **`grill-me` 追问技能护栏**，完成 3–5 分支、5–7 轮结构化对话澄清。
 2. 掌握 **Given-When-Then 验收条件** 与 **Stop / Escalation 停止上提熔断条件** 的本质区别。
 3. 锁定 **6 大业务要素**（Goal 业务目标、User & Problem 问题定义、Boundary 边界、Risk 风险隐私、Acceptance Criteria 验收场景、Stop Conditions 停止条件）。
-4. 掌握 **阻断性待确认事项门禁 (Blocking Gate)**，确保无未决阻断项进入第四课。
+4. 掌握 **阻断性待确认事项强校验门禁 (Fail-Closed Blocking Gate)**，未通过时输出 `BLOCKING_GATE_FAILED` 拒绝落盘。
 5. 掌握 **三层验收机制（工程验证、契约验证、主管验收）**、`PROJECT_STATE.md` 更新与选择性暂存 (`git add --`) 存档。
 
 ## 4. 可见成果
@@ -63,7 +64,7 @@
 | --- | --- | --- | --- |
 | 成果展示与复盘 | 10 分钟 | 展示模糊需求导致代码崩溃对比，解析 6 大业务要素 | **[ Pause Point 1 ]**：提问学员“口头指令与业务契约的区别是什么？” |
 | 教师演示 | 15 分钟 | 演示唤醒 `grill-me`，下发 Task 3A 预览与 Task 3B HITL 授权口令 | **[ Pause Point 2 ]**：检查学员是否理解为什么 Task 3A 只输出文字预览不改磁盘文件 |
-| 学员实操 Task 1 & 2 | 45 分钟 | 唤醒 `grill-me` 澄清 6 要素，校验阻断门禁，落盘 9 章节契约卡 | **[ Pause Point 3 ]**：巡视检查学员是否清空了 6 项阻断性待确认事项 |
+| 学员实操 Task 1 & 2 | 45 分钟 | 唤醒 `grill-me` 澄清 6 要素，校验阻断门禁，落盘 9 章节契约卡 | **[ Pause Point 3 ]**：巡视检查学员是否清空了 6 项阻断性待确认事项，触发强校验门禁 |
 | 三层验收与 Git 存档 | 10 分钟 | 执行工程验证、契约验证与主管验收，更新 PROJECT_STATE.md | **[ Pause Point 4 ]**：确认学员执行了选择性暂存 (`git add --`) |
 | 总结与 Exit Ticket | 10 分钟 | 区分 Given-When-Then 与 Stop Conditions，完成退场测试 | **[ Pause Point 5 ]**：退出门禁答题与下节课契约冻结规则宣告 |
 
@@ -90,7 +91,7 @@
 ## 11. 学员实操任务
 
 - **Task 1**：唤醒 `grill-me` 澄清 6 要素，清空阻断项。
-- **Task 2**：Task 3A 预览与 Task 3B 口令授权落盘。
+- **Task 2**：Task 3A 预览与 Task 3B 口令授权落盘（触发 Blocking Gate 校验）。
 - **Task 3**：三层验收、更新 `docs/PROJECT_STATE.md` 与 `git add --` 暂存 Commit。
 
 ## 12. 推荐提示词
@@ -141,7 +142,7 @@
 | --- | --- | --- |
 | 误区 1：把解决方案当成问题 | 学员说“我要做个 AI 看板” | 引导关注当前人工耗时与遗漏事实，先定义具体痛点 |
 | 误区 2：把 Given-When-Then 误当停止条件 | 将场景测试用例当成 Agent 熔断边界 | 明确 Given-When-Then 是功能正确性，Stop 是暂停呈报门禁 |
-| 误区 3：带着阻断项直接进入第四课 | 关键字段来源未确认就写实施计划 | 强调阻断门禁规则，必须先清空 6 项阻断问题 |
+| 误区 3：带着阻断项直接进入第四课 | 关键字段来源未确认就写实施计划 | 强调阻断门禁规则，出现 `BLOCKING_GATE_FAILED` 时必须先清空阻断问题 |
 
 ## 20. 课后记录
 
@@ -163,6 +164,6 @@
 实际授课时间：待填
 ```
 
-## 23. 附录：契约冻结规则说明
+## 附录 A：契约冻结规则说明 (Teacher Appendix)
 
 主管验收 PASS 后，`BUSINESS_FEATURE_CARD.md` 成为第四课的唯一需求基线。后续如需修改范围、业务规则、数据契约或验收场景，必须先更新 `BUSINESS_FEATURE_CARD.md` 并重新获得主管确认。

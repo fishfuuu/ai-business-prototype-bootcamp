@@ -28,7 +28,7 @@ For each question:
   6. **Stop / Escalation Conditions (停止与上提条件)**: Operational limits that force the Agent to pause and request human intervention (e.g. unconfirmed critical field sources, conflicting business rules, requirement scope expansion, max interview rounds exceeded).
 
 #### Blocking Open Decisions Gate (阻断性待确认事项门禁)
-If ANY of the following 6 critical items remain `[待确认]`, the proposal MUST NOT be approved as a final contract or used to enter Lesson 04:
+If ANY of the following 6 critical items remain `[待确认]`, the proposal MUST NOT be approved as a final contract or written to disk:
 1. 核心使用者或责任角色
 2. 核心字段来源
 3. 关键业务规则
@@ -38,11 +38,10 @@ If ANY of the following 6 critical items remain `[待确认]`, the proposal MUST
 
 Non-blocking open questions stay in Section 9 `Open Decisions` with schema: `[事项 | 负责人 | 截止日期 | 是否阻断 (否) | 影响范围]`.
 
-#### Prototype Type Specialization:
-- All 3 prototype types MUST keep uniform page technical presentation states (`prototypeState`: `Loading / Empty / Error / Success`).
+#### Prototype Type Specialization (Business Contract Differences):
 - **A. 监控与决策型**: Clarify metric definitions, time range, benchmark, threshold, anomaly level, drill-down dimensions, and trigger actions.
 - **B. 任务与流程型**: Clarify roles, business states, state transitions, allowed actions, reject/revoke rules, and permission boundaries.
-- **C. 操作工具型**: Clarify inputs, validation rules, processing logic, outputs, error handling, and HITL confirmation checkpoints. (Optionally display tool workflow states: `Idle / Validating / Result / Error`).
+- **C. 操作工具型**: Clarify inputs, validation rules, processing logic, outputs, error handling, and HITL confirmation checkpoints.
 
 ### Phase 2: Read-Only Preview (Task 3A)
 - Output text previews in chat ONLY for:
@@ -52,16 +51,19 @@ Non-blocking open questions stay in Section 9 `Open Decisions` with schema: `[�
 - Do NOT write to disk during preview.
 - Instruct user to respond with exact HITL stamp prompt if approved.
 
-### Phase 3: HITL Authorization & File Assets Writing (Task 3B)
-- Write files ONLY after receiving the EXACT prompt:
-  ```text
-  同意方案，请开始落盘功能卡与契约资产
-  ```
-- Upon receiving exact prompt, write ONLY:
-  - `docs/BUSINESS_FEATURE_CARD.md`
-  - `src/types/prototype-contract.d.ts`
-  - `src/mocks/prototype-data.ts`
-- Strictly prohibit modifying any other files.
+### Phase 3: HITL Authorization & Fail-Closed Writing Gate (Task 3B 写入门禁)
+Before accepting the HITL write stamp (`同意方案，请开始落盘功能卡与契约资产`):
+1. **Fail-Closed Gate Check**: Re-evaluate all 6 Blocking Gate items.
+2. **If ANY item remains `[待确认]`**:
+   - **Do NOT write any files**.
+   - Output `BLOCKING_GATE_FAILED`.
+   - List the exact unresolved blocking items.
+   - Instruct user to resolve them or request escalation.
+3. **ONLY when all 6 items are resolved**:
+   - Write `docs/BUSINESS_FEATURE_CARD.md`
+   - Write `src/types/prototype-contract.d.ts`
+   - Write `src/mocks/prototype-data.ts`
+   - Strictly prohibit modifying any other files.
 
 ### Contract Freeze Rule (契约冻结规则)
 Once approved by human manager, `docs/BUSINESS_FEATURE_CARD.md` becomes the authoritative baseline for Lesson 04 implementation. Any subsequent requirement changes MUST update the card and receive re-authorization first.

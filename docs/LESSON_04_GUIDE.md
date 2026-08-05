@@ -13,11 +13,11 @@
 完成本课学习后，你将能够：
 1. **对比与阐述** 一次性巨石代码盲开的退化风险，以及 **先计划、后执行、做小切片** 的增量实施优势。
 2. **遵守与继承** 第三课的 **契约冻结规则 (Contract Freeze Rule)**，以 `docs/BUSINESS_FEATURE_CARD.md` 为唯一需求基线。
-3. **生成与保存** 包含 `plan_status` 与 `current_waiting_step` 步骤清单的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
+3. **生成与保存** 包含 `plan_status` 与状态枚举（`PENDING / READY / IN_PROGRESS / COMPLETED / BLOCKED`）的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 4. **精准区分** **页面技术呈现状态 (Loading/Empty/Error/Success)** 与 **业务流程状态 (待处理/处理中/已阻塞/已完成)** 的本质区别。
 5. **掌握与触发** **Step级 Workflow 授权门禁**（首行精确匹配 `授权执行 Step 1`），受控解锁首个切片编码。
 6. **验证与体验** 带有 **页面技术状态调试器 (Prototype Debug)** 的前端原型，以及针对三类原型方向的 Step 1 薄切片。
-7. **执行** **三层验收与一次完整版本归档 (Commit A 源码 + Commit B 状态推进)**；若验证失败，正确执行 **`BLOCKED` 暂停记录**（不提交 Commit A、不推进 Step 2）。
+7. **执行** **三层验收 (Verifier -> 人工点击 -> 主管验收) 与一次完整版本归档 (Commit A 源码 + Commit B 状态推进)**；若验证失败，正确执行 **`BLOCKED` 失败 Patch 导出与干净工作树恢复**。
 
 ---
 
@@ -33,23 +33,23 @@
 ===================================================================================
 【第二层：增量切片实施 + 实施计划 + 调试验证】 (本课实操)
 
-  [前置需求卡] ───> [ 生成增量计划 ]
-                           │ (只读预览 Plan)
-                           ▼
-               [ 授权保存实施计划 ]
-                           │ (落盘至 docs/LESSON_04_IMPLEMENTATION_PLAN.md)
-                           ▼
-               ┌────────────────────────────────┐
-               │ Workflow 门禁首行: "授权执行 Step 1" │
-               └────────────────────────────────┘
-                           │
-                           ▼
-                 ( Step 1 薄切片编码 ) 
-                           │
-                           ▼
-               [ 静默自测 + 人工页面点击 4 状态 ] ───> [ PASS: 授权 Commit A + Commit B 归档 ]
-                           │
-                           └───> [ FAIL: 标记 BLOCKED 暂停 ] ───> (不跑 Commit A, 记录失败摘要)
+  [前置需求契约] ───> [ 生成增量计划 ]
+                             │ (只读预览 Plan, Step 2..N 默认为 PENDING)
+                             ▼
+                 [ 授权保存实施计划 ]
+                             │ (落盘至 docs/LESSON_04_IMPLEMENTATION_PLAN.md)
+                             ▼
+                 ┌────────────────────────────────┐
+                 │ Workflow 门禁首行: "授权执行 Step 1" │
+                 └────────────────────────────────┘
+                             │
+                             ▼
+                   ( Step 1 薄切片编码 ) 
+                             │
+                             ▼
+  [ 三层验收: Verifier -> 人工点击 -> 主管验收 ] ───> [ PASS: 授权 Commit A + Commit B 归档 ]
+                             │
+                             └───> [ FAIL: 导出 .patch 补丁 ──> git restore 恢复干净源码 ──> 仅提交 Commit B 状态 ]
 
 ===================================================================================
 【第三层：页面技术状态调试器】 (可视化调试，彻底消除交接死角)
@@ -69,37 +69,34 @@
 
 ## 1. 核心概念与护栏机制
 
-### 1.1 主概念：增量实施 (Incremental Implementation)
-- **核心思想**：不让 Agent 一口气修改多个模块，而是先规划 3–5 个小步骤，每次只授权 Agent 编写并验证 1 个 Step。
-- **支撑工具**：
-  - **实施计划 (`docs/LESSON_04_IMPLEMENTATION_PLAN.md`)**：保存计划步骤，防止 `/clear` 后上下文丢失；
-  - **授权口令 (`授权执行 Step N`)**：首行精确匹配，防止 AI 冲动修改超出范围的代码；
-  - **Verifier 静默自测**：后台跑 `typecheck` 与 `build`，防止大量日志刷屏污染主对话框。
+### 1.1 实施计划状态机枚举 (Step Status Enum)
+`docs/LESSON_04_IMPLEMENTATION_PLAN.md` 严格限定 5 种状态：
+- `PENDING`：后续未开始步骤的默认初始状态（Step 2..N 初始状态）；
+- `READY`：前置步骤已完成，等待主管下发 `授权执行 Step N`；
+- `IN_PROGRESS`：已下发授权，正在编码执行中；
+- `COMPLETED`：三层验收通过且完成 Commit A / Commit B 归档；
+- `BLOCKED`：自测或页面验证失败，导出 Patch 恢复干净源码后的阻断状态。
 
-### 1.2 核心概念澄清：页面技术呈现状态 vs. 业务流程状态
-全课程统一三类原型保留相同的页面技术呈现状态：
+### 1.2 `allowed_files` 精确文件路径规范
+实施计划中 `allowed_files` **必须列出精确文件路径**（例如 `["src/pages/HomePage.vue", "src/components/WorkOrderBoard.vue"]`），**严格禁止填写 `src/components/` 等目录**，防止批量误修改或误暂存无关文件。
 
-| 状态类型 | 作用与定义 | 典型示例 | 本课应用 |
-| :--- | :--- | :--- | :--- |
-| **页面技术呈现状态** | 页面前端能否正常拉取、呈现数据与处理异常 | Loading (加载中)、Empty (空数据)、Error (报错重试)、Success (正常呈现) | 植入 **`Prototype Debug` 调试器**，物理点击切换 4 种界面 |
-| **业务流程状态** | 业务对象在真实业务生命周期中所处的阶段 | 待处理 (Pending)、处理中 (In Progress)、已阻塞 (Blocked)、已完成 (Completed) | 在列表/看板的 Tag 标签中展示真正的业务阶段 |
-
-*(注：操作工具型原型保留统一的 `prototypeState` 4 种技术呈现状态，可额外展示 `Idle / Validating / Result / Error` 工具流程状态。)*
-
-### 1.3 三层递进验收标准与版本归档 (Three-Layer Verification & Archiving)
-Step 1 编码完成后，需通过三层关口：
+### 1.3 三层递进验收门禁与版本归档 (Three-Layer Verification Gate)
+Step 1 编码完成后，必须按顺序通过三层门禁：
 1. **第一层：Verifier PASS (静态工程与编译自测)**
-2. **第二层：人工点击验收 PASS (页面行为交互验证)**
-3. **第三层：主管业务验收 PASS (业务目标满足)**
+2. **第二层：人工点击验收 PASS (页面 `Prototype Debug` 4 状态点击校验)**
+3. **第三层：主管业务验收 PASS (主管下发 `主管验收 Step N 通过`)**
 
-通过后，执行一次完整版本归档：
-- **Commit A：切片源码 (`feat`)**
-- **Commit B：实施计划状态推进 (`docs`)**
+三层全过，方可依次下发 `授权提交 Step N 源码` (Commit A) 与 `授权提交 Step N 状态推进` (Commit B)。
 
-### 1.4 区分“课程学习结果”与“切片实施结果”
-如果静默自测报错或切片未达预期：
-- **课程学习结果**：**`PASS`**（学员正确执行了停止、记录证据与 `BLOCKED` 标记流程）；
-- **Step 实施结果**：**`BLOCKED`**（不执行 Commit A，不推进 Step 2，在 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中填入 `failure_summary` 写入日志，留给第六课处理）。
+### 1.4 校验失败时的干净工作树恢复机制 (Clean Worktree Recovery)
+若 Verifier 或页面验证失败：
+- **课程学习结果**：**`PASS`**（学员正确执行了导出 Patch、恢复干净源码与 `BLOCKED` 记录流程）；
+- **Step 实施结果**：**`BLOCKED`**；
+- **恢复与导出动作**：
+  1. 将失败修改导出为 Patch 补丁：`local-backups/lesson-04-evidence/step-N-blocked.patch`；
+  2. 保存 Verifier 日志并回填 `failure_summary`；
+  3. **恢复干净源码**：执行 `git restore -- <Step N exact allowed_files>` 还原源码至稳定基线；
+  4. **仅归档状态**：下发 `授权提交 Step N 状态推进` 提交 Commit B 状态记录，留给第六课处理。
 
 ---
 
@@ -128,7 +125,7 @@ Step 1 编码完成后，需通过三层关口：
 **操作指令 1 (只读预览)**：
 ```text
 /incremental-implementation
-请读取 docs/BUSINESS_FEATURE_CARD.md，生成 3-5 步增量实施计划预览。注意：现在只输出 Plan 预览，不要改动任何文件。
+请读取 docs/BUSINESS_FEATURE_CARD.md、src/types/prototype-contract.d.ts 与 src/mocks/prototype-data.ts，生成 3-5 步增量实施计划预览。注意：现在只输出 Plan 预览，不要改动任何文件。
 ```
 
 **操作指令 2 (授权落盘)**：
@@ -154,13 +151,18 @@ Step 1 编码完成后，需通过三层关口：
 Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run-lesson-verifier.ps1 -Step 1 进行校验。
 ```
 
-**操作指令 2 (授权提交 Step 1 源码 - Commit A)**：
+**操作指令 2 (主管业务验收通过)**：
+```text
+主管验收 Step 1 通过
+```
+
+**操作指令 3 (授权提交 Step 1 源码 - Commit A)**：
 ```text
 授权提交 Step 1 源码
 ```
 *(Agent 底层执行 `git add -- <allowed_files>` 选择性暂存提交)*
 
-**操作指令 3 (授权提交 Step 1 状态推进 - Commit B)**：
+**操作指令 4 (授权提交 Step 1 状态推进 - Commit B)**：
 ```text
 授权提交 Step 1 状态推进
 ```
@@ -170,7 +172,7 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 
 ## 3. 课后退场自测 (Exit Ticket)
 
-> **退出门禁题**：“页面技术呈现状态”与“业务流程状态”的核心区别是什么？切片验证失败时，应该如何正确处理？
+> **退出门禁题**：验证失败时，为什么必须将失败修改导出为 Patch 并执行 `git restore` 恢复干净源码？
 
 * **参考答案**：
-  页面技术呈现状态描述前端拉取数据与展示状态；业务流程状态描述业务对象的生命周期；验证失败时，不提交 Commit A，将步骤标记为 `BLOCKED` 并回填失败摘要，留给第六课处理。
+  导出 Patch 补丁可以完整保存失败证据（留给第六课诊断）；执行 `git restore` 恢复干净源码可以防止失败代码污染工作区，确保后续 Git 操作不误提交损坏代码。

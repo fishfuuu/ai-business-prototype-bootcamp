@@ -12,14 +12,15 @@ Build in thin vertical slices — create a plan first, then implement one verifi
 ## Workflow & Authorization Protocol (Step级 Workflow 授权门禁)
 
 ### Phase 1: Read-Only Plan Preview (只读预览)
-- Read `docs/BUSINESS_FEATURE_CARD.md`, `src/types/prototype-contract.d.ts`, `src/mocks/prototype-data.ts`.
+- Read all 3 inputs: `docs/BUSINESS_FEATURE_CARD.md`, `src/types/prototype-contract.d.ts`, `src/mocks/prototype-data.ts`.
 - Output proposed 3–5 step Contract-First execution plan preview in chat.
 - **CRITICAL**: Do NOT write, modify, or delete any files during Phase 1.
 - End response with exact prompt: `计划预览生成完毕。请输入 "授权保存 Lesson 04 实施计划" 以写入工程。`
 
 ### Phase 2: Plan Persistence & State Machine Schema (计划落盘门禁)
 - Require user input to match exact phrase: `授权保存 Lesson 04 实施计划`
-- Write persistent plan to `docs/LESSON_04_IMPLEMENTATION_PLAN.md` using the exact Schema:
+- **Step Status Enum**: `PENDING` (Initial future step) | `READY` (Awaiting authorization) | `IN_PROGRESS` (Authorized executing) | `COMPLETED` (Verification & Commit A passed) | `BLOCKED` (Execution or verification failed).
+- Write persistent plan to `docs/LESSON_04_IMPLEMENTATION_PLAN.md` using exact file paths in `allowed_files` (Directories like `src/components/` are strictly PROHIBITED):
   ```markdown
   # Lesson 04 实施计划 (Implementation Plan)
 
@@ -31,15 +32,18 @@ Build in thin vertical slices — create a plan first, then implement one verifi
     - id: 1
       name: "组件骨架与页面技术状态调试切片"
       status: READY
-      allowed_files: ["src/pages/HomePage.vue", "src/components/"]
+      allowed_files:
+        - "src/pages/HomePage.vue"
+        - "src/components/WorkOrderBoard.vue"
       acceptance: "支持页面技术状态调试器切换 (Loading / Empty / Error / Success)"
       failure_summary: ""
       verification_log: ""
       commit_sha: ""
     - id: 2
       name: "绑定 Mock 数据与渲染业务列表"
-      status: BLOCKED
-      allowed_files: ["src/pages/HomePage.vue", "src/components/"]
+      status: PENDING
+      allowed_files:
+        - "src/components/WorkOrderBoard.vue"
       acceptance: "成功渲染业务列表与交互"
       failure_summary: ""
       verification_log: ""
@@ -54,6 +58,7 @@ Build in thin vertical slices — create a plan first, then implement one verifi
   授权执行 Step N
   ```
   where `N` matches `current_waiting_step` recorded in `docs/LESSON_04_IMPLEMENTATION_PLAN.md`.
+- Upon receiving authorization, set Step N `status` -> `IN_PROGRESS`.
 - **Step Constraints**:
   - One authorization permits execution of ONE step only.
   - Do NOT auto-execute subsequent steps.
@@ -61,24 +66,25 @@ Build in thin vertical slices — create a plan first, then implement one verifi
 
 ### Phase 4: Three-Layer Verification & Outcome Handling
 
-1. **Silent Verification**:
-   - Invoke `Verifier Subagent` (`.claude/agents/verifier.md`) or run `powershell -ExecutionPolicy Bypass -File scripts/run-lesson-verifier.ps1 -Step N`.
-   - Log saved to `local-backups/lesson-04-evidence/step-N-verification.log`.
+1. **Three-Layer Verification Order**:
+   - **Layer 1: Verifier PASS** (Run `powershell -ExecutionPolicy Bypass -File scripts/run-lesson-verifier.ps1 -Step N` -> `[PASS]`).
+   - **Layer 2: 人工页面点击 PASS** (Manual verification of Loading / Empty / Error / Success debug toggles).
+   - **Layer 3: 主管业务验收 PASS** (Require explicit human authorization or statement `主管验收 Step N 通过`).
 
-2. **Outcome A: Verification PASS (静默自测 + 人工页面验证 PASS)**
-   - Main context receives 1 summary line: `[PASS] Step N Verification clean | Log: local-backups/lesson-04-evidence/step-N-verification.log`.
-   - Instruct user to issue Two-Commit commands:
-     - `授权提交 Step N 源码` (Commit A: `git add -- <Step N allowed_files>`, message `feat(prototype): step N - implement target slice`)
+2. **Outcome A: Verification & Human Approval PASS (三层全 PASS)**
+   - Only when all 3 layers pass, present Two-Commit prompts:
+     - `授权提交 Step N 源码` (Commit A: `git add -- <Step N exact allowed_files>`, message `feat(prototype): step N - implement target slice`)
      - `授权提交 Step N 状态推进` (Commit B: `git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md`, message `docs(state): advance lesson 04 plan to step N+1`, or for final step set `plan_status: COMPLETED`, `current_waiting_step: null` and message `docs(state): complete lesson 04 implementation plan`)
 
-3. **Outcome B: Verification FAIL / Step BLOCKED (校验失败与暂停关口)**
+3. **Outcome B: Verification FAIL / Step BLOCKED (失败工作区导出与恢复)**
    - If Verifier or manual page verification fails:
      - **Do NOT execute Commit A** (do NOT commit broken code slice).
-     - Update Step N `status` -> `BLOCKED` in `docs/LESSON_04_IMPLEMENTATION_PLAN.md`.
-     - Write detailed cause to Step N `failure_summary`.
-     - Write log path to Step N `verification_log`.
-     - If instructed by user to save failure state, execute Commit B ONLY: `git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md` with message `docs(state): record step N blocked status`.
-     - Do NOT proceed to Step N+1. Leave evidence for Lesson 06 (Bug Diagnosis).
+     - Export dirty diff to patch file: `local-backups/lesson-04-evidence/step-N-blocked.patch`.
+     - Save log to `local-backups/lesson-04-evidence/step-N-verification.log`.
+     - Update Step N `status` -> `BLOCKED`, write cause to `failure_summary`.
+     - **Clean Worktree Recovery**: Run `git restore -- <Step N exact allowed_files>` to restore exact allowed files to clean baseline!
+     - Execute Commit B ONLY for state recording: `git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md` with message `docs(state): record step N blocked status`.
+     - Do NOT proceed to Step N+1. Leave `.patch` evidence for Lesson 06 (Bug Diagnosis).
      - Student course outcome is marked `PASS` for correctly following the stop and evidence logging protocol.
 
 ## Page Technical State Debugger Requirement (页面技术状态调试器)
