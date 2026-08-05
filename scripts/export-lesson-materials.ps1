@@ -12,7 +12,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $projectRoot
 
 Write-Host "========================================"
-Write-Host "Exporting Lesson 02 Materials Package"
+Write-Host "Exporting Lesson Materials Package"
 Write-Host "========================================"
 Write-Host "SourceRef: $SourceRef"
 Write-Host "Version:   $Version"
@@ -62,7 +62,7 @@ $exportSucceeded = $false
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
 try {
-    # 4. Extract install-lesson-materials.ps1 ONLY from SourceCommit via git show (No working tree fallback)
+    # 4. Extract install-lesson-materials.ps1 ONLY from SourceCommit via git show
     $installerPath = Join-Path $packageStaging "install-lesson-materials.ps1"
     $installerContent = & git show "$sourceCommit`:scripts/install-lesson-materials.ps1" 2>$null
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($installerContent)) {
@@ -70,11 +70,11 @@ try {
     }
     [System.IO.File]::WriteAllLines($installerPath, $installerContent, $utf8NoBom)
 
-    # 5. Extract payload/ files (docs and skills) from SourceCommit via git archive
+    # 5. Extract payload/ files from SourceCommit via git archive
     $gitArchiveZip = Join-Path $tempDir "git-archive.zip"
-    & git archive --format=zip -o $gitArchiveZip $sourceCommit docs .claude/skills/grill-me
+    & git archive --format=zip -o $gitArchiveZip $sourceCommit docs .claude/skills .claude/agents scripts
     if ($LASTEXITCODE -ne 0) {
-        throw "git archive for docs & skills failed on SourceCommit $sourceCommit."
+        throw "git archive for docs, skills, agents & scripts failed on SourceCommit $sourceCommit."
     }
     
     $archiveExtractDir = Join-Path $tempDir "git-archive-extracted"
@@ -84,7 +84,7 @@ try {
     New-Item -ItemType Directory -Path $payloadStagingDir -Force | Out-Null
     Copy-Item -Path "$archiveExtractDir\*" -Destination $payloadStagingDir -Recurse -Force
 
-    # Filter to only keep second & third lesson relevant docs & skills in payload
+    # Filter to only keep allowed lesson relevant docs, skills, agents & scripts in payload
     $allowedRelativePaths = @(
         "docs\LESSON_02_GUIDE.md",
         "docs\assets\lesson-02\lesson-02-flow.png",
@@ -92,7 +92,12 @@ try {
         "docs\assets\lesson-02\ref-task-workflow.png",
         "docs\assets\lesson-02\ref-operation-tool.png",
         "docs\LESSON_03_GUIDE.md",
-        ".claude\skills\grill-me\SKILL.md"
+        ".claude\skills\grill-me\SKILL.md",
+        "docs\LESSON_04_GUIDE.md",
+        ".claude\skills\incremental-implementation\SKILL.md",
+        ".claude\agents\verifier.md",
+        "scripts\run-lesson-verifier.ps1",
+        "scripts\verify-lesson-04-student.ps1"
     )
 
     $allExtractedFiles = Get-ChildItem -Path $payloadStagingDir -Recurse -File
