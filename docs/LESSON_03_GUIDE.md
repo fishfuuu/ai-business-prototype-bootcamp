@@ -147,9 +147,31 @@ git commit -m "feat: complete lesson 3 business and data contracts"
 
 ---
 
-## 3. 课后退场自测 (Exit Ticket)
+## 4. 学员课后记忆卡与退场测试 (Exit Ticket & Misconceptions)
 
-> **退出门禁题**：`Acceptance Criteria (验收条件)` 与 `Stop Conditions (停止条件)` 的核心区别是什么？为什么阻断性事项未确认时 `grill-me` 会拒绝落盘？
+### ✍️ 学员概念互动填空 (Interactive Concept Fill-in-the-Blanks)
+1. **Prompting vs. Harness**：盲发口头 Prompt 容易引发 AI 凭空脑补与需求漂移；通过 **`grill-me` 技能护栏** 进行 3–5 分支、5–7 轮结构化追问，本质是将模糊需求转化为 **确定性的业务契约**。
+2. **Given-When-Then vs. Stop Conditions**：基于场景的 `Given-When-Then` 用于判断 **功能做出来后是否正确**（验收条件）；而 `Stop Conditions` 用于判断 **Agent 什么时候必须熔断暂停并呈报主管**（停止与上提条件）。
+3. **契约三件套**：第三课落盘的三大契约资产分别是 Markdown 格式的《业务功能卡》(`docs/BUSINESS_FEATURE_CARD.md`)、TypeScript 类型草稿 (`src/types/prototype-contract.d.ts`) 以及运行时模拟种子数据 (`src/mocks/prototype-data.ts`)。
+4. **强校验门禁 (Fail-Closed Blocking Gate)**：若使用者角色、核心字段来源、业务规则、敏感数据处理方式、In Scope 边界线或 Given-When-Then 场景存在 `[待确认]` 事项，`grill-me` 会输出 **`BLOCKING_GATE_FAILED`** 拒绝落盘文件。
 
+### 💡 常见概念误区与正确理解 (Misconceptions vs. Correct Engineering Reality)
+
+| 常见误区 (Misconception) | 正确硬核理解 (Correct Engineering Reality) | 如何纠偏与护栏防护 (Remedy & Guardrails) |
+| :--- | :--- | :--- |
+| **误区 1：“直接给 AI 发‘帮我做个工单预警页面’最省事”** | 口头一句话需求缺乏数据来源与规则边界，AI 会凭空编造字段名与数据结构，到了第四课增量编码时直接产生类型崩溃。 | 唤醒 `grill-me` 护栏，强制通过 3–5 个决策分支、5–7 轮追问锁死 6 大业务要素。 |
+| **误区 2：“把 Given-When-Then 用例当成 Stop Conditions”** | 验收用例是描述成功/异常的页面行为预期（Acceptance Criteria）；Stop Conditions 是约束 Agent 权限越界、规则冲突或未决事项时的熔断自杀开关。 | 明确区分两类概念，Stop Conditions 必须包含“触发未决阻断项时自动暂停并上呈主管”。 |
+| **误区 3：“带着 `[待确认]` 事项也能强行落盘写代码”** | 阻断性事项未澄清意味着需求基准缺失，在缺失基准上写代码会导致后续大面积二次重构与沟通蒸发。 | 触发 Blocking Gate 强校验门禁，未通过时输出 `BLOCKING_GATE_FAILED` 拒绝落盘。 |
+| **误区 4：“在 Mock 假数据里标记敏感度是多此一举”** | 在原型中标记敏感等级是写给未来 IT 部门的 **生产网关脱敏规约**，告知生产环境哪些字段物理禁止送入 LLM 模型。 | Task 2 契约表格中必须显式标明敏感等级（Public / Internal / Secret）。 |
+
+---
+
+### 🎯 退场测试题 (Exit Ticket)
+
+* **问题 1**：`Acceptance Criteria (Given-When-Then 验收条件)` 与 `Stop Conditions (停止上提条件)` 的本质区别是什么？
 * **参考答案**：
-  验收条件用于判断功能做出后是否正确；停止条件用于判断 Agent 什么时候必须熔断暂停并呈报主管；阻断性事项未确认会导致第四课增量开发失去需求基准，故触发 Fail-Closed 门禁拒绝落盘。
+  - `Acceptance Criteria` 描述功能开发完成后如何判断其输出与逻辑是否正确（Given 上下文 / When 操作 / Then 预期结果）。
+  - `Stop Conditions` 描述 Agent 在执行过程中遇阻或触及权限边界时，何时必须熔断暂停并向上呈报主管裁决。
+* **问题 2**：为什么在写入磁盘前要生成 `src/types/prototype-contract.d.ts` 类型草稿？
+* **参考答案**：
+  - TypeScript 类型草稿是强类型的数据契约，能在编码前锁定字段名称、数据类型与必填属性，防止第四课 AI 增量编码时字段随心所欲飘移；同时 IT 部门接手后可直接复用该接口定义。

@@ -175,9 +175,30 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 
 ---
 
-## 3. 课后退场自测 (Exit Ticket)
+## 3. 学员课后记忆卡与退场测试 (Exit Ticket & Misconceptions)
 
-> **退出门禁题**：验证失败时，为什么必须导出 `.patch` 补丁并执行 `git restore` 恢复干净源码？为什么不能直接运行 `授权提交 Step 1 状态推进`？
+### ✍️ 学员概念互动填空 (Interactive Concept Fill-in-the-Blanks)
+1. **Plan & Execute 范式**：增量实施的核心是 **“先形成计划，每次只授权完成一个可验证的小切片”**，计划保存于外部长期记忆 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中。
+2. **步骤状态机枚举**：实施计划中的步骤包含 5 种状态：初始步骤默认为 **`PENDING`**，前置步骤通过后变为 **`READY`**，授权后变为 **`IN_PROGRESS`**，三层验收归档后变为 **`COMPLETED`**，校验失败或主管拒绝后变为 **`BLOCKED`**。
+3. **2D 状态解耦**：**页面技术呈现状态 (`prototypeState`: Loading / Empty / Error / Success)** 用于调试 UI 数据加载与异常；而 **业务流程状态 (待处理 / 处理中 / 已阻塞 / 已完成)** 用于展示业务对象的生命周期。
+4. **两提交协议与干净恢复**：验收通过后分两次提交——**Commit A 源码暂存** (`git add -- <allowed_files>`) 与 **Commit B 状态推进** (`git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md`)；若验证失败，导出 **`.patch` 补丁** 物理记录证据，并执行 **`git restore` 恢复干净源码**。
 
+### 💡 常见概念误区与正确理解 (Misconceptions vs. Correct Engineering Reality)
+
+| 常见误区 (Misconception) | 正确硬核理解 (Correct Engineering Reality) | 如何纠偏与护栏防护 (Remedy & Guardrails) |
+| :--- | :--- | :--- |
+| **误区 1：“让 AI 一口气写完页面所有功能效率最高”** | 一口气修改 10 个文件会导致上下文记忆爆炸 (Context Window Blowup)、样式大面积崩塌且报错时根本无法定位根因。 | 唤醒 `incremental-implementation` 护栏，强制按 3–5 步切片，每次仅授权执行 1 个切片。 |
+| **误区 2：“只要静态编译通过 (Verifier PASS)，就代表切片做对了”** | Verifier 只是静态编译检查，无法替代人工物理点击页面以及主管对业务逻辑与交互美观度的裁决。 | 严格执行 **三层递进验收 (Verifier PASS -> 人工点击 PASS -> 主管业务验收 PASS)**，缺一不可。 |
+| **误区 3：“混淆页面技术呈现状态与业务流程状态”** | 将 `Loading` 或 `Error` 误当成业务对象的状态，导致逻辑混乱与调试失败。 | 强制前端植入 `prototypeState` 调试器（`import.meta.env.DEV`），与业务流程状态标签物理解耦。 |
+| **误区 4：“切片报错时直接多次下发指令让 AI 撞大运”** | 在污染的工作区重试会导致损坏代码残留，后续 Git 提交会误将坏代码打包入库。 | 导出 `step-N-blocked.patch` 补丁，执行 `git restore` 还原干净源码，使用独立口令 `授权提交 Step N 阻断状态` 归档。 |
+
+---
+
+### 🎯 退场测试题 (Exit Ticket)
+
+* **问题 1**：验证失败或主管拒绝切片时，为什么必须导出 `.patch` 补丁并执行 `git restore` 恢复干净源码？
 * **参考答案**：
-  导出 `.patch` 可以保存失败证据供第六课诊断；执行 `git restore` 恢复干净源码可以防止损坏代码污染工作树；失败时必须使用独立的 `授权提交 Step 1 阻断状态` 提交，不能混用状态推进口令。
+  - 导出 `.patch` 补丁可以完整保存失败代码证据供第六课诊断；执行 `git restore` 清理未跟踪新文件可以还原 100% Clean 的工作树，防止失败的破损代码残留并误被后续 Git 操作提交。
+* **问题 2**：选择性暂存协议中 Commit A 与 Commit B 的职责划分是什么？
+* **参考答案**：
+  - Commit A 仅暂存并提交 `allowed_files` 中清单列出的源码修改（`feat` 提交）；Commit B 在回填 SHA 与日志后仅暂存并提交 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 实施计划文件（`docs` 状态推进提交）。
