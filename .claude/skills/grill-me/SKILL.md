@@ -27,16 +27,18 @@ For each question:
   5. **Acceptance Criteria (验收条件)**: Functional correctness criteria formatted as `Given [Context] / When [Action] / Then [Expected Result]`.
   6. **Stop / Escalation Conditions (停止与上提条件)**: Operational limits that force the Agent to pause and request human intervention (e.g. unconfirmed critical field sources, conflicting business rules, requirement scope expansion, max interview rounds exceeded).
 
-#### Blocking Open Decisions Gate (阻断性待确认事项门禁)
-If ANY of the following 6 critical items remain `[待确认]`, the proposal MUST NOT be approved as a final contract or written to disk:
-1. 核心使用者或责任角色
-2. 核心字段来源
-3. 关键业务规则
-4. 敏感数据处理方式
-5. In Scope 边界线
-6. 至少 1 个核心 Given-When-Then 验收场景
+#### Fail-Closed Blocking Gate Rules (强校验阻断门禁)
+The 6 core items MUST be evaluated for **existence, non-emptiness, explicit confirmed conclusions, absence of vague/conflicting claims, and absence of `[待确认]` tags**:
+1. `user_and_owner`: 核心使用者或责任角色
+2. `core_field_source`: 核心字段来源
+3. `business_rules`: 关键业务规则
+4. `sensitive_data_policy`: 敏感数据处理方式
+5. `in_scope`: In Scope 边界线
+6. `acceptance_scenario`: 至少 1 个核心 Given-When-Then 验收场景
 
-Non-blocking open questions stay in Section 9 `Open Decisions` with schema: `[事项 | 负责人 | 截止日期 | 是否阻断 (否) | 影响范围]`.
+If ANY item is missing, empty, vague, conflicting, or tagged `[待确认]`, the proposal MUST NOT be approved as a final contract or written to disk.
+
+Non-blocking open questions stay in Section 9 `Open Decisions` with schema: `[事项 | 负责人 | 截止日期 | 是否阻断: 否 | 影响范围]`.
 
 #### Prototype Type Specialization (Business Contract Differences):
 - **A. 监控与决策型**: Clarify metric definitions, time range, benchmark, threshold, anomaly level, drill-down dimensions, and trigger actions.
@@ -51,15 +53,26 @@ Non-blocking open questions stay in Section 9 `Open Decisions` with schema: `[�
 - Do NOT write to disk during preview.
 - Instruct user to respond with exact HITL stamp prompt if approved.
 
-### Phase 3: HITL Authorization & Fail-Closed Writing Gate (Task 3B 写入门禁)
+### Phase 3: HITL Authorization & Fail-Closed Gate Evaluation (Task 3B 写入门禁)
 Before accepting the HITL write stamp (`同意方案，请开始落盘功能卡与契约资产`):
-1. **Fail-Closed Gate Check**: Re-evaluate all 6 Blocking Gate items.
-2. **If ANY item remains `[待确认]`**:
+1. **Re-evaluate all 6 Blocking Gate items** for existence, non-emptiness, and confirmed status.
+2. **Output structured evaluation status**:
+   ```yaml
+   blocking_gate:
+     user_and_owner: PASS # (or FAIL)
+     core_field_source: PASS # (or FAIL)
+     business_rules: PASS # (or FAIL)
+     sensitive_data_policy: PASS # (or FAIL)
+     in_scope: PASS # (or FAIL)
+     acceptance_scenario: PASS # (or FAIL)
+     result: PASS # (or BLOCKING_GATE_FAILED)
+   ```
+3. **If `result` is `BLOCKING_GATE_FAILED`**:
    - **Do NOT write any files**.
    - Output `BLOCKING_GATE_FAILED`.
-   - List the exact unresolved blocking items.
+   - List unresolved or missing items.
    - Instruct user to resolve them or request escalation.
-3. **ONLY when all 6 items are resolved**:
+4. **ONLY when `result` is `PASS`**:
    - Write `docs/BUSINESS_FEATURE_CARD.md`
    - Write `src/types/prototype-contract.d.ts`
    - Write `src/mocks/prototype-data.ts`

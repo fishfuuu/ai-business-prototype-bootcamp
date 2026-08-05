@@ -261,6 +261,12 @@ if ($l4Skill -notmatch "授权提交 Step.*状态推进") {
 if ($l4Skill -notmatch "plan_status:\s*COMPLETED") {
     throw "SKILL.md must define final step transition to plan_status: COMPLETED."
 }
+if ($l4Skill -notmatch "CONTRACT_ASSET_MISMATCH") {
+    throw "SKILL.md must define Pre-Plan Gate CONTRACT_ASSET_MISMATCH mismatch error."
+}
+if ($l4Skill -notmatch "step-N-blocked\.patch") {
+    throw "SKILL.md must define clean worktree recovery via step-N-blocked.patch."
+}
 
 # 9. Verifier Runner Execution & Timeout Assertions
 $runnerScript = Get-Content "scripts\run-lesson-verifier.ps1" -Encoding UTF8 -Raw

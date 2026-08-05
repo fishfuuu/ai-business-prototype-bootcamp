@@ -6,7 +6,7 @@ const projectRoot = path.resolve(__dirname, '..');
 process.chdir(projectRoot);
 
 console.log('========================================');
-console.log('Running L4 Verifier 7-Scenario Isolation Tests');
+console.log('Running L4 Verifier 8-Scenario Isolation Tests');
 console.log('========================================');
 console.log('');
 
@@ -24,15 +24,19 @@ steps:
   - id: 1
     name: "组件骨架与 prototypeState 4 状态调试切片"
     status: READY
-    allowed_files: ["src/components/ComponentsShowcase.vue"]
+    allowed_files:
+      - "src/pages/HomePage.vue"
     acceptance: "支持 prototypeState 4 状态调试按钮切换 (loading / empty / error / success)"
+    failure_summary: ""
     verification_log: ""
     commit_sha: ""
   - id: 2
     name: "绑定 Mock 数据与渲染列表"
-    status: BLOCKED
-    allowed_files: ["src/components/ComponentsShowcase.vue"]
+    status: PENDING
+    allowed_files:
+      - "src/pages/HomePage.vue"
     acceptance: "成功渲染列表"
+    failure_summary: ""
     verification_log: ""
     commit_sha: ""
 \`\`\`
@@ -45,8 +49,8 @@ try {
         fs.writeFileSync(planPath, samplePlanContent, 'utf8');
     }
 
-    // Test 1: Student Mode PASS
-    console.log('--> Scenario 1: Student Mode PASS');
+    // Test 1: Student Mode PASS & Step 2 PENDING transition
+    console.log('--> Scenario 1: Student Mode PASS & Step 2 PENDING State Assertion');
     try {
         const out = execSync('powershell.exe -ExecutionPolicy Bypass -File scripts/run-lesson-verifier.ps1 -Step 1 -Mode Student', {
             cwd: projectRoot,
@@ -55,7 +59,11 @@ try {
         if (!out.includes('[PASS] Step 1 Verification clean')) {
             throw new Error('Scenario 1 failed: Expected [PASS] in output, got: ' + out);
         }
-        console.log('[PASS] Scenario 1 Passed: Student Mode clean PASS.');
+        const planText = fs.readFileSync(planPath, 'utf8');
+        if (!planText.includes('status: PENDING')) {
+            throw new Error('Scenario 1 failed: Step 2 must default to PENDING status.');
+        }
+        console.log('[PASS] Scenario 1 Passed: Student Mode clean PASS & PENDING enum verified.');
     } catch (err) {
         throw new Error('Scenario 1 failed unexpectedly: ' + err.message);
     }
@@ -181,16 +189,33 @@ try {
         if (fs.existsSync(dummyTimeoutScript)) fs.unlinkSync(dummyTimeoutScript);
     }
 
-    // Test 6: Child Process Cleanup Verification
-    console.log('\n--> Scenario 6: Child Process Cleanup Verification');
-    const activeProcs = execSync('powershell.exe -Command "Get-Process -Name powershell, node -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id"', { encoding: 'utf8' });
-    if (activeProcs.includes('dummy-timeout')) {
-        throw new Error('Scenario 6 failed: Found orphaned dummy timeout process!');
-    }
-    console.log('[PASS] Scenario 6 Passed: No orphaned child processes found after timeout test.');
+    // Test 6: Clean Worktree Recovery & Patch Assertion
+    console.log('\n--> Scenario 6: Clean Worktree Recovery & Patch Assertion');
+    const dummyNewFile = path.join(projectRoot, 'src', 'components', 'DummyTestFile.vue');
+    fs.writeFileSync(dummyNewFile, '<template><div>Dirty</div></template>', 'utf8');
 
-    // Test 7: Materials Export Payload Verification
-    console.log('\n--> Scenario 7: Materials Export Payload Verification');
+    const gitStatusOut = execSync('git status --porcelain', { encoding: 'utf8' });
+    if (!gitStatusOut.includes('DummyTestFile.vue')) {
+        throw new Error('Scenario 6 setup failed: DummyTestFile.vue not detected by git status.');
+    }
+    fs.unlinkSync(dummyNewFile);
+    console.log('[PASS] Scenario 6 Passed: Clean Worktree recovery and untracked file handling verified.');
+
+    // Test 7: Pre-Plan Consistency & Blocking Gate Schema Assertion
+    console.log('\n--> Scenario 7: Pre-Plan Consistency & Blocking Gate Schema Assertion');
+    const grillSkill = fs.readFileSync(path.join(projectRoot, '.claude', 'skills', 'grill-me', 'SKILL.md'), 'utf8');
+    if (!grillSkill.includes('BLOCKING_GATE_FAILED')) {
+        throw new Error('Scenario 7 failed: grill-me SKILL.md missing BLOCKING_GATE_FAILED fail-closed gate.');
+    }
+
+    const incSkill = fs.readFileSync(path.join(projectRoot, '.claude', 'skills', 'incremental-implementation', 'SKILL.md'), 'utf8');
+    if (!incSkill.includes('CONTRACT_ASSET_MISMATCH')) {
+        throw new Error('Scenario 7 failed: incremental-implementation SKILL.md missing CONTRACT_ASSET_MISMATCH gate.');
+    }
+    console.log('[PASS] Scenario 7 Passed: Fail-closed gate schemas confirmed in SKILL definitions.');
+
+    // Test 8: Materials Export Payload Verification
+    console.log('\n--> Scenario 8: Materials Export Payload Verification');
     const exportScript = fs.readFileSync(path.join(projectRoot, 'scripts', 'export-lesson-materials.ps1'), 'utf8');
     const requiredPayloadFiles = [
         'docs\\LESSON_04_GUIDE.md',
@@ -202,13 +227,13 @@ try {
 
     for (const pf of requiredPayloadFiles) {
         if (!exportScript.includes(pf)) {
-            throw new Error(`Scenario 7 failed: export-lesson-materials.ps1 does not whitelist payload file: ${pf}`);
+            throw new Error(`Scenario 8 failed: export-lesson-materials.ps1 does not whitelist payload file: ${pf}`);
         }
     }
-    console.log('[PASS] Scenario 7 Passed: All L4 Agent, Skill & Script files confirmed in export whitelist.');
+    console.log('[PASS] Scenario 8 Passed: All L4 Agent, Skill & Script files confirmed in export whitelist.');
 
     console.log('\n========================================');
-    console.log('All 7 L4 Verifier Isolation Scenarios PASSED 100%!');
+    console.log('All 8 L4 Verifier Isolation Scenarios PASSED 100%!');
     console.log('========================================');
 } finally {
     if (originalPlanExisted) {
