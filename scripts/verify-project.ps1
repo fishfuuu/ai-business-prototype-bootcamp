@@ -204,6 +204,12 @@ if ($l4Guide -notmatch "LESSON_04_IMPLEMENTATION_PLAN\.md") {
 if ($l4Guide -notmatch "授权执行 Step") {
     throw "LESSON_04_GUIDE.md must instruct student to use '授权执行 Step N' authorization gate."
 }
+if ($l4Guide -notmatch "授权提交 Step.*源码") {
+    throw "LESSON_04_GUIDE.md must instruct student to use Two-Commit Protocol (授权提交 Step N 源码)."
+}
+if ($l4Guide -notmatch "授权提交 Step.*状态推进") {
+    throw "LESSON_04_GUIDE.md must instruct student to use Two-Commit Protocol (授权提交 Step N 状态推进)."
+}
 if ($l4Guide -notmatch "prototypeState") {
     throw "LESSON_04_GUIDE.md must explain prototypeState debug toggle."
 }
@@ -228,7 +234,22 @@ if ($l4TeacherPlan -match "\[x\] 页面实际操作") {
     throw "LESSON_04_TEACHER_PLAN.md checkboxes must default to unchecked [ ]."
 }
 
-# 8. Verifier Runner Execution & Timeout Assertions
+# 8. Skill File Input Path & Two-Commit Protocol Assertions
+$l4Skill = Get-Content ".claude\skills\incremental-implementation\SKILL.md" -Encoding UTF8 -Raw
+if ($l4Skill -notmatch "docs/BUSINESS_FEATURE_CARD\.md") {
+    throw "SKILL.md must specify full path docs/BUSINESS_FEATURE_CARD.md instead of bare filename."
+}
+if ($l4Skill -notmatch "授权提交 Step.*源码") {
+    throw "SKILL.md must define Two-Commit protocol (授权提交 Step N 源码)."
+}
+if ($l4Skill -notmatch "授权提交 Step.*状态推进") {
+    throw "SKILL.md must define Two-Commit protocol (授权提交 Step N 状态推进)."
+}
+if ($l4Skill -notmatch "plan_status:\s*COMPLETED") {
+    throw "SKILL.md must define final step transition to plan_status: COMPLETED."
+}
+
+# 9. Verifier Runner Execution & Timeout Assertions
 $runnerScript = Get-Content "scripts\run-lesson-verifier.ps1" -Encoding UTF8 -Raw
 if ($runnerScript -notmatch "taskkill\.exe") {
     throw "run-lesson-verifier.ps1 must implement recursive process tree termination via taskkill.exe."
@@ -240,7 +261,7 @@ if ($runnerScript -notmatch "scripts/verify-lesson-04-student\.ps1") {
     throw "run-lesson-verifier.ps1 Student mode must execute scripts/verify-lesson-04-student.ps1."
 }
 
-# 9. Skills Lock Assertions
+# 10. Skills Lock Assertions
 $skillsLock = Get-Content "skills-lock.json" -Encoding UTF8 -Raw
 if ($skillsLock -notmatch "bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1") {
     throw "skills-lock.json must record exact 40-character upstream commit SHA for incremental-implementation."
@@ -251,7 +272,7 @@ if ($skillsLock -notmatch $localSkillHash) {
     throw "skills-lock.json computedHash does not match actual local SKILL.md SHA256 ($localSkillHash)."
 }
 
-# 10. Student Export Script Whitelist Assertions
+# 11. Student Export Script Whitelist Assertions
 $exportScript = Get-Content "scripts\export-lesson-materials.ps1" -Encoding UTF8 -Raw
 if ($exportScript -notmatch "LESSON_02_GUIDE\.md") {
     throw "export-lesson-materials.ps1 missing LESSON_02_GUIDE.md."

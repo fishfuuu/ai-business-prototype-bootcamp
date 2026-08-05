@@ -14,7 +14,7 @@ Build in thin vertical slices — implement one piece, test it, verify it, then 
 To enforce strict, non-ambiguous human-in-the-loop control:
 
 ### Phase 1: Read-Only Plan Preview (只读预览)
-- Read `BUSINESS_FEATURE_CARD.md`, `src/types/prototype-contract.d.ts`, `src/mocks/prototype-data.ts`.
+- Read `docs/BUSINESS_FEATURE_CARD.md`, `src/types/prototype-contract.d.ts`, `src/mocks/prototype-data.ts`.
 - Output proposed 3–5 step Contract-First execution plan preview in chat.
 - **CRITICAL**: Absolutely DO NOT write, modify, or delete any files during Phase 1.
 - End response with exact prompt: `计划预览生成完毕。请输入 "授权保存 Lesson 04 实施计划" 以写入工程。`
@@ -66,19 +66,23 @@ To enforce strict, non-ambiguous human-in-the-loop control:
    - Invoke `Verifier Subagent` (`.claude/agents/verifier.md`) or run `powershell -ExecutionPolicy Bypass -File scripts/run-lesson-verifier.ps1 -Step N`.
    - Log saved to `local-backups/lesson-04-evidence/step-N-verification.log`.
    - Main context receives 1 summary line: `[PASS] Step N Verification clean | Log: local-backups/lesson-04-evidence/step-N-verification.log`.
+   - End response with exact prompt: `Step N 校验通过。请输入 "授权提交 Step N 源码" 以提交代码。`
 
-2. **Commit A (Code Commit)**:
+2. **Commit A Authorization & Execution (Commit A 源码提交)**:
+   - Require user input to match exact phrase: `授权提交 Step N 源码`
    - Commit the implementation source code:
      `git commit -m "feat(prototype): step N - implement target slice"`
    - Obtain Commit A SHA via `git rev-parse HEAD`.
-
-3. **Plan State Transition & Commit B**:
    - Update `docs/LESSON_04_IMPLEMENTATION_PLAN.md`:
      - Step N `status` -> `COMPLETED`
      - Step N `verification_log` -> `local-backups/lesson-04-evidence/step-N-verification.log`
      - Step N `commit_sha` -> `<Commit A SHA>`
-     - Step N+1 `status` -> `READY`
-     - `current_waiting_step` -> `N+1`
+     - Step N+1 `status` -> `READY` (or if final step: `plan_status: COMPLETED`, `current_waiting_step: null`)
+     - `current_waiting_step` -> `N+1` (or `null` if final step)
+   - End response with exact prompt: `Step N 源码已提交 (Commit A)。实施计划状态机已更新。请输入 "授权提交 Step N 状态推进" 以归档实施计划。`
+
+3. **Commit B Authorization & Execution (Commit B 状态推进提交)**:
+   - Require user input to match exact phrase: `授权提交 Step N 状态推进`
    - Commit plan state update:
      `git commit -m "docs(state): advance lesson 04 plan to step N+1"`
 
@@ -94,7 +98,7 @@ To enforce strict, non-ambiguous human-in-the-loop control:
 ## Slicing Strategy (Contract-First)
 
 ```
-Slice 0: Validate Baseline SHA & Contracts (BUSINESS_FEATURE_CARD.md + prototype-contract.d.ts + prototype-data.ts)
+Slice 0: Validate Baseline SHA & Contracts (docs/BUSINESS_FEATURE_CARD.md + src/types/prototype-contract.d.ts + src/mocks/prototype-data.ts)
 Slice 1: Component Skeleton + Prototype Debug 4-State Toggle (Loading / Empty / Error / Success UI)
 Slice 2: Mock Data Binding & Success List View
 Slice 3: Error Recovery Action (Retry -> Loading -> Restore) & Search Filter

@@ -1,6 +1,6 @@
 # 第四课学员指南 (V2 闭环版)：把大需求拆成连续的小成功
 
-欢迎来到第四课！在前三课中，我们完成了界面搭建、视觉规则约束（`DESIGN.md`）以及需求与数据契约锁定（`grill-me`）。本节课我们将解决大型业务原型开发中最容易出现的崩溃点——**“巨石代码盲开与上下文记忆失控”**。你将学习如何唤醒 `/incremental-implementation` 架构护栏，采用 **Plan & Execute 增量范式**，将大需求拆解并持久化写入 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 状态机文档，通过 **Step级 Workflow 授权门禁（`授权执行 Step 1`）** 落地首个薄切片，并在前端引入 **`prototypeState` 调试切换器**，配合 **`Verifier Subagent` 静默自测** 与 Git 存档，完成可复核的增量交付。
+欢迎来到第四课！在前三课中，我们完成了界面搭建、视觉规则约束（`DESIGN.md`）以及需求与数据契约锁定（`grill-me`）。本节课我们将解决大型业务原型开发中最容易出现的崩溃点——**“巨石代码盲开与上下文记忆失控”**。你将学习如何唤醒 `/incremental-implementation` 架构护栏，采用 **Plan & Execute 增量范式**，将大需求拆解并持久化写入 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 状态机文档，通过 **Step级 Workflow 授权门禁（`授权执行 Step 1`）** 落地首个薄切片，并在前端引入 **`prototypeState` 调试切换器**，配合 **`Verifier Subagent` 静默自测** 与 **两提交状态推进协议（Commit A + Commit B）**，完成可复核的增量交付。
 
 ---
 
@@ -8,15 +8,16 @@
 
 完成本课学习后，你将能够：
 1. **对比与阐述** 一次性巨石代码生成的退化风险，以及 **Plan & Execute 范式** 结合 `/incremental-implementation` 架构护栏物理收敛的优势。
-2. **校验与断言** 第三课交付的前置 Git 基线 SHA、`BUSINESS_FEATURE_CARD.md`、`src/types/prototype-contract.d.ts` 以及 `src/mocks/prototype-data.ts`（Task 0 基线检查）。
+2. **校验与断言** 第三课交付的前置 Git 基线 SHA、`docs/BUSINESS_FEATURE_CARD.md`、`src/types/prototype-contract.d.ts` 以及 `src/mocks/prototype-data.ts`（Task 0 基线检查）。
 3. **驱动与持久化** `/incremental-implementation` 技能，将包含 `plan_status` 与 `current_waiting_step` 状态机的实施计划落盘至外部长期记忆 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 4. **掌握与触发** **Step级 Workflow 授权门禁**（首行精确匹配 `授权执行 Step 1`），解锁首个垂直切片编码。
 5. **编写与物理验证** 带有 **`prototypeState` 调试切片（Loading 骨架屏、Empty 空数据、Error 报错重试、Success 正常呈现）** 可视化切换能力的 Vue 业务组件。
-6. **派遣与调用** **`Verifier Subagent`（运行 `scripts/run-lesson-verifier.ps1 -Step 1`）** 静默跑通编译与学员自测（`scripts/verify-student-project.ps1`），在不污染主 Context 的前提下完成 **Atomic Git Commit 稳定存档**。
+6. **派遣与调用** **`Verifier Subagent`（运行 `scripts/run-lesson-verifier.ps1 -Step 1`）** 静默跑通编译与学员自测（`scripts/verify-lesson-04-student.ps1`）。
+7. **签署与执行** **两提交状态推进协议（Commit A 源码提交 + Commit B 状态推进提交）**，完成代码与状态机的解耦归档。
 
 ---
 
-### 核心模式对比线框图 (巨石盲开 vs 增量切片 + 持久化 Plan 状态机 + Verifier)
+### 核心模式对比线框图 (巨石盲开 vs 增量切片 + 持久化 Plan 状态机 + Verifier + 两提交协议)
 
 ```text
 ===================================================================================
@@ -26,7 +27,7 @@
                        (一次性修改全套逻辑)
 
 ===================================================================================
-【第二层：/incremental-implementation + 持久化 Plan 状态机 + Step级 Workflow 门禁】
+【第二层：/incremental-implementation + 持久化 Plan 状态机 + 两提交协议】
 
   [Task 0 基线断言] ───> [ 唤醒 /incremental-implementation ]
                                  │ (只读预览 Plan)
@@ -42,10 +43,14 @@
                         ( Step 1 切片: 4 状态 UI ) 
                                  │
                                  ▼
-                     [ Verifier Subagent 静默自测 ] ───> [ PASS: Atomic Git Commit ]
+                     [ Verifier Subagent 静默自测 ] ───> [ PASS ]
                                  │
-                                 ▼
-                    (更新计划状态机: current_waiting_step -> 2)
+                                 ├───> [ 授权提交 Step 1 源码 ] ───> (Commit A: feat)
+                                 │
+                                 └───> [ 授权提交 Step 1 状态推进 ] ───> (Commit B: docs)
+                                                                            │
+                                                                            ▼
+                                                          ( current_waiting_step -> 2 )
 
 ===================================================================================
 【第三层：prototypeState 物理调试切换器】 (可视化调试，彻底消除交接死角)
@@ -89,19 +94,12 @@ steps:
     commit_sha: ""
 ```
 
-当 Step 1 验证通过并完成 Commit 后，更新状态机：
-- Step 1 的 `status` 改为 `COMPLETED`，回填 `verification_log` 与 `commit_sha`；
-- Step 2 的 `status` 改为 `READY`；
-- `current_waiting_step` 自动推进至 `2`。
-
-### 1.2 Step级 Workflow 授权门禁规则
-为了防止 Agent 误识别用户意图或连续冲动修改代码，物理 Skill 设置了严格的 **Step级 Workflow 授权门禁**：
-- 用户发送的消息**首行必须精确等于**：
-  ```text
-  授权执行 Step N
-  ```
-- 其中 `N` 必须匹配 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中当前 `current_waiting_step` 的数值。
-- 每次授权只允许 Agent 执行一个 Step，不得自动执行下一步，验证失败时不得自行修改代码或自作主张 Git Commit。
+### 1.2 两提交状态推进协议 (Two-Commit State Transition Protocol)
+为了避免“在 Commit 前回填 Commit SHA 导致再次产生未提交修改”的自引用逻辑闭环问题，我们采用两提交协议：
+1. **Commit A (源码提交)**：代码通过 Verifier 后，主管下发 `授权提交 Step 1 源码`，提交业务组件代码并取得 Commit A SHA；
+2. **状态更新**：把 Commit A SHA 回填至计划，Step 1 改为 `COMPLETED`，Step 2 改为 `READY`，`current_waiting_step` 自动推进至 2；
+3. **Commit B (状态推进提交)**：主管下发 `授权提交 Step 1 状态推进`，提交 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 状态更迭。
+*(注：当完成最后一个 Step 时，状态机 `plan_status` 改为 `COMPLETED`，`current_waiting_step` 改为 `null`。)*
 
 ### 1.3 `prototypeState` 调试切换器（`import.meta.env.DEV`）
 在纯前端原型中，静态 Mock 数据（`src/mocks/prototype-data.ts`）会导致页面永远处于 `Success` 状态。
@@ -112,10 +110,10 @@ const prototypeState = ref<'loading' | 'empty' | 'error' | 'success'>('success')
 ```
 在页面顶部渲染带有 `Prototype Debug` 标识的组件，让主管和讲师可以**物理点击按钮直接验证 4 种 UI 视图**。
 
-### 1.4 `Verifier Subagent` 后台静默自测
-为了防止成百上千行的 `npm run build` 日志塞满主 Context 记忆窗口，我们派遣 `.claude/agents/verifier.md` 后台子智能体（运行 `scripts/run-lesson-verifier.ps1 -Step 1`）：
-* 支持 Student 模式（运行 `scripts/verify-student-project.ps1`）与 Maintainer 模式；
-* 物理执行 60 秒超时控制（超时自动 Kill 进程树并记录 TIMEOUT）；
+### 1.4 `Verifier Subagent` 后台静默自测与进程树熔断
+派遣 `.claude/agents/verifier.md` 后台子智能体（运行 `scripts/run-lesson-verifier.ps1 -Step 1`）：
+* Student 模式默认调用 `scripts/verify-lesson-04-student.ps1`；
+* 物理执行 60 秒超时控制（使用 `taskkill /F /T /PID` 递归销毁进程树，记录 `TIMEOUT_RECORDED`）；
 * 完整日志写入 `local-backups/lesson-04-evidence/step-1-verification.log`；
 * 主窗口只接收 1 行极简断言结果：`[PASS] Step 1 Verification clean | Log: local-backups/lesson-04-evidence/step-1-verification.log`。
 
@@ -174,28 +172,38 @@ const prototypeState = ref<'loading' | 'empty' | 'error' | 'success'>('success')
 
 ---
 
-### 任务 3：派遣 Verifier Subagent 静默自测与 Git 提交 (Verify 阶段)
+### 任务 3：派遣 Verifier 自测与两提交归档 (Verify & Commit 阶段)
 
-**目标**：调用 Verifier Subagent 跑通静默构建校验，完成 90 分钟课堂首个 Atomic Git Commit 存档。
+**目标**：调用 Verifier Subagent 跑通静默自测，下发两提交授权口令完成代码与状态归档。
 
-**操作指令**：
+**操作指令 1 (Verifier 自测)**：
 ```text
-Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run-lesson-verifier.ps1 -Step 1 进行校验。确认 PASS 后提示我提交 Git Commit 并更新实施计划状态机。
+Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run-lesson-verifier.ps1 -Step 1 进行校验。
+```
+
+**操作指令 2 (Commit A 源码提交)**：
+```text
+授权提交 Step 1 源码
+```
+
+**操作指令 3 (Commit B 状态推进提交)**：
+```text
+授权提交 Step 1 状态推进
 ```
 
 **完成标准**：
-- [ ] 终端接收到干净的 1 行提示：`[PASS] Step 1 Verification clean | Log: local-backups/lesson-04-evidence/step-1-verification.log`。
-- [ ] 成功执行 `git commit`，提交日志形如 `feat(prototype): step 1 - add skeleton with 4-state debug toggle`。
-- [ ] `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中 `current_waiting_step` 自动更新为 2。
+- [ ] Verifier 接收到 `[PASS]`。
+- [ ] Git Log 形成标准的 2 个提交：Commit A (`feat: step 1`) 与 Commit B (`docs(state): advance plan`)。
+- [ ] `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中 `current_waiting_step` 成功更新为 2。
 
 ---
 
 ## 3. 课后退场自测 (Exit Ticket)
 
-> **退出门禁题**：第四课 90 分钟课堂交付的核心成果是什么？后续 Step 如何进行？
+> **退出门禁题**：第四课 90 分钟课堂交付的核心成果是什么？两提交协议解决了什么问题？
 
 * **参考答案**：
-  课堂交付一份已批准的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` + 一个经过 Verifier 验证的完整切片 (Step 1) + 1 个稳定 Git Commit。课后按相同循环（`授权执行 Step N` -> `Verifier 自测` -> `Git Commit` -> `推进状态机`）依次完成剩余 Step。
+  课堂交付一份已批准的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` + 一个经过 Verifier 验证的完整切片 (Step 1) + 2 个规范 Git Commit (Commit A 源码 + Commit B 状态推进)。两提交协议消除了“在 Commit 前回填 SHA 导致二次污染工作区”的死循环。
 
 ---
 
@@ -205,4 +213,4 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 | --- | --- | --- |
 | 发送指令后 Agent 没有写文件 | 消息首行未严格匹配 `授权执行 Step N` | 检查发送的消息第一行是否精确等于 `授权执行 Step 1` |
 | 点击调试切片界面无反应 | 误用了 `src/data/` 路径或变量未定义 | 确认使用了冻结路径 `src/mocks/prototype-data.ts` |
-| Verifier 显示 FAIL | TS 类型错误或语法构建失败 | 查看 `local-backups/lesson-04-evidence/step-1-verification.log` 提取日志排错 |
+| Verifier 显示 FAIL | TS 类型错误、语法构建失败或计划文件丢失 | 查看 `local-backups/lesson-04-evidence/step-1-verification.log` 提取日志排错 |

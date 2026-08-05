@@ -38,7 +38,7 @@ if (-not (Test-Path $artifactDir)) {
     New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null
 }
 
-$zipName = "ai-business-prototype-lesson-materials-$Version.zip"
+$zipName = "ai-business-prototype-lesson-02-materials-$Version.zip"
 $targetZipPath = Join-Path $artifactDir $zipName
 $targetShaPath = Join-Path $artifactDir "$zipName.sha256"
 
@@ -50,7 +50,7 @@ if (Test-Path $targetShaPath) {
 }
 
 # 3. Create temp staging directory
-$tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("materials-export-" + [Guid]::NewGuid().ToString("N"))
+$tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("l2-materials-export-" + [Guid]::NewGuid().ToString("N"))
 $packageStaging = Join-Path $tempDir "package"
 $metadataDir = Join-Path $packageStaging "metadata"
 $payloadDocsDir = Join-Path $packageStaging "payload\docs"
@@ -111,7 +111,7 @@ try {
     # 6. Generate VERSION.txt
     $builtAtUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
     $versionLines = @(
-        "Package: ai-business-prototype-lesson-materials",
+        "Package: ai-business-prototype-lesson-02-materials",
         "Version: $Version",
         "Repository Source Commit: $sourceCommit",
         "Built At UTC: $builtAtUtc",

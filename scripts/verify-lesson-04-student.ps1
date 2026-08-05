@@ -2,6 +2,7 @@ param(
     [string]$CourseState = "lesson-04"
 )
 
+$ErrorActionPreference = "Stop"
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
@@ -13,11 +14,15 @@ Write-Host "Lesson 04 Student Verification ($CourseState)"
 Write-Host "========================================"
 Write-Host ""
 
-# 1. Check base required student files
+# 1. Check required student files
 $baseRequired = @(
     "package.json",
     "CLAUDE.md",
     "DESIGN.md",
+    "docs\BUSINESS_FEATURE_CARD.md",
+    "src\types\prototype-contract.d.ts",
+    "src\mocks\prototype-data.ts",
+    "docs\LESSON_04_IMPLEMENTATION_PLAN.md",
     "src\main.ts",
     "src\App.vue"
 )
@@ -29,7 +34,7 @@ foreach ($f in $baseRequired) {
 }
 
 # 2. Check TypeScript typecheck
-Write-Host "[1/3] Running TypeScript typecheck..."
+Write-Host "[1/4] Running TypeScript typecheck..."
 $tcRaw = & cmd.exe /c "npm run typecheck 2>&1"
 $tcCode = $LASTEXITCODE
 if ($tcCode -ne 0) {
@@ -38,7 +43,7 @@ if ($tcCode -ne 0) {
 Write-Host "[PASS] Typecheck clean."
 
 # 3. Check Production build
-Write-Host "[2/3] Running production build..."
+Write-Host "[2/4] Running production build..."
 $bldRaw = & cmd.exe /c "npm run build 2>&1"
 $bldCode = $LASTEXITCODE
 if ($bldCode -ne 0) {
@@ -46,20 +51,52 @@ if ($bldCode -ne 0) {
 }
 Write-Host "[PASS] Build clean."
 
-# 4. Check Plan Schema if present
-Write-Host "[3/3] Running Lesson 04 student assertions..."
-if (Test-Path "docs\LESSON_04_IMPLEMENTATION_PLAN.md") {
-    $planContent = Get-Content "docs\LESSON_04_IMPLEMENTATION_PLAN.md" -Encoding UTF8 -Raw
-    if ($planContent -notmatch "plan_status:\s*APPROVED") {
-        throw "Student verification failed: LESSON_04_IMPLEMENTATION_PLAN.md must contain 'plan_status: APPROVED'."
-    }
-    if ($planContent -notmatch "current_waiting_step:") {
-        throw "Student verification failed: LESSON_04_IMPLEMENTATION_PLAN.md must contain 'current_waiting_step:'."
-    }
-    Write-Host "[PASS] Plan State Machine Schema valid."
-} else {
-    Write-Host "[INFO] LESSON_04_IMPLEMENTATION_PLAN.md is not created yet (Waiting for Task 1)."
+# 4. Check Plan Schema & State Machine (Fail-Closed)
+Write-Host "[3/4] Checking LESSON_04_IMPLEMENTATION_PLAN.md State Machine Schema..."
+$planContent = Get-Content "docs\LESSON_04_IMPLEMENTATION_PLAN.md" -Encoding UTF8 -Raw
+
+if ($planContent -notmatch "plan_status:\s*(APPROVED|COMPLETED)") {
+    throw "Student verification failed: LESSON_04_IMPLEMENTATION_PLAN.md must contain 'plan_status: APPROVED' or 'plan_status: COMPLETED'."
 }
+if ($planContent -notmatch "current_waiting_step:\s*(\d+|null)") {
+    throw "Student verification failed: LESSON_04_IMPLEMENTATION_PLAN.md must contain valid 'current_waiting_step:' (integer or null)."
+}
+if ($planContent -notmatch "steps:") {
+    throw "Student verification failed: LESSON_04_IMPLEMENTATION_PLAN.md must contain 'steps:' array."
+}
+if ($planContent -notmatch "allowed_files:" -or $planContent -notmatch "acceptance:") {
+    throw "Student verification failed: LESSON_04_IMPLEMENTATION_PLAN.md steps must define 'allowed_files:' and 'acceptance:' fields."
+}
+Write-Host "[PASS] Plan State Machine Schema valid."
+
+# 5. Check Vue Business Component for prototypeState & 4 States
+Write-Host "[4/4] Checking Vue Component for prototypeState 4-state debug toggle..."
+$vueFiles = Get-ChildItem -Path "src\components" -Filter "*.vue" -Recurse -ErrorAction SilentlyContinue
+if (-not $vueFiles -or $vueFiles.Count -eq 0) {
+    $vueFiles = Get-ChildItem -Path "src" -Filter "*.vue" -Recurse
+}
+
+$foundDebugToggle = $false
+$foundAllFourStates = $false
+
+foreach ($vf in $vueFiles) {
+    $c = Get-Content $vf.FullName -Encoding UTF8 -Raw
+    if ($c -match "prototypeState" -and ($c -match "import\.meta\.env\.DEV" -or $c -match "showPrototypeDebug")) {
+        $foundDebugToggle = $true
+        if ($c -match "loading" -and $c -match "empty" -and $c -match "error" -and $c -match "success") {
+            $foundAllFourStates = $true
+            break
+        }
+    }
+}
+
+if (-not $foundDebugToggle) {
+    throw "Lesson 04 student verification failed: No Vue component found with 'prototypeState' and 'import.meta.env.DEV' / 'showPrototypeDebug' debug toggle."
+}
+if (-not $foundAllFourStates) {
+    throw "Lesson 04 student verification failed: Vue component prototypeState does not define all 4 states ('loading', 'empty', 'error', 'success')."
+}
+Write-Host "[PASS] Component prototypeState debug toggle and 4-state assertion passed."
 
 Write-Host ""
 Write-Host "========================================"

@@ -57,13 +57,21 @@ function Invoke-ProcessTreeWithTimeout([string]$commandLine, [int]$maxSeconds) {
     $completed = $proc.WaitForExit($maxSeconds * 1000)
 
     if (-not $completed) {
-        Log-Message "TIMEOUT: Execution exceeded $maxSeconds seconds. Recursively killing process tree (PID: $($proc.Id))."
+        Log-Message "TIMEOUT: Execution exceeded $maxSeconds seconds. Recursively terminating process tree (PID: $($proc.Id))."
         
         # Kill process tree using taskkill
-        try {
-            & taskkill.exe /F /T /PID $proc.Id 2>&1 | Out-Null
-        } catch {
+        & taskkill.exe /F /T /PID $proc.Id 2>&1 | Out-Null
+        $killExitCode = $LASTEXITCODE
+
+        if ($killExitCode -ne 0) {
             try { $proc.Kill() } catch { }
+        }
+
+        $proc.WaitForExit(5000)
+
+        if (-not $proc.HasExited) {
+            Log-Message "KILL_FAILED: Process tree termination failed. Process still running."
+            return @{ ExitCode = 125; Output = "Process tree termination failed." }
         }
 
         # Read any partial output collected before timeout
@@ -73,7 +81,7 @@ function Invoke-ProcessTreeWithTimeout([string]$commandLine, [int]$maxSeconds) {
             Remove-Item $outTempFile -Force -ErrorAction SilentlyContinue
         }
 
-        Log-Message "TIMEOUT_RECORDED: Process tree killed after $maxSeconds seconds."
+        Log-Message "TIMEOUT_RECORDED: Process tree successfully killed after $maxSeconds seconds."
         return @{ ExitCode = 124; Output = "TIMEOUT: Killed process tree after $maxSeconds seconds." }
     }
 
