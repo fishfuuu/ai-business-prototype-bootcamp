@@ -117,7 +117,7 @@
 | --- | --- | --- | --- | --- | --- |
 | **一、界面与外观** | **1** | 从业务问题创建第一个系统页面 | **Prompting → Loop 初体验**；Tools 权限沙箱；模拟数据红线；初始化 `PROJECT_STATE.md` | **ReAct 范式** (单步自修)；Tools 沙箱与 127.0.0.1 试衣镜 | 可运行系统雏形、侧栏菜单、模拟数据、`PROJECT_STATE.md` |
 | | **2** | 用参考图与设计规则做出像样的页面 | **视觉 Harness (`DESIGN.md`) & 事实锚定**；**双 Token 制衡**；物理点开 `DESIGN.md`；Git 节点1/2存档 | **ReAct 范式**；**MCP/Plugin 概念启蒙**；`design-lint` | 高颜原型、`DESIGN.md`、首个 Git 稳定 Commit |
-| **二、需求与结构** | **3** | 让 Agent 帮助自己想清楚需求 | **Prompt vs Skill Harness (`grill-me`)**；前置 **Goal/Boundary/Risk/Stop 4 大要素**；数据契约卡 | **ReAct + Skill 约束**；`grill-me` | 分类型《业务功能卡》与数据契约卡草稿 |
+| **二、需求与结构** | **3** | 把模糊想法变成可执行的业务契约 | **Prompt vs Skill Harness (`grill-me`)**；前置 **6 大要素** (问题、目标、边界、风险、Given-When-Then 验收条件、Stop 条件)；数据契约收扣于 `BUSINESS_FEATURE_CARD.md` | **ReAct + Skill 约束**；`grill-me` | 《业务功能卡与数据契约》(`BUSINESS_FEATURE_CARD.md`) + TS 类型草稿 + Mock 数据 |
 | | **4** | 把大需求拆成连续的小成功 | **架构 Harness (`incremental-implementation`) 驱动增量 Loop**；持久化计划 (`LESSON_04_IMPLEMENTATION_PLAN.md`)；数据接口意识（4 种状态与调试切片）；可重复验证与回归风险 | **Plan & Execute 范式**；**后台静默 Verifier Subagent** (跑自测与日志落盘) | 已批准增量计划 + 首个已验证切片与 Git Commit |
 | **三、防崩与排错** | **5** | 建立不会轻易失控的项目 | **工程 Harness (`CLAUDE.md`)**；**三分记忆模型**；**【解药 1：环境脱幻与独立工具箱】** | **Plan & Execute 范式**；`CLAUDE.md` 项目护栏 | 带项目护栏、Git 恢复能力与独立工具箱的稳定系统 |
 | | **6** | 学会定位和修复问题 | **事实锚定排错**；五层诊断卡；**有界排错 Loop (最多2轮，不得改断言)** | **ReAct 有界自修**；Console/日志锚定 | 带有五层 Bug 诊断与回归证据的系统 |
@@ -181,12 +181,13 @@
 
 ---
 
-### 第 3 课：让 Agent 帮助自己想清楚需求
-* **定位**：对比单次 Prompt 与 Skill Harness（`grill-me`），前置锁定 Goal/Boundary/Risk/Stop 4 大要素，完成数据契约与前置验收标准。
+### 第 3 课：把模糊想法变成可执行的业务契约
+* **定位**：对比单次 Prompt 与 Skill Harness（`grill-me`），前置锁定 6 大要素（目标、问题定义、边界、风险、Given-When-Then 验收场景、停止条件），将数据契约统一落盘至 `docs/BUSINESS_FEATURE_CARD.md` 并生成 TypeScript 类型草稿。
 * **主要内容**：
-  1. 使用 `grill-me` Skill 进行 3–5 轮追问对话，体会一次只问一个问题的约束，产出《业务功能卡》。
-  2. **轻量数据契约卡**：明确字段名称、业务含义、数据类型、是否必填、数据来源（Mock/未来API）、示例值、校验规则、敏感等级，生成 TypeScript 类型草稿 (`src/types/prototype-contract.d.ts`)。
-  3. **前置停止条件与验收标准**：在前置契约中写明客观验收步骤，为后续自主 Loop 打下基础。
+  1. 使用 `grill-me` Skill 进行 3–5 轮追问对话，体会一次只问一个问题的约束，区分 `[事实]`、`[决定]`、`[假设]` 与 `[待确认]` 事项。
+  2. **精准区分 Acceptance Criteria 与 Stop Conditions**：Given-When-Then 专门用于描述功能正确性验收场景；Stop Conditions 专门用于描述 Agent 触发熔断暂停并呈报主管的条件。
+  3. **数据契约收扣于《业务功能卡》**：在 `docs/BUSINESS_FEATURE_CARD.md` 中嵌入完整数据契约表，生成 TypeScript 类型草稿 (`src/types/prototype-contract.d.ts`) 与 Mock 数据 (`src/mocks/prototype-data.ts`)。
+  4. **三层验收与选择性暂存**：通过工程验证、契约验证、主管验收三层关口，使用 `git add --` 暂存指定 4 个资产并提交。
 
 ---
 

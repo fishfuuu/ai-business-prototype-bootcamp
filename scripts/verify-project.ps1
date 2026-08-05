@@ -182,8 +182,11 @@ if ($l3Guide -notmatch "grill-me") {
 if ($l3Guide -notmatch "数据契约") {
     throw "LESSON_03_GUIDE.md missing Data Contract reference."
 }
-if ($l3Guide -notmatch "verify-student-project\.ps1" -and $l3Guide -notmatch "verify-lesson-04-student\.ps1") {
-    throw "LESSON_03_GUIDE.md must reference student verification script execution."
+if ($l3Guide -notmatch "Given-When-Then") {
+    throw "LESSON_03_GUIDE.md must reference Given-When-Then Acceptance Criteria."
+}
+if ($l3Guide -notmatch "Stop / Escalation") {
+    throw "LESSON_03_GUIDE.md must reference Stop / Escalation Conditions."
 }
 if ($l3Guide -match "cd d:\\AILearning") {
     throw "LESSON_03_GUIDE.md contains prohibited hardcoded path d:\AILearning."
