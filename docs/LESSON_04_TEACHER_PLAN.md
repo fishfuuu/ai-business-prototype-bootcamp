@@ -21,7 +21,7 @@
 说明：
 - **解决问题**：解决业务主管在面对复杂业务页面时，用裸 Prompt 或单次生成导致代码结构崩塌、上下文记忆爆炸、白屏死机且无法排错的典型卡点。
 - **核心主概念**：**增量实施 (Incremental Implementation)**——不让 Agent 一口气完成整个功能，而是先形成计划，每次只完成一个可验证的小切片。
-- **上下游关系**：承接 L3 输出的 `docs/BUSINESS_FEATURE_CARD.md`、`prototype-contract.d.ts` 与 `src/mocks/prototype-data.ts`；输出持久化实施计划状态机 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 与首个包含 4 种技术呈现状态及代码归档的业务组件切片。
+- **上下游关系**：承接 L3 输出的 `docs/BUSINESS_FEATURE_CARD.md` (遵守契约冻结规则)；输出持久化实施计划状态机 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 与首个包含 4 种技术呈现状态及代码归档的业务组件切片。
 
 ## 3. 核心目标
 
@@ -29,13 +29,13 @@
 2. 掌握 **Step级 Workflow 授权门禁（首行精确匹配 `授权执行 Step 1`）**，受控下发切片编码指令。
 3. 掌握 **页面技术呈现状态（Loading/Empty/Error/Success）** 与 **业务流程状态（待处理/处理中/已阻塞/已完成）** 的本质区别。
 4. 掌握 **`prototypeState` 可视化调试切片（`import.meta.env.DEV`）** 与针对三类原型的切片设计。
-5. 掌握 **三层递进验收机制（静态工程自测、人工页面点击验收、主管业务验收）** 与失败时的 `BLOCKED` 标记暂停处理。
+5. 掌握 **三层递进验收机制与一次完整版本归档（Commit A 源码 + Commit B 状态推进）**；若验证失败，正确区分课程 PASS 与切片 `BLOCKED` 处理。
 
 ## 4. 可见成果
 
 - 一份已批准的外部长期记忆实施计划状态机 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 - 一个带有 `Prototype Debug` 标识、支持 4 种技术状态点击切换的已验证 Vue 业务组件切片 (Step 1)。
-- 一个规范的代码 Commit 节点。
+- 一次完整版本归档：Commit A (切片源码) + Commit B (实施计划状态推进)。
 - 一份包含剩余 Step 2–N 执行指引的清单。
 
 ## 5. 本课明确不做
@@ -53,23 +53,23 @@
 | 所需截图 | 待完成 | 1 巨石生成崩塌对比图，2 4技术状态调试切片效果图 |
 | 所需 Skill | 待验证 | `.claude/skills/incremental-implementation/SKILL.md` |
 | Skill 来源与版本 | addyosmani/agent-skills (bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1) | 物理改编 V2 版 |
-| Skill 是否已验证 | Skill定义检查：已完成；课堂实测状态：待候选包隔离验证 | 待隔离验证 |
-| 教师标准答案 | 待完成 | 包含 `prototypeState` 切换调试器与 4 状态分支的 Vue 组件 |
+| Skill 是否已验证 | 待隔离验证 | 待候选包隔离验证 |
+| 教师标准答案 | 待完成 / 待试讲验证 | 包含 `prototypeState` 切换调试器与 4 状态分支的 Vue 组件 |
 
 ## 7. 学员准备
 
 - 解压学员起点包，在终端运行 `npm run dev` 确保项目起手可运行。
 - 确认处于干净基线提交（Task 0 检查）。
 
-## 8. 课堂时间安排
+## 8. 课堂时间安排与关键暂停点 (Pause Points)
 
-| 时段 | 时长 | 内容 |
-| --- | --- | --- |
-| 成果展示与 Task 0 基线检查 | 10 分钟 | 检查 L3 资产，演示巨石盲开崩塌 vs 增量切片对比 |
-| 教师演示 | 15 分钟 | 演示唤醒 `/incremental-implementation`，下发授权落盘与 `授权执行 Step 1` |
-| 学员实操 Task 1 & 2 | 45 分钟 | 唤醒 Skill 生成并保存 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`，下发授权门禁落盘 Step 1 组件 |
-| 静默自测与三层验收归档 | 10 分钟 | 派遣 `Verifier Subagent` 运行 `scripts/run-lesson-verifier.ps1 -Step 1`，完成三层验收与 Commit |
-| 总结与 Exit Ticket | 10 分钟 | 完成 Exit Ticket 问答，总结页面技术呈现状态 vs 业务流程状态区别 |
+| 时段 | 时长 | 内容 | 关键暂停点 (Pause Point) |
+| --- | --- | --- | --- |
+| 成果展示与 Task 0 基线检查 | 10 分钟 | 检查 L3 资产，演示巨石盲开崩塌 vs 增量切片对比 | **[ Pause Point 1 ]**：提问学员“为什么不能让 AI 一口气修改整个复杂页面？” |
+| 教师演示 | 15 分钟 | 演示唤醒 `/incremental-implementation`，下发授权落盘与 `授权执行 Step 1` | **[ Pause Point 2 ]**：检查学员是否观察到 Workflow 门禁首行强匹配规则 |
+| 学员实操 Task 1 & 2 | 40 分钟 | 唤醒 Skill 生成并保存 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`，下发授权门禁落盘 Step 1 组件 | **[ Pause Point 3 ]**：物理点击 `Prototype Debug` 按钮，确认 4 种界面流畅切换 |
+| 静默自测与三层验收归档 | 15 分钟 | 派遣 `Verifier Subagent` 运行自测，完成三层验收与两次授权归档 | **[ Pause Point 4 ]**：确认学员理解 Commit A 源码与 Commit B 状态推进的区别 |
+| 总结与 Exit Ticket | 10 分钟 | 完成 Exit Ticket 问答，总结页面技术呈现状态 vs 业务流程状态区别及 BLOCKED 处理 | **[ Pause Point 5 ]**：退出门禁答题与切片失败 BLOCKED 优雅暂停总结 |
 
 ## 9. 业务场景
 
@@ -134,13 +134,13 @@
 - [ ] 页面实际操作与 `prototypeState` 4 种状态点击切换演示
 - [ ] `Verifier Subagent` 静默自测返回 `[PASS]`
 - [ ] `npm run typecheck` & `npm run build` PASS
-- [ ] `git log` 显示代码版本提交
+- [ ] `git log` 显示 Commit A 与 Commit B 记录
 
 ## 16. 课堂成果
 
 1. 实施计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 2. 包含 `prototypeState` 物理调试切换器与 4 状态分支的 Vue 组件切片 (Step 1)。
-3. 规范的代码 Commit 记录。
+3. 一次完整版本归档：Commit A (切片源码) + Commit B (实施计划状态推进)。
 
 ## 17. 课后作业
 
@@ -148,14 +148,15 @@
 
 ## 18. 通过标准
 
-- [ ] 三层验收全部 PASS。若验证失败，成功将 Step 标记为 `BLOCKED` 并写入 `failure_summary` 同样视为合格交付。
+- [ ] 三层验收全部 PASS。若验证失败，正确区分课程 PASS 与切片 `BLOCKED` 状态，回填 `failure_summary` 同样视为合格交接。
 
-## 19. 常见问题
+## 19. 常见误区与处理 (Misconceptions Table)
 
-| 问题类型 | 现象 | 处理建议 |
+| 常见误区 | 现象描述 | 纠偏与处理方案 |
 | --- | --- | --- |
-| 概念卡点 | 为什么不让 AI 一口气写完 | 解释巨石代码盲开引发的白屏与爆 Context 问题 |
-| 操作卡点 | 首行未精确匹配导致授权失败 | 强调消息第一行必须严格写 `授权执行 Step 1` |
+| 误区 1：为什么不一口气写完 | 一口气修改 10 个文件导致白屏无法定位 | 强调增量切片是防止 Context 爆炸与样式崩塌的必修课 |
+| 误区 2：以为 Verifier PASS 就等于功能正确 | 看到 `[PASS]` 不去页面物理点击 4 状态 | 明确 Verifier 只是静态编译检查，必须配合人工页面点击与业务验收 |
+| 误区 3：切片报错时强行多次重试 | 连续发送多次指令希望 AI 撞大运对 | 强调失败暂停门禁，将 Step 标为 `BLOCKED` 留给第六课处理 |
 
 ## 20. 课后记录
 
@@ -169,7 +170,7 @@
 
 | 项 | 内容 |
 | --- | --- |
-| 包版本 | v0.1.0 |
+| 包版本 | 待生成 |
 
 ## 22. 教师复盘
 
@@ -177,7 +178,7 @@
 实际授课时间：待填
 ```
 
-## 23. 附录：运维与两提交治理内部细节 (Teacher & Maintainer Appendix)
+## 附录 A：教师与维护者内部细节 (Teacher & Maintainer Appendix)
 
 ### A1. 两提交选择性暂存协议
 - **Commit A (源码暂存)**：`git add -- <Step N allowed_files>`，提交消息 `feat(prototype): step N - implement target slice`。

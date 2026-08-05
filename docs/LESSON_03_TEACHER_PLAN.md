@@ -10,11 +10,11 @@
 | 建议时长 | 90 分钟 |
 | 前置课程 | 第 2 课：用参考图与设计规则做出像样的页面 |
 | 对应路线图 | `docs/COURSE_ROADMAP.md` 第 3 课 |
-| 课程状态 | 已交付 / 闭环 |
-| 课程负责人 | 课程研发组 |
+| 课程状态 | 草稿V2 / 待试讲 |
+| 课程负责人 | 待指定 |
 | 最后复核日期 | 2026-08-05 |
-| 学员包版本 | v0.1.0 |
-| 来源 commit 或 tag | HEAD / main@d57a8e1f |
+| 学员包版本 | 待生成 |
+| 来源 commit 或 tag | 待候选版本冻结后填写 |
 
 ## 2. 本课定位
 
@@ -25,17 +25,18 @@
 
 ## 3. 核心目标
 
-1. 掌握 **`grill-me` 追问技能护栏**，完成 3–5 轮结构化对话澄清。
+1. 掌握 **`grill-me` 追问技能护栏**，完成 3–5 分支、5–7 轮结构化对话澄清。
 2. 掌握 **Given-When-Then 验收条件** 与 **Stop / Escalation 停止上提熔断条件** 的本质区别。
 3. 锁定 **6 大业务要素**（Goal 业务目标、User & Problem 问题定义、Boundary 边界、Risk 风险隐私、Acceptance Criteria 验收场景、Stop Conditions 停止条件）。
-4. 区分并标记 **`[事实]`、`[决定]`、`[假设]` 与 `[待确认]`** 事项。
-5. 掌握 **三层验收机制（工程验证、契约验证、主管验收）** 与选择性暂存 (`git add --`) 存档。
+4. 掌握 **阻断性待确认事项门禁 (Blocking Gate)**，确保无未决阻断项进入第四课。
+5. 掌握 **三层验收机制（工程验证、契约验证、主管验收）**、`PROJECT_STATE.md` 更新与选择性暂存 (`git add --`) 存档。
 
 ## 4. 可见成果
 
-- `docs/BUSINESS_FEATURE_CARD.md`（包含 9 大完整章节：1. User & Problem, 2. Goal, 3. In Scope / Out of Scope, 4. Business Rules, 5. Risks and Data Policy, 6. Acceptance Scenarios, 7. Stop / Escalation Conditions, 8. Data Contract, 9. Open Decisions）。
+- `docs/BUSINESS_FEATURE_CARD.md`（包含 9 大完整章节）。
 - `src/types/prototype-contract.d.ts`（TypeScript 类型草稿）。
 - `src/mocks/prototype-data.ts`（符合强类型结构的 Mock 数据）。
+- 更新后的 `docs/PROJECT_STATE.md`。
 
 ## 5. 本课明确不做
 
@@ -47,24 +48,24 @@
 
 | 项 | 状态 | 说明 |
 | --- | --- | --- |
-| 教师演示环境 | 已就绪 | Node.js, Claude Code CLI |
+| 教师演示环境 | 待完成 | Node.js, Claude Code CLI |
 | 所需 Skill | 已就绪 | `.claude/skills/grill-me/SKILL.md` |
-| 教师标准答案 | 已就绪 | 包含 9 大章节的 `BUSINESS_FEATURE_CARD.md` |
+| 教师标准答案 | 待完成 / 待试讲验证 | 包含 9 大章节的 `BUSINESS_FEATURE_CARD.md` 样例 |
 
 ## 7. 学员准备
 
 - 完成前两课，项目起手可运行 `npm run dev`。
 - 确认处于干净基线提交。
 
-## 8. 课堂时间安排
+## 8. 课堂时间安排与关键暂停点 (Pause Points)
 
-| 时段 | 时长 | 内容 |
-| --- | --- | --- |
-| 成果展示与复盘 | 10 分钟 | 展示模糊需求导致代码崩溃对比，解析 6 大业务要素 |
-| 教师演示 | 15 分钟 | 演示唤醒 `grill-me`，下发 Task 3A 预览与 Task 3B HITL 授权口令 |
-| 学员实操 Task 1 & 2 | 45 分钟 | 唤醒 `grill-me` 澄清 6 要素，输出 9 章节契约卡与类型草稿 |
-| 三层验收与 Git 存档 | 10 分钟 | 执行工程验证、契约验证与主管验收，选择性暂存 Commit |
-| 总结与 Exit Ticket | 10 分钟 | 区分 Given-When-Then 与 Stop Conditions，完成退场测试 |
+| 时段 | 时长 | 内容 | 关键暂停点 (Pause Point) |
+| --- | --- | --- | --- |
+| 成果展示与复盘 | 10 分钟 | 展示模糊需求导致代码崩溃对比，解析 6 大业务要素 | **[ Pause Point 1 ]**：提问学员“口头指令与业务契约的区别是什么？” |
+| 教师演示 | 15 分钟 | 演示唤醒 `grill-me`，下发 Task 3A 预览与 Task 3B HITL 授权口令 | **[ Pause Point 2 ]**：检查学员是否理解为什么 Task 3A 只输出文字预览不改磁盘文件 |
+| 学员实操 Task 1 & 2 | 45 分钟 | 唤醒 `grill-me` 澄清 6 要素，校验阻断门禁，落盘 9 章节契约卡 | **[ Pause Point 3 ]**：巡视检查学员是否清空了 6 项阻断性待确认事项 |
+| 三层验收与 Git 存档 | 10 分钟 | 执行工程验证、契约验证与主管验收，更新 PROJECT_STATE.md | **[ Pause Point 4 ]**：确认学员执行了选择性暂存 (`git add --`) |
+| 总结与 Exit Ticket | 10 分钟 | 区分 Given-When-Then 与 Stop Conditions，完成退场测试 | **[ Pause Point 5 ]**：退出门禁答题与下节课契约冻结规则宣告 |
 
 ## 9. 业务场景
 
@@ -84,19 +85,19 @@
 - 输入：`同意方案，请开始落盘功能卡与契约资产`
 
 ### 步骤 4：三层验收与选择性暂存
-- 执行 `npm run typecheck` & `git add --` 选择性暂存提交。
+- 执行 `npm run typecheck`、更新 `docs/PROJECT_STATE.md` & `git add --` 选择性暂存提交。
 
 ## 11. 学员实操任务
 
-- **Task 1**：唤醒 `grill-me` 澄清 6 要素。
+- **Task 1**：唤醒 `grill-me` 澄清 6 要素，清空阻断项。
 - **Task 2**：Task 3A 预览与 Task 3B 口令授权落盘。
-- **Task 3**：三层验收与 `git add --` 暂存 Commit。
+- **Task 3**：三层验收、更新 `docs/PROJECT_STATE.md` 与 `git add --` 暂存 Commit。
 
 ## 12. 推荐提示词
 
 ```text
 /grill-me
-我想针对我选定的业务原型方向做需求澄清。请一次只问一个问题，帮助我澄清使用者与问题、目标、边界、风险、Given-When-Then 验收场景、停止条件与数据契约。
+我想针对我选定的业务原型方向做需求澄清。请一次只问一个问题，控制在 5-7 轮内帮助我澄清使用者与问题、目标、边界、风险、Given-When-Then 验收场景、停止条件与数据契约。
 ```
 
 ## 13. Skill 使用
@@ -114,8 +115,9 @@
 
 ## 15. 验证和证据
 
-- [ ] `docs/BUSINESS_FEATURE_CARD.md` 包含 9 大章节
+- [ ] `docs/BUSINESS_FEATURE_CARD.md` 包含 9 大章节，无阻断性待确认事项
 - [ ] `npm run typecheck` & `npm run build` PASS
+- [ ] `docs/PROJECT_STATE.md` 已同步更新为 L03 PASS
 - [ ] Git Log 呈现 `feat: complete lesson 3 business and data contracts`
 
 ## 16. 课堂成果
@@ -123,20 +125,23 @@
 - `docs/BUSINESS_FEATURE_CARD.md`
 - `src/types/prototype-contract.d.ts`
 - `src/mocks/prototype-data.ts`
+- `docs/PROJECT_STATE.md`
 
 ## 17. 课后作业
 
-复核 `docs/BUSINESS_FEATURE_CARD.md` 中的 `[待确认]` 事项，在下节课前与业务团队确认。
+复核 `docs/BUSINESS_FEATURE_CARD.md` 中的 `[待确认]` 事项，在下节课前与业务团队确认非阻断细节。
 
 ## 18. 通过标准
 
 - [ ] 三层验收（工程、契约、主管）全部 PASS。
 
-## 19. 常见问题
+## 19. 常见误区与处理 (Misconceptions Table)
 
-| 问题 | 处理 |
-| --- | --- |
-| 无法区分验收条件与停止条件 | 解释 Given-When-Then 是功能正确性，Stop 条件是 Agent 触发熔断 |
+| 常见误区 | 现象描述 | 纠偏与处理方案 |
+| --- | --- | --- |
+| 误区 1：把解决方案当成问题 | 学员说“我要做个 AI 看板” | 引导关注当前人工耗时与遗漏事实，先定义具体痛点 |
+| 误区 2：把 Given-When-Then 误当停止条件 | 将场景测试用例当成 Agent 熔断边界 | 明确 Given-When-Then 是功能正确性，Stop 是暂停呈报门禁 |
+| 误区 3：带着阻断项直接进入第四课 | 关键字段来源未确认就写实施计划 | 强调阻断门禁规则，必须先清空 6 项阻断问题 |
 
 ## 20. 课后记录
 
@@ -150,10 +155,14 @@
 
 | 项 | 内容 |
 | --- | --- |
-| 包版本 | v0.1.0 |
+| 包版本 | 待生成 |
 
 ## 22. 教师复盘
 
 ```text
 实际授课时间：待填
 ```
+
+## 23. 附录：契约冻结规则说明
+
+主管验收 PASS 后，`BUSINESS_FEATURE_CARD.md` 成为第四课的唯一需求基线。后续如需修改范围、业务规则、数据契约或验收场景，必须先更新 `BUSINESS_FEATURE_CARD.md` 并重新获得主管确认。

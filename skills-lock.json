@@ -14,7 +14,7 @@
       "upstreamCommit": "bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1",
       "upstreamRef": "bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1",
       "adaptationNotes": "Adapted for Claude Code CLI with Step-level Workflow authorization gate (授权执行 Step N), persistent plan state machine (docs/LESSON_04_IMPLEMENTATION_PLAN.md), selective two-commit state transition protocol, prototypeState debug toggle, and Verifier Subagent silent self-tests.",
-      "computedHash": "65e750a0f5c9984eb50f9327b5b493092108011200dfdfe511a3ef6d79fa7579"
+      "computedHash": "80cf1d694fc367cfe471f77805c9d600d1918c415f6578403c133575de97a574"
     }
   }
 }

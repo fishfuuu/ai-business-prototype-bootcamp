@@ -12,11 +12,12 @@
 
 完成本课学习后，你将能够：
 1. **对比与阐述** 一次性巨石代码盲开的退化风险，以及 **先计划、后执行、做小切片** 的增量实施优势。
-2. **生成与保存** 包含 `plan_status` 与 `current_waiting_step` 步骤清单的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
-3. **精准区分** **页面技术呈现状态 (Loading/Empty/Error/Success)** 与 **业务流程状态 (待处理/处理中/已阻塞/已完成)** 的本质区别。
-4. **掌握与触发** **Step级 Workflow 授权门禁**（首行精确匹配 `授权执行 Step 1`），受控解锁首个切片编码。
-5. **验证与体验** 带有 **页面技术状态调试器 (Prototype Debug)** 的前端原型，以及针对三类原型方向的 Step 1 薄切片。
-6. **执行** **三层验收（静态工程自测、人工页面点击验收、主管业务验收）**，完成稳定代码版本归档；若验证失败，掌握将步骤标为 `BLOCKED` 的优雅暂停方法。
+2. **遵守与继承** 第三课的 **契约冻结规则 (Contract Freeze Rule)**，以 `docs/BUSINESS_FEATURE_CARD.md` 为唯一需求基线。
+3. **生成与保存** 包含 `plan_status` 与 `current_waiting_step` 步骤清单的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
+4. **精准区分** **页面技术呈现状态 (Loading/Empty/Error/Success)** 与 **业务流程状态 (待处理/处理中/已阻塞/已完成)** 的本质区别。
+5. **掌握与触发** **Step级 Workflow 授权门禁**（首行精确匹配 `授权执行 Step 1`），受控解锁首个切片编码。
+6. **验证与体验** 带有 **页面技术状态调试器 (Prototype Debug)** 的前端原型，以及针对三类原型方向的 Step 1 薄切片。
+7. **执行** **三层验收与一次完整版本归档 (Commit A 源码 + Commit B 状态推进)**；若验证失败，正确执行 **`BLOCKED` 暂停记录**（不提交 Commit A、不推进 Step 2）。
 
 ---
 
@@ -46,9 +47,9 @@
                  ( Step 1 薄切片编码 ) 
                            │
                            ▼
-               [ 静默自测 + 人工页面点击 4 状态 ] ───> [ PASS: 保存代码版本 ]
+               [ 静默自测 + 人工页面点击 4 状态 ] ───> [ PASS: 授权 Commit A + Commit B 归档 ]
                            │
-                           └───> [ FAIL: 标记 BLOCKED 暂停 ] ───> (记录失败摘要)
+                           └───> [ FAIL: 标记 BLOCKED 暂停 ] ───> (不跑 Commit A, 记录失败摘要)
 
 ===================================================================================
 【第三层：页面技术状态调试器】 (可视化调试，彻底消除交接死角)
@@ -76,38 +77,40 @@
   - **Verifier 静默自测**：后台跑 `typecheck` 与 `build`，防止大量日志刷屏污染主对话框。
 
 ### 1.2 核心概念澄清：页面技术呈现状态 vs. 业务流程状态
-为防止概念混淆，全课程严格区分：
+全课程统一三类原型保留相同的页面技术呈现状态：
 
 | 状态类型 | 作用与定义 | 典型示例 | 本课应用 |
 | :--- | :--- | :--- | :--- |
 | **页面技术呈现状态** | 页面前端能否正常拉取、呈现数据与处理异常 | Loading (加载中)、Empty (空数据)、Error (报错重试)、Success (正常呈现) | 植入 **`Prototype Debug` 调试器**，物理点击切换 4 种界面 |
 | **业务流程状态** | 业务对象在真实业务生命周期中所处的阶段 | 待处理 (Pending)、处理中 (In Progress)、已阻塞 (Blocked)、已完成 (Completed) | 在列表/看板的 Tag 标签中展示真正的业务阶段 |
 
-*(注：一个工单页面可以同时处于 `页面技术状态：Success`，且展示的工单处于 `业务流程状态：已阻塞`。)*
+*(注：操作工具型原型保留统一的 `prototypeState` 4 种技术呈现状态，可额外展示 `Idle / Validating / Result / Error` 工具流程状态。)*
 
-### 1.3 三类业务原型的 Step 1 薄切片示例
-- **A. 监控与决策型**：Step 1 聚焦于指标卡/预警面板骨架屏 + 4 技术状态调试器切换；
-- **B. 任务与流程型**：Step 1 聚焦于工单看板/审批列表骨架屏 + 4 技术状态调试器 + 4 业务流程 Tag 切片；
-- **C. 操作工具型**：Step 1 聚焦于表单输入面板 + `Idle` (待输入) / `Validating` (校验中) / `Result` (处理结果) / `Error` 状态调试切片。
-
-### 1.4 三层递进验收标准 (Three-Layer Verification)
+### 1.3 三层递进验收标准与版本归档 (Three-Layer Verification & Archiving)
 Step 1 编码完成后，需通过三层关口：
 1. **第一层：Verifier PASS (静态工程与编译自测)**
-   - 运行后台自测，确认 TypeScript 类型与 Vite 构建 Clean 通过。
 2. **第二层：人工点击验收 PASS (页面行为交互验证)**
-   - 刷新浏览器页面，物理点击顶部 `Prototype Debug` 单选按钮，确认 Loading / Empty / Error / Success 4 种视觉效果流畅切换。
 3. **第三层：主管业务验收 PASS (业务目标满足)**
-   - 确认 Step 1 产出符合当前步骤要求的切片范围。
 
-### 1.5 优雅处理失败：标记 `BLOCKED` 也是有效成果
+通过后，执行一次完整版本归档：
+- **Commit A：切片源码 (`feat`)**
+- **Commit B：实施计划状态推进 (`docs`)**
+
+### 1.4 区分“课程学习结果”与“切片实施结果”
 如果静默自测报错或切片未达预期：
-- **不慌张、不盲目自动修复**；
-- 在 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中将当前 Step 状态标记为 `status: BLOCKED`，回填 `failure_summary` 失败摘要；
-- 记录失败日志并保存代码，这本身就是一份**完全合格的课程资产**，可直接作为第六课（定位与修复问题）的前置线索。
+- **课程学习结果**：**`PASS`**（学员正确执行了停止、记录证据与 `BLOCKED` 标记流程）；
+- **Step 实施结果**：**`BLOCKED`**（不执行 Commit A，不推进 Step 2，在 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中填入 `failure_summary` 写入日志，留给第六课处理）。
 
 ---
 
-## 2. 学员实操任务
+## 2. 学员实操任务与时间分配
+
+建议时间分配：
+- **Task 0 & 1 & 2 (基线、Plan 与 Step 1 编码)**：40 分钟
+- **Task 3 (三层验收与版本归档)**：15 分钟
+- **总结与 Exit Ticket**：10 分钟
+
+---
 
 ### 任务 0：前置基线检查
 
@@ -115,14 +118,12 @@ Step 1 编码完成后，需通过三层关口：
 
 **操作指令**：
 ```text
-请检查当前 Git 状态，确认 docs/BUSINESS_FEATURE_CARD.md、src/types/prototype-contract.d.ts 以及 src/mocks/prototype-data.ts 物理存在且工作区干净。
+请检查当前 Git 状态，确认 docs/BUSINESS_FEATURE_CARD.md、src/types/prototype-contract.d.ts 以及 src/mocks/prototype-data.ts 存在且工作区干净。
 ```
 
 ---
 
 ### 任务 1：唤醒 Skill，生成并保存实施计划 (Plan 阶段)
-
-**目标**：生成增量计划预览，授权落盘至 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 
 **操作指令 1 (只读预览)**：
 ```text
@@ -135,29 +136,18 @@ Step 1 编码完成后，需通过三层关口：
 授权保存 Lesson 04 实施计划
 ```
 
-**完成标准**：
-- [ ] 成功在项目根目录下生成包含 `plan_status` 与 `steps` 的 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 文件。
-
 ---
 
 ### 任务 2：下发授权门禁，完成 Step 1 调试切片 (Execute 阶段)
-
-**目标**：下发 `授权执行 Step 1`，完成 Step 1 切片编码，并植入页面技术状态调试器。
 
 **操作指令**：
 ```text
 授权执行 Step 1
 ```
 
-**完成标准**：
-- [ ] 刷新页面，看到带有 `Prototype Debug` 标识的顶部切换按钮。
-- [ ] 点击 Loading / Empty / Error / Success，界面流畅切换 4 种前端视图。
-
 ---
 
 ### 任务 3：静默自测、三层验收与版本归档 (Verify & Commit 阶段)
-
-**目标**：调用 Verifier 完成自测，通过三层验收，归档代码版本（采用两提交选择性暂存协议解耦源码与计划状态）。
 
 **操作指令 1 (静默自测)**：
 ```text
@@ -176,26 +166,11 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 ```
 *(Agent 底层执行 `git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md` 选择性暂存提交)*
 
-**完成标准**：
-- [ ] 终端接收到 `[PASS] Step 1 Verification clean`。
-- [ ] 页面 4 种技术状态物理点击验证通过。
-- [ ] Git Log 分别呈现代码 Commit A 与实施计划推进 Commit B。
-
 ---
 
 ## 3. 课后退场自测 (Exit Ticket)
 
-> **退出门禁题**：“页面技术呈现状态”与“业务流程状态”的核心区别是什么？
+> **退出门禁题**：“页面技术呈现状态”与“业务流程状态”的核心区别是什么？切片验证失败时，应该如何正确处理？
 
 * **参考答案**：
-  页面技术呈现状态 (Loading/Empty/Error/Success) 描述前端能否正常展示数据与处理异常；业务流程状态 (待处理/处理中/已阻塞/已完成) 描述业务对象在业务流程中所处的阶段。
-
----
-
-## 4. 常见卡点与排错 (FAQ)
-
-| 卡点现象 | 根因分析 | 处理建议 |
-| --- | --- | --- |
-| 发送指令后 Agent 没有写文件 | 消息首行未严格匹配 `授权执行 Step N` | 检查发送的消息第一行是否精确等于 `授权执行 Step 1` |
-| 调试切换按钮点击无响应 | 状态变量未正确绑定条件渲染 | 检查 Vue 组件是否正确引入了 `showPrototypeDebug` 保护 |
-| Verifier 显示 FAIL | TS 类型错误或计划缺失 | 将 Step 状态标记为 `BLOCKED`，保存失败日志，移交下节课分析 |
+  页面技术呈现状态描述前端拉取数据与展示状态；业务流程状态描述业务对象的生命周期；验证失败时，不提交 Commit A，将步骤标记为 `BLOCKED` 并回填失败摘要，留给第六课处理。
