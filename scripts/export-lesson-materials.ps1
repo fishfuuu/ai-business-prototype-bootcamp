@@ -12,7 +12,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $projectRoot
 
 Write-Host "========================================"
-Write-Host "Exporting Lesson 02 Materials Package"
+Write-Host "Exporting Lesson Materials Package"
 Write-Host "========================================"
 Write-Host "SourceRef: $SourceRef"
 Write-Host "Version:   $Version"
@@ -38,7 +38,7 @@ if (-not (Test-Path $artifactDir)) {
     New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null
 }
 
-$zipName = "ai-business-prototype-lesson-02-materials-$Version.zip"
+$zipName = "ai-business-prototype-lesson-materials-$Version.zip"
 $targetZipPath = Join-Path $artifactDir $zipName
 $targetShaPath = Join-Path $artifactDir "$zipName.sha256"
 
@@ -50,7 +50,7 @@ if (Test-Path $targetShaPath) {
 }
 
 # 3. Create temp staging directory
-$tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("l2-materials-export-" + [Guid]::NewGuid().ToString("N"))
+$tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("materials-export-" + [Guid]::NewGuid().ToString("N"))
 $packageStaging = Join-Path $tempDir "package"
 $metadataDir = Join-Path $packageStaging "metadata"
 $payloadDocsDir = Join-Path $packageStaging "payload\docs"
@@ -62,7 +62,7 @@ $exportSucceeded = $false
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
 try {
-    # 4. Extract install-lesson-materials.ps1 ONLY from SourceCommit via git show (No working tree fallback)
+    # 4. Extract install-lesson-materials.ps1 ONLY from SourceCommit via git show
     $installerPath = Join-Path $packageStaging "install-lesson-materials.ps1"
     $installerContent = & git show "$sourceCommit`:scripts/install-lesson-materials.ps1" 2>$null
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($installerContent)) {
@@ -72,7 +72,7 @@ try {
 
     # 5. Extract payload/ files (docs and skills) from SourceCommit via git archive
     $gitArchiveZip = Join-Path $tempDir "git-archive.zip"
-    & git archive --format=zip -o $gitArchiveZip $sourceCommit docs .claude/skills/grill-me
+    & git archive --format=zip -o $gitArchiveZip $sourceCommit docs .claude/skills
     if ($LASTEXITCODE -ne 0) {
         throw "git archive for docs & skills failed on SourceCommit $sourceCommit."
     }
@@ -84,7 +84,7 @@ try {
     New-Item -ItemType Directory -Path $payloadStagingDir -Force | Out-Null
     Copy-Item -Path "$archiveExtractDir\*" -Destination $payloadStagingDir -Recurse -Force
 
-    # Filter to only keep second & third lesson relevant docs & skills in payload
+    # Filter to only keep allowed lesson relevant docs & skills in payload
     $allowedRelativePaths = @(
         "docs\LESSON_02_GUIDE.md",
         "docs\assets\lesson-02\lesson-02-flow.png",
@@ -92,7 +92,9 @@ try {
         "docs\assets\lesson-02\ref-task-workflow.png",
         "docs\assets\lesson-02\ref-operation-tool.png",
         "docs\LESSON_03_GUIDE.md",
-        ".claude\skills\grill-me\SKILL.md"
+        ".claude\skills\grill-me\SKILL.md",
+        "docs\LESSON_04_GUIDE.md",
+        ".claude\skills\incremental-implementation\SKILL.md"
     )
 
     $allExtractedFiles = Get-ChildItem -Path $payloadStagingDir -Recurse -File
@@ -106,7 +108,7 @@ try {
     # 6. Generate VERSION.txt
     $builtAtUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
     $versionLines = @(
-        "Package: ai-business-prototype-lesson-02-materials",
+        "Package: ai-business-prototype-lesson-materials",
         "Version: $Version",
         "Repository Source Commit: $sourceCommit",
         "Built At UTC: $builtAtUtc",

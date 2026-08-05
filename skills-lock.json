@@ -6,6 +6,14 @@
       "sourceType": "github",
       "skillPath": "skills/teaching-lesson-plan/SKILL.md",
       "computedHash": "cd5017102672ac09a06ecebb718ef1f3bd5bd212b7130703def104a944cafda5"
+    },
+    "incremental-implementation": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/incremental-implementation/SKILL.md",
+      "upstreamCommit": "main",
+      "adaptationNotes": "Adapted for Claude Code CLI with Step-level Workflow authorization gate (授权执行 Step N), persistent plan (docs/LESSON_04_IMPLEMENTATION_PLAN.md), prototypeState debug toggle, and Verifier Subagent silent self-tests.",
+      "computedHash": "0f78c91e59fa9a0e4188fa08b857df21cd5d4c1c69e8b2d9b2b9f4287e11c47b"
     }
   }
 }

@@ -118,7 +118,7 @@
 | **一、界面与外观** | **1** | 从业务问题创建第一个系统页面 | **Prompting → Loop 初体验**；Tools 权限沙箱；模拟数据红线；初始化 `PROJECT_STATE.md` | **ReAct 范式** (单步自修)；Tools 沙箱与 127.0.0.1 试衣镜 | 可运行系统雏形、侧栏菜单、模拟数据、`PROJECT_STATE.md` |
 | | **2** | 用参考图与设计规则做出像样的页面 | **视觉 Harness (`DESIGN.md`) & 事实锚定**；**双 Token 制衡**；物理点开 `DESIGN.md`；Git 节点1/2存档 | **ReAct 范式**；**MCP/Plugin 概念启蒙**；`design-lint` | 高颜原型、`DESIGN.md`、首个 Git 稳定 Commit |
 | **二、需求与结构** | **3** | 让 Agent 帮助自己想清楚需求 | **Prompt vs Skill Harness (`grill-me`)**；前置 **Goal/Boundary/Risk/Stop 4 大要素**；数据契约卡 | **ReAct + Skill 约束**；`grill-me` | 分类型《业务功能卡》与数据契约卡草稿 |
-| | **4** | 把大需求拆成连续的小成功 | **架构 Harness 驱动增量 Loop**；数据接口意识（4 种状态）；可重复验证与回归风险 | **Plan & Execute 范式**；**后台静默 Verifier Subagent** (跑自测) | 包含 3–5 步连贯实现与 Commit 的业务模块 |
+| | **4** | 把大需求拆成连续的小成功 | **架构 Harness (`incremental-implementation`) 驱动增量 Loop**；持久化计划 (`LESSON_04_IMPLEMENTATION_PLAN.md`)；数据接口意识（4 种状态与调试切片）；可重复验证与回归风险 | **Plan & Execute 范式**；**后台静默 Verifier Subagent** (跑自测与日志落盘) | 已批准增量计划 + 首个已验证切片与 Git Commit |
 | **三、防崩与排错** | **5** | 建立不会轻易失控的项目 | **工程 Harness (`CLAUDE.md`)**；**三分记忆模型**；**【解药 1：环境脱幻与独立工具箱】** | **Plan & Execute 范式**；`CLAUDE.md` 项目护栏 | 带项目护栏、Git 恢复能力与独立工具箱的稳定系统 |
 | | **6** | 学会定位和修复问题 | **事实锚定排错**；五层诊断卡；**有界排错 Loop (最多2轮，不得改断言)** | **ReAct 有界自修**；Console/日志锚定 | 带有五层 Bug 诊断与回归证据的系统 |
 | **四、双 Agent 验收** | **7** | 让 Agent 实际操作页面完成验收 | **断言 Harness 自动化**；停止条件转 Playwright 自动化断言；四类可复核证据链 | **Subagent + Browser MCP** (Browser-Tester 抓截图) | 带有四类可复核证据链的验收记录 |

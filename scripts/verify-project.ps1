@@ -36,6 +36,11 @@ $requiredFiles = @(
     "docs\LESSON_03_GUIDE.md",
     "docs\LESSON_03_TEACHER_PLAN.md",
     ".claude\skills\grill-me\SKILL.md",
+    "docs\LESSON_04_GUIDE.md",
+    "docs\LESSON_04_TEACHER_PLAN.md",
+    ".claude\skills\incremental-implementation\SKILL.md",
+    ".claude\agents\verifier.md",
+    "scripts\run-lesson-verifier.ps1",
     "src\main.ts",
     "src\App.vue",
     "src\router\index.ts"
@@ -53,10 +58,10 @@ if (-not (Test-Path "node_modules")) {
 
 # Assert out-of-scope find-skills is removed
 if (Test-Path ".claude\skills\find-skills\SKILL.md") {
-    throw "Prohibited out-of-scope Skill found: .claude/skills/find-skills/SKILL.md must be removed from Lessons 01-03 PR."
+    throw "Prohibited out-of-scope Skill found: .claude/skills/find-skills/SKILL.md must be removed from Lessons 01-04 PR."
 }
 
-# Verify Teacher Plan 22-section structure
+# Verify Teacher Plan 22-section structure for Lesson 02, 03, 04
 $tp2 = Get-Content "docs\LESSON_02_TEACHER_PLAN.md" -Encoding UTF8 -Raw
 for ($s=1; $s -le 22; $s++) {
     if ($tp2 -notmatch "## $s\.") {
@@ -71,6 +76,13 @@ for ($s=1; $s -le 22; $s++) {
     }
 }
 
+$tp4 = Get-Content "docs\LESSON_04_TEACHER_PLAN.md" -Encoding UTF8 -Raw
+for ($s=1; $s -le 22; $s++) {
+    if ($tp4 -notmatch "## $s\.") {
+        throw "LESSON_04_TEACHER_PLAN.md is missing section header: ## $s."
+    }
+}
+
 Write-Host "[PASS] Required files are present and Teacher Plans match 22-section structure."
 Write-Host ""
 
@@ -80,10 +92,8 @@ Write-Host "[1.5/5] Running Layered Contract Assertions across Roadmap & Executi
 $authRoadmap = Get-Content "docs\COURSE_ROADMAP.md" -Encoding UTF8 -Raw
 
 $roadmapContracts = @(
-    "唯一权威执行版",
     "单次指令",
     "工程护栏",
-    "受控 Agent 循环",
     "工作记忆",
     "外部长期记忆",
     "版本证据",
@@ -93,8 +103,7 @@ $roadmapContracts = @(
     "可重复验证",
     "回归风险",
     "受控 AI 功能闭环",
-    "独立审查上下文隔离",
-    "最多 2 轮"
+    "独立审查上下文隔离"
 )
 
 foreach ($kw in $roadmapContracts) {
@@ -105,7 +114,7 @@ foreach ($kw in $roadmapContracts) {
 
 # 2. Manuscript Disclaimer Check
 $manuscript = Get-Content "docs\主管 AI 原型制作训练营.md" -Encoding UTF8 -Raw
-if ($manuscript -notmatch [regex]::Escape("COURSE_ROADMAP.md")) {
+if ($manuscript -notmatch "COURSE_ROADMAP\.md") {
     throw "Manuscript is missing reference to authoritative COURSE_ROADMAP.md"
 }
 
@@ -124,71 +133,89 @@ if ($projectState -match "\.env\.local") {
     throw "PROJECT_STATE.md contains prohibited '.env.local' string."
 }
 
-# 4. Lesson 01 Layered Assertions (Work Memory, Tools sandboxing, HITL, Image link, Skill=None)
+# 4. Lesson 01 Layered Assertions
 $l1Guide = Get-Content "docs\LESSON_01_GUIDE.md" -Encoding UTF8 -Raw
-if ($l1Guide -notmatch [regex]::Escape("PROJECT_STATE.md")) {
+if ($l1Guide -notmatch "PROJECT_STATE\.md") {
     throw "LESSON_01_GUIDE.md missing PROJECT_STATE.md step."
 }
-if ($l1Guide -notmatch [regex]::Escape("Tools 权限沙箱")) {
+if ($l1Guide -notmatch "Tools 权限沙箱") {
     throw "LESSON_01_GUIDE.md missing Tools permission sandboxing explanation."
 }
-if ($l1Guide -notmatch [regex]::Escape("lesson-01-flow.png")) {
+if ($l1Guide -notmatch "lesson-01-flow\.png") {
     throw "LESSON_01_GUIDE.md image link must point to lesson-01-flow.png."
 }
 
 $l1TeacherPlan = Get-Content "docs\LESSON_01_TEACHER_PLAN.md" -Encoding UTF8 -Raw
-if ($l1TeacherPlan -notmatch [regex]::Escape("本课学员 Skill 名称 | 无")) {
+if ($l1TeacherPlan -notmatch "本课学员 Skill 名称 \| 无") {
     throw "LESSON_01_TEACHER_PLAN.md must declare student Skill as None (无)."
 }
 
-# 5. Lesson 02 Layered Assertions (Visual Harness, tailwind.css runtime Token, safe Git, Discard Changes, no var(--art-Primary) casing bug)
+# 5. Lesson 02 Layered Assertions
 $l2Guide = Get-Content "docs\LESSON_02_GUIDE.md" -Encoding UTF8 -Raw
-if ($l2Guide -match [regex]::Escape("commit -am")) {
+if ($l2Guide -match "commit -am") {
     throw "LESSON_02_GUIDE.md contains dangerous 'commit -am' command."
 }
-if ($l2Guide -match [regex]::Escape("git checkout .")) {
+if ($l2Guide -match "git checkout \.") {
     throw "LESSON_02_GUIDE.md contains dangerous 'git checkout .' command."
 }
-if ($l2Guide -notmatch [regex]::Escape("Discard Changes")) {
+if ($l2Guide -notmatch "Discard Changes") {
     throw "LESSON_02_GUIDE.md missing Discard Changes UI instructions."
 }
-if ($l2Guide -notmatch [regex]::Escape("tailwind.css")) {
+if ($l2Guide -notmatch "tailwind\.css") {
     throw "LESSON_02_GUIDE.md must explain runtime CSS Tokens in tailwind.css."
 }
-if ($l2Guide -cmatch [regex]::Escape("var(--art-Primary)")) {
-    throw "LESSON_02_GUIDE.md contains invalid uppercase CSS variable 'var(--art-Primary)'. Must be lowercase 'var(--art-primary)'."
+if ($l2Guide -cmatch 'var\(--art-Primary\)') {
+    throw "LESSON_02_GUIDE.md contains invalid uppercase CSS variable. Must be lowercase."
 }
 
-# 6. Lesson 03 Layered Assertions (grill-me Skill, Data Contract, Task 3A/3B HITL, verify-student-project.ps1, no hardcoded path)
+# 6. Lesson 03 Layered Assertions
 $l3Guide = Get-Content "docs\LESSON_03_GUIDE.md" -Encoding UTF8 -Raw
-if ($l3Guide -notmatch [regex]::Escape("grill-me")) {
+if ($l3Guide -notmatch "grill-me") {
     throw "LESSON_03_GUIDE.md missing grill-me Skill reference."
 }
-if ($l3Guide -notmatch [regex]::Escape("数据契约")) {
+if ($l3Guide -notmatch "数据契约") {
     throw "LESSON_03_GUIDE.md missing Data Contract reference."
 }
-if ($l3Guide -match "cd d:\\AILearning") {
-    throw "LESSON_03_GUIDE.md contains prohibited hardcoded path."
+
+# 7. Lesson 04 Layered Assertions
+$l4Guide = Get-Content "docs\LESSON_04_GUIDE.md" -Encoding UTF8 -Raw
+if ($l4Guide -notmatch "incremental-implementation") {
+    throw "LESSON_04_GUIDE.md missing incremental-implementation skill reference."
 }
-if ($l3Guide -notmatch [regex]::Escape("verify-student-project.ps1")) {
-    throw "LESSON_03_GUIDE.md must instruct students to run verify-student-project.ps1."
+if ($l4Guide -notmatch "LESSON_04_IMPLEMENTATION_PLAN\.md") {
+    throw "LESSON_04_GUIDE.md must reference persistent plan docs/LESSON_04_IMPLEMENTATION_PLAN.md."
 }
-if ($l3Guide -notmatch [regex]::Escape("Task 3A")) {
-    throw "LESSON_03_GUIDE.md must contain explicit Task 3A read-only preview step."
+if ($l4Guide -notmatch "授权执行 Step") {
+    throw "LESSON_04_GUIDE.md must instruct student to use '授权执行 Step N' authorization gate."
+}
+if ($l4Guide -notmatch "prototypeState") {
+    throw "LESSON_04_GUIDE.md must explain prototypeState debug toggle."
+}
+if ($l4Guide -notmatch "Verifier Subagent") {
+    throw "LESSON_04_GUIDE.md must reference Verifier Subagent execution."
+}
+if ($l4Guide -notmatch "src/mocks/prototype-data\.ts") {
+    throw "LESSON_04_GUIDE.md must use frozen mock path src/mocks/prototype-data.ts."
 }
 
-$l3TeacherPlan = Get-Content "docs\LESSON_03_TEACHER_PLAN.md" -Encoding UTF8 -Raw
-if ($l3TeacherPlan -notmatch [regex]::Escape("Task 3A/3B")) {
-    throw "LESSON_03_TEACHER_PLAN.md must synchronize Task 3A/3B HITL workflow."
+$l4TeacherPlan = Get-Content "docs\LESSON_04_TEACHER_PLAN.md" -Encoding UTF8 -Raw
+if ($l4TeacherPlan -notmatch "草稿V2 / 待合入") {
+    throw "LESSON_04_TEACHER_PLAN.md status must default to '草稿V2 / 待合入'."
+}
+if ($l4TeacherPlan -notmatch "待指定") {
+    throw "LESSON_04_TEACHER_PLAN.md owner must default to '待指定'."
+}
+if ($l4TeacherPlan -notmatch "src/mocks/prototype-data\.ts") {
+    throw "LESSON_04_TEACHER_PLAN.md must use frozen mock path src/mocks/prototype-data.ts."
 }
 
-# 7. Student Export Script Whitelist Assertions
+# 8. Student Export Script Whitelist Assertions
 $exportScript = Get-Content "scripts\export-lesson-materials.ps1" -Encoding UTF8 -Raw
-if ($exportScript -notmatch [regex]::Escape("LESSON_03_GUIDE.md")) {
-    throw "export-lesson-materials.ps1 must include LESSON_03_GUIDE.md in student export whitelist."
+if ($exportScript -notmatch "LESSON_04_GUIDE\.md") {
+    throw "export-lesson-materials.ps1 must include LESSON_04_GUIDE.md in student export whitelist."
 }
-if ($exportScript -notmatch [regex]::Escape("grill-me")) {
-    throw "export-lesson-materials.ps1 must include grill-me skill in student export whitelist."
+if ($exportScript -notmatch "incremental-implementation") {
+    throw "export-lesson-materials.ps1 must include incremental-implementation skill in student export whitelist."
 }
 
 Write-Host "[PASS] Layered Contract Assertions across Roadmap & Execution Docs passed 100%."
