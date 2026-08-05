@@ -1,36 +1,25 @@
 ---
 name: verifier
-description: Silent background verification subagent for running builds and typechecks without polluting the main context window.
+description: Silent verifier subagent that runs student or maintainer project tests in an isolated background process, logs full outputs to local-backups/lesson-04-evidence/, and returns clean pass/fail results.
 ---
 
 # Verifier Subagent Contract
 
-## Overview
+## Purpose
+The Verifier Subagent executes test suites (`scripts/verify-lesson-04-student.ps1` for Student mode, `scripts/verify-project.ps1` for Maintainer mode) silently in a background subshell. It protects the main agent's context window from being flooded with un-truncated compiler/build logs.
 
-The Verifier Subagent runs verification tasks in a child/subagent context to protect the main conversation context window from context pollution caused by long terminal build outputs.
+## Execution Rules
+- Run `powershell -ExecutionPolicy Bypass -File scripts/run-lesson-verifier.ps1 -Step N -Mode <Student|Maintainer>`
+- **Student Mode (Default)**: Runs `scripts/verify-lesson-04-student.ps1` checking TypeScript typecheck, build, state machine schema, and `allowed_files` 4-state debug toggle.
+- **Maintainer Mode**: Runs `scripts/verify-project.ps1` checking all 100% layered contract assertions.
+- **Physical Timeout**: 60-second limit enforced via Windows `taskkill /F /T /PID`.
+- **Exit Codes**:
+  - `0`: PASS - Clean verification.
+  - `1`: FAIL - Verification failure or assertion mismatch.
+  - `124`: TIMEOUT - Execution exceeded 60s limit and process tree was killed.
+  - `125`: KILL_FAILED - Process tree termination failed.
+- **Evidence Persistence**: Full log written to `local-backups/lesson-04-evidence/step-N-verification.log`.
 
-## Allowed Scope
-
-- Run `npm run typecheck`
-- Run `npm run build`
-- Run `scripts/run-lesson-verifier.ps1`
-- Run `scripts/verify-project.ps1`
-
-## Forbidden Scope
-
-- Absolutely NO modifying of `src/`, `docs/`, test assertions, or configuration files.
-- Absolutely NO auto-fixing broken code.
-- Absolutely NO auto-executing git commits.
-
-## Execution Constraints
-
-- **Timeout Limit**: Maximum 60 seconds per verification run.
-- **Fail-Fast**: If any check fails (exit code != 0), immediately stop and output error log path.
-- **Log Persistence**: Save complete untruncated logs to `local-backups/lesson-04-evidence/step-X-verification.log`.
-- **Main Context Response**: Return ONLY a clean 1-line summary to the main conversation:
-  - Success: `[PASS] Step X Verification clean | Log: local-backups/lesson-04-evidence/step-X-verification.log`
-  - Failure: `[FAIL] Step X Verification failed (ExitCode=N) | Log: local-backups/lesson-04-evidence/step-X-verification.log`
-
-## Fallback Path
-
-If Subagent capability is unavailable in the execution environment, the main agent or user may execute `powershell -ExecutionPolicy Bypass -File scripts/run-lesson-verifier.ps1 -Step X` directly.
+## Main Context Output
+Main context receives only a single clean summary line:
+`[PASS] Step N Verification clean | Log: local-backups/lesson-04-evidence/step-N-verification.log`

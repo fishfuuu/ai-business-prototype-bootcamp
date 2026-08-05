@@ -1,6 +1,6 @@
 ---
 name: incremental-implementation
-description: Delivers multi-file changes incrementally using contract-first slices, persistent implementation plans with state machines, 2-commit state transition protocols, prototype debug toggles, and silent Verifier Subagent self-tests.
+description: Delivers multi-file changes incrementally using contract-first slices, persistent implementation plans with state machines, selective two-commit state transition protocols, prototype debug toggles, and silent Verifier Subagent self-tests.
 ---
 
 # Incremental Implementation
@@ -60,7 +60,7 @@ To enforce strict, non-ambiguous human-in-the-loop control:
   - Do NOT modify allowed files or acceptance criteria without explicit human authorization.
   - If tests fail, stop immediately and report log path. Do NOT attempt silent code auto-fixes.
 
-### Phase 4: Silent Verification & 2-Commit State Transition Protocol (两提交状态推进协议)
+### Phase 4: Silent Verification & Selective 2-Commit Protocol (两提交选择性暂存协议)
 
 1. **Silent Verification**:
    - Invoke `Verifier Subagent` (`.claude/agents/verifier.md`) or run `powershell -ExecutionPolicy Bypass -File scripts/run-lesson-verifier.ps1 -Step N`.
@@ -68,10 +68,17 @@ To enforce strict, non-ambiguous human-in-the-loop control:
    - Main context receives 1 summary line: `[PASS] Step N Verification clean | Log: local-backups/lesson-04-evidence/step-N-verification.log`.
    - End response with exact prompt: `Step N 校验通过。请输入 "授权提交 Step N 源码" 以提交代码。`
 
-2. **Commit A Authorization & Execution (Commit A 源码提交)**:
+2. **Commit A Selective Staging & Execution (Commit A 源码选择性暂存提交)**:
    - Require user input to match exact phrase: `授权提交 Step N 源码`
-   - Commit the implementation source code:
-     `git commit -m "feat(prototype): step N - implement target slice"`
+   - Execute selective staging rules:
+     ```bash
+     git status
+     git add -- <Step N allowed_files>
+     git diff --cached --name-only
+     git diff --cached
+     git commit -m "feat(prototype): step N - implement target slice"
+     ```
+   - **Staging Assertion**: Commit A MUST ONLY stage files listed in Step N `allowed_files`. It MUST NOT stage `docs/LESSON_04_IMPLEMENTATION_PLAN.md`.
    - Obtain Commit A SHA via `git rev-parse HEAD`.
    - Update `docs/LESSON_04_IMPLEMENTATION_PLAN.md`:
      - Step N `status` -> `COMPLETED`
@@ -81,10 +88,16 @@ To enforce strict, non-ambiguous human-in-the-loop control:
      - `current_waiting_step` -> `N+1` (or `null` if final step)
    - End response with exact prompt: `Step N 源码已提交 (Commit A)。实施计划状态机已更新。请输入 "授权提交 Step N 状态推进" 以归档实施计划。`
 
-3. **Commit B Authorization & Execution (Commit B 状态推进提交)**:
+3. **Commit B Selective Staging & Execution (Commit B 状态推进选择性暂存提交)**:
    - Require user input to match exact phrase: `授权提交 Step N 状态推进`
-   - Commit plan state update:
-     `git commit -m "docs(state): advance lesson 04 plan to step N+1"`
+   - Execute selective staging rules:
+     ```bash
+     git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md
+     git diff --cached --name-only
+     git diff --cached
+     git commit -m "docs(state): advance lesson 04 plan to step N+1" # (or "docs(state): complete lesson 04 implementation plan" if final step)
+     ```
+   - **Staging Assertion**: Commit B MUST ONLY stage `docs/LESSON_04_IMPLEMENTATION_PLAN.md`.
 
 ## Prototype Debug Toggle Requirement
 

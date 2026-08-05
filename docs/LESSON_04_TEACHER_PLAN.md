@@ -29,13 +29,13 @@
 2. 掌握 **Step级 Workflow 授权门禁（首行精确匹配 `授权执行 Step 1`）**，受控下发切片编码指令。
 3. 掌握 **数据接口 4 种物理状态（Loading / Empty / Error / Success）** 及其 **`prototypeState` 可视化调试切片（`import.meta.env.DEV`）**。
 4. 掌握 **`Verifier Subagent` 静默自测机制**，运行 `scripts/run-lesson-verifier.ps1 -Step 1` 调用 `scripts/verify-lesson-04-student.ps1`，将编译日志落盘至 `local-backups/lesson-04-evidence/`，不污染主 Context 记忆。
-5. 掌握 **两提交状态推进协议（Commit A 源码提交 + Commit B 状态推进提交）**，完成代码与状态机的解耦归档。
+5. 掌握 **两提交选择性暂存协议（Commit A `git add -- <allowed_files>` 源码提交 + Commit B `git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md` 状态推进提交）**，完成代码与状态机的解耦归档。
 
 ## 4. 可见成果
 
 - 一份已批准的外部长期记忆实施计划状态机 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 - 一个带有 `Prototype Debug` 标识、支持 4 种数据状态物理点击切换的已验证 Vue 业务组件切片 (Step 1)。
-- 两个标准的 Git Commit 节点（Commit A 源码 + Commit B 状态推进）。
+- 两个标准的 Git Commit 节点（Commit A 仅含源码 + Commit B 仅含状态推进）。
 - 一份包含剩余 Step 2–N 执行指引的清单。
 
 ## 5. 本课明确不做
@@ -75,7 +75,7 @@
 | 成果展示与 Task 0 基线检查 | 10 分钟 | 检查 L3 资产，演示巨石盲开崩塌 vs 增量切片对比 |
 | 教师演示 | 15 分钟 | 演示唤醒 `/incremental-implementation`，下发授权落盘与 `授权执行 Step 1` |
 | 学员实操 Task 1 & 2 | 45 分钟 | 唤醒 Skill 生成并保存 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`，下发授权门禁落盘 Step 1 组件 |
-| Verifier 静默自测与 Git 存档 | 10 分钟 | 派遣 `Verifier Subagent` 运行 `scripts/run-lesson-verifier.ps1 -Step 1`，执行两提交归档 |
+| Verifier 静默自测与 Git 存档 | 10 分钟 | 派遣 `Verifier Subagent` 运行 `scripts/run-lesson-verifier.ps1 -Step 1`，执行两提交选择性暂存归档 |
 | 总结与 Exit Ticket | 10 分钟 | 完成 Exit Ticket 问答，总结主 Context 保护、4 状态调试切片与两提交协议价值 |
 
 ## 9. 业务场景
@@ -105,12 +105,12 @@
 - **操作**：刷新页面，物理点击顶部 `Prototype Debug` 单选按钮（Loading / Empty / Error / Success），演示 4 种界面切换。
 - **预期结果**：组件中物理生成 `prototypeState` 条件渲染分支。
 
-### 步骤 3：Verifier Subagent 静默自测与两提交归档演示
-- **目标**：演示后台静默自测、两提交协议与日志落盘。
+### 步骤 3：Verifier Subagent 静默自测与两提交选择性暂存归档演示
+- **目标**：演示后台静默自测、两提交选择性暂存协议与日志落盘。
 - **输入 1**：“派遣 Verifier Subagent 运行 scripts/run-lesson-verifier.ps1 -Step 1。”
 - **输入 2**：`授权提交 Step 1 源码`
 - **输入 3**：`授权提交 Step 1 状态推进`
-- **操作**：展示主窗口接收到 `[PASS]`，Git Log 增加 Commit A 与 Commit B，状态机更新至 Step 2。
+- **操作**：展示主窗口接收到 `[PASS]`，Git Log 增加 Commit A (源码) 与 Commit B (状态)，状态机更新至 Step 2。
 
 ## 11. 学员实操任务
 
@@ -145,7 +145,7 @@
 2. 计划落盘至 docs/LESSON_04_IMPLEMENTATION_PLAN.md 后，提示我下发 "授权执行 Step 1"；
 3. 必须在 Step 1 组件顶部渲染带有 Prototype Debug 标识的状态调试切换器；
 4. 编写完成后派遣 Verifier Subagent 后台运行 scripts/run-lesson-verifier.ps1 -Step 1；
-5. 校验通过后，引导我通过 "授权提交 Step 1 源码" 与 "授权提交 Step 1 状态推进" 进行两提交归档。
+5. 校验通过后，引导我通过 "授权提交 Step 1 源码" 与 "授权提交 Step 1 状态推进" 进行两提交选择性暂存归档。
 ```
 
 ## 13. Skill 使用
@@ -165,7 +165,7 @@
 - **Step级 Workflow 授权门禁**：首行精确匹配阻止 AI 冲动修改。
 - **prototypeState 调试切片**：解决静态 Mock 环境下无法物理验证 Loading/Empty/Error 的工业级技巧。
 - **Verifier Subagent 模式**：子会话静默跑编译，日志落盘至 `local-backups/lesson-04-evidence/`，保护主 Context 记忆纯净。
-- **两提交状态推进协议**：消除在 Commit 前回填 SHA 导致的二次污染死循环。
+- **两提交选择性暂存协议**：消除在 Commit 前回填 SHA 导致的二次污染死循环与计划混入源码提交问题。
 
 ## 15. 验证和证据
 

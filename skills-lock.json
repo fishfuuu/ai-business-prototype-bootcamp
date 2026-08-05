@@ -13,8 +13,8 @@
       "skillPath": "skills/incremental-implementation/SKILL.md",
       "upstreamCommit": "bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1",
       "upstreamRef": "bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1",
-      "adaptationNotes": "Adapted for Claude Code CLI with Step-level Workflow authorization gate (授权执行 Step N), persistent plan state machine (docs/LESSON_04_IMPLEMENTATION_PLAN.md), 2-commit state transition protocol, prototypeState debug toggle, and Verifier Subagent silent self-tests.",
-      "computedHash": "996c87a5c5ecb536c17dbc9a9f6b884bf601abe1595a84285828dbc83de0d39f"
+      "adaptationNotes": "Adapted for Claude Code CLI with Step-level Workflow authorization gate (授权执行 Step N), persistent plan state machine (docs/LESSON_04_IMPLEMENTATION_PLAN.md), selective two-commit state transition protocol, prototypeState debug toggle, and Verifier Subagent silent self-tests.",
+      "computedHash": "f82aa6043f3a103918ad43a9b6cb2c0b3cd6584203a09254b085e20d552723fd"
     }
   }
 }

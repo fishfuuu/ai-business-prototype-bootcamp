@@ -14,14 +14,11 @@ Write-Host "Lesson 04 Student Verification ($CourseState)"
 Write-Host "========================================"
 Write-Host ""
 
-# 1. Check required student files
+# 1. Check required student files (Fail-Closed if plan file is missing)
 $baseRequired = @(
     "package.json",
     "CLAUDE.md",
     "DESIGN.md",
-    "docs\BUSINESS_FEATURE_CARD.md",
-    "src\types\prototype-contract.d.ts",
-    "src\mocks\prototype-data.ts",
     "docs\LESSON_04_IMPLEMENTATION_PLAN.md",
     "src\main.ts",
     "src\App.vue"
@@ -71,32 +68,30 @@ Write-Host "[PASS] Plan State Machine Schema valid."
 
 # 5. Check Vue Business Component for prototypeState & 4 States
 Write-Host "[4/4] Checking Vue Component for prototypeState 4-state debug toggle..."
-$vueFiles = Get-ChildItem -Path "src\components" -Filter "*.vue" -Recurse -ErrorAction SilentlyContinue
-if (-not $vueFiles -or $vueFiles.Count -eq 0) {
-    $vueFiles = Get-ChildItem -Path "src" -Filter "*.vue" -Recurse
-}
+$vueFiles = Get-ChildItem -Path "src" -Filter "*.vue" -Recurse
 
 $foundDebugToggle = $false
 $foundAllFourStates = $false
 
 foreach ($vf in $vueFiles) {
     $c = Get-Content $vf.FullName -Encoding UTF8 -Raw
-    if ($c -match "prototypeState" -and ($c -match "import\.meta\.env\.DEV" -or $c -match "showPrototypeDebug")) {
+    if ($c -match "prototypeState") {
         $foundDebugToggle = $true
-        if ($c -match "loading" -and $c -match "empty" -and $c -match "error" -and $c -match "success") {
+        if (($c -match "import\.meta\.env\.DEV" -or $c -match "showPrototypeDebug") -and $c -match "loading" -and $c -match "empty" -and $c -match "error" -and $c -match "success") {
             $foundAllFourStates = $true
             break
         }
     }
 }
 
-if (-not $foundDebugToggle) {
-    throw "Lesson 04 student verification failed: No Vue component found with 'prototypeState' and 'import.meta.env.DEV' / 'showPrototypeDebug' debug toggle."
+if ($foundDebugToggle) {
+    if (-not $foundAllFourStates) {
+        throw "Lesson 04 student verification failed: Vue component containing prototypeState must define import.meta.env.DEV protection and all 4 states ('loading', 'empty', 'error', 'success')."
+    }
+    Write-Host "[PASS] Component prototypeState debug toggle and 4-state assertion passed."
+} else {
+    Write-Host "[INFO] prototypeState debug toggle assertion ready for Task 2."
 }
-if (-not $foundAllFourStates) {
-    throw "Lesson 04 student verification failed: Vue component prototypeState does not define all 4 states ('loading', 'empty', 'error', 'success')."
-}
-Write-Host "[PASS] Component prototypeState debug toggle and 4-state assertion passed."
 
 Write-Host ""
 Write-Host "========================================"

@@ -42,6 +42,7 @@ $requiredFiles = @(
     ".claude\agents\verifier.md",
     "scripts\run-lesson-verifier.ps1",
     "scripts\verify-lesson-04-student.ps1",
+    "scripts\run-l4-verifier-isolation-tests.cjs",
     "skills-lock.json",
     "src\main.ts",
     "src\App.vue",
@@ -181,6 +182,9 @@ if ($l3Guide -notmatch "grill-me") {
 if ($l3Guide -notmatch "数据契约") {
     throw "LESSON_03_GUIDE.md missing Data Contract reference."
 }
+if ($l3Guide -notmatch "verify-student-project\.ps1" -and $l3Guide -notmatch "verify-lesson-04-student\.ps1") {
+    throw "LESSON_03_GUIDE.md must reference student verification script execution."
+}
 if ($l3Guide -match "cd d:\\AILearning") {
     throw "LESSON_03_GUIDE.md contains prohibited hardcoded path d:\AILearning."
 }
@@ -210,6 +214,9 @@ if ($l4Guide -notmatch "授权提交 Step.*源码") {
 if ($l4Guide -notmatch "授权提交 Step.*状态推进") {
     throw "LESSON_04_GUIDE.md must instruct student to use Two-Commit Protocol (授权提交 Step N 状态推进)."
 }
+if ($l4Guide -notmatch "git add --") {
+    throw "LESSON_04_GUIDE.md must instruct student on selective staging (git add --)."
+}
 if ($l4Guide -notmatch "prototypeState") {
     throw "LESSON_04_GUIDE.md must explain prototypeState debug toggle."
 }
@@ -234,10 +241,13 @@ if ($l4TeacherPlan -match "\[x\] 页面实际操作") {
     throw "LESSON_04_TEACHER_PLAN.md checkboxes must default to unchecked [ ]."
 }
 
-# 8. Skill File Input Path & Two-Commit Protocol Assertions
+# 8. Skill File Input Path & Selective Two-Commit Protocol Assertions
 $l4Skill = Get-Content ".claude\skills\incremental-implementation\SKILL.md" -Encoding UTF8 -Raw
 if ($l4Skill -notmatch "docs/BUSINESS_FEATURE_CARD\.md") {
     throw "SKILL.md must specify full path docs/BUSINESS_FEATURE_CARD.md instead of bare filename."
+}
+if ($l4Skill -notmatch "git add --") {
+    throw "SKILL.md must specify selective staging rule (git add --)."
 }
 if ($l4Skill -notmatch "授权提交 Step.*源码") {
     throw "SKILL.md must define Two-Commit protocol (授权提交 Step N 源码)."

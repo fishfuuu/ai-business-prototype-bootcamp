@@ -64,14 +64,20 @@ function Invoke-ProcessTreeWithTimeout([string]$commandLine, [int]$maxSeconds) {
         $killExitCode = $LASTEXITCODE
 
         if ($killExitCode -ne 0) {
+            Log-Message "KILL_FAILED: taskkill exited with non-zero code $killExitCode. Attempting fallback process kill."
             try { $proc.Kill() } catch { }
+            
+            if (Test-Path $outTempFile) {
+                Remove-Item $outTempFile -Force -ErrorAction SilentlyContinue
+            }
+            return @{ ExitCode = 125; Output = "KILL_FAILED: Process tree termination failed with code $killExitCode." }
         }
 
         $proc.WaitForExit(5000)
 
         if (-not $proc.HasExited) {
-            Log-Message "KILL_FAILED: Process tree termination failed. Process still running."
-            return @{ ExitCode = 125; Output = "Process tree termination failed." }
+            Log-Message "KILL_FAILED: Process still running after taskkill."
+            return @{ ExitCode = 125; Output = "KILL_FAILED: Process still running after taskkill." }
         }
 
         # Read any partial output collected before timeout
@@ -95,8 +101,13 @@ function Invoke-ProcessTreeWithTimeout([string]$commandLine, [int]$maxSeconds) {
 }
 
 try {
-    $targetScript = if ($Mode -eq "Maintainer") { "scripts/verify-project.ps1" } else { "scripts/verify-lesson-04-student.ps1" }
-    $cmd = "powershell.exe -ExecutionPolicy Bypass -File $targetScript -CourseState lesson-04"
+    if ($Mode -eq "Maintainer") {
+        $cmd = "powershell.exe -ExecutionPolicy Bypass -File scripts/verify-project.ps1"
+    } elseif ($Mode -eq "Student") {
+        $cmd = "powershell.exe -ExecutionPolicy Bypass -File scripts/verify-lesson-04-student.ps1 -CourseState lesson-04"
+    } else {
+        throw "Unsupported Mode: $Mode"
+    }
     
     $res = Invoke-ProcessTreeWithTimeout $cmd $TimeoutSeconds
     Log-Message $res.Output
