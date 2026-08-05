@@ -41,6 +41,8 @@ $requiredFiles = @(
     ".claude\skills\incremental-implementation\SKILL.md",
     ".claude\agents\verifier.md",
     "scripts\run-lesson-verifier.ps1",
+    "scripts\verify-lesson-04-student.ps1",
+    "skills-lock.json",
     "src\main.ts",
     "src\App.vue",
     "src\router\index.ts"
@@ -92,8 +94,10 @@ Write-Host "[1.5/5] Running Layered Contract Assertions across Roadmap & Executi
 $authRoadmap = Get-Content "docs\COURSE_ROADMAP.md" -Encoding UTF8 -Raw
 
 $roadmapContracts = @(
+    "唯一权威执行版",
     "单次指令",
     "工程护栏",
+    "受控 Agent 循环",
     "工作记忆",
     "外部长期记忆",
     "版本证据",
@@ -103,7 +107,8 @@ $roadmapContracts = @(
     "可重复验证",
     "回归风险",
     "受控 AI 功能闭环",
-    "独立审查上下文隔离"
+    "独立审查上下文隔离",
+    "最多 2 轮"
 )
 
 foreach ($kw in $roadmapContracts) {
@@ -118,7 +123,7 @@ if ($manuscript -notmatch "COURSE_ROADMAP\.md") {
     throw "Manuscript is missing reference to authoritative COURSE_ROADMAP.md"
 }
 
-# 3. PROJECT_STATE.md Contract Assertions (Must default to '待开始', unchecked checkboxes, no '.env.local' conflict)
+# 3. PROJECT_STATE.md Contract Assertions
 $projectState = Get-Content "docs\PROJECT_STATE.md" -Encoding UTF8 -Raw
 if ($projectState -match "L01.*\| PASS") {
     throw "PROJECT_STATE.md should not default lesson statuses to PASS."
@@ -176,6 +181,17 @@ if ($l3Guide -notmatch "grill-me") {
 if ($l3Guide -notmatch "数据契约") {
     throw "LESSON_03_GUIDE.md missing Data Contract reference."
 }
+if ($l3Guide -match "cd d:\\AILearning") {
+    throw "LESSON_03_GUIDE.md contains prohibited hardcoded path d:\AILearning."
+}
+if ($l3Guide -notmatch "Task 3A") {
+    throw "LESSON_03_GUIDE.md must contain explicit Task 3A read-only preview step."
+}
+
+$l3TeacherPlan = Get-Content "docs\LESSON_03_TEACHER_PLAN.md" -Encoding UTF8 -Raw
+if ($l3TeacherPlan -notmatch "Task 3A/3B") {
+    throw "LESSON_03_TEACHER_PLAN.md must synchronize Task 3A/3B HITL workflow."
+}
 
 # 7. Lesson 04 Layered Assertions
 $l4Guide = Get-Content "docs\LESSON_04_GUIDE.md" -Encoding UTF8 -Raw
@@ -208,14 +224,58 @@ if ($l4TeacherPlan -notmatch "待指定") {
 if ($l4TeacherPlan -notmatch "src/mocks/prototype-data\.ts") {
     throw "LESSON_04_TEACHER_PLAN.md must use frozen mock path src/mocks/prototype-data.ts."
 }
+if ($l4TeacherPlan -match "\[x\] 页面实际操作") {
+    throw "LESSON_04_TEACHER_PLAN.md checkboxes must default to unchecked [ ]."
+}
 
-# 8. Student Export Script Whitelist Assertions
+# 8. Verifier Runner Execution & Timeout Assertions
+$runnerScript = Get-Content "scripts\run-lesson-verifier.ps1" -Encoding UTF8 -Raw
+if ($runnerScript -notmatch "taskkill\.exe") {
+    throw "run-lesson-verifier.ps1 must implement recursive process tree termination via taskkill.exe."
+}
+if ($runnerScript -notmatch "TimeoutSeconds") {
+    throw "run-lesson-verifier.ps1 must support TimeoutSeconds parameter."
+}
+if ($runnerScript -notmatch "scripts/verify-lesson-04-student\.ps1") {
+    throw "run-lesson-verifier.ps1 Student mode must execute scripts/verify-lesson-04-student.ps1."
+}
+
+# 9. Skills Lock Assertions
+$skillsLock = Get-Content "skills-lock.json" -Encoding UTF8 -Raw
+if ($skillsLock -notmatch "bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1") {
+    throw "skills-lock.json must record exact 40-character upstream commit SHA for incremental-implementation."
+}
+
+$localSkillHash = (Get-FileHash ".claude\skills\incremental-implementation\SKILL.md" -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($skillsLock -notmatch $localSkillHash) {
+    throw "skills-lock.json computedHash does not match actual local SKILL.md SHA256 ($localSkillHash)."
+}
+
+# 10. Student Export Script Whitelist Assertions
 $exportScript = Get-Content "scripts\export-lesson-materials.ps1" -Encoding UTF8 -Raw
+if ($exportScript -notmatch "LESSON_02_GUIDE\.md") {
+    throw "export-lesson-materials.ps1 missing LESSON_02_GUIDE.md."
+}
+if ($exportScript -notmatch "LESSON_03_GUIDE\.md") {
+    throw "export-lesson-materials.ps1 missing LESSON_03_GUIDE.md."
+}
+if ($exportScript -notmatch "grill-me") {
+    throw "export-lesson-materials.ps1 missing grill-me."
+}
 if ($exportScript -notmatch "LESSON_04_GUIDE\.md") {
-    throw "export-lesson-materials.ps1 must include LESSON_04_GUIDE.md in student export whitelist."
+    throw "export-lesson-materials.ps1 missing LESSON_04_GUIDE.md."
 }
 if ($exportScript -notmatch "incremental-implementation") {
-    throw "export-lesson-materials.ps1 must include incremental-implementation skill in student export whitelist."
+    throw "export-lesson-materials.ps1 missing incremental-implementation."
+}
+if ($exportScript -notmatch "verifier\.md") {
+    throw "export-lesson-materials.ps1 missing verifier.md."
+}
+if ($exportScript -notmatch "run-lesson-verifier\.ps1") {
+    throw "export-lesson-materials.ps1 missing run-lesson-verifier.ps1."
+}
+if ($exportScript -notmatch "verify-lesson-04-student\.ps1") {
+    throw "export-lesson-materials.ps1 missing verify-lesson-04-student.ps1."
 }
 
 Write-Host "[PASS] Layered Contract Assertions across Roadmap & Execution Docs passed 100%."

@@ -97,7 +97,7 @@ try {
         ".claude\skills\incremental-implementation\SKILL.md",
         ".claude\agents\verifier.md",
         "scripts\run-lesson-verifier.ps1",
-        "scripts\verify-student-project.ps1"
+        "scripts\verify-lesson-04-student.ps1"
     )
 
     $allExtractedFiles = Get-ChildItem -Path $payloadStagingDir -Recurse -File

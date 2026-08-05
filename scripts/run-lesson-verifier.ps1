@@ -38,77 +38,64 @@ Log-Message "Timeout Limit: $TimeoutSeconds seconds"
 $verifierFailed = $false
 $exitCode = 0
 
-function Invoke-ProcessWithTimeout([string]$cmdPath, [string]$cmdArgs, [int]$maxSeconds) {
-    Log-Message "Executing: $cmdPath $cmdArgs"
+function Invoke-ProcessTreeWithTimeout([string]$commandLine, [int]$maxSeconds) {
+    Log-Message "Executing: $commandLine"
     
-    $stdoutFile = Join-Path $fullLogDir "proc-out.log"
-    $stderrFile = Join-Path $fullLogDir "proc-err.log"
-    if (Test-Path $stdoutFile) { Remove-Item $stdoutFile -Force }
-    if (Test-Path $stderrFile) { Remove-Item $stderrFile -Force }
-
+    $outTempFile = Join-Path $fullLogDir "temp-raw-$([Guid]::NewGuid().ToString('N')).log"
+    
     $pinfo = New-Object System.Diagnostics.ProcessStartInfo
-    $pinfo.FileName = $cmdPath
-    $pinfo.Arguments = $cmdArgs
+    $pinfo.FileName = "cmd.exe"
+    $pinfo.Arguments = "/c $commandLine > `"$outTempFile`" 2>&1"
     $pinfo.WorkingDirectory = $projectRoot
     $pinfo.UseShellExecute = $false
-    $pinfo.RedirectStandardOutput = $true
-    $pinfo.RedirectStandardError = $true
     $pinfo.CreateNoWindow = $true
 
     $proc = New-Object System.Diagnostics.Process
     $proc.StartInfo = $pinfo
-
-    $outList = New-Object System.Collections.Generic.List[string]
-    $errList = New-Object System.Collections.Generic.List[string]
-
     $proc.Start() | Out-Null
-
-    $asyncOut = $proc.StandardOutput.ReadToEndAsync()
-    $asyncErr = $proc.StandardError.ReadToEndAsync()
 
     $completed = $proc.WaitForExit($maxSeconds * 1000)
 
     if (-not $completed) {
-        Log-Message "TIMEOUT: Process exceeded maximum execution time ($maxSeconds seconds). Terminating process tree."
+        Log-Message "TIMEOUT: Execution exceeded $maxSeconds seconds. Recursively killing process tree (PID: $($proc.Id))."
+        
+        # Kill process tree using taskkill
         try {
-            $proc.Kill()
-        } catch { }
-        return @{ ExitCode = 124; Output = "TIMEOUT: Process killed after $maxSeconds seconds." }
+            & taskkill.exe /F /T /PID $proc.Id 2>&1 | Out-Null
+        } catch {
+            try { $proc.Kill() } catch { }
+        }
+
+        # Read any partial output collected before timeout
+        if (Test-Path $outTempFile) {
+            $partial = Get-Content $outTempFile -ErrorAction SilentlyContinue
+            if ($partial) { $partial | ForEach-Object { Log-Message "PARTIAL STDOUT/STDERR: $_" } }
+            Remove-Item $outTempFile -Force -ErrorAction SilentlyContinue
+        }
+
+        Log-Message "TIMEOUT_RECORDED: Process tree killed after $maxSeconds seconds."
+        return @{ ExitCode = 124; Output = "TIMEOUT: Killed process tree after $maxSeconds seconds." }
     }
 
-    [System.Threading.Tasks.Task]::WaitAll(@($asyncOut, $asyncErr))
-
-    $stdOutText = $asyncOut.Result
-    $stdErrText = $asyncErr.Result
-
-    $combinedOutput = ""
-    if (-not [string]::IsNullOrWhiteSpace($stdOutText)) {
-        $combinedOutput += $stdOutText
-    }
-    if (-not [string]::IsNullOrWhiteSpace($stdErrText)) {
-        $combinedOutput += "`n" + $stdErrText
+    $rawContent = ""
+    if (Test-Path $outTempFile) {
+        $rawContent = Get-Content $outTempFile -Raw -ErrorAction SilentlyContinue
+        Remove-Item $outTempFile -Force -ErrorAction SilentlyContinue
     }
 
-    return @{ ExitCode = $proc.ExitCode; Output = $combinedOutput.Trim() }
+    return @{ ExitCode = $proc.ExitCode; Output = $rawContent }
 }
 
 try {
-    if ($Mode -eq "Maintainer") {
-        Log-Message "--- Running Maintainer Mode Verification (verify-project.ps1) ---"
-        $res = Invoke-ProcessWithTimeout "powershell.exe" "-ExecutionPolicy Bypass -File scripts/verify-project.ps1" $TimeoutSeconds
-        Log-Message $res.Output
-        if ($res.ExitCode -ne 0) {
-            $verifierFailed = $true
-            $exitCode = $res.ExitCode
-        }
-    } else {
-        Log-Message "--- Running Student Mode Verification (verify-student-project.ps1) ---"
-        $res = Invoke-ProcessWithTimeout "powershell.exe" "-ExecutionPolicy Bypass -File scripts/verify-student-project.ps1 -CourseState lesson-04" $TimeoutSeconds
-        Log-Message $res.Output
-        if ($res.ExitCode -ne 0) {
-            $verifierFailed = $true
-            $exitCode = $res.ExitCode
-        }
+    $targetScript = if ($Mode -eq "Maintainer") { "scripts/verify-project.ps1" } else { "scripts/verify-lesson-04-student.ps1" }
+    $cmd = "powershell.exe -ExecutionPolicy Bypass -File $targetScript -CourseState lesson-04"
+    
+    $res = Invoke-ProcessTreeWithTimeout $cmd $TimeoutSeconds
+    Log-Message $res.Output
+
+    if ($res.ExitCode -ne 0) {
+        $verifierFailed = $true
+        $exitCode = $res.ExitCode
     }
 } catch {
     $verifierFailed = $true
