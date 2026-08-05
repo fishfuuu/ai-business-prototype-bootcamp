@@ -1,22 +1,20 @@
 ---
 name: incremental-implementation
-description: Delivers multi-file changes incrementally using contract-first slices, persistent implementation plans with state machines, selective two-commit state transition protocols, prototype debug toggles, and silent Verifier Subagent self-tests.
+description: Delivers multi-file changes incrementally using contract-first thin slices, persistent implementation plans with state machines, two-commit state transition protocols, technical state debug toggles, and silent verifier self-tests.
 ---
 
 # Incremental Implementation
 
 ## Overview
 
-Build in thin vertical slices — implement one piece, test it, verify it, then expand. Avoid implementing an entire feature in one pass. Each increment MUST leave the system in a working, testable state without polluting the main context window.
+Build in thin vertical slices — create a plan first, then implement one verifiable piece at a time. Avoid implementing an entire feature in one pass. Each increment MUST leave the system in a working, testable state without polluting the main context window.
 
 ## Workflow & Authorization Protocol (Step级 Workflow 授权门禁)
-
-To enforce strict, non-ambiguous human-in-the-loop control:
 
 ### Phase 1: Read-Only Plan Preview (只读预览)
 - Read `docs/BUSINESS_FEATURE_CARD.md`, `src/types/prototype-contract.d.ts`, `src/mocks/prototype-data.ts`.
 - Output proposed 3–5 step Contract-First execution plan preview in chat.
-- **CRITICAL**: Absolutely DO NOT write, modify, or delete any files during Phase 1.
+- **CRITICAL**: Do NOT write, modify, or delete any files during Phase 1.
 - End response with exact prompt: `计划预览生成完毕。请输入 "授权保存 Lesson 04 实施计划" 以写入工程。`
 
 ### Phase 2: Plan Persistence & State Machine Schema (计划落盘门禁)
@@ -31,17 +29,19 @@ To enforce strict, non-ambiguous human-in-the-loop control:
 
   steps:
     - id: 1
-      name: "组件骨架与 prototypeState 4 状态调试切片"
+      name: "组件骨架与页面技术状态调试切片"
       status: READY
-      allowed_files: ["src/components/WorkOrderBoard.vue"]
-      acceptance: "支持 prototypeState 4 状态调试按钮切换 (Loading / Empty / Error / Success)"
+      allowed_files: ["src/pages/HomePage.vue", "src/components/"]
+      acceptance: "支持页面技术状态调试器切换 (Loading / Empty / Error / Success)"
+      failure_summary: ""
       verification_log: ""
       commit_sha: ""
     - id: 2
-      name: "绑定 Mock 数据与渲染列表"
+      name: "绑定 Mock 数据与渲染业务列表"
       status: BLOCKED
-      allowed_files: ["src/components/WorkOrderBoard.vue"]
-      acceptance: "成功渲染工单列表"
+      allowed_files: ["src/pages/HomePage.vue", "src/components/"]
+      acceptance: "成功渲染业务列表与交互"
+      failure_summary: ""
       verification_log: ""
       commit_sha: ""
   ```
@@ -58,9 +58,9 @@ To enforce strict, non-ambiguous human-in-the-loop control:
   - One authorization permits execution of ONE step only.
   - Do NOT auto-execute subsequent steps.
   - Do NOT modify allowed files or acceptance criteria without explicit human authorization.
-  - If tests fail, stop immediately and report log path. Do NOT attempt silent code auto-fixes.
+  - **Failure Rule**: If verification fails, do NOT auto-fix blindly. Update step `status` to `BLOCKED`, write `failure_summary`, and present evidence to human manager.
 
-### Phase 4: Silent Verification & Selective 2-Commit Protocol (两提交选择性暂存协议)
+### Phase 4: Verification & Selective 2-Commit Protocol (验证与选择性暂存协议)
 
 1. **Silent Verification**:
    - Invoke `Verifier Subagent` (`.claude/agents/verifier.md`) or run `powershell -ExecutionPolicy Bypass -File scripts/run-lesson-verifier.ps1 -Step N`.
@@ -86,7 +86,7 @@ To enforce strict, non-ambiguous human-in-the-loop control:
      - Step N `commit_sha` -> `<Commit A SHA>`
      - Step N+1 `status` -> `READY` (or if final step: `plan_status: COMPLETED`, `current_waiting_step: null`)
      - `current_waiting_step` -> `N+1` (or `null` if final step)
-   - End response with exact prompt: `Step N 源码已提交 (Commit A)。实施计划状态机已更新。请输入 "授权提交 Step N 状态推进" 以归档实施计划。`
+   - End response with exact prompt: `Step N 源码已提交 (Commit A)。实施计划已更新。请输入 "授权提交 Step N 状态推进" 以归档实施计划。`
 
 3. **Commit B Selective Staging & Execution (Commit B 状态推进选择性暂存提交)**:
    - Require user input to match exact phrase: `授权提交 Step N 状态推进`
@@ -99,21 +99,20 @@ To enforce strict, non-ambiguous human-in-the-loop control:
      ```
    - **Staging Assertion**: Commit B MUST ONLY stage `docs/LESSON_04_IMPLEMENTATION_PLAN.md`.
 
-## Prototype Debug Toggle Requirement
+## Page Technical State Debugger Requirement (页面技术状态调试器)
 
-- **Step 1 UI Requirement**: The initial component skeleton MUST introduce a reactive `prototypeState` debug toggle pill labeled `Prototype Debug` (`showPrototypeDebug = import.meta.env.DEV`):
+- **Step 1 UI Requirement**: The initial component skeleton MUST introduce a reactive `prototypeState` technical state debug pill labeled `Prototype Debug` (`showPrototypeDebug = import.meta.env.DEV`):
   ```typescript
   const showPrototypeDebug = import.meta.env.DEV
   const prototypeState = ref<'loading' | 'empty' | 'error' | 'success'>('success')
   ```
-- **Subsequent Steps**: Preserve and maintain the `prototypeState` debug toggle. Do NOT delete or re-add it repeatedly.
+- **Disentanglement Rule**:
+  - **Page Technical States (页面技术状态)**: Loading, Empty, Error, Success (Data fetching & UI presentation states).
+  - **Business Process States (业务流程状态)**: 待处理, 处理中, 已阻塞, 已完成 (Domain lifecycle states).
+- **Subsequent Steps**: Preserve and maintain the `prototypeState` technical debug toggle.
 
-## Slicing Strategy (Contract-First)
+## Prototype Slicing Strategies (by Prototype Type)
 
-```
-Slice 0: Validate Baseline SHA & Contracts (docs/BUSINESS_FEATURE_CARD.md + src/types/prototype-contract.d.ts + src/mocks/prototype-data.ts)
-Slice 1: Component Skeleton + Prototype Debug 4-State Toggle (Loading / Empty / Error / Success UI)
-Slice 2: Mock Data Binding & Success List View
-Slice 3: Error Recovery Action (Retry -> Loading -> Restore) & Search Filter
-Slice 4: Final Verification & Clean Commit
-```
+- **A. 监控与决策型**: Slice 1 = 指标卡骨架屏与 4 技术状态调试器切片
+- **B. 任务与流程型**: Slice 1 = 看板骨架屏、4 技术状态与 4 业务流程状态标签切片
+- **C. 操作工具型**: Slice 1 = 表单骨架与 Idle / Validating / Result / Error 工具状态调试切片
