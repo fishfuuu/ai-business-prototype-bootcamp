@@ -21,20 +21,20 @@
 说明：
 - **解决问题**：解决业务主管在面对复杂业务页面时，用裸 Prompt 或单次生成导致代码结构崩塌、上下文记忆爆炸、白屏死机且无法排错的典型卡点。
 - **阶段安排**：处于“需求与结构”阶段收官课。在 L3 锁定了《业务功能卡》与《数据契约卡》后，L4 正式开启基于护栏的受控自主 Loop（Plan & Execute 范式）。
-- **上下游关系**：承接 L3 输出的 `BUSINESS_FEATURE_CARD.md`、`prototype-contract.d.ts` 与 `src/mocks/prototype-data.ts`；输出持久化实施计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 与首个包含 4 种接口状态及稳定 Commit 的业务组件切片，为 L5 的 `CLAUDE.md` 工程护栏打下坚实基础。
+- **上下游关系**：承接 L3 输出的 `BUSINESS_FEATURE_CARD.md`、`prototype-contract.d.ts` 与 `src/mocks/prototype-data.ts`；输出持久化实施计划状态机 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 与首个包含 4 种接口状态及稳定 Commit 的业务组件切片，为 L5 的 `CLAUDE.md` 工程护栏打下坚实基础。
 
 ## 3. 核心目标
 
 1. 掌握 **Plan & Execute 增量范式**，使用 `.claude/skills/incremental-implementation/SKILL.md` 护栏将拆解计划落盘至 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 2. 掌握 **Step级 Workflow 授权门禁（首行精确匹配 `授权执行 Step 1`）**，受控下发切片编码指令。
 3. 掌握 **数据接口 4 种物理状态（Loading / Empty / Error / Success）** 及其 **`prototypeState` 可视化调试切片（`import.meta.env.DEV`）**。
-4. 掌握 **`Verifier Subagent` 静默自测机制**，运行 `scripts/run-lesson-verifier.ps1` 将编译日志落盘至 `local-backups/lesson-04-evidence/`，不污染主 Context 记忆并完成 Atomic Git Commit。
+4. 掌握 **`Verifier Subagent` 静默自测机制**，运行 `scripts/run-lesson-verifier.ps1 -Step 1` 调用 `scripts/verify-student-project.ps1`，将编译日志落盘至 `local-backups/lesson-04-evidence/`，不污染主 Context 记忆并完成 Atomic Git Commit。
 
 ## 4. 可见成果
 
-- 一份已批准的外部长期记忆实施计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
+- 一份已批准的外部长期记忆实施计划状态机 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 - 一个带有 `Prototype Debug` 标识、支持 4 种数据状态物理点击切换的已验证 Vue 业务组件切片 (Step 1)。
-- 一个稳定规范的 Git Commit 节点。
+- 一个规范的 Git Commit 节点。
 - 一份包含剩余 Step 2–N 执行指引的清单。
 
 ## 5. 本课明确不做
@@ -52,7 +52,7 @@
 | 示例项目或页面 | 待完成 | 前置 L3 产物就绪项目 |
 | 所需截图 | 待完成 | 1 巨石生成崩塌对比图，2 4状态调试切片效果图 |
 | 所需 Skill | 待验证 | `.claude/skills/incremental-implementation/SKILL.md` |
-| Skill 来源与版本 | addyosmani/agent-skills (main) | 物理改编 V2 版 |
+| Skill 来源与版本 | addyosmani/agent-skills (bdf76c7) | 物理改编 V2 版 |
 | Skill 是否已验证 | Skill定义检查：已完成；课堂实测状态：待候选包隔离验证 | 待隔离验证 |
 | 起点 ZIP 或 tag | 待完成 | 基于 L3 交付基线项目 |
 | 教师标准答案 | 待完成 | 包含 `prototypeState` 切换调试器与 4 状态分支的 Vue 组件 |
@@ -96,7 +96,7 @@
 - **目标**：演示计划预览与授权落盘。
 - **输入 1**：`/incremental-implementation` 读取 L3 契约生成 Plan 预览。
 - **输入 2**：`授权保存 Lesson 04 实施计划`
-- **预期结果**：根目录物理生成 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
+- **预期结果**：根目录物理生成包含状态机字段的 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 
 ### 步骤 2：下发授权门禁与 `prototypeState` 调试切片演示
 - **目标**：演示 Workflow 授权门禁与 4 状态调试切片。
@@ -107,7 +107,7 @@
 ### 步骤 3：Verifier Subagent 静默自测演示
 - **目标**：演示后台静默自测与日志落盘。
 - **输入**：“派遣 Verifier Subagent 运行 scripts/run-lesson-verifier.ps1 -Step 1。”
-- **操作**：展示主窗口仅接收到 `[PASS]` 总结，日志写入 `local-backups/lesson-04-evidence/step-1-verification.log`。
+- **操作**：展示主窗口仅接收到 `[PASS]` 总结，日志写入 `local-backups/lesson-04-evidence/step-1-verification.log`，状态机更新至 Step 2。
 
 ## 11. 学员实操任务
 
@@ -127,7 +127,7 @@
 
 ### 任务 3：Verifier Subagent 静默自测与 Commit
 - **输入提示词**：`派遣 Verifier Subagent 后台运行 scripts/run-lesson-verifier.ps1 -Step 1 校验，确认 PASS 后提示我 commit。`
-- **完成标准**：返回 `[PASS]`，Git Log 增加 1 个稳定 commit。
+- **完成标准**：返回 `[PASS]`，Git Log 增加 1 个稳定 commit，`current_waiting_step` 更新至 2。
 
 ## 12. 推荐提示词
 
@@ -149,7 +149,7 @@
 | Skill 名称 | `incremental-implementation` |
 | Skill 用途 | 物理锁死 Plan 预览，授权保存实施计划，下发 Step级 Workflow 授权门禁落盘 |
 | 来源仓库 | `addyosmani/agent-skills` |
-| 固定版本或 commit | main |
+| 固定版本或 commit | bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1 |
 | 安装状态 | 已安装于 `.claude/skills/incremental-implementation/SKILL.md` |
 | 验证状态 | Skill定义检查：已完成；课堂实测状态：待候选包隔离验证 |
 

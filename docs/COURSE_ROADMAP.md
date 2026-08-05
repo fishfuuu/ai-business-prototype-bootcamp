@@ -72,7 +72,7 @@
 - 需求解构与方案推演
 - 页面与组件增量创建
 - 执行 **ReAct 范式**、**Plan & Execute 范式** 与 **Subagent 调度**
-- 本地调试与自测验证 (`verify-project.ps1`)
+- 本地调试与自测验证 (学员：`verify-student-project.ps1` / Verifier Subagent；维护者：`verify-project.ps1`)
 
 ### 2. Codex（独立审查者 / 审计 Agent）
 - 从第 8 课开始正式引入（基于 `AGENTS.md` 规范）
@@ -104,8 +104,8 @@
    第 9~10 课真 AI 接口连接失败、网络超时或非法返回时，系统自动降级回 Mock Data 结构化渲染，保证 100% 演示不白屏崩盘。
 
 > [!NOTE]
-> **关于后续课程 (第 4–10 课) 架构演进说明**：  
-> 本 PR 集中交付 **第 1–3 课 V2 重构** 与基础能力建设。路线图中所提及的第 4–10 课 Subagent 演进、Browser/API MCP 插座配置 (`.claude/mcp_config.json`) 及 Mock 降级保护机制，属于**后续课程规划预告 (Future Architecture Roadmap)**，尚未在当前分支中落地实装，不得作为当前 1–3 课已具备的教学承诺。
+> **关于后续课程 (第 5–10 课) 架构演进说明**：  
+> 第 1–4 课已在当前分支中实装交付（第 4 课包含 Plan & Execute 范式、持久化实施计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`、`prototypeState` 4 状态调试切片与 `Verifier Subagent` 后台自测）。路线图中所提及的第 5–10 课 Subagent 演进、Browser/API MCP 插座配置 (`.claude/mcp_config.json`) 及 Mock 降级保护机制，属于**后续课程规划预告 (Future Architecture Roadmap)**。
 
 ---
 

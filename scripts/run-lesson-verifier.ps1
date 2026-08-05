@@ -1,7 +1,8 @@
 param(
     [int]$Step = 1,
     [string]$LogDir = "local-backups/lesson-04-evidence",
-    [int]$TimeoutSeconds = 60
+    [int]$TimeoutSeconds = 60,
+    [string]$Mode = "Student"
 )
 
 $OutputEncoding = [System.Text.Encoding]::UTF8
@@ -31,60 +32,84 @@ function Log-Message([string]$msg) {
 
 Log-Message "Starting Verifier Execution for Lesson 04 Step $Step"
 Log-Message "Target Directory: $projectRoot"
+Log-Message "Execution Mode: $Mode"
 Log-Message "Timeout Limit: $TimeoutSeconds seconds"
-Log-Message "Allowed Scope: npm run typecheck, npm run build, verify-project.ps1"
-Log-Message "Forbidden Scope: Modifying src/, docs/, test assertions, configs, auto-fix, auto-git-commit"
 
 $verifierFailed = $false
 $exitCode = 0
 
-try {
-    # Task 1: Typecheck
-    Log-Message "--- Running Task 1: npm run typecheck ---"
-    $tcResult = & npm.cmd run typecheck 2>&1
-    $tcCode = $LASTEXITCODE
-    if ($tcResult) { $tcResult | ForEach-Object { Log-Message "OUTPUT: $_" } }
+function Invoke-ProcessWithTimeout([string]$cmdPath, [string]$cmdArgs, [int]$maxSeconds) {
+    Log-Message "Executing: $cmdPath $cmdArgs"
     
-    if ($tcCode -ne 0) {
-        $verifierFailed = $true
-        $exitCode = $tcCode
-        Log-Message "FAIL: typecheck exited with code $tcCode"
+    $stdoutFile = Join-Path $fullLogDir "proc-out.log"
+    $stderrFile = Join-Path $fullLogDir "proc-err.log"
+    if (Test-Path $stdoutFile) { Remove-Item $stdoutFile -Force }
+    if (Test-Path $stderrFile) { Remove-Item $stderrFile -Force }
+
+    $pinfo = New-Object System.Diagnostics.ProcessStartInfo
+    $pinfo.FileName = $cmdPath
+    $pinfo.Arguments = $cmdArgs
+    $pinfo.WorkingDirectory = $projectRoot
+    $pinfo.UseShellExecute = $false
+    $pinfo.RedirectStandardOutput = $true
+    $pinfo.RedirectStandardError = $true
+    $pinfo.CreateNoWindow = $true
+
+    $proc = New-Object System.Diagnostics.Process
+    $proc.StartInfo = $pinfo
+
+    $outList = New-Object System.Collections.Generic.List[string]
+    $errList = New-Object System.Collections.Generic.List[string]
+
+    $proc.Start() | Out-Null
+
+    $asyncOut = $proc.StandardOutput.ReadToEndAsync()
+    $asyncErr = $proc.StandardError.ReadToEndAsync()
+
+    $completed = $proc.WaitForExit($maxSeconds * 1000)
+
+    if (-not $completed) {
+        Log-Message "TIMEOUT: Process exceeded maximum execution time ($maxSeconds seconds). Terminating process tree."
+        try {
+            $proc.Kill()
+        } catch { }
+        return @{ ExitCode = 124; Output = "TIMEOUT: Process killed after $maxSeconds seconds." }
+    }
+
+    [System.Threading.Tasks.Task]::WaitAll(@($asyncOut, $asyncErr))
+
+    $stdOutText = $asyncOut.Result
+    $stdErrText = $asyncErr.Result
+
+    $combinedOutput = ""
+    if (-not [string]::IsNullOrWhiteSpace($stdOutText)) {
+        $combinedOutput += $stdOutText
+    }
+    if (-not [string]::IsNullOrWhiteSpace($stdErrText)) {
+        $combinedOutput += "`n" + $stdErrText
+    }
+
+    return @{ ExitCode = $proc.ExitCode; Output = $combinedOutput.Trim() }
+}
+
+try {
+    if ($Mode -eq "Maintainer") {
+        Log-Message "--- Running Maintainer Mode Verification (verify-project.ps1) ---"
+        $res = Invoke-ProcessWithTimeout "powershell.exe" "-ExecutionPolicy Bypass -File scripts/verify-project.ps1" $TimeoutSeconds
+        Log-Message $res.Output
+        if ($res.ExitCode -ne 0) {
+            $verifierFailed = $true
+            $exitCode = $res.ExitCode
+        }
     } else {
-        Log-Message "PASS: typecheck clean"
-    }
-
-    # Task 2: Build
-    if (-not $verifierFailed) {
-        Log-Message "--- Running Task 2: npm run build ---"
-        $bldResult = & npm.cmd run build 2>&1
-        $bldCode = $LASTEXITCODE
-        if ($bldResult) { $bldResult | ForEach-Object { Log-Message "OUTPUT: $_" } }
-        
-        if ($bldCode -ne 0) {
+        Log-Message "--- Running Student Mode Verification (verify-student-project.ps1) ---"
+        $res = Invoke-ProcessWithTimeout "powershell.exe" "-ExecutionPolicy Bypass -File scripts/verify-student-project.ps1 -CourseState lesson-04" $TimeoutSeconds
+        Log-Message $res.Output
+        if ($res.ExitCode -ne 0) {
             $verifierFailed = $true
-            $exitCode = $bldCode
-            Log-Message "FAIL: build exited with code $bldCode"
-        } else {
-            Log-Message "PASS: build clean"
+            $exitCode = $res.ExitCode
         }
     }
-
-    # Task 3: verify-project.ps1
-    if (-not $verifierFailed) {
-        Log-Message "--- Running Task 3: verify-project.ps1 ---"
-        $vpResult = & powershell.exe -ExecutionPolicy Bypass -File "scripts/verify-project.ps1" 2>&1
-        $vpCode = $LASTEXITCODE
-        if ($vpResult) { $vpResult | ForEach-Object { Log-Message "OUTPUT: $_" } }
-        
-        if ($vpCode -ne 0) {
-            $verifierFailed = $true
-            $exitCode = $vpCode
-            Log-Message "FAIL: verify-project.ps1 exited with code $vpCode"
-        } else {
-            Log-Message "PASS: verify-project.ps1 clean"
-        }
-    }
-
 } catch {
     $verifierFailed = $true
     $exitCode = 1

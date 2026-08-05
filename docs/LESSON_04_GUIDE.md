@@ -1,6 +1,6 @@
 # 第四课学员指南 (V2 闭环版)：把大需求拆成连续的小成功
 
-欢迎来到第四课！在前三课中，我们完成了界面搭建、视觉规则约束（`DESIGN.md`）以及需求与数据契约锁定（`grill-me`）。本节课我们将解决大型业务原型开发中最容易出现的崩溃点——**“巨石代码盲开与上下文记忆失控”**。你将学习如何唤醒 `/incremental-implementation` 架构护栏，采用 **Plan & Execute 增量范式**，将大需求拆解并持久化写入 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`，通过 **Step级 Workflow 授权门禁（`授权执行 Step 1`）** 落地首个薄切片，并在前端引入 **`prototypeState` 调试切换器**，配合 **`Verifier Subagent` 静默自测** 与 Git 存档，完成可复核的增量交付。
+欢迎来到第四课！在前三课中，我们完成了界面搭建、视觉规则约束（`DESIGN.md`）以及需求与数据契约锁定（`grill-me`）。本节课我们将解决大型业务原型开发中最容易出现的崩溃点——**“巨石代码盲开与上下文记忆失控”**。你将学习如何唤醒 `/incremental-implementation` 架构护栏，采用 **Plan & Execute 增量范式**，将大需求拆解并持久化写入 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 状态机文档，通过 **Step级 Workflow 授权门禁（`授权执行 Step 1`）** 落地首个薄切片，并在前端引入 **`prototypeState` 调试切换器**，配合 **`Verifier Subagent` 静默自测** 与 Git 存档，完成可复核的增量交付。
 
 ---
 
@@ -9,14 +9,14 @@
 完成本课学习后，你将能够：
 1. **对比与阐述** 一次性巨石代码生成的退化风险，以及 **Plan & Execute 范式** 结合 `/incremental-implementation` 架构护栏物理收敛的优势。
 2. **校验与断言** 第三课交付的前置 Git 基线 SHA、`BUSINESS_FEATURE_CARD.md`、`src/types/prototype-contract.d.ts` 以及 `src/mocks/prototype-data.ts`（Task 0 基线检查）。
-3. **驱动与持久化** `/incremental-implementation` 技能，将 3–5 步增量计划落盘至外部长期记忆 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
+3. **驱动与持久化** `/incremental-implementation` 技能，将包含 `plan_status` 与 `current_waiting_step` 状态机的实施计划落盘至外部长期记忆 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
 4. **掌握与触发** **Step级 Workflow 授权门禁**（首行精确匹配 `授权执行 Step 1`），解锁首个垂直切片编码。
 5. **编写与物理验证** 带有 **`prototypeState` 调试切片（Loading 骨架屏、Empty 空数据、Error 报错重试、Success 正常呈现）** 可视化切换能力的 Vue 业务组件。
-6. **派遣与调用** **`Verifier Subagent`（`.claude/agents/verifier.md` 或 `scripts/run-lesson-verifier.ps1`）** 静默跑通编译自测，在不污染主 Context 的前提下完成 **Atomic Git Commit 稳定存档**。
+6. **派遣与调用** **`Verifier Subagent`（运行 `scripts/run-lesson-verifier.ps1 -Step 1`）** 静默跑通编译与学员自测（`scripts/verify-student-project.ps1`），在不污染主 Context 的前提下完成 **Atomic Git Commit 稳定存档**。
 
 ---
 
-### 核心模式对比线框图 (巨石盲开 vs 增量切片 + 持久化 Plan + Verifier)
+### 核心模式对比线框图 (巨石盲开 vs 增量切片 + 持久化 Plan 状态机 + Verifier)
 
 ```text
 ===================================================================================
@@ -26,7 +26,7 @@
                        (一次性修改全套逻辑)
 
 ===================================================================================
-【第二层：/incremental-implementation + 持久化 Plan + Step级 Workflow 门禁】
+【第二层：/incremental-implementation + 持久化 Plan 状态机 + Step级 Workflow 门禁】
 
   [Task 0 基线断言] ───> [ 唤醒 /incremental-implementation ]
                                  │ (只读预览 Plan)
@@ -43,6 +43,9 @@
                                  │
                                  ▼
                      [ Verifier Subagent 静默自测 ] ───> [ PASS: Atomic Git Commit ]
+                                 │
+                                 ▼
+                    (更新计划状态机: current_waiting_step -> 2)
 
 ===================================================================================
 【第三层：prototypeState 物理调试切换器】 (可视化调试，彻底消除交接死角)
@@ -62,9 +65,34 @@
 
 ## 1. 核心概念与护栏机制
 
-### 1.1 为什么必须使用持久化计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`？
+### 1.1 为什么必须使用持久化计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 状态机？
 如果增量计划只保存在聊天窗口中，一旦执行 `/clear` 重置上下文，计划就会丢失；同时 Codex 或主管也无法根据固定计划进行复核。
-因此，本课要求将拆解计划持久化写入 **`docs/LESSON_04_IMPLEMENTATION_PLAN.md`**，作为外部长期记忆。
+因此，本课要求将拆解计划持久化写入 **`docs/LESSON_04_IMPLEMENTATION_PLAN.md`**，结构包含：
+```yaml
+plan_status: APPROVED
+current_waiting_step: 1
+
+steps:
+  - id: 1
+    name: "组件骨架与 prototypeState 4 状态调试切片"
+    status: READY
+    allowed_files: ["src/components/WorkOrderBoard.vue"]
+    acceptance: "支持 prototypeState 4 状态调试按钮切换"
+    verification_log: ""
+    commit_sha: ""
+  - id: 2
+    name: "绑定 Mock 数据与渲染列表"
+    status: BLOCKED
+    allowed_files: ["src/components/WorkOrderBoard.vue"]
+    acceptance: "成功渲染列表"
+    verification_log: ""
+    commit_sha: ""
+```
+
+当 Step 1 验证通过并完成 Commit 后，更新状态机：
+- Step 1 的 `status` 改为 `COMPLETED`，回填 `verification_log` 与 `commit_sha`；
+- Step 2 的 `status` 改为 `READY`；
+- `current_waiting_step` 自动推进至 `2`。
 
 ### 1.2 Step级 Workflow 授权门禁规则
 为了防止 Agent 误识别用户意图或连续冲动修改代码，物理 Skill 设置了严格的 **Step级 Workflow 授权门禁**：
@@ -72,7 +100,7 @@
   ```text
   授权执行 Step N
   ```
-- 其中 `N` 必须匹配 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中当前等待执行的步骤。
+- 其中 `N` 必须匹配 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中当前 `current_waiting_step` 的数值。
 - 每次授权只允许 Agent 执行一个 Step，不得自动执行下一步，验证失败时不得自行修改代码或自作主张 Git Commit。
 
 ### 1.3 `prototypeState` 调试切换器（`import.meta.env.DEV`）
@@ -85,9 +113,9 @@ const prototypeState = ref<'loading' | 'empty' | 'error' | 'success'>('success')
 在页面顶部渲染带有 `Prototype Debug` 标识的组件，让主管和讲师可以**物理点击按钮直接验证 4 种 UI 视图**。
 
 ### 1.4 `Verifier Subagent` 后台静默自测
-为了防止成百上千行的 `npm run build` 日志塞满主 Context 记忆窗口，我们派遣 `.claude/agents/verifier.md` 后台子智能体（或运行 `scripts/run-lesson-verifier.ps1`）：
-* 允许范围：`npm run typecheck`, `npm run build`, `verify-project.ps1`；
-* 绝不允许修改 `src/` 或 `docs/`；
+为了防止成百上千行的 `npm run build` 日志塞满主 Context 记忆窗口，我们派遣 `.claude/agents/verifier.md` 后台子智能体（运行 `scripts/run-lesson-verifier.ps1 -Step 1`）：
+* 支持 Student 模式（运行 `scripts/verify-student-project.ps1`）与 Maintainer 模式；
+* 物理执行 60 秒超时控制（超时自动 Kill 进程树并记录 TIMEOUT）；
 * 完整日志写入 `local-backups/lesson-04-evidence/step-1-verification.log`；
 * 主窗口只接收 1 行极简断言结果：`[PASS] Step 1 Verification clean | Log: local-backups/lesson-04-evidence/step-1-verification.log`。
 
@@ -126,7 +154,7 @@ const prototypeState = ref<'loading' | 'empty' | 'error' | 'success'>('success')
 ```
 
 **完成标准**：
-- [ ] 成功在项目根目录下生成 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 文件，包含目标、非目标、Step 1–N 及其验收条件。
+- [ ] 成功在项目根目录下生成包含状态机字段的 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 文件。
 - [ ] 暂未修改任何业务源码文件。
 
 ---
@@ -152,12 +180,13 @@ const prototypeState = ref<'loading' | 'empty' | 'error' | 'success'>('success')
 
 **操作指令**：
 ```text
-Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run-lesson-verifier.ps1 -Step 1 进行校验。确认 PASS 后提示我提交 Git Commit。
+Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run-lesson-verifier.ps1 -Step 1 进行校验。确认 PASS 后提示我提交 Git Commit 并更新实施计划状态机。
 ```
 
 **完成标准**：
 - [ ] 终端接收到干净的 1 行提示：`[PASS] Step 1 Verification clean | Log: local-backups/lesson-04-evidence/step-1-verification.log`。
 - [ ] 成功执行 `git commit`，提交日志形如 `feat(prototype): step 1 - add skeleton with 4-state debug toggle`。
+- [ ] `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中 `current_waiting_step` 自动更新为 2。
 
 ---
 
@@ -166,7 +195,7 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 > **退出门禁题**：第四课 90 分钟课堂交付的核心成果是什么？后续 Step 如何进行？
 
 * **参考答案**：
-  课堂交付一份已批准的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` + 一个经过 Verifier 验证的完整切片 (Step 1) + 1 个稳定 Git Commit。课后按相同循环（`授权执行 Step N` -> `Verifier 自测` -> `Git Commit`）依次完成剩余 Step。
+  课堂交付一份已批准的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` + 一个经过 Verifier 验证的完整切片 (Step 1) + 1 个稳定 Git Commit。课后按相同循环（`授权执行 Step N` -> `Verifier 自测` -> `Git Commit` -> `推进状态机`）依次完成剩余 Step。
 
 ---
 
