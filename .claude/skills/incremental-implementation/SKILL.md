@@ -98,7 +98,7 @@ description: Delivers multi-file changes incrementally using contract-first thin
      - 自动将未跟踪新文件纳入快照清单：`git add -N -- <allowed_files>`。
      - 自动导出完整快照补丁：`git diff -- <allowed_files> > local-backups/lesson-04-evidence/step-N-blocked.patch`。
      - 自动保存自测日志并回填 `failure_summary`。
-     - **自动还原干净工程**：自动撤销修改并清除未跟踪文件，使工作区恢复 100% 干净。
+     - **自动清扫 Working Tree 还原干净工程**：自动撤销修改并清除未跟踪文件，使 Working Tree (工作区) 恢复 100% Clean 干净。
      - 提示学员下发自然口令：**`同意记录 Step N 问题`** (或 `暂停 Step N 并记录问题` / `授权提交 Step N 阻断状态`)。
      - 底层仅执行 Commit B 提交状态记录：`git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md` (提交消息 `docs(state): record step N blocked status`)。
      - 终止后续 Step 执行，保留补丁与日志留给第六课排错。
