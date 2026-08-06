@@ -95,8 +95,7 @@
 ### 步骤 3：Verifier 静默自测与版本归档演示
 - 输入 1：“派遣 Verifier Subagent 运行 scripts/run-lesson-verifier.ps1 -Step 1。”
 - 输入 2：`主管验收 Step 1 通过`
-- 输入 3：`授权提交 Step 1 源码`
-- 输入 4：`授权提交 Step 1 状态推进`
+- 输入 3：`确认完成 Step 1` (Agent 底层自动完成 Commit A 源码暂存与 Commit B 状态推进)
 
 ## 11. 学员实操任务
 

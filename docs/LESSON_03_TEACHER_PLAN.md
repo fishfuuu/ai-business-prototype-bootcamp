@@ -29,7 +29,7 @@
 1. 掌握 **`grill-me` 追问技能护栏**，完成 3–5 分支、5–7 轮结构化对话澄清。
 2. 掌握 **Given-When-Then 验收条件** 与 **Stop / Escalation 停止上提熔断条件** 的本质区别。
 3. 锁定 **6 大业务要素**（Goal 业务目标、User & Problem 问题定义、Boundary 边界、Risk 风险隐私、Acceptance Criteria 验收场景、Stop Conditions 停止条件）。
-4. 掌握 **阻断性待确认事项强校验门禁 (Fail-Closed Blocking Gate)**，未通过时输出 `BLOCKING_GATE_FAILED` 拒绝落盘。
+4. 掌握 **阻断性待确认事项强校验门禁 (Fail-Closed Blocking Gate)**，未通过时输出 `[需求遗漏拦截] 核心需求尚有未决事项，暂不开工` (BLOCKING_GATE_FAILED) 拒绝落盘。
 5. 掌握 **三层验收机制（工程验证、契约验证、主管验收）**、`PROJECT_STATE.md` 更新与选择性暂存 (`git add --`) 存档。
 
 ## 4. 可见成果
