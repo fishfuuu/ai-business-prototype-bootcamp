@@ -194,7 +194,7 @@ try {
     const dummyNewFile = path.join(projectRoot, 'src', 'components', 'DummyTestFile.vue');
     fs.writeFileSync(dummyNewFile, '<template><div>Dirty</div></template>', 'utf8');
 
-    const gitStatusOut = execSync('git status --porcelain', { encoding: 'utf8' });
+    const gitStatusOut = execSync('git status --porcelain -u', { encoding: 'utf8' });
     if (!gitStatusOut.includes('DummyTestFile.vue')) {
         throw new Error('Scenario 6 setup failed: DummyTestFile.vue not detected by git status.');
     }

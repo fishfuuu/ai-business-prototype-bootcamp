@@ -15,6 +15,7 @@ declare module 'vue' {
     AppSidebar: typeof import('./components/layout/AppSidebar.vue')['default']
     ArtEmptyState: typeof import('./components/business/ArtEmptyState.vue')['default']
     DataTable: typeof import('./components/business/DataTable.vue')['default']
+    DummyTestFile: typeof import('./components/DummyTestFile.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']

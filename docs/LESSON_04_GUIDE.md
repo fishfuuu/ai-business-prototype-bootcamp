@@ -12,12 +12,12 @@
 
 完成本课学习后，你将能够：
 1. **对比与阐述** 一次性巨石代码盲开的退化风险，以及 **先计划、后执行、做小切片** 的增量实施优势。
-2. **遵守与继承** 第三课的 **契约冻结规则 (Contract Freeze Rule)**，通过 **权威交接门禁 (Pre-Plan Gate)** 校验第三课 3 份契约资产的一致性（若存在冲突将触发 `CONTRACT_ASSET_MISMATCH` 拒绝生成计划）。
-3. **生成与保存** 包含 `plan_status` 与状态枚举（`PENDING / READY / IN_PROGRESS / COMPLETED / BLOCKED`）的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`（Step 2..N 默认为 `PENDING`，`allowed_files` 必须为精确文件路径）。
-4. **精准区分** **页面技术呈现状态 (Loading/Empty/Error/Success)** 与 **业务流程状态 (待处理/处理中/已阻塞/已完成)** 的本质区别。
-5. **掌握与触发** **Step级 Workflow 授权门禁**（首行精确匹配 `授权执行 Step 1`），受控解锁首个切片编码。
+2. **遵守与继承** 第三课的 **契约冻结规则 (Contract Freeze Rule)**，通过 **契约交接门禁 (Pre-Plan Gate)** 校验第三课 3 份契约资产的一致性（若存在冲突将触发 `[契约冲突拦截] 需求卡与数据定义不一致，请先核对` (CONTRACT_ASSET_MISMATCH) 拒绝生成计划）。
+3. **生成与保存** 包含 `plan_status` 与状态枚举（`PENDING / READY / IN_PROGRESS / COMPLETED / BLOCKED`）的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`（Step 2..N 默认为 `PENDING`，`allowed_files` 必须为具体文件路径）。
+4. **精准区分** **界面技术呈现状态 (Loading/Empty/Error/Success)** 与 **业务处理流程状态 (待处理/处理中/已阻塞/已完成)** 的本质区别。
+5. **掌握与触发** **Step级 Workflow 授权门禁**（匹配 `授权执行 Step 1` 或 `授权开始 Step 1`），受控解锁首个切片编码。
 6. **验证与体验** 带有 **页面技术状态调试器 (Prototype Debug)** 的前端原型，以及针对三类原型方向的 Step 1 薄切片。
-7. **执行** **三层验收 (Verifier -> 人工点击 -> 主管验收) 与一次完整版本归档 (Commit A 源码 + 回填 SHA/日志 -> Commit B 状态推进)**；若验证失败，正确执行 **`BLOCKED` 失败 Patch 导出、干净源码恢复 (`git restore`) 与独立阻断口令归档 (`授权提交 Step 1 阻断状态`)**。
+7. **执行** **三层验收 (Verifier -> 人工点击 -> 主管验收) 与版本归档 (`确认完成 Step 1`)**；若验证失败，体验系统 **失败快照备份、干净源码自动恢复与问题记录 (`同意记录 Step 1 问题`)**。
 
 ---
 
@@ -36,20 +36,20 @@
   [前置需求契约 (3份)] ───> [ Pre-Plan Gate 校验 ] ───> [ 生成增量计划 ]
                                                                 │ (只读预览 Plan, Step 2..N 默认为 PENDING)
                                                                 ▼
-                                                    [ 授权保存实施计划 ]
+                                                    [ 同意保存实施计划 ]
                                                                 │ (落盘至 docs/LESSON_04_IMPLEMENTATION_PLAN.md)
                                                                 ▼
                                                     ┌────────────────────────────────┐
-                                                    │ Workflow 门禁首行: "授权执行 Step 1" │
+                                                    │ Workflow 门禁: "授权执行 Step 1"   │
                                                     └────────────────────────────────┘
                                                                 │
                                                                 ▼
                                                       ( Step 1 薄切片编码 ) 
                                                                 │
                                                                 ▼
-  [ 三层验收: Verifier -> 人工点击 -> 主管验收 ] ───> [ PASS: 授权 Commit A 源码 + 回填 SHA ──> 授权 Commit B 推进 Step 2 ]
+  [ 三层验收: Verifier -> 人工点击 -> 主管验收 ] ───> [ PASS: 确认完成 Step 1 ──> 自动保存源码并推进 Step 2 ]
                              │
-                             └───> [ FAIL/拒绝: 导出 .patch 补丁 ──> git restore 还原源码 ──> 授权提交阻断状态 ]
+                             └───> [ FAIL/拒绝: 备份失败快照 ──> 自动恢复干净源码 ──> 同意记录 Step 1 问题 ]
 
 ===================================================================================
 【第三层：页面技术状态调试器】 (可视化调试，彻底消除交接死角)
@@ -69,8 +69,8 @@
 
 ## 1. 核心概念与护栏机制
 
-### 1.1 权威交接门禁 (Pre-Plan Gate)
-`BUSINESS_FEATURE_CARD.md` 是第四课唯一的需求权威来源。生成实施计划前，Agent 必须校验 TypeScript 类型草稿与 Mock 数据。若存在字段名、类型、必填性、枚举或业务含义冲突，输出 `CONTRACT_ASSET_MISMATCH`，禁止生成或保存实施计划。
+### 1.1 契约交接门禁 (Pre-Plan Gate)
+`BUSINESS_FEATURE_CARD.md` 是第四课唯一的需求权威来源。生成实施计划前，Agent 必须校验数据字典定义表与模拟数据。若存在字段名、类型、必填性、枚举或业务含义冲突，输出 `[契约冲突拦截] 需求卡与数据定义不一致，请先核对` (CONTRACT_ASSET_MISMATCH)，禁止生成或保存实施计划。
 
 ### 1.2 实施计划状态机枚举 (Step Status Enum)
 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 严格限定 5 种状态：
@@ -78,10 +78,10 @@
 - `READY`：前置步骤已完成，等待主管下发 `授权执行 Step N`；
 - `IN_PROGRESS`：已下发授权，正在编码执行中；
 - `COMPLETED`：三层验收通过且完成 Commit A / Commit B 归档；
-- `BLOCKED`：自测、页面验证或主管业务拒绝后，导出 Patch 并恢复干净源码后的阻断状态。
+- `BLOCKED`：自测、页面验证或主管业务拒绝后，备份快照并恢复干净源码后的阻断状态。
 
 ### 1.3 `allowed_files` 精确文件路径规范
-实施计划中 `allowed_files` **必须列出精确文件路径**（例如 `["src/pages/HomePage.vue", "src/components/WorkOrderBoard.vue"]`），**严格禁止填写 `src/components/` 等目录**。
+实施计划中 `allowed_files` **必须列出具体文件路径**（例如 `["src/pages/HomePage.vue", "src/components/WorkOrderBoard.vue"]`），**严格禁止填写 `src/components/` 等目录**。
 
 ### 1.4 三层递进验收门禁与版本归档 (Three-Layer Verification Gate)
 Step 1 编码完成后，必须按顺序通过三层门禁：
@@ -89,17 +89,17 @@ Step 1 编码完成后，必须按顺序通过三层门禁：
 2. **第二层：人工点击验收 PASS (页面 `Prototype Debug` 4 状态点击校验)**
 3. **第三层：主管业务验收 PASS (主管下发 `主管验收 Step N 通过`)**
 
-三层全过，方可下发 `授权提交 Step N 源码` (Commit A)，Agent 自动回填 Commit A SHA/日志并将 Step N 改为 `COMPLETED`、Step N+1 改为 `READY`；最后下发 `授权提交 Step N 状态推进` (Commit B)。
+三层全过，下发 **`确认完成 Step N`** (或 `同意保存 Step N 成果`)，Agent 底层顺次自动完成 Commit A 源码暂存、回填 SHA 与日志、将 Step N 改为 `COMPLETED`、Step N+1 改为 `READY`，最后自动执行 Commit B 状态推进。
 
 ### 1.5 校验失败时的干净工作树恢复机制 (Clean Worktree Recovery)
 若 Verifier 报错、页面验证失败或主管下发 `主管拒绝 Step N 切片`：
-- **课程学习结果**：**`PASS`**（学员正确执行了导出 Patch、恢复干净源码与独立阻断口令归档流程）；
+- **课程学习结果**：**`PASS`**（学员正确执行了快照备份、恢复干净源码与问题记录归档流程）；
 - **Step 实施结果**：**`BLOCKED`**；
 - **恢复与导出动作**：
-  1. 将失败修改导出为 Patch 补丁：`local-backups/lesson-04-evidence/step-N-blocked.patch`；
+  1. 自动将失败修改备份为快照补丁：`local-backups/lesson-04-evidence/step-N-blocked.patch`；
   2. 保存 Verifier 日志并回填 `failure_summary`；
-  3. **恢复干净源码**：执行 `git restore -- <allowed_files>` 并清除新创建的文件；
-  4. **独立口令归档阻断状态**：下发 `授权提交 Step N 阻断状态` 提交 Commit B 状态记录，留给第六课处理。
+  3. **自动恢复干净源码**：自动撤销修改并清理未跟踪文件，使工作区恢复 100% 干净；
+  4. **自然口令归档问题**：学员下发 **`同意记录 Step N 问题`** 提交状态记录，留给第六课处理。
 
 ---
 
@@ -135,7 +135,7 @@ Step 1 编码完成后，必须按顺序通过三层门禁：
 
 **操作指令 2 (授权落盘)**：
 ```text
-授权保存 Lesson 04 实施计划
+同意保存实施计划
 ```
 
 ---
@@ -161,17 +161,11 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 主管验收 Step 1 通过
 ```
 
-**操作指令 3 (授权提交 Step 1 源码 - Commit A)**：
+**操作指令 3 (确认完成 Step 1)**：
 ```text
-授权提交 Step 1 源码
+确认完成 Step 1
 ```
-*(Agent 底层执行 `git add -- <allowed_files>` 选择性暂存提交并回填 Commit A SHA 与状态)*
-
-**操作指令 4 (授权提交 Step 1 状态推进 - Commit B)**：
-```text
-授权提交 Step 1 状态推进
-```
-*(Agent 底层执行 `git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md` 选择性暂存提交)*
+*(Agent 底层自动顺次执行 git add -- 源码与实施计划的选择性暂存提交)*
 
 ---
 
@@ -180,8 +174,8 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 ### ✍️ 学员概念互动填空 (Interactive Concept Fill-in-the-Blanks)
 1. **Plan & Execute 范式**：增量实施的核心是 **“先形成计划，每次只授权完成一个可验证的小切片”**，计划保存于外部长期记忆 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中。
 2. **步骤状态机枚举**：实施计划中的步骤包含 5 种状态：初始步骤默认为 **`PENDING`**，前置步骤通过后变为 **`READY`**，授权后变为 **`IN_PROGRESS`**，三层验收归档后变为 **`COMPLETED`**，校验失败或主管拒绝后变为 **`BLOCKED`**。
-3. **2D 状态解耦**：**页面技术呈现状态 (`prototypeState`: Loading / Empty / Error / Success)** 用于调试 UI 数据加载与异常；而 **业务流程状态 (待处理 / 处理中 / 已阻塞 / 已完成)** 用于展示业务对象的生命周期。
-4. **两提交协议与干净恢复**：验收通过后分两次提交——**Commit A 源码暂存** (`git add -- <allowed_files>`) 与 **Commit B 状态推进** (`git add -- docs/LESSON_04_IMPLEMENTATION_PLAN.md`)；若验证失败，导出 **`.patch` 补丁** 物理记录证据，并执行 **`git restore` 恢复干净源码**。
+3. **概念解耦**：**界面技术呈现状态 (`prototypeState`: Loading / Empty / Error / Success)** 用于调试 UI 数据加载与异常；而 **业务处理流程状态 (待处理 / 处理中 / 已阻塞 / 已完成)** 用于展示业务对象的生命周期。
+4. **版本归档与干净恢复**：三层验收通过后回复 **`确认完成 Step 1`** 自动归档；若验证失败，系统将自动 **备份失败快照** 并 **恢复干净源码**，学员回复 **`同意记录 Step 1 问题`** 记录问题。
 
 ### 💡 常见概念误区与正确理解 (Misconceptions vs. Correct Engineering Reality)
 
@@ -189,16 +183,16 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 | :--- | :--- | :--- |
 | **误区 1：“让 AI 一口气写完页面所有功能效率最高”** | 一口气修改 10 个文件会导致上下文记忆爆炸 (Context Window Blowup)、样式大面积崩塌且报错时根本无法定位根因。 | 唤醒 `incremental-implementation` 护栏，强制按 3–5 步切片，每次仅授权执行 1 个切片。 |
 | **误区 2：“只要静态编译通过 (Verifier PASS)，就代表切片做对了”** | Verifier 只是静态编译检查，无法替代人工物理点击页面以及主管对业务逻辑与交互美观度的裁决。 | 严格执行 **三层递进验收 (Verifier PASS -> 人工点击 PASS -> 主管业务验收 PASS)**，缺一不可。 |
-| **误区 3：“混淆页面技术呈现状态与业务流程状态”** | 将 `Loading` 或 `Error` 误当成业务对象的状态，导致逻辑混乱与调试失败。 | 强制前端植入 `prototypeState` 调试器（`import.meta.env.DEV`），与业务流程状态标签物理解耦。 |
-| **误区 4：“切片报错时直接多次下发指令让 AI 撞大运”** | 在污染的工作区重试会导致损坏代码残留，后续 Git 提交会误将坏代码打包入库。 | 导出 `step-N-blocked.patch` 补丁，执行 `git restore` 还原干净源码，使用独立口令 `授权提交 Step N 阻断状态` 归档。 |
+| **误区 3：“混淆界面技术呈现状态与业务处理流程状态”** | 将 `Loading` 或 `Error` 误当成业务对象的状态，导致逻辑混乱与调试失败。 | 强制前端植入 `prototypeState` 调试器（`import.meta.env.DEV`），与业务处理流程状态标签物理解耦。 |
+| **误区 4：“切片报错时直接多次下发指令让 AI 撞大运”** | 在污染的工作区重试会导致损坏代码残留，后续 Git 提交会误将坏代码打包入库。 | 系统自动备份快照补丁并还原干净源码，下发 `同意记录 Step 1 问题` 归档。 |
 
 ---
 
 ### 🎯 退场测试题 (Exit Ticket)
 
-* **问题 1**：验证失败或主管拒绝切片时，为什么必须导出 `.patch` 补丁并执行 `git restore` 恢复干净源码？
+* **问题 1**：验证失败或主管拒绝切片时，为什么系统要自动备份快照并恢复干净源码？
 * **参考答案**：
-  - 导出 `.patch` 补丁可以完整保存失败代码证据供第六课诊断；执行 `git restore` 清理未跟踪新文件可以还原 100% Clean 的工作树，防止失败的破损代码残留并误被后续 Git 操作提交。
-* **问题 2**：选择性暂存协议中 Commit A 与 Commit B 的职责划分是什么？
+  - 自动备份快照补丁可以完整保存失败代码证据供第六课诊断；自动恢复干净源码可以还原 100% Clean 的工作树，防止失败的破损代码残留并误被后续 Git 操作提交。
+* **问题 2**：回复 `确认完成 Step 1` 时，Agent 底层顺次执行了什么操作？
 * **参考答案**：
-  - Commit A 仅暂存并提交 `allowed_files` 中清单列出的源码修改（`feat` 提交）；Commit B 在回填 SHA 与日志后仅暂存并提交 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 实施计划文件（`docs` 状态推进提交）。
+  - Agent 底层顺次自动执行了 Commit A 源码暂存提交、提取 Commit SHA 回填 Plan 状态，以及 Commit B 实施计划更新暂存，无需学员手动分两次操作。

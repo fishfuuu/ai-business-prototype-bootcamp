@@ -211,11 +211,8 @@ if ($l4Guide -notmatch "LESSON_04_IMPLEMENTATION_PLAN\.md") {
 if ($l4Guide -notmatch "授权执行 Step") {
     throw "LESSON_04_GUIDE.md must instruct student to use '授权执行 Step N' authorization gate."
 }
-if ($l4Guide -notmatch "授权提交 Step.*源码") {
-    throw "LESSON_04_GUIDE.md must instruct student to use Two-Commit Protocol (授权提交 Step N 源码)."
-}
-if ($l4Guide -notmatch "授权提交 Step.*状态推进") {
-    throw "LESSON_04_GUIDE.md must instruct student to use Two-Commit Protocol (授权提交 Step N 状态推进)."
+if ($l4Guide -notmatch "确认完成 Step|授权提交 Step.*源码") {
+    throw "LESSON_04_GUIDE.md must instruct student to use natural success command (确认完成 Step N)."
 }
 if ($l4Guide -notmatch "git add --") {
     throw "LESSON_04_GUIDE.md must instruct student on selective staging (git add --)."
@@ -252,11 +249,11 @@ if ($l4Skill -notmatch "docs/BUSINESS_FEATURE_CARD\.md") {
 if ($l4Skill -notmatch "git add --") {
     throw "SKILL.md must specify selective staging rule (git add --)."
 }
-if ($l4Skill -notmatch "授权提交 Step.*源码") {
-    throw "SKILL.md must define Two-Commit protocol (授权提交 Step N 源码)."
+if ($l4Skill -notmatch "确认完成 Step|授权提交 Step.*源码") {
+    throw "SKILL.md must define success protocol command (确认完成 Step N)."
 }
-if ($l4Skill -notmatch "授权提交 Step.*状态推进") {
-    throw "SKILL.md must define Two-Commit protocol (授权提交 Step N 状态推进)."
+if ($l4Skill -notmatch "同意记录 Step|授权提交 Step.*状态推进") {
+    throw "SKILL.md must define blocked protocol command (同意记录 Step N 问题)."
 }
 if ($l4Skill -notmatch "plan_status:\s*COMPLETED") {
     throw "SKILL.md must define final step transition to plan_status: COMPLETED."
