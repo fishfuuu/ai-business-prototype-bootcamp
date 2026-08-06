@@ -91,7 +91,13 @@ Step 1 编码完成后，必须按顺序通过三层门禁：
 
 三层全过，下发 **`确认完成 Step N`** (或 `同意保存 Step N 成果`)，Agent 底层顺次自动完成 Commit A 源码暂存、回填 SHA 与日志、将 Step N 改为 `COMPLETED`、Step N+1 改为 `READY`，最后自动执行 Commit B 状态推进。
 
-### 1.5 校验失败时的干净工作区自动恢复机制 (Clean Worktree Recovery)
+### 1.5 校验失败时的干净工作区自动恢复机制 (Clean Working Tree / Worktree Recovery)
+
+> **💡 IT 跨界沟通术语卡：Working Tree (工作区 / 工作树)**
+> - **标准 IT 术语**：`Working Tree`（中文常译为 **工作区** 或 **工作树**）。
+> - **通俗生活类比**：就像 **厨师切菜的砧板** 或 **画家的画板**。你当前打开文件夹、修改代码、AI 正在写入文件的地方，就是你的“Working Tree (工作区)”。
+> - **与 IT 沟通场景**：当你未来与 IT 部门沟通时，说“清空 Working Tree 恢复干净状态”，IT 工程师会立刻明白你想把“砧板上的临时碎渣撤销，恢复干净初始状态”。
+
 若 Verifier 报错、页面验证失败或主管下发 `主管拒绝 Step N 切片`：
 - **课程学习结果**：**`PASS`**（学员正确执行了快照备份、恢复干净源码与问题记录归档流程）；
 - **Step 实施结果**：**`BLOCKED`**；
