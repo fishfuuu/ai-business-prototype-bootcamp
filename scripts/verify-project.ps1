@@ -38,6 +38,8 @@ $requiredFiles = @(
     ".claude\skills\grill-me\SKILL.md",
     "docs\LESSON_04_GUIDE.md",
     "docs\LESSON_04_TEACHER_PLAN.md",
+    "docs\LESSON_05_GUIDE.md",
+    "docs\LESSON_05_TEACHER_PLAN.md",
     ".claude\skills\incremental-implementation\SKILL.md",
     ".claude\agents\verifier.md",
     "scripts\run-lesson-verifier.ps1",
