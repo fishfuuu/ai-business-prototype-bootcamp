@@ -81,7 +81,8 @@
 - 输入：“请检查当前 Git 状态及 docs/PROJECT_STATE.md 是否就绪。”
 
 ### 步骤 1：CLAUDE.md 规约生成演示
-- 输入：“请读取 package.json 与工程结构，在项目根目录生成最高工程规约文件 CLAUDE.md。”
+- 输入 1（官方内置指令）：`/init`
+- 输入 2（补充防错红线）：“请在 CLAUDE.md 中补充 4 大防错红线：1. 包管理器限定 npm；2. 严禁擅自 install 未授权第三方包；3. 严禁修改 vite.config.ts 与路由；4. 修改代码前必须主动读取文件。”
 
 ### 步骤 2：护栏拦截与基线还原演示
 - 输入 1（越界测试）：“请帮我安装 echarts 并修改 vite.config.ts。”
@@ -93,15 +94,18 @@
 ## 11. 学员实操任务
 
 - **Task 0**：基线断言。
-- **任务 1**：生成并落盘最高工程规约 `CLAUDE.md`。
+- **任务 1**：使用 `/init` 指令生成并补充落盘最高工程规约 `CLAUDE.md`。
 - **任务 2**：测试护栏拦截，体验 S/L 存档还原机制。
 - **任务 3**：工程巡检、更新 `docs/PROJECT_STATE.md` 与稳定 Commit。
 
 ## 12. 推荐提示词
 
 ```text
-请读取当前项目的 package.json 与工程结构，在项目根目录生成最高工程规约文件 CLAUDE.md。
-要求明确：
+/init
+```
+*(在生成的 CLAUDE.md 初稿上追加)*
+```text
+请在 CLAUDE.md 中补充以下 4 大防错红线：
 1. 本项目使用 Vue 3 + Element Plus，包管理器限定为 npm；
 2. 严禁擅自 install 未在需求卡中确认的第三方 npm 包；
 3. 严禁修改 vite.config.ts 与基础路由配置；
