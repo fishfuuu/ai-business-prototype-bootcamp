@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>术语词典 (GLOSSARY) · 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #334155 100%);
+    color: #f5f1e8;
+    padding: 3rem 1.25rem 2.5rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #94a3b8; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .6rem 0 .8rem; font-weight: 800;
+  }
+  .hero .sub { color: #cbd5e1; max-width: 68ch; font-size: 1rem; line-height: 1.6; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  
+  .nav-bar {
+    margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: .4rem; background: var(--card); border: 1px solid var(--line);
+    padding: .5rem 1.1rem; border-radius: 8px; font-size: .9rem; font-weight: 700; color: var(--ink);
+    text-decoration: none; transition: all .2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  }
+  .back-btn:hover { background: #f1ede5; border-color: #d0c7ba; transform: translateY(-1px); }
+
+  /* Search Box */
+  .search-box {
+    margin: 1.8rem 0 1.2rem; position: relative;
+  }
+  .search-input {
+    width: 100%; padding: .85rem 1.2rem .85rem 2.8rem; border: 1.5px solid var(--line); border-radius: 12px;
+    font-size: 1rem; font-family: inherit; background: #fff; color: var(--ink); outline: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all .2s;
+  }
+  .search-input:focus { border-color: var(--teal); box-shadow: 0 4px 15px rgba(15, 118, 110, 0.15); }
+  .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); opacity: .5; font-size: 1.1rem; }
+
+  /* Glossary Grid Layout */
+  .glossary-list { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1.5rem; }
+  
+  .term-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 1.4rem 1.6rem; box-shadow: 0 2px 6px rgba(0,0,0,0.02); transition: all .2s;
+  }
+  .term-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  
+  .term-header {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .6rem;
+  }
+  .term-title {
+    font-size: 1.15rem; font-weight: 800; color: #0f172a; font-family: "Segoe UI", sans-serif;
+  }
+  .term-tag {
+    font-size: .75rem; font-weight: 800; padding: .2rem .6rem; border-radius: 6px; background: var(--teal-soft); color: var(--teal); white-space: nowrap;
+  }
+  .term-tag.plum { background: var(--plum-soft); color: var(--plum); }
+  .term-tag.amber { background: var(--amber-soft); color: var(--amber); }
+
+  .term-def { font-size: .98rem; color: var(--ink); line-height: 1.7; margin-bottom: .6rem; }
+  
+  .term-avoid {
+    display: inline-flex; align-items: center; gap: .4rem; font-size: .84rem; background: var(--red-soft);
+    color: var(--red); border: 1px solid #f87171; border-radius: 6px; padding: .25rem .65rem; font-weight: 600;
+  }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">GLOSSARY · 权威术语词典</div>
+    <h1>主管 AI 原型制作训练营 术语词典</h1>
+    <p class="sub">本词典收录本训练营统一遵循的硬核工程与业务概念，帮您建立清晰的 IT 跨界沟通术语与物理认知。</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="nav-bar">
+    <a href="javascript:history.back()" class="back-btn">⬅️ 返回上一级课程</a>
+    <div style="font-size: .88rem; color: var(--ink-soft); font-weight: 600;">共收录 15 个核心工程与业务术语</div>
+  </div>
+
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" class="search-input" placeholder="输入搜索术语或关键词（如 LLM / Working Tree / grill-me / CLAUDE.md）..." oninput="filterTerms()">
+  </div>
+
+  <div class="glossary-list" id="glossaryList">
+
+    <!-- TERM 1 -->
+    <div class="term-card" data-kw="llm 大语言模型 transformer 概率">
+      <div class="term-header">
+        <div class="term-title">LLM (大语言模型)</div>
+        <span class="term-tag">核心引擎</span>
+      </div>
+      <div class="term-def">基于 Transformer 架构在内存中推演概率序列的语言预测模型，本身没有任何操作系统读写物理句柄。必须通过宿主程序暴露的 Tools 工具才能操作物理世界。</div>
+      <div class="term-avoid">🚫 避免误用: 全知全能AI, 智能黑盒</div>
+    </div>
+
+    <!-- TERM 2 -->
+    <div class="term-card" data-kw="tools 工具接口 api 函数 物理手脚">
+      <div class="term-header">
+        <div class="term-title">Tools (工具接口)</div>
+        <span class="term-tag">物理手脚</span>
+      </div>
+      <div class="term-def">由宿主程序暴露给 Agent 的受控 API / 函数（如物理文件读写、终端运行命令），是 Agent 操作磁盘与系统环境的受控物理手脚。</div>
+      <div class="term-avoid">🚫 避免误用: AI 自发功能, 插件黑盒</div>
+    </div>
+
+    <!-- TERM 3 -->
+    <div class="term-card" data-kw="agent 受控执行者 核心控制器 规则">
+      <div class="term-header">
+        <div class="term-title">Agent (受控执行者)</div>
+        <span class="term-tag">协作实体</span>
+      </div>
+      <div class="term-def">以 LLM 为核心控制器、提示词与规则为物理约束、Tools 为操作介质，能够在明确目标下组织多步行动的受控软件实体。</div>
+      <div class="term-avoid">🚫 避免误用: 自动化脚本, 机器人</div>
+    </div>
+
+    <!-- TERM 4 -->
+    <div class="term-card" data-kw="react 范式 reasoning acting 思考行动观察">
+      <div class="term-header">
+        <div class="term-title">ReAct 范式 (Reasoning & Acting)</div>
+        <span class="term-tag plum">架构范式</span>
+      </div>
+      <div class="term-def">Reasoning and Acting 闭环。Agent 每次行动后，将 Observation（工具返回值、终端编译报错或日志）送回 LLM 内存进行自修正与下一步推理。</div>
+      <div class="term-avoid">🚫 避免误用: 盲目试错, 自动改错</div>
+    </div>
+
+    <!-- TERM 5 -->
+    <div class="term-card" data-kw="hitl 人在回路 盖章 门禁 审批 授权">
+      <div class="term-header">
+        <div class="term-title">HITL (人在回路授权门禁)</div>
+        <span class="term-tag amber">安全防错</span>
+      </div>
+      <div class="term-def">Human-in-the-Loop。要求 Agent 在修改物理代码、落盘写盘或发布前暂停自动化，交由人类主管审批盖章签署口令的物理控制机制。</div>
+      <div class="term-avoid">🚫 避免误用: 人工客服, 机器弹窗</div>
+    </div>
+
+    <!-- TERM 6 -->
+    <div class="term-card" data-kw="mock data 模拟数据 道具 契约 隐私">
+      <div class="term-header">
+        <div class="term-title">Mock Data (模拟数据)</div>
+        <span class="term-tag">数据安全</span>
+      </div>
+      <div class="term-def">符合业务结构契约但内容完全虚构的数据道具，用于原型演示，严禁带入真实的客户隐私、财务或生产敏感数据。</div>
+      <div class="term-avoid">🚫 避免误用: 真实测试数据, 生产数据</div>
+    </div>
+
+    <!-- TERM 7 -->
+    <div class="term-card" data-kw="试衣镜 127.0.0.1 开发服务器 前端 预览">
+      <div class="term-header">
+        <div class="term-title">试衣镜 (127.0.0.1)</div>
+        <span class="term-tag">预览体验</span>
+      </div>
+      <div class="term-def">运行于本地开发服务器（如 Vite / Node.js）的前端预览窗口，用于主管实时肉眼校验 Agent 渲染的页面外观与交互行为。</div>
+      <div class="term-avoid">🚫 避免误用: 线上生产环境, 测试服务器</div>
+    </div>
+
+    <!-- TERM 8 -->
+    <div class="term-card" data-kw="design token 设计令牌 视觉变量 design.md">
+      <div class="term-header">
+        <div class="term-title">Design Token (设计令牌)</div>
+        <span class="term-tag plum">视觉规范</span>
+      </div>
+      <div class="term-def">在设计规范文件（<code>DESIGN.md</code>）中事先约定的标准化视觉变量（如主色、字号标尺、间距、圆角），用于制衡 AI Token 的随机性。</div>
+      <div class="term-avoid">🚫 避免误用: 随机内联样式, ad-hoc 杂色</div>
+    </div>
+
+    <!-- TERM 9 -->
+    <div class="term-card" data-kw="grill-me 追问范式 需求澄清 反向面试 6要素">
+      <div class="term-header">
+        <div class="term-title">Grill-Me 追问范式</div>
+        <span class="term-tag plum">需求解构</span>
+      </div>
+      <div class="term-def">使用反向面试的思考路径，唤醒 <code>grill-me</code> Skill 护栏让 Agent 主动扮演考官，结构化追问并锁死 Goal / Boundary / Risk / Stop 等 6 大业务要素。</div>
+      <div class="term-avoid">🚫 避免误用: 模糊需求, 凭空脑补</div>
+    </div>
+
+    <!-- TERM 10 -->
+    <div class="term-card" data-kw="data contract 数据契约 feature card 类型草稿">
+      <div class="term-header">
+        <div class="term-title">Data Contract (数据契约)</div>
+        <span class="term-tag">IT 交接</span>
+      </div>
+      <div class="term-def">在物理写界面代码前落盘的标准化 <code>BUSINESS_FEATURE_CARD.md</code> 功能卡与 TypeScript 接口类型草稿 (`contract.d.ts`)，确保 UI 与未来 IT API 零缝隙无损对接。</div>
+      <div class="term-avoid">🚫 避免误用: 随机内联字段, 临时假数据</div>
+    </div>
+
+    <!-- TERM 11 -->
+    <div class="term-card" data-kw="working tree 工作区 工作树 砧板 clean dirty">
+      <div class="term-header">
+        <div class="term-title">Working Tree (工作区 / 工作树)</div>
+        <span class="term-tag amber">Git 工程</span>
+      </div>
+      <div class="term-def">开发者或 AI 正在修改代码、做切片物理写盘的文件夹区域。类似于厨师切菜的<b>“砧板”</b>，未改动时为 Clean，有改动时为 Dirty。做完切片随时打包归档恢复 Clean 干净状态。</div>
+      <div class="term-avoid">🚫 避免误用: 缓存目录, 临时文件区</div>
+    </div>
+
+    <!-- TERM 12 -->
+    <div class="term-card" data-kw="plan execute 增量范式 薄切片 实施计划">
+      <div class="term-header">
+        <div class="term-title">Plan & Execute 增量范式</div>
+        <span class="term-tag plum">受控循环</span>
+      </div>
+      <div class="term-def">将大需求拆解为包含具体文件路径与状态机的 <code>IMPLEMENTATION_PLAN.md</code> 实施计划，每次仅授权 Agent 完成一个可验证薄切片的小成功路径。</div>
+      <div class="term-avoid">🚫 避免误用: 巨石盲开, 一口气改全盘</div>
+    </div>
+
+    <!-- TERM 13 -->
+    <div class="term-card" data-kw="claude.md 最高工程规约 依赖禁令 红线 防措">
+      <div class="term-header">
+        <div class="term-title">CLAUDE.md 工程规约</div>
+        <span class="term-tag amber">最高护栏</span>
+      </div>
+      <div class="term-def">项目根目录下的最高行为规范文件，AI 每次对话前强制读取，用于物理锁死包管理器（npm）、禁用未经授权第三方包与 Vite 配置文件隔离红线。</div>
+      <div class="term-avoid">🚫 避免误用: 口头规则, 临时说明文档</div>
+    </div>
+
+    <!-- TERM 14 -->
+    <div class="term-card" data-kw="三分记忆模型 工作记忆 外部长期记忆 版本证据">
+      <div class="term-header">
+        <div class="term-title">三分记忆模型 (Three-Layer Memory)</div>
+        <span class="term-tag">记忆管理</span>
+      </div>
+      <div class="term-def">解耦为工作记忆（聊天窗口: 随用随清）、外部长期记忆（Markdown 文件与实施计划: 跨会话继承）与版本证据（Git Commit 节点: 物理追溯与 S/L 读档）的三层记忆体系。</div>
+      <div class="term-avoid">🚫 避免误用: 依靠聊天记录记忆</div>
+    </div>
+
+    <!-- TERM 15 -->
+    <div class="term-card" data-kw="sl 存档还原 save load 读档 git commit 基线">
+      <div class="term-header">
+        <div class="term-title">S/L 存档还原机制 (Save & Load)</div>
+        <span class="term-tag amber">基线保护</span>
+      </div>
+      <div class="term-def">通过 Git Commit 进行稳定存档（Save），当 Agent 产生严重幻觉或改坏工程配置时，下发指令一键撤销并读档还原（Load）至最近的干净 Commit 基线。</div>
+      <div class="term-avoid">🚫 避免误用: 在破损代码上继续试错</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  主管 AI 原型制作训练营 · 权威路线图：<a href="docs/COURSE_ROADMAP.html" style="color: var(--teal); font-weight: bold;">docs/COURSE_ROADMAP.html</a>
+</footer>
+
+<script>
+function filterTerms() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.term-card');
+  cards.forEach(card => {
+    const kw = card.dataset.kw ? card.dataset.kw.toLowerCase() : '';
+    const text = card.innerText.toLowerCase();
+    if (!query || kw.includes(query) || text.includes(query)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>

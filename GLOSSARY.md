@@ -47,3 +47,23 @@ _Avoid_: 模糊需求, 凭空脑补
 **Data Contract (数据契约)**:
 在物理写界面代码前落盘的标准化 `mock-contract.json` 假数据结构文件，确保 UI 与未来 IT API 零缝隙无损对接。
 _Avoid_: 随机内联字段, 临时假数据
+
+**Working Tree (工作区 / 工作树)**:
+开发者或 AI 正在修改代码、写盘的物理文件夹区域。类似于厨师切菜的“砧板”，未改动时为 Clean，有改动时为 Dirty。
+_Avoid_: 缓存目录, 临时文件区
+
+**Plan & Execute 增量范式**:
+将大需求拆解为包含具体文件路径与状态机的 `IMPLEMENTATION_PLAN.md`，每次仅授权 Agent 完成一个可验证薄切片的小成功路径。
+_Avoid_: 巨石盲开, 一口气改全盘
+
+**CLAUDE.md 工程规约**:
+项目根目录下的最高行为规范文件，AI 每次对话前强制读取，用于锁死包管理器、依赖禁令与安全隔离红线。
+_Avoid_: 口头规则, 临时说明文档
+
+**三分记忆模型 (Three-Layer Memory Model)**:
+解耦为工作记忆（聊天窗口）、外部长期记忆（Markdown 状态文件与实施计划）与版本证据（Git Commit 节点）的三层记忆体系。
+_Avoid_: 依靠聊天记录记忆
+
+**S/L 存档还原机制 (Save & Load Baseline)**:
+通过 Git Commit 进行稳定存档（Save），并在 Agent 产生幻觉或改坏工程时一键撤销并读档还原（Load）至干净基线。
+_Avoid_: 在破损代码上继续试错

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 课 · 建立不会轻易失控的项目 | 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #1e40af 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #93c5fd; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #bfdbfe; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #93c5fd; }
+  
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+  
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--blue); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+  
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+  
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--blue-soft); border-color: #bfdbfe; }
+  .card.warn { background: var(--amber-soft); border-color: #ecd3a8; }
+  .card.focus { background: var(--plum-soft); border-color: #d8b4fe; }
+  .card.green { background: var(--green-soft); border-color: #a7d7b4; }
+  
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+  
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+  
+  .quote {
+    border-left: 4px solid var(--blue); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+
+  /* Grid Layouts - Symmetric 2x2 Grid */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--blue); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(29, 78, 216, 0.2);
+  }
+  .btn:hover { background: #1e40af; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Interactive Simulator Container */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: .9rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+  
+  .mode-tabs {
+    display: flex; gap: .6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+  }
+  .mode-btn {
+    flex: 1; min-width: 200px; padding: .8rem 1rem; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: .88rem; font-weight: 700; cursor: pointer; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s; text-align: center;
+  }
+  .mode-btn:hover { background: #e2e8f0; }
+  .mode-btn.active.raw { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .mode-btn.active.harness { background: #dbeafe; border-color: var(--blue); color: #1e40af; }
+
+  .flow-display-canvas {
+    background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.4rem;
+    min-height: 280px; position: relative; transition: all .3s;
+  }
+  .flow-step-node {
+    background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .8rem 1.1rem;
+    margin-bottom: .8rem; font-size: .9rem; opacity: .4; transition: all .3s; transform: translateY(5px);
+  }
+  .flow-step-node.active { opacity: 1; transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .flow-step-node.error { border-color: #ef4444; background: #fff5f5; color: #991b1b; }
+  .flow-step-node.success { border-color: #10b981; background: #f0fdf4; color: #065f46; }
+  .flow-step-node.blocked { border-color: #3b82f6; background: #eff6ff; color: #1e40af; }
+
+  .node-title { font-weight: 800; font-size: .95rem; margin-bottom: .2rem; display: flex; align-items: center; justify-content: space-between; }
+  .node-desc { font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Consolas", monospace; font-size: .82rem;
+    padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 160px; overflow-y: auto;
+  }
+
+  /* Interactive Concept Fill-in-the-Blanks */
+  .blank-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem; font-size: .95rem; line-height: 1.8;
+  }
+  .blank-select {
+    padding: .25rem .6rem; border-radius: 6px; border: 1.5px solid var(--blue); font-size: .9rem;
+    font-weight: 700; color: var(--blue); background: var(--blue-soft); cursor: pointer; outline: none;
+  }
+  .blank-select.ok { border-color: #10b981; background: #dcfce7; color: #15803d; }
+  .blank-select.err { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+  .blank-feedback { font-size: .85rem; margin-top: .5rem; font-weight: 600; display: none; }
+  .blank-feedback.show { display: block; }
+
+  /* Misconceptions 3-Column Table Card */
+  .misc-table-container {
+    overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  }
+  .misc-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem;
+  }
+  .misc-table th {
+    background: #0f172a; color: #fff; font-weight: 700; padding: .85rem 1.1rem; border-bottom: 1px solid var(--line);
+  }
+  .misc-table td {
+    padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6;
+  }
+  .misc-table tr:hover { background: #fafaf9; }
+  .badge-misc { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .78rem; font-weight: 800; }
+  .badge-misc.red { background: #fee2e2; color: #991b1b; }
+  .badge-misc.green { background: #dcfce7; color: #15803d; }
+  .badge-misc.blue { background: #dbeafe; color: #1e40af; }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem;
+  }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box {
+    background: var(--blue-soft); border: 1px solid #bfdbfe; border-radius: 10px; padding: 1rem 1.2rem;
+    margin-top: .8rem; font-size: .92rem; color: #1e40af; display: none; line-height: 1.6;
+  }
+  .ans-box.show { display: block; }
+
+  /* Quiz Cards & Label Formatting */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; width: 100%; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--blue-soft); }
+  .quiz-q label input { margin-top: .35rem; accent-color: var(--blue); }
+  .quiz-q label.sel { background: var(--blue-soft); border-color: #bfdbfe; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+  .q-btn { margin-top: .6rem; }
+  
+  .score {
+    display: none; margin-top: 1.2rem; margin-bottom: 1.5rem; background: #0f172a; color: #f5f1e8;
+    border-radius: 12px; padding: 1.2rem 1.6rem; text-align: center; font-size: 1.1rem;
+  }
+  .score.show { display: block; }
+  .score b { color: #4ade80; font-size: 1.4rem; }
+
+  /* Checklist Card */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--blue); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 05 · 工程护栏与三分记忆 (V2 闭环版)</div>
+    <h1>建立不会轻易失控的项目</h1>
+    <p class="sub">通过配置项目最高工程规约 <b>CLAUDE.md</b> 锁死包管理器与框架规约。掌握 <b>三分记忆模型（工作记忆 / 外部长期记忆 / 版本证据）</b>、<b>【解药 1：环境脱幻工具箱】</b> 与单机游戏 <b>S/L (Save & Load) 存档还原机制</b>，确保原型项目稳如磐石。</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 配置项目最高规约 <code>CLAUDE.md</code> 锁定 4 大防错红线；② 理解三分记忆模型；③ 掌握【解药 1：环境脱幻工具箱】；④ 运用 S/L 存档还原机制一键撤销坏修改；⑤ 完成全量项目巡检并进行稳定 Commit 归档。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 01: INTERACTIVE HARNESS & S/L SIMULATOR -->
+<section>
+  <h2><span class="num">01</span> 核心架构演进：无护栏失控 vs CLAUDE.md 护栏 + 三分记忆</h2>
+  <p>看看缺少护栏时 AI 乱装依赖、改坏 Vite 配置导致白屏，与绑定 <code>CLAUDE.md</code> 物理拦截及 S/L 读档还原的动态效果：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎬 CLAUDE.md 物理拦截与 S/L 存档还原动态演示</span>
+      <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
+    </div>
+    <div class="sim-body">
+      
+      <div class="mode-tabs">
+        <button class="mode-btn active raw" id="mBtnUncontrolled" onclick="runHarnessMode('uncontrolled')">🔴 第一层：无护栏失控 (乱装依赖/改坏 Vite/白屏)</button>
+        <button class="mode-btn harness" id="mBtnHarness" onclick="runHarnessMode('harness')">🔵 第二层：CLAUDE.md 护栏 + S/L 读档 (本课实操)</button>
+      </div>
+
+      <div class="flow-display-canvas" id="harnessCanvas">
+        <!-- JS rendered steps -->
+      </div>
+
+      <div class="console-output" id="harnessConsoleLog">
+        > 点击上方按钮运行模式推演…
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote">
+    💡 <b>核心思想</b>：用工程规约（<code>CLAUDE.md</code>）死死约束 AI 的越界行为，用三分记忆与 S/L 基线存档保障项目永不失控。
+  </div>
+</section>
+
+<!-- SECTION 02: 4 CORE CONCEPTS -->
+<section>
+  <h2><span class="num">02</span> 核心概念卡：最高规约、三分记忆与 S/L 机制</h2>
+
+  <div class="grid-2">
+    <div class="card focus">
+      <h3 style="color: var(--blue);">📜 1. 最高工程规约 (CLAUDE.md)</h3>
+      <p>根目录下的系统级 Prompt 护栏，AI 每次对话前<b>强制读取</b>。<br>
+      锁定包管理器 (npm)、UI 框架 (Vue 3 + Element Plus)、禁止修改核心配置与敏感安全红线。</p>
+    </div>
+    <div class="card focus">
+      <h3 style="color: var(--plum);">🧠 2. 三分记忆模型 (3-Layer Memory)</h3>
+      <p>• <b>工作记忆</b> (聊天窗口: 随用随清)<br>
+      • <b>外部长期记忆</b> (<code>PROJECT_STATE.md</code> / 实施计划: 跨会话继承)<br>
+      • <b>版本证据</b> (Git Commit 节点: 物理可追溯与 S/L 读档)</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card tinted">
+      <h3 style="color: var(--teal);">🧪 3. 解药 1：环境脱幻工具箱</h3>
+      <p>修改代码或安装依赖前，强制要求 Agent <b>先主动读取工程实际文件与依赖版本</b>（如运行 <code>verify-project.ps1</code>），严禁凭空盲猜。</p>
+    </div>
+    <div class="card tinted">
+      <h3 style="color: var(--amber);">💾 4. S/L 存档还原机制 (Save & Load)</h3>
+      <p>• <b>存档 (Save)</b>：三层验收通过后立即 Commit 入库；<br>
+      • <b>读档 (Load)</b>：当 Agent 产生幻觉或改坏代码时，下发指令要求其<b>一键撤销并恢复至最近的稳定 Git Commit</b>！</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 03: INTERACTIVE DEMO OF /INIT & CLAUDE.MD INTERCEPTION -->
+<section>
+  <h2><span class="num">03</span> 演练：`/init` 指令与违规拦截现场模拟</h2>
+  <p>在模拟 CLI 终端中体验下发违规命令（如请求安装未经授权的第三方图标库）时，`CLAUDE.md` 护栏物理拦截的物理过程：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🛡️ CLAUDE.md 拦截测试终端模拟器</span>
+      <span style="font-size: .8rem; opacity: .8;">输入越界指令测试物理拦截</span>
+    </div>
+    <div class="sim-body">
+      <div style="margin-bottom: 1rem; display:flex; gap:.6rem; flex-wrap:wrap;">
+        <button class="btn" onclick="testInterception('init')">⚡ 运行 /init 探查自动生成 CLAUDE.md</button>
+        <button class="btn secondary" onclick="testInterception('violating')">🔴 下发违规指令 ("安装 echarts 并修改 vite.config.ts")</button>
+        <button class="btn secondary" style="background:var(--amber);" onclick="testInterception('sl')">💾 执行 S/L 读档 ("一键还原至最近 Git Commit")</button>
+      </div>
+
+      <div class="console-output" id="interceptionTerminal" style="min-height: 180px;">
+        > 准备就绪，请点击上方测试按钮...
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: STUDENT TASKS WORKFLOW -->
+<section>
+  <h2><span class="num">04</span> 学员实操 Task 0 ~ Task 3 指令全景</h2>
+
+  <div class="card focus">
+    <b>Task 0 · 基线检查</b><br>
+    确认上一课成果完好，工作区处于 clean 干净状态：<br>
+    <code>请检查当前 Git 状态，确认 docs/PROJECT_STATE.md 存在且工作区干净。</code>
+  </div>
+
+  <div class="card focus">
+    <b>Task 1 · 唤醒 Skill 生成并落盘 CLAUDE.md</b><br>
+    在 CLI 中下发内置指令并追加 4 大防错红线：<br>
+    <code>/init</code> ➔ <code>请在 CLAUDE.md 中补充 4 大防错红线 (限定 npm / 禁用未授权包 / 锁 Vite 配置 / 强制读盘)</code>
+  </div>
+
+  <div class="card focus">
+    <b>Task 2 · 体验工程护栏拦截与 S/L 存档还原</b><br>
+    测试违规指令：<code>请帮我安装 echarts 并修改 vite.config.ts</code> ➔ 触发 <code>[工程护栏拦截]</code>！<br>
+    测试 S/L 读档：<code>放弃刚才的所有临时修改，一键恢复到最近的稳定 Git Commit 基线。</code>
+  </div>
+
+  <div class="card focus">
+    <b>Task 3 · 项目全量巡检与 Git 稳定 Commit 归档</b><br>
+    运行全量巡检脚本 ➔ 确认输出 <code>[PASS]</code> ➔ 更新 <code>PROJECT_STATE.md</code> 为 L05 PASS ➔ 执行 Git 稳定提交！
+  </div>
+</section>
+
+<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<section>
+  <h2><span class="num">05</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
+
+  <h3>1. ✍️ 概念互动填空 (Interactive Fill-in-the-Blanks)</h3>
+  <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空，并点击“核对答案”：</p>
+
+  <div class="blank-card" id="bCard1">
+    1. <b>最高工程规约</b>：根目录下的 
+    <select class="blank-select" id="blank1">
+      <option value="">-- 请选择 --</option>
+      <option value="CLAUDE.md">CLAUDE.md</option>
+      <option value="README.md">README.md</option>
+      <option value="INDEX.html">INDEX.html</option>
+    </select>
+    是 Agent 每次对话前强制读取的最高规范，用于锁定包管理器与安全防错红线。
+    <div class="blank-feedback" id="bf1"></div>
+  </div>
+
+  <div class="blank-card" id="bCard2">
+    2. <b>三分记忆模型</b>：聊天窗口属于 
+    <select class="blank-select" id="blank2">
+      <option value="">-- 请选择 --</option>
+      <option value="working-mem">工作记忆 (随用随清)</option>
+      <option value="long-term-mem">外部长期记忆</option>
+      <option value="version-evidence">版本证据</option>
+    </select>
+    ；而 <code>PROJECT_STATE.md</code> 属于 
+    <select class="blank-select" id="blank3">
+      <option value="">-- 请选择 --</option>
+      <option value="long-term-mem">外部长期记忆 (跨会话继承)</option>
+      <option value="working-mem">工作记忆</option>
+    </select>
+    ；Git Commit 属于版本证据。
+    <div class="blank-feedback" id="bf2"></div>
+  </div>
+
+  <div class="blank-card" id="bCard3">
+    3. <b>S/L 存档还原机制</b>：当 Agent 产生严重幻觉或改坏代码配置时，最正确的动作是 
+    <select class="blank-select" id="blank4">
+      <option value="">-- 请选择 --</option>
+      <option value="sl-load">放弃当前错误尝试，恢复至最近的稳定 Git Commit</option>
+      <option value="retry-forever">在污染的代码上不断发指令撞大运</option>
+    </select>。
+    <div class="blank-feedback" id="bf3"></div>
+  </div>
+
+  <button class="btn" style="margin-bottom: 2rem;" onclick="checkAllBlanks()">✅ 核对所有填空答案</button>
+
+  <h3>2. 💡 常见概念误区与正确理解 (3 栏对照表)</h3>
+  <div class="misc-table-container">
+    <table class="misc-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">常见误区 (Misconception)</th>
+          <th style="width: 42%;">正确硬核理解 (Correct Engineering Reality)</th>
+          <th style="width: 30%;">如何纠偏与护栏防护 (Remedy & Guardrails)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-misc red">误区 1</span><br><b>“让 AI 自由选择安装流行的第三方库效率更高”</b></td>
+          <td>擅自安装未知依赖容易导致版本冲突、打包体积膨胀甚至引入恶意代码，生产环境物理禁止。</td>
+          <td>在 <code>CLAUDE.md</code> 中写入依赖禁令，触发护栏物理拦截未授权 install。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 2</span><br><b>“以为在聊天窗口里说过的规则 AI 永远记得”</b></td>
+          <td>聊天窗口属于工作记忆，随着对话变长（Context 满溢），前面的规则会被自动挤出蒸发。</td>
+          <td>将项目规约写入 <code>CLAUDE.md</code>，将业务事实写入 <code>PROJECT_STATE.md</code> 外部长期记忆。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 3</span><br><b>“项目改坏了就不断发指令让 AI 尝试修复”</b></td>
+          <td>在污染的错代码上继续修复会导致错误叠加，如同在流沙上建塔。</td>
+          <td>运用 S/L 存档机制，一键放弃错误尝试，还原回最近的稳定 Git Commit 基线。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 4</span><br><b>“CLAUDE.md 是给程序员看的说明文档”</b></td>
+          <td><code>CLAUDE.md</code> 是专门写给 AI Agent 看的系统级 Prompt 护栏，具有最高优先级的指令效力。</td>
+          <td>项目起手即配置 <code>CLAUDE.md</code>，死死约束 Agent 修改边界。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 06: QUIZ, EXIT TICKET & GRADUATION -->
+<section>
+  <h2><span class="num">06</span> 测验 + 🎯 退场测试题 + 🎓 训练营通关总结</h2>
+
+  <!-- 5 Scenario Quiz -->
+  <h3>1. 5 道概念选择测验</h3>
+  <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · 为什么不能把项目规约只保存在聊天窗口里，而必须落盘到 CLAUDE.md？</div>
+    <label><input type="radio" name="q1" value="a"> 聊天窗口属于工作记忆会随对话满溢而蒸发；CLAUDE.md 是系统级护栏，每次对话前强制读取</label>
+    <label><input type="radio" name="q1" value="b"> 没有任何区别，完全看心情</label>
+    <label><input type="radio" name="q1" value="c"> 为了节省内存空间</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · 三分记忆模型中，`PROJECT_STATE.md` 与实施计划属于哪一层记忆？</div>
+    <label><input type="radio" name="q2" value="a"> 外部长期记忆 (External Long-Term Memory)</label>
+    <label><input type="radio" name="q2" value="b"> 工作记忆 (Working Memory)</label>
+    <label><input type="radio" name="q2" value="c"> 版本证据 (Version Evidence)</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · 什么是【解药 1：环境脱幻与独立工具箱】？</div>
+    <label><input type="radio" name="q3" value="a"> 在修改代码或安装依赖前，强制要求 Agent 先主动读取工程实际文件与依赖版本，杜绝凭空假想</label>
+    <label><input type="radio" name="q3" value="b"> 让 AI 自由发明版本号</label>
+    <label><input type="radio" name="q3" value="c"> 忽略本地代码，只看在线文档</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · 当 Agent 在某次尝试中改坏工程配置或产生严重幻觉时，最正确的动作是什么？</div>
+    <label><input type="radio" name="q4" value="a"> 运用 S/L 读档机制，一键放弃错误尝试，恢复至最近的稳定 Git Commit 基线</label>
+    <label><input type="radio" name="q4" value="b"> 继续疯狂发指令让 AI 尝试修复</label>
+    <label><input type="radio" name="q4" value="c"> 删除整个 Git 历史重来</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="5">
+    <div class="q">Q5 · 主管 AI 原型制作训练营的终极能力目标是什么？</div>
+    <label><input type="radio" name="q5" value="a"> 不写代码，凭借工程护栏、契约卡与增量切片，驾驭 Agent 打造高保真、IT零摩擦复用的生产级原型！</label>
+    <label><input type="radio" name="q5" value="b"> 成为全栈程序员并手写 TypeScript 逻辑</label>
+    <label><input type="radio" name="q5" value="c"> 只进行口头 Prompt 发令</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：为什么不能把项目规约只保存在聊天窗口里，而必须落盘到 `CLAUDE.md`？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      聊天窗口属于“工作记忆”，会随对话变长或新开会话而蒸发丢失；落盘到 <code>CLAUDE.md</code> 属于物理工程护栏，Agent 每次对话前都会强制读取，能够跨会话保持最高约束力。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：当 Agent 产生严重幻觉或改坏工程配置时，最正确的处理动作是什么？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      运用 S/L 存档机制，立即下发指令要求 Agent“放弃当前错误尝试，恢复至最近的稳定 Git Commit”，重新从干净基线开工，绝不在污染的代码上叠加修改。
+    </div>
+  </div>
+
+  <!-- Graduation Banner Box -->
+  <div class="card green" style="margin-top: 2rem; border-width: 2px;">
+    <h3 style="color: var(--green); margin-top:0;">🎓 恭喜你！通关《主管 AI 原型制作训练营》全五课课程！</h3>
+    <p style="font-size: .95rem; line-height: 1.7;">你已经成功从“盲发口头 Prompt 的旁观者”，蜕变成为<b>“用视觉护栏 (DESIGN.md)、需求契约 (grill-me)、增量切片 (incremental-implementation) 与工程规约 (CLAUDE.md) 掌控全局的 10x 业务主管”</b>！你所产出的 Prototype 已具备高保真外观、强类型数据契约与 Clean 版本历史，可直接与 IT 研发无缝协同！</p>
+  </div>
+
+  <!-- Key Takeaways Box -->
+  <div class="card tinted" style="margin-top: 1.2rem;">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>用 <code>CLAUDE.md</code> 最高工程规约物理锁死包管理器与修改边界。</b></li>
+      <li><b>建立三分记忆模型，把长久规则与项目事实落盘为 Markdown。</b></li>
+      <li><b>出现幻觉或坏修改时，运用 S/L 机制一键还原至稳定 Commit 基线。</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第五课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 已在项目根目录生成并落盘 <code>CLAUDE.md</code> 锁定 4 大防错红线？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 成功测试了 <code>CLAUDE.md</code> 越界指令物理拦截与 S/L 读档还原机制？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 完成全量工程巡检，更新 <code>docs/PROJECT_STATE.md</code> 为 L05 PASS 并打上 Git 稳定 Commit？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--blue);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 配套阅读 (10 分钟)</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Claude Code 官方 CLAUDE.md 规范：<a href="https://docs.anthropic.com" target="_blank" style="color: var(--blue); font-weight: bold;">docs.anthropic.com</a>。学习 Prompt Harness 原理。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 记忆模型理论</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Cognitive Load & Context Windows：理解大模型 Context 满溢与外部记忆落盘的物理机制。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ Slash 命令快捷指南</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">在 CLI 终端输入 <code>/init</code> 一键自动探查工程结构并生成 <code>CLAUDE.md</code> 护栏初稿。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--green); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🎉 结业徽章认证</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">你已具备完整的“主管 Agent 原型开发护栏套件”，可直接应用至企业真实原型研发！</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--blue); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--blue-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--blue);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“检查我当前项目的 CLAUDE.md 是否具备足够的工程防御效力”——它会为您出具评估建议。</span>
+  </div>
+</section>
+
+<footer>
+  第 5 课 · 主管 AI 原型制作训练营 · 权威路线图：<a href="../docs/COURSE_ROADMAP.html">docs/COURSE_ROADMAP.html</a> | 术语：<a href="../GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// ---------- Section 01 Harness & S/L Demonstrator ----------
+const harnessScenarios = {
+  uncontrolled: {
+    steps: [
+      { title: 'Step 1 · 业务口头提出复杂需求', desc: '用户: "帮我加个图表，顺便改改 Vite 配置优化打包速度"', cls: '' },
+      { title: 'Step 2 · AI 自由发挥，擅自 npm install 未知包', desc: 'Agent 凭空臆测环境，盲目运行 `npm install echarts echarts-gl` 并重写 vite.config.ts...', cls: 'error' },
+      { title: 'Step 3 · 💥 包版本冲突，配置破坏，项目白屏崩溃', desc: '【废弃】依赖冲突且工作记忆蒸发，在污染的代码上越改越乱，导致原型全盘崩溃白屏！', cls: 'error' }
+    ],
+    logs: [
+      '> [User Input]: "帮我加个图表，顺便改改 Vite 配置"',
+      '> [LLM Execution]: npm install echarts echarts-gl --save',
+      '❌ [Vite Build Error]: Failed to resolve plugin "vite-plugin-echarts".',
+      '💥 [Result]: 缺少 CLAUDE.md 工程护栏，AI 擅自装包与修改配置导致项目白屏瘫痪！'
+    ]
+  },
+  harness: {
+    steps: [
+      { title: 'Step 1 · 项目起手配置最高规约 CLAUDE.md', desc: '根目录落盘 CLAUDE.md，锁死 npm 包管理器、Vue 3 + Element Plus，严禁擅自修改 Vite 配置。', cls: '' },
+      { title: 'Step 2 · 下发违规指令 ➔ 触发 CLAUDE.md 物理拦截', desc: '用户请求安装未知包 ➔ Agent 强行读取 CLAUDE.md ➔ 输出 `[工程护栏拦截]` 拒绝对话！', cls: 'blocked' },
+      { title: 'Step 3 · 改坏代码时发起 S/L 读档一键还原', desc: '下发 `放弃错误尝试，恢复至最近 Git Commit` ➔ 物理恢复干净稳定基线！', cls: 'success' },
+      { title: 'Step 4 · 🎉 全量巡检 PASS，项目稳如磐石归档', desc: '运行 verify-student-project.ps1 ➔ 输出 [PASS] ➔ 打上 Git 稳定 Commit。', cls: 'success' }
+    ],
+    logs: [
+      '> [Command]: /init -> Created CLAUDE.md',
+      '> [User Input]: "帮我安装 echarts"',
+      '🛡️ [CLAUDE.md Interception]: 物理拒绝！根据 CLAUDE.md 规约，严禁擅自 install 未授权包。',
+      '> [S/L Action]: git reset --hard HEAD -> Restored to Clean Commit SHA: 8a91cf2',
+      '🎉 [Result]: 工程护栏守住底线，S/L 机制秒级恢复，项目 100% 稳定控盘！'
+    ]
+  }
+};
+
+function runHarnessMode(mode) {
+  const btnUncontrolled = document.getElementById('mBtnUncontrolled');
+  const btnHarness = document.getElementById('mBtnHarness');
+  const canvas = document.getElementById('harnessCanvas');
+  const consoleLog = document.getElementById('harnessConsoleLog');
+
+  btnUncontrolled.className = 'mode-btn raw ' + (mode === 'uncontrolled' ? 'active' : '');
+  btnHarness.className = 'mode-btn harness ' + (mode === 'harness' ? 'active' : '');
+
+  const data = harnessScenarios[mode];
+  canvas.innerHTML = '';
+  consoleLog.innerHTML = '';
+
+  data.steps.forEach((s, idx) => {
+    const node = document.createElement('div');
+    node.className = 'flow-step-node ' + (s.cls || '');
+    node.id = 'hnode_' + idx;
+    node.innerHTML = `
+      <div class="node-title">
+        <span>${s.title}</span>
+        <span style="font-size:.75rem; padding: 2px 6px; border-radius:4px; background:rgba(0,0,0,0.05);">Step ${idx + 1}</span>
+      </div>
+      <div class="node-desc">${s.desc}</div>
+    `;
+    canvas.appendChild(node);
+  });
+
+  data.steps.forEach((s, idx) => {
+    setTimeout(() => {
+      const el = document.getElementById('hnode_' + idx);
+      if (el) el.classList.add('active');
+    }, idx * 400);
+  });
+
+  consoleLog.innerHTML = data.logs.join('<br>');
+}
+runHarnessMode('harness');
+
+// ---------- Section 03 Interception Terminal Demo ----------
+function testInterception(type) {
+  const term = document.getElementById('interceptionTerminal');
+  if (type === 'init') {
+    term.innerHTML = `
+> 下发指令: /init<br>
+🔍 正在探查当前工程 package.json, vite.config.ts 与组件目录...<br>
+✅ 检测到技术栈: Vue 3 + Element Plus, 包管理器: npm<br>
+📄 正在生成项目最高工程规约: CLAUDE.md...<br>
+🎉 CLAUDE.md 已经落盘至项目根目录！AI 每次对话将自动读取最高防错规约。
+    `;
+  } else if (type === 'violating') {
+    term.innerHTML = `
+> [User Prompt]: 请帮我安装一个新的图表库 echarts，并修改 vite.config.ts 增加复杂插件。<br>
+📖 Agent 强制读取根目录 CLAUDE.md...<br>
+🛡️ <b>[工程护栏拦截 - Rule Violation]</b><br>
+根据 CLAUDE.md 最高规约：<br>
+1. 严禁擅自 npm install 未在需求卡中确认的第三方 npm 包；<br>
+2. 严禁修改 vite.config.ts 基础配置文件！<br>
+❌ 动作已物理拒绝。请先修改需求卡并获得主管授权。
+    `;
+  } else {
+    term.innerHTML = `
+> [User Prompt]: 放弃刚才的所有临时修改，请帮我一键恢复到最近的稳定 Git Commit 基线。<br>
+💾 正在启动 S/L (Save & Load) 存档还原流程...<br>
+🔄 运行 git reset --hard HEAD...<br>
+🧹 清扫 Working Tree 未跟踪残渣...<br>
+✅ 成功读档！工程源码已秒级恢复至 100% Clean 干净稳定基线 (Commit: 8a91cf2)。
+    `;
+  }
+}
+
+// ---------- Section 05 Concept Fill-in-the-Blanks Logic ----------
+function checkAllBlanks() {
+  const b1 = document.getElementById('blank1');
+  const b2 = document.getElementById('blank2');
+  const b3 = document.getElementById('blank3');
+  const b4 = document.getElementById('blank4');
+
+  const ok1 = b1.value === 'CLAUDE.md';
+  const ok2 = b2.value === 'working-mem';
+  const ok3 = b3.value === 'long-term-mem';
+  const ok4 = b4.value === 'sl-load';
+
+  b1.className = 'blank-select ' + (ok1 ? 'ok' : 'err');
+  b2.className = 'blank-select ' + (ok2 ? 'ok' : 'err');
+  b3.className = 'blank-select ' + (ok3 ? 'ok' : 'err');
+  b4.className = 'blank-select ' + (ok4 ? 'ok' : 'err');
+
+  const bf1 = document.getElementById('bf1');
+  const bf2 = document.getElementById('bf2');
+  const bf3 = document.getElementById('bf3');
+
+  bf1.className = 'blank-feedback show';
+  bf1.style.color = ok1 ? 'var(--green)' : 'var(--red)';
+  bf1.innerHTML = ok1 ? '✅ 填空 1 正确！CLAUDE.md 是项目根目录下的最高工程规约。' : '❌ 填空 1 错误：应选择 CLAUDE.md。';
+
+  bf2.className = 'blank-feedback show';
+  bf2.style.color = (ok2 && ok3) ? 'var(--green)' : 'var(--red)';
+  bf2.innerHTML = (ok2 && ok3) ? '✅ 填空 2 全对！聊天窗口为工作记忆，PROJECT_STATE.md 为外部长期记忆。' : '❌ 填空 2 存在错误：聊天窗口为工作记忆，PROJECT_STATE.md 为外部长期记忆。';
+
+  bf3.className = 'blank-feedback show';
+  bf3.style.color = ok4 ? 'var(--green)' : 'var(--red)';
+  bf3.innerHTML = ok4 ? '✅ 填空 3 正确！改坏代码时，下发 S/L 读档恢复至最近的稳定 Git Commit 基线。' : '❌ 填空 3 错误：应选择放弃错误尝试，恢复至最近 Git Commit。';
+}
+
+// ---------- Section 06 Exit Ticket Expand Answer Logic ----------
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+
+// ---------- Quiz Logic ----------
+const explain = {
+  q1: '正确答案：A。聊天窗口属于工作记忆，随对话满溢蒸发；CLAUDE.md 是每次对话强制读取的工程物理护栏。',
+  q2: '正确答案：A。PROJECT_STATE.md 与实施计划落盘为文件，属于外部长期记忆。',
+  q3: '正确答案：A。【解药 1】强制要求 Agent 修改前先主动读取工程实际文件与依赖版本，杜绝盲猜。',
+  q4: '正确答案：A。运用 S/L 机制一键恢复至最近的稳定 Git Commit，不在污染的代码上叠加修改。',
+  q5: '正确答案：A。训练营终极目标是凭借工程护栏与增量切片，驾驭 Agent 打造高保真、IT 零摩擦复用的生产级原型！'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 20;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 5) {
+    el.innerHTML = `你已答完 <b>${answered} / 5</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  } else {
+    el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！`;
+  }
+}
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--green)';
+    res.innerHTML = '🎉 恭喜！训练营全五课课程全部圆满通关！你已具备 10x 业务主管的 Agent 原型控盘能力！';
+  } else {
+    res.style.color = 'var(--blue)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+</script>
+
+</body>
+</html>

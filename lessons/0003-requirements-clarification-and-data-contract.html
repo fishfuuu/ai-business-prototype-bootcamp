@@ -556,12 +556,15 @@
     <button class="btn q-btn" data-a="a">提交答案</button>
   </div>
 
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
   <!-- Exit Ticket Questions -->
   <h3 style="margin-top: 2rem;">2. 🎯 课后退场自测题 (Exit Ticket)</h3>
 
   <div class="exit-q-card">
     <div class="exit-q-title">❓ 退出门禁题 1：Acceptance Criteria (Given-When-Then 验收条件) 与 Stop Conditions (停止上提条件) 的本质区别是什么？</div>
-    <button class="btn secondary" style="font-size: .85rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
     <div class="ans-box" id="ans1">
       <b>参考答案解析：</b><br>
       • <code>Acceptance Criteria</code> 描述功能开发完成后如何判断其输出与逻辑是否正确（格式为 Given 上下文 / When 操作 / Then 预期结果）。<br>
@@ -571,7 +574,7 @@
 
   <div class="exit-q-card">
     <div class="exit-q-title">❓ 退出门禁题 2：为什么在写入磁盘前要生成 `src/types/prototype-contract.d.ts` 类型草稿？</div>
-    <button class="btn secondary" style="font-size: .85rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
     <div class="ans-box" id="ans2">
       <b>参考答案解析：</b><br>
       TypeScript 类型草稿是强类型的数据契约，能在编码前锁定字段名称、数据类型与必填属性，防止第四课 AI 增量编码时字段随心所欲飘移；同时 IT 部门接手后可直接复用该接口定义。
@@ -625,8 +628,8 @@
       <p style="font-size: .88rem; color: var(--ink-soft);">Antigravity Slash Command：在终端输入 <code>/grill-me</code> 即可一键拉起 3-5 分支、5-7 轮追问流程。</p>
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
-      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">▶ 第 4 课预告</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);">《受控 Agent 循环与物理写盘》：基于第 3 课冻结的契约基线，执行受控 Plan & Execute 增量代码生成！</p>
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">▶ 第 4 课开启</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">《受控 Agent 循环与物理写盘》：<a href="0004-controlled-agent-loop-and-disk-persistence.html" style="color: var(--blue); font-weight: bold;">点击直接进入第 4 课 HTML</a>！学习 Plan & Execute 增量切片与 Working Tree 状态控制。</p>
     </div>
   </div>
 
@@ -638,7 +641,7 @@
 </section>
 
 <footer>
-  第 3 课 · 主管 AI 原型制作训练营 · 权威路线图：<a href="../docs/COURSE_ROADMAP.md">docs/COURSE_ROADMAP.md (v1.3)</a> | 术语：<a href="../GLOSSARY.md">GLOSSARY.md</a>
+  第 3 课 · 主管 AI 原型制作训练营 · 权威路线图：<a href="../docs/COURSE_ROADMAP.html">docs/COURSE_ROADMAP.html</a> | 术语：<a href="../GLOSSARY.html">GLOSSARY.html</a>
 </footer>
 
 </div>
@@ -857,6 +860,26 @@ document.querySelectorAll('.quiz-q').forEach(q => {
     btn.disabled = true;
   });
 });
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 20;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 5) {
+    el.innerHTML = `你已答完 <b>${answered} / 5</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  } else {
+    el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！`;
+  }
+}
 
 function chkUpdate() {
   let count = 0;
