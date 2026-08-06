@@ -202,7 +202,7 @@
   1. **解析 Plan & Execute 范式**：先生成 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 实施计划，经主管审批授权后分步执行。
   2. **精准区分 2D 状态**：区分页面技术呈现状态 (Loading/Empty/Error/Success) 与业务流程状态 (待处理/处理中/已阻塞/已完成)。
   3. **落地 Step 1 调试切片**：结合三类原型方向落地首个切片，植入页面技术状态调试器，完成 4 种界面点击验证。
-  4. **三层验收与干净工作树恢复**：结合后台 Verifier 静默自测、人工页面点击与主管业务验收完成一次完整版本归档 (Commit A 源码 + Commit B 状态推进)；自测或页面验证失败时，导出 `.patch` 补丁，执行 `git restore` 恢复干净源码，仅提交 Commit B 状态并将步骤标记为 `BLOCKED`。
+  4. **三层验收与干净项目工作区恢复**：结合后台 Verifier 静默自测、人工页面点击与主管业务验收完成一次完整版本归档 (Commit A 源码 + Commit B 状态推进)；自测或页面验证失败时，导出 `.patch` 补丁，执行 `git restore` 恢复干净源码，仅提交 Commit B 状态并将步骤标记为 `BLOCKED`。
 * **执行文档**：[LESSON_04_GUIDE.md](LESSON_04_GUIDE.md) 与 [LESSON_04_TEACHER_PLAN.md](LESSON_04_TEACHER_PLAN.md)。
 
 ---
