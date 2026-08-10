@@ -12,13 +12,13 @@
 
 ### 1.2 宏观受控流水线闭环
 本课的核心工程机制，是将 AI 编程的随机性纳入一条**“契约约束 ➔ 磁盘计划 ➔ 单步授权 ➔ 三层门禁 ➔ 干净还原”**的受控流水线中：
-1. **契约校验与计划落盘**：编码前强制校验功能契约，AI 必须先将大块需求切割为独立切片并写入磁盘状态机 (`IMPLEMENTATION_PLAN.md`)。
-2. **单步授权门禁**：未经主管输入口令授权，AI 物理上被禁止修改任何代码；授权后仅解锁当前 Step 的受控文件。
-3. **闭环验收与双分支流转**：写完代码后静默触发自动化 Verifier 自测，若 PASS 跑双 Commit 归档并恢复 Clean；若 FAIL 自动导出 `.patch` 快照补丁并清扫工作区还原 Clean。
+1. **契约校验与计划落盘**：编码前强制校验第三课产出的 [`src/mocks/prototype-data.ts`](file:///d:/AILearning/src/mocks/prototype-data.ts) 数据契约，唤醒 `/incremental-implementation` Skill，AI 必须先将大块需求切割为独立切片并写入磁盘状态机 [`docs/LESSON_04_IMPLEMENTATION_PLAN.md`](file:///d:/AILearning/docs/LESSON_04_IMPLEMENTATION_PLAN.md)。
+2. **单步授权门禁**：未经主管输入口令授权（下发“授权执行 Step N”），AI 物理上被禁止修改任何代码；授权后仅解锁当前 Step 的受控文件。
+3. **闭环验收与双分支流转**：写完代码后在后台通过 Verifier Subagent 静默自测，若 PASS 则跑 `git add --` 选择性暂存双 Commit 归档并恢复 Clean；若 FAIL 则自动导出 `.patch` 快照补丁并清扫工作区还原 Clean。
 
 ### 1.3 核心学习目标
 完成本课实操后，你将能够：
-1. 学会使用自然授权口令 (`同意保存实施计划` / `确认完成 Step 1`) 控制 Agent 编码节奏。
+1. 学会使用自然授权口令 (`同意保存实施计划` / `确认完成 Step 1` / `授权执行 Step 1`) 控制 Agent 编码节奏。
 2. 掌握使用 `prototypeState` 可视化调试器，将界面技术呈现状态与业务处理流程状态物理解耦。
 3. 掌握代码切片报错时的“补丁快照备份 + Working Tree 干净无损还原”机制。
 
@@ -118,7 +118,7 @@
    ```text
    /incremental-implementation
    ```
-2. 检查 AI 在窗口中输出的 3 步增量计划预览，确认无误后下发自然授权口令：
+2. 检查 AI 在窗口中输出的 3 步增量计划预览，核对包含第三课的 [`src/mocks/prototype-data.ts`](file:///d:/AILearning/src/mocks/prototype-data.ts) 路径，确认无误后下发自然授权口令：
    ```text
    同意保存实施计划
    ```
@@ -133,7 +133,7 @@
 ### Task 2: 授权执行 Step 1 薄切片编码
 
 #### ⚡ 极速操作步骤
-1. 在聊天窗口下发授权解锁口令：
+1. 在聊天窗口下发授权执行口令（`授权执行 Step 1` 或自然口令）：
    ```text
    确认完成 Step 1
    ```
@@ -163,7 +163,7 @@
 
 #### ⚡ 极速操作步骤
 1. 观察控制台日志与页面点击无报错。
-2. AI 在后台通过 Verifier 静默自测后，自动执行双 Commit：
+2. AI 在后台通过 Verifier Subagent 静默自测后，使用选择性暂存 (`git add --`) 自动执行双 Commit：
    - **Commit A**：提交源码修改 (`feat(code): ...`)。
    - **Commit B**：更新 `LESSON_04_IMPLEMENTATION_PLAN.md` 状态机（Step 1 变为 `COMPLETED`，Step 2 变为 `READY`）。
 3. 运行 Git 检查：
@@ -174,7 +174,7 @@
 
 #### 💡 独立自学原理解析
 > **双 Commit 机制物理原理**  
-> 为什么要做两次 Commit？因为“源码改动”和“进度状态更新”是两个维度的资产。Commit A 保护了纯净的代码库，Commit B 记录了项目管理进度。即使未来代码需要回滚，实施计划的进度的物理记录也不会丢失。
+> 为什么要做两次 Commit？因为“源码改动”和“进度状态更新”是两个维度的资产。Commit A 保护了纯净的代码库，Commit B 记录了项目管理进度。使用 `git add --` 隔离暂存，即使未来代码需要回滚，实施计划的进度的物理记录也不会丢失。
 
 ---
 

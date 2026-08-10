@@ -1,196 +1,184 @@
-# 第四课学员指南 (V2 闭环版)：把大需求拆成连续的小成功
+# 第四课学员操作指南 (GUIDE V3 双模合一终极版) — 受控 Agent 循环与 Working Tree 物理状态机
 
-欢迎来到第四课！在前三课中，我们完成了界面搭建、视觉规则约束（`DESIGN.md`）以及需求与数据契约锁定（`grill-me`）。本节课我们将解决大型业务原型开发中最容易出现的崩溃点——**“巨石代码盲开与上下文记忆失控”**。本课的核心思想只有一句话：
-
+> 💡 **本课的核心思想只有一句话：**  
 > **不要让 Agent 一口气完成整个功能，而是先形成计划，每次只完成一个可验证的小切片。**
 
-你将学习如何采用 **Plan & Execute 增量范式**，将大需求拆解并保存至 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 实施计划中，通过 **Step级 Workflow 授权门禁（`授权执行 Step 1`）** 落地首个薄切片。在整个过程中，我们将引入 IT 研发核心概念 **Working Tree (工作区/工作树)**——把它当成 AI 手艺切菜的“砧板”，学会如何在砧板上受控切片、进行 **页面技术状态调试器 (`prototypeState`)** 验证，并在失败时清扫砧板恢复干净工作区。
+---
+
+## 一、 本课背景、底层原理与学习目标
+
+### 1.1 业务背景与真实痛点
+在实际 AI 编程中，非技术主管最常踩的坑就是“让 AI 一口气写完全部功能”。结果往往是 AI 抬手修改 10 个文件、生成 1000 行代码，中途一旦报错，整个页面直接白屏崩溃。由于代码量巨大，主管既无法审查改动，也无法精准回退，最终只能“大失血式重头再来”。
+
+### 1.2 宏观受控流水线闭环
+本课的核心工程机制，是将 AI 编程的随机性纳入一条**“契约约束 ➔ 磁盘计划 ➔ 单步授权 ➔ 三层门禁 ➔ 干净还原”**的受控流水线中：
+1. **契约校验与计划落盘**：编码前强制校验第三课产出的 [`src/mocks/prototype-data.ts`](file:///d:/AILearning/src/mocks/prototype-data.ts) 数据契约，唤醒 `/incremental-implementation` Skill，AI 必须先将大块需求切割为独立切片并写入磁盘状态机 [`docs/LESSON_04_IMPLEMENTATION_PLAN.md`](file:///d:/AILearning/docs/LESSON_04_IMPLEMENTATION_PLAN.md)。
+2. **单步授权门禁**：未经主管输入口令授权（下发“授权执行 Step N”），AI 物理上被禁止修改任何代码；授权后仅解锁当前 Step 的受控文件。
+3. **闭环验收与双分支流转**：写完代码后在后台通过 Verifier Subagent 静默自测，若 PASS 则跑 `git add --` 选择性暂存双 Commit 归档并恢复 Clean；若 FAIL 则自动导出 `.patch` 快照补丁并清扫工作区还原 Clean。
+
+### 1.3 核心学习目标
+完成本课实操后，你将能够：
+1. 学会使用自然授权口令 (`同意保存实施计划` / `确认完成 Step 1` / `授权执行 Step 1`) 控制 Agent 编码节奏。
+2. 掌握使用 `prototypeState` 可视化调试器，将界面技术呈现状态与业务处理流程状态物理解耦。
+3. 掌握代码切片报错时的“补丁快照备份 + Working Tree 干净无损还原”机制。
 
 ---
 
-## 0. 本课教学目标 (Learning Objectives)
+## 二、 💡 本课核心工程概念卡 (Core Concepts)
 
-完成本课学习后，你将能够：
-1. **对比与阐述** 一次性巨石代码盲开的退化风险，以及 **先计划、后执行、做小切片** 的增量实施优势。
-2. **掌握 IT 跨界术语** **`Working Tree (工作区 / 工作树)`**，理解其作为“AI 改写代码手艺砧板”的物理含义及其 Clean/Dirty 状态流转。
-3. **遵守与继承** 第三课的 **契约冻结规则 (Contract Freeze Rule)**，通过 **契约交接门禁 (Pre-Plan Gate)** 校验第三课 3 份契约资产的一致性（若存在冲突将触发 `[契约冲突拦截] 需求卡与数据定义不一致，请先核对` (CONTRACT_ASSET_MISMATCH) 拒绝生成计划）。
-4. **生成与保存** 包含 `plan_status` 与状态枚举（`PENDING / READY / IN_PROGRESS / COMPLETED / BLOCKED`）的外部长期记忆计划 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`（Step 2..N 默认为 `PENDING`，`allowed_files` 必须为具体文件路径）。
-5. **精准区分** **界面技术呈现状态 (Loading/Empty/Error/Success)** 与 **业务处理流程状态 (待处理/处理中/已阻塞/已完成)** 的本质区别。
-6. **掌握与触发** **Step级 Workflow 授权门禁**（匹配 `授权执行 Step 1` 或 `授权开始 Step 1`），受控解锁首个切片编码。
-7. **执行** **三层验收 (Verifier -> 人工点击 -> 主管验收) 与版本归档 (`确认完成 Step 1`)**；若验证失败，体验 **失败快照备份、清扫 Working Tree 自动恢复干净工作区与问题记录 (`同意记录 Step 1 问题`)**。
+### 核心概念 1：Working Tree (工作区 / 工作树)
+- **硬核工程定义**：Git 版本控制系统中，当前物理磁盘上记录代码修改与暂存的工作镜像。
+- **底层运作机制**：代码修改标记为 `Dirty`，执行 `git commit` 或 `git restore` 后恢复 `100% Clean` 干净状态。
+- **具象业务比喻**：**厨师切菜的砧板** 🔪。砧板上有脏菜是 Dirty，菜切好装盘（Commit）或冲洗砧板（Restore）后恢复 Clean。
+- **IT 沟通场景**：“请确保提交前 Working Tree 处于 Clean 干净状态，避免脏代码混入开发主干。”
+
+### 核心概念 2：增量实施与薄切片范式 (Incremental Thin Slices)
+- **硬核工程定义**：将大块复杂需求拆解为多个独立可编译、可测试的最小粒度切片（Thin Slice）逐个构建的软件工程范式。
+- **底层运作机制**：通过 `IMPLEMENTATION_PLAN.md` 磁盘状态机驱动步骤按 `PENDING` ➔ `READY` ➔ `COMPLETED` 受控流转。
+- **具象业务比喻**：**预制件搭积木** 🧩。不一口气砌整面墙，而是一块一块榫卯积木搭接，随时能单独替换。
+- **IT 沟通场景**：“我们采用薄切片范式开发，每次只授权落盘 1 个可验证的切片，拒绝盲开大块代码。”
+
+### 核心概念 3：技术呈现状态与业务处理流程状态解耦 (prototypeState Decoupling)
+- **硬核工程定义**：将前端界面的技术容错与加载状态（Loading/Empty/Error/Success）与数据对象的业务生命周期状态物理隔离的设计。
+- **底层运作机制**：在组件内植入 `prototypeState` 开发期变量与可视化按钮，自由切换静态渲染形态。
+- **具象业务比喻**：**新车风洞测试** 🚗。在不点火上路前，静态测试车门、灯光在暴风雪中的容错表现。
+- **IT 沟通场景**：“前端引入了 `prototypeState` 可视化调试器，实现了界面技术状态与业务流程状态的物理解耦。”
 
 ---
 
-### 核心模式对比线框图 (巨石盲开 vs 增量切片 + 实施计划 + 调试验证)
+## 三、 🔄 薄切片受控流转模型与物理状态
 
 ```text
 ===================================================================================
-【第一层：一次性巨石盲开】 (无步骤约束，AI 一口气改 10 个文件，砧板一片狼藉无法定位错误)
+【模式 A：一次性巨石盲开】(反面案例：无步骤约束，一口气修改全套逻辑 ➔ 白屏/崩塌)
 
-  [复杂需求卡] ───> ( LLM 盲开输出 1000 行代码 ) ───> [ 样式崩溃 / 白屏 / 砧板废弃 ]
-                       (一次性修改全套逻辑)
+  [复杂需求卡] ───> ( AI 一口气生成 1000 行代码 ) ───> [ 页面白屏 / 代码冲突 / 砧板废弃 ]
 
 ===================================================================================
-【第二层：增量切片实施 + Working Tree (工作区) 状态控制】 (本课实操)
+【模式 B：受控薄切片 + Working Tree 物理状态机】(本课标准范式)
 
   [起始状态: Working Tree 100% Clean (干净砧板)]
                         │
                         ▼
-  [前置需求契约 (3份)] ───> [ Pre-Plan Gate 校验 ] ───> [ 生成增量计划 ]
-                                                                │ (只读预览 Plan, Step 2..N 默认为 PENDING)
-                                                                ▼
-                                                    [ 同意保存实施计划 ]
-                                                                │ (落盘至 docs/LESSON_04_IMPLEMENTATION_PLAN.md)
-                                                                ▼
-                                                    ┌────────────────────────────────┐
-                                                    │ Workflow 门禁: "授权执行 Step 1"   │
-                                                    └────────────────────────────────┘
-                                                                │
-                                                                ▼
-                                              ( Step 1 薄切片编码 ➔ Working Tree 变为 Dirty )
-                                                                │
-                                                                ▼
-  [ 三层验收: Verifier -> 人工点击 -> 主管验收 ]
+  [三份需求契约] ───> [ Pre-Plan 检查 ] ───> [ 预览切片计划 ] ───> [ 同意保存实施计划 ]
+                                                                          │ (落盘 IMPLEMENTATION_PLAN.md)
+                                                                          ▼
+                                                              ┌───────────────────────────┐
+                                                              │ Workflow 门禁: 确认完成 Step 1│
+                                                              └───────────────────────────┘
+                                                                          │
+                                                                          ▼
+                                                       ( 编码修改 ➔ Working Tree 变为 Dirty )
+                                                                          │
+                                                                          ▼
+  [ 三层验收: Verifier 自测 ➔ 界面调试 ➔ 主管盖章 ]
                              │
                              ├─────────────────────────────────────────┐
                              ▼                                         ▼
-  [ PASS: 确认完成 Step 1 ➔ 打包归档 Commit A ]       [ FAIL/拒绝: 备份快照 ➔ 清扫 Working Tree 还原 Clean ]
-  [ ➔ Working Tree 恢复 100% Clean (干净砧板) ]       [ ➔ 同意记录 Step 1 问题 ➔ 留给第 6 课诊断 ]
+  [ PASS: 确认完成 Step 1 ➔ 跑 Commit A/B 双提交 ]      [ FAIL: 备份 .patch 补丁 ➔ 冲洗 Working Tree ]
+  [ ➔ Working Tree 物理恢复 100% Clean 干净状态 ]       [ ➔ 同意记录 Step 1 问题 ➔ 回退还原 Clean ]
 
 ===================================================================================
-【第三层：页面技术状态调试器】 (可视化调试，彻底消除交接死角)
+【模式 C：页面技术状态调试器】(解决技术与业务解耦)
 
-   ┌────────────────────────────────────────────────────────────────────────┐
-   │ [Prototype Debug] 状态切换: (◯ Loading  ◯ Empty  ◯ Error  ● Success)   │
-   ├────────────────────────────────────────────────────────────────────────┤
-   │ 1. Loading  : 骨架屏 / 菊花图 (数据加载中)                             │
-   │ 2. Empty    : 空数据占位图 ("暂无满足条件的业务记录")                  │
-   │ 3. Error    : 错误提示 + 重试按钮 ("网络异常，点击重试")                │
-   │ 4. Success  : 正常数据列表 / 视图                                     │
-   └────────────────────────────────────────────────────────────────────────┘
+  ┌────────────────────────────────────────────────────────────────────────┐
+  │ [prototypeState Debug] 状态切换: (◯ Loading  ◯ Empty  ◯ Error  ● Success)│
+  │ 1. Loading: 骨架屏  2. Empty: 空数据  3. Error: 报错重试  4. Success: 列表数据 │
+  └────────────────────────────────────────────────────────────────────────┘
 ===================================================================================
 ```
 
 ---
 
-## 1. 核心概念与护栏机制
+## 四、 🛠️ 课堂实操与自学导引任务清单
 
-### 1.1 💡 IT 跨界沟通术语卡：Working Tree (工作区 / 工作树)
-> - **标准 IT 术语**：`Working Tree`（中文常用译名：**工作区** 或 **工作树**）。
-> - **通俗生活类比**：就像 **厨师切菜的砧板** 或 **画家的画板**。你当前打开文件夹、修改代码、AI 正在写入文件的地方，就是你的“Working Tree (工作区)”。
-> - **与 IT 沟通场景**：当你未来把原型交接给 IT 部门时，说“我已经清空了 Working Tree 恢复到了干净基线”，IT 工程师会立刻意识到你具备非常专业的工程素养，毫无沟通障碍。
+### Task 0: 启动工程与干净状态检查
 
-### 1.2 契约交接门禁 (Pre-Plan Gate)
-`BUSINESS_FEATURE_CARD.md` 是第四课唯一的需求权威来源。生成实施计划前，Agent 必须校验数据字典定义表与模拟数据。若存在字段名、类型、必填性、枚举或业务含义冲突，输出 `[契约冲突拦截] 需求卡与数据定义不一致，请先核对` (CONTRACT_ASSET_MISMATCH)，禁止生成或保存实施计划。
+#### ⚡ 极速操作步骤
+1. 打开 VS Code 终端，启动本地开发服务器：
+   ```powershell
+   npm run dev
+   ```
+2. 确认 Working Tree 处于 Clean 干净状态：
+   ```powershell
+   git status
+   ```
+   *预期输出*：`nothing to commit, working tree clean`
 
-### 1.3 实施计划状态机枚举 (Step Status Enum)
-`docs/LESSON_04_IMPLEMENTATION_PLAN.md` 严格限定 5 种状态：
-- `PENDING`：后续未开始步骤的默认初始状态（Step 2..N 初始状态）；
-- `READY`：前置步骤已完成，等待主管下发 `授权执行 Step N`；
-- `IN_PROGRESS`：已下发授权，正在编码执行中；
-- `COMPLETED`：三层验收通过且完成 Commit A / Commit B 归档；
-- `BLOCKED`：自测、页面验证或主管业务拒绝后，备份快照并恢复干净 Working Tree 后的阻断状态。
-
-### 1.4 `allowed_files` 精确文件路径规范
-实施计划中 `allowed_files` **必须列出具体文件路径**（例如 `["src/pages/HomePage.vue", "src/components/WorkOrderBoard.vue"]`），**严格禁止填写 `src/components/` 等目录**。
-
-### 1.5 三层递进验收门禁与版本归档 (Three-Layer Verification Gate)
-Step 1 编码完成后，必须按顺序通过三层门禁：
-1. **第一层：Verifier PASS (静态工程与编译自测)**
-2. **第二层：人工点击验收 PASS (页面 `Prototype Debug` 4 状态点击校验)**
-3. **第三层：主管业务验收 PASS (主管下发 `主管验收 Step N 通过`)**
-
-三层全过，下发 **`确认完成 Step N`** (或 `同意保存 Step N 成果`)，Agent 底层顺次自动完成 Commit A 源码暂存、回填 SHA 与日志、将 Step N 改为 `COMPLETED`、Step N+1 改为 `READY`，最后自动执行 Commit B 状态推进。**Working Tree 自动恢复 Clean 干净状态。**
-
-### 1.6 校验失败时的 Clean Working Tree 清扫自动恢复机制
-若 Verifier 报错、页面验证失败或主管下发 `主管拒绝 Step N 切片`：
-- **课程学习结果**：**`PASS`**（学员正确执行了快照备份、清扫 Working Tree 恢复干净源码与问题记录归档流程）；
-- **Step 实施结果**：**`BLOCKED`**；
-- **恢复与导出动作**：
-  1. 自动将失败修改备份为快照补丁：`local-backups/lesson-04-evidence/step-N-blocked.patch`；
-  2. 保存 Verifier 日志并回填 `failure_summary`；
-  3. **清扫 Working Tree 自动恢复干净源码**：自动撤销修改并清理未跟踪文件，使 Working Tree 物理恢复 100% Clean 干净；
-  4. **自然口令归档问题**：学员下发 **`同意记录 Step N 问题`** 提交状态记录，留给第六课处理。
+#### 💡 独立自学原理解析
+> **为什么这一步至关重要？**  
+> 如果 Working Tree 在开工前就是 `Dirty`（有上次遗留未提交的修改），AI 生成代码时就会将新旧代码混在一起。开工前检查 `git status` 确保 `working tree clean`，相当于厨师做菜前先把砧板冲洗干净。
 
 ---
 
-## 2. 90 分钟课堂时间安排与学员实操
+### Task 1: 唤醒增量实施 Skill 并落盘实施计划
 
-完整 90 分钟课堂时间安排：
-- **成果展示与 Task 0**：10 分钟
-- **教师演示**：15 分钟
-- **学员 Task 1 与 Task 2**：40 分钟
-- **Task 3 (三层验收与版本归档)**：15 分钟
-- **总结与 Exit Ticket**：10 分钟
+#### ⚡ 极速操作步骤
+1. 在 Claude Code CLI 窗口中输入：
+   ```text
+   /incremental-implementation
+   ```
+2. 检查 AI 在窗口中输出的 3 步增量计划预览，核对包含第三课的 [`src/mocks/prototype-data.ts`](file:///d:/AILearning/src/mocks/prototype-data.ts) 路径，确认无误后下发自然授权口令：
+   ```text
+   同意保存实施计划
+   ```
+3. **验证产物**：工程中将自动落盘 [`docs/LESSON_04_IMPLEMENTATION_PLAN.md`](file:///d:/AILearning/docs/LESSON_04_IMPLEMENTATION_PLAN.md)，初始 Step 1 为 `READY`。
 
----
-
-### 任务 0：前置基线检查与 Working Tree 状态确认
-
-**目标**：确认起点环境完好，Working Tree 处于 100% Clean 干净状态。
-
-**操作指令**：
-```text
-请检查当前 Git 状态，确认 docs/BUSINESS_FEATURE_CARD.md、src/types/prototype-contract.d.ts 以及 src/mocks/prototype-data.ts 存在，且 Working Tree 处于 Clean 干净状态。
-```
+#### 💡 独立自学原理解析
+> **为什么不能直接让 AI 开始写代码？**  
+> 野生 AI 的习惯是“抬手就写 500 行代码”，一旦中途某个函数报错，很难追踪是哪一步写错的。`/incremental-implementation` 强制 AI 在写入代码前，必须先把复杂需求切成 3 个互相独立的“薄切片 (Thin Slices)”，并将计划落盘为磁盘状态机。只有主管回复 `同意保存实施计划` 后，AI 才被许可创建计划文件。
 
 ---
 
-### 任务 1：唤醒 Skill，生成并保存实施计划 (Plan 阶段)
+### Task 2: 授权执行 Step 1 薄切片编码
 
-**操作指令 1 (只读预览)**：
-```text
-/incremental-implementation
-请读取 docs/BUSINESS_FEATURE_CARD.md、src/types/prototype-contract.d.ts 与 src/mocks/prototype-data.ts，生成 3-5 步增量实施计划预览。注意：现在只输出 Plan 预览，不要改动任何文件。
+#### ⚡ 极速操作步骤
+1. 在聊天窗口下发授权执行口令（`授权执行 Step 1` 或自然口令）：
+   ```text
+   确认完成 Step 1
+   ```
+2. AI 将在受控目录 `src/components/WorkOrderBoard.vue` 中写入 Step 1 薄切片代码， Working Tree 状态变为 `Dirty`。
+3. 打开浏览器页面 `http://localhost:5173/`，验证 `prototypeState` 调试按钮：
+   - 点击 `Loading`：展示加载骨架屏。
+   - 点击 `Empty`：展示空数据占位。
+   - 点击 `Error`：展示网络报错提示。
+   - 点击 `Success`：展示正常工单列表。
+
+#### 🔍 代码 Before vs After 视觉对比
+```diff
+  // src/components/WorkOrderBoard.vue
++ const showPrototypeDebug = import.meta.env.DEV
++ const prototypeState = ref<'loading' | 'empty' | 'error' | 'success'>('success')
++ 
++ // Step 1 薄切片仅绑定界面调试器，技术状态与业务状态物理解耦
 ```
 
-**操作指令 2 (授权落盘)**：
-```text
-同意保存实施计划
-```
+#### 💡 独立自学原理解析
+> **界面技术状态 vs 业务状态的解耦**  
+> 非技术主管常把“页面报错/加载中”和“业务上的工单待处理”混为一谈。Step 1 切片引入 `prototypeState` 可视化调试按钮，让主管可以在真实接口未对接前，自由切换 Loading / Empty / Error / Success 四种界面形态，验证 UI 交互在各种极限网络情况下的容错表现。
 
 ---
 
-### 任务 2：下发授权门禁，完成 Step 1 调试切片 (Execute 阶段)
+### Task 3: 三层验收与双 Commit 物理归档
 
-**操作指令**：
-```text
-授权执行 Step 1
-```
-*(提示：指令下发后，Agent 会在你的 Working Tree (工作区/砧板) 写入 Step 1 代码，此时 Working Tree 变为 Dirty)*
+#### ⚡ 极速操作步骤
+1. 观察控制台日志与页面点击无报错。
+2. AI 在后台通过 Verifier Subagent 静默自测后，使用选择性暂存 (`git add --`) 自动执行双 Commit：
+   - **Commit A**：提交源码修改 (`feat(code): ...`)。
+   - **Commit B**：更新 `LESSON_04_IMPLEMENTATION_PLAN.md` 状态机（Step 1 变为 `COMPLETED`，Step 2 变为 `READY`）。
+3. 运行 Git 检查：
+   ```powershell
+   git status
+   ```
+   *预期结果*：Working Tree 重新恢复为 `100% Clean` 干净状态！
 
----
-
-### 任务 3：静默自测、三层验收与版本归档 (Verify & Commit 阶段)
-
-**操作指令 1 (静默自测)**：
-```text
-Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run-lesson-verifier.ps1 -Step 1 进行校验。
-```
-
-**操作指令 2 (主管业务验收通过)**：
-```text
-主管验收 Step 1 通过
-```
-
-**操作指令 3 (确认完成 Step 1)**：
-```text
-确认完成 Step 1
-```
-*(Agent 底层自动顺次执行 git add -- 选择性暂存提交源码与实施计划，打包入库后 Working Tree 自动恢复 Clean 干净状态)*
+#### 💡 独立自学原理解析
+> **双 Commit 机制物理原理**  
+> 为什么要做两次 Commit？因为“源码改动”和“进度状态更新”是两个维度的资产。Commit A 保护了纯净的代码库，Commit B 记录了项目管理进度。使用 `git add --` 隔离暂存，即使未来代码需要回滚，实施计划的进度的物理记录也不会丢失。
 
 ---
 
-## 3. 学员课后记忆卡与退场测试 (Exit Ticket & Misconceptions)
-
-### ✍️ 学员概念互动填空 (Interactive Concept Fill-in-the-Blanks)
-1. **IT 跨界术语 Working Tree**：AI 正在写代码、做切片的物理文件夹被称为 **`Working Tree (工作区 / 工作树)`**，就像厨师切菜的砧板。
-2. **Plan & Execute 范式**：增量实施的核心是 **“先形成计划，每次只授权完成一个可验证的小切片”**，计划保存于外部长期记忆 `docs/LESSON_04_IMPLEMENTATION_PLAN.md` 中。
-3. **步骤状态机枚举**：实施计划中的步骤包含 5 种状态：初始步骤默认为 **`PENDING`**，前置步骤通过后变为 **`READY`**，授权后变为 **`IN_PROGRESS`**，三层验收归档后变为 **`COMPLETED`**，校验失败或主管拒绝后变为 **`BLOCKED`**。
-4. **概念解耦**：**界面技术呈现状态 (`prototypeState`: Loading / Empty / Error / Success)** 用于调试 UI 数据加载与异常；而 **业务处理流程状态 (待处理 / 处理中 / 已阻塞 / 已完成)** 用于展示业务对象的生命周期。
-5. **版本归档与 Working Tree 清扫**：三层验收通过后回复 **`确认完成 Step 1`** 自动归档，Working Tree 恢复 Clean；若验证失败，系统将自动 **备份失败快照** 并 **清扫 Working Tree 还原干净源码**，学员回复 **`同意记录 Step 1 问题`** 记录问题。
-
-### 💡 常见概念误区与正确理解 (Misconceptions vs. Correct Engineering Reality)
+## 五、 💡 常见概念误区与正确理解 (Mindset Transformation)
 
 | 常见误区 (Misconception) | 正确硬核理解 (Correct Engineering Reality) | 如何纠偏与护栏防护 (Remedy & Guardrails) |
 | :--- | :--- | :--- |
@@ -201,11 +189,30 @@ Step 1 代码已写完，请派遣 Verifier Subagent 在后台运行 scripts/run
 
 ---
 
-### 🎯 退场测试题 (Exit Ticket)
+## 六、 ❓ 常见操作报错与 Troubleshooting 指南
 
-* **问题 1**：当你向 IT 工程师说“请清扫 Working Tree 恢复 Clean 干净状态”时，是什么意思？为什么切片失败时必须执行这个动作？
-* **参考答案**：
-  - 意思是撤销 Working Tree (工作区) 中未提交的破损修改与未跟踪文件，将其还原至上一个稳定的 Commit 节点；切片失败时执行此动作可以清扫坏代码残渣，防止污染后续工程。
-* **问题 2**：回复 `确认完成 Step 1` 时，Agent 底层顺次执行了什么操作？
-* **参考答案**：
-  - Agent 底层顺次自动执行了 Commit A 源码暂存提交、提取 Commit SHA 回填 Plan 状态，以及 Commit B 实施计划更新暂存，把 Working Tree 上的改动打包入库并恢复 Clean 状态。
+| 报错/异常现象 | 物理原因 | 解决与纠偏方案 |
+| :--- | :--- | :--- |
+| 输入口令后 AI 提示 `CONTRACT_ASSET_MISMATCH` | 第三课的功能卡与 TS 数据字典字典字段不一致 | 回退到第三课，核对并修正 `BUSINESS_FEATURE_CARD.md` 字段。 |
+| AI 生成代码后 Working Tree 一直是 Dirty | 静默自测失败，未跑 Commit 归档 | 在聊天窗口下发 `同意记录 Step 1 问题`，AI 会导出 `.patch` 快照并还原干净工程。 |
+
+---
+
+## 七、 📝 巩固与退场测试题库 (5 题精选)
+
+### 阶段 1：课堂退场盖章测试 (Exit Ticket)
+1. **[概念填空题]** 在增量实施范式中，当切片报错或主管拒绝时，系统会自动导出补丁快照（`.patch`），并将 Working Tree 物理恢复为 ____________ 干净状态。
+2. **[状态机辨析题]** 在实施计划文件 `IMPLEMENTATION_PLAN.md` 中，一个步骤在等待主管输入授权口令前，其物理状态枚举应当是 ____________。
+   - A. `PENDING`
+   - B. `READY`
+   - C. `IN_PROGRESS`
+   - D. `COMPLETED`
+3. **[IT 沟通场景题]** 当你需要向 IT 工程师解释为什么要分 Step 授权落盘时，你应该怎么说？
+   - **参考回答**：“我们采用了 Step 级状态机与薄切片范式，每次授权一个可独立测试的增量切片，配合双 Commit 物理归档，确保 Working Tree 随时可退回 100% 干净状态。”
+
+---
+
+### 阶段 2：课后自学拓展思考题 (Self-Study Extension)
+4. **[原理思考题]** 为什么我们在 Step 1 中要专门引入 `prototypeState` 调试器？它和真正的业务数据处理有什么区别？
+   - **自学提示**：界面技术状态（Loading/Error）属于前端展示容错，业务状态（待处理/已关单）属于领域数据流。将两者解耦可在无后端支撑时全量测试前端交互。
+5. **[实操演练题]** 尝试故意在代码中改错一个变量名，然后向 AI 下发口令 `同意记录 Step 1 问题`，观察本地 `local-backups/` 目录中是否生成了补丁文件，并使用 `git status` 验证 Working Tree 是否自动恢复为 Clean。
