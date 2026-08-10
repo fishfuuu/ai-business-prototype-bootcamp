@@ -115,7 +115,7 @@
 <div class="wrap">
   <div class="nav-bar">
     <a href="javascript:history.back()" class="back-btn">⬅️ 返回上一级课程</a>
-    <div style="font-size: .88rem; color: var(--ink-soft); font-weight: 600;">共收录 18 个核心工程与业务术语</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); font-weight: 600;">共收录 21 个核心工程与业务术语</div>
   </div>
 
   <div class="search-box">
@@ -303,6 +303,36 @@
       </div>
       <div class="term-def">排错前下发 Checkpoint 无痛存档 (Save Point)，当 Agent 自修 2 轮仍未 PASS 时，自动触发 `git restore .` 安全恢复 Checkpoint 干净状态并导出补丁。</div>
       <div class="term-avoid">🚫 避免误用: 盲目死循环修复, 越改越崩白屏</div>
+    </div>
+
+    <!-- TERM 19 -->
+    <div class="term-card" data-kw="qa subagent qa子智能体 只读沙箱 自动销毁">
+      <div class="term-header">
+        <div class="term-title">QA Subagent (QA 子智能体)</div>
+        <span class="term-tag blue" style="background:#dbeafe; color:#1e40af;">测试沙箱</span>
+      </div>
+      <div class="term-def">受主 Agent 调度的只读沙箱子进程（<code>.claude/agents/qa-tester.md</code>），协同 Playwright 与 Chrome DevTools 双 MCP 执行质量测试，完结后自动销毁沙箱。</div>
+      <div class="term-avoid">🚫 避免误用: 口头凭空承诺, 污染主开发Context</div>
+    </div>
+
+    <!-- TERM 20 -->
+    <div class="term-card" data-kw="双 mcp 工具链 playwright devtools dom console network">
+      <div class="term-header">
+        <div class="term-title">双 MCP 工具链 (Dual MCP Tooling)</div>
+        <span class="term-tag blue" style="background:#dbeafe; color:#1e40af;">双端审计</span>
+      </div>
+      <div class="term-def">由 Playwright MCP（DOM 慢动作交互与照片截图）与 Chrome DevTools MCP（Console 0 报错与 127.0.0.1 网络白名单）构成的多维自动化测试工具链。</div>
+      <div class="term-avoid">🚫 避免误用: 单一静态截图, 忽略运行报错</div>
+    </div>
+
+    <!-- TERM 21 -->
+    <div class="term-card" data-kw="四类证据链 验收总卡 evidence index 照片 脚印 体检 存根">
+      <div class="term-header">
+        <div class="term-title">四类证据链与验收总卡 (Evidence Chain & Index)</div>
+        <span class="term-tag blue" style="background:#dbeafe; color:#1e40af;">交付落盘</span>
+      </div>
+      <div class="term-def">由视觉照片 (`screenshot.png`)、行为脚印 (`action.log`)、工程体检 (`typecheck.log`)、范围存根 (`diff.patch`) 及带 Header 的 `LESSON_07_EVIDENCE_INDEX.md` 构成的全方位客观审计交付包。</div>
+      <div class="term-avoid">🚫 避免误用: 嘴巴口头验收, 无落盘物证交付</div>
     </div>
 
   </div>

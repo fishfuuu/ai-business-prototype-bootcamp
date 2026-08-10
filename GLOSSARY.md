@@ -79,3 +79,15 @@ _Avoid_: 直接复制敏感 Token 抓包, 无断言盲改
 **2 轮硬熔断机制 (Two-Round Circuit Breaker)**:
 排错前下发 Checkpoint 无痛存档，在 Agent 自修达到 2 轮上限仍未 PASS 时自动运行 `git restore .` 安全恢复 Checkpoint 干净状态并打上补丁。
 _Avoid_: 盲目死循环修复, 越改越崩白屏
+
+**QA Subagent (QA 子智能体)**:
+受主 Agent 调度的只读沙箱子进程（`.claude/agents/qa-tester.md`），挂载 Playwright 与 Chrome DevTools 双 MCP 执行端到端质量验收，完结后自动销毁沙箱。
+_Avoid_: 口头凭空承诺, 污染主开发Context
+
+**双 MCP 工具链 (Dual MCP Tooling)**:
+由 Playwright MCP（负责 UI 慢动作 DOM 交互与截图）与 Chrome DevTools MCP（负责 Console 0 报错与 127.0.0.1 网络白名单审计）构成的多维测试工具链。
+_Avoid_: 单一静态截图, 忽略运行报错
+
+**四类证据链与验收总卡 (Four-Category Evidence Chain & Index)**:
+由视觉照片 (`screenshot.png`)、行为脚印 (`action.log`)、工程体检 (`typecheck.log`)、范围存根 (`diff.patch`) 及带有 YAML Header 的 `LESSON_07_EVIDENCE_INDEX.md` 总卡构成的客观审计证据集合。
+_Avoid_: 嘴巴口头验收, 无落盘物证交付

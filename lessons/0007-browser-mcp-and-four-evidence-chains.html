@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 7 课 · 让 Agent 实际操作页面完成验收：QA Subagent、双 MCP 与四类证据链 | 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #1d4ed8 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #93c5fd; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #bfdbfe; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #93c5fd; }
+  
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+  
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--blue); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+  
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+  
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--blue-soft); border-color: #93c5fd; }
+  .card.warn { background: var(--amber-soft); border-color: #ecd3a8; }
+  .card.focus { background: var(--plum-soft); border-color: #d8b4fe; }
+  .card.green { background: var(--green-soft); border-color: #a7d7b4; }
+  
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+  
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+  
+  .quote {
+    border-left: 4px solid var(--blue); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+
+  /* Grid Layouts - Symmetric 2x2 Grid */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--blue); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(29, 78, 216, 0.2);
+  }
+  .btn:hover { background: #1e40af; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Interactive Simulator Container */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: .9rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+  
+  .mode-tabs {
+    display: flex; gap: .6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+  }
+  .mode-btn {
+    flex: 1; min-width: 200px; padding: .8rem 1rem; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: .88rem; font-weight: 700; cursor: pointer; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s; text-align: center;
+  }
+  .mode-btn:hover { background: #e2e8f0; }
+  .mode-btn.active.raw { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .mode-btn.active.bounded { background: #dbeafe; border-color: var(--blue); color: #1e40af; }
+
+  .flow-display-canvas {
+    background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.4rem;
+    min-height: 280px; position: relative; transition: all .3s;
+  }
+  .flow-step-node {
+    background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .8rem 1.1rem;
+    margin-bottom: .8rem; font-size: .9rem; opacity: .4; transition: all .3s; transform: translateY(5px);
+  }
+  .flow-step-node.active { opacity: 1; transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .flow-step-node.error { border-color: #ef4444; background: #fff5f5; color: #991b1b; }
+  .flow-step-node.success { border-color: #10b981; background: #f0fdf4; color: #065f46; }
+  .flow-step-node.working { border-color: #3b82f6; background: #eff6ff; color: #1e40af; }
+
+  .node-title { font-weight: 800; font-size: .95rem; margin-bottom: .2rem; display: flex; align-items: center; justify-content: space-between; }
+  .node-desc { font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Consolas", monospace; font-size: .82rem;
+    padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 160px; overflow-y: auto;
+  }
+
+  /* Four Category Evidence Box */
+  .evidence-box {
+    display: flex; flex-direction: column; gap: .6rem; margin: 1.2rem 0;
+  }
+  .ev-row {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 10px; padding: .8rem 1.2rem;
+    display: flex; justify-content: space-between; align-items: center; transition: all .2s; cursor: pointer;
+  }
+  .ev-row:hover { border-color: var(--blue); background: var(--blue-soft); }
+  .ev-badge { font-weight: 800; font-size: .88rem; padding: 2px 8px; border-radius: 6px; background: #0f172a; color: #fff; }
+  .ev-label { font-weight: 700; font-size: .95rem; color: #0f172a; }
+  .ev-file { font-size: .82rem; font-weight: 700; color: var(--blue); background: #dbeafe; padding: 2px 8px; border-radius: 4px; font-family: "Consolas", monospace; }
+
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .9rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  }
+  .prompt-copy-text { font-family: "Consolas", monospace; font-size: .92rem; font-weight: 700; color: #0f172a; }
+  .btn-copy {
+    background: #334155; color: #fff; border: none; border-radius: 6px; padding: .35rem .85rem;
+    font-size: .8rem; font-weight: 700; cursor: pointer; transition: background .15s; white-space: nowrap;
+  }
+  .btn-copy:hover { background: #0f172a; }
+
+  /* Interactive Concept Fill-in-the-Blanks */
+  .blank-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem; font-size: .95rem; line-height: 1.8;
+  }
+  .blank-select {
+    padding: .25rem .6rem; border-radius: 6px; border: 1.5px solid var(--blue); font-size: .9rem;
+    font-weight: 700; color: var(--blue); background: var(--blue-soft); cursor: pointer; outline: none;
+  }
+  .blank-select.ok { border-color: #10b981; background: #dcfce7; color: #15803d; }
+  .blank-select.err { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+  .blank-feedback { font-size: .85rem; margin-top: .5rem; font-weight: 600; display: none; }
+  .blank-feedback.show { display: block; }
+
+  /* Misconceptions 3-Column Table Card */
+  .misc-table-container {
+    overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  }
+  .misc-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem;
+  }
+  .misc-table th {
+    background: #0f172a; color: #fff; font-weight: 700; padding: .85rem 1.1rem; border-bottom: 1px solid var(--line);
+  }
+  .misc-table td {
+    padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6;
+  }
+  .misc-table tr:hover { background: #fafaf9; }
+  .badge-misc { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .78rem; font-weight: 800; }
+  .badge-misc.red { background: #fee2e2; color: #991b1b; }
+  .badge-misc.green { background: #dcfce7; color: #15803d; }
+  .badge-misc.blue { background: #dbeafe; color: #1e40af; }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem;
+  }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box {
+    background: var(--blue-soft); border: 1px solid #93c5fd; border-radius: 10px; padding: 1rem 1.2rem;
+    margin-top: .8rem; font-size: .92rem; color: #1e40af; display: none; line-height: 1.6;
+  }
+  .ans-box.show { display: block; }
+
+  /* Quiz Cards & Label Formatting */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; width: 100%; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--blue-soft); }
+  .quiz-q label input { margin-top: .35rem; accent-color: var(--blue); }
+  .quiz-q label.sel { background: var(--blue-soft); border-color: #93c5fd; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+  .q-btn { margin-top: .6rem; }
+  
+  .score {
+    display: none; margin-top: 1.2rem; margin-bottom: 1.5rem; background: #0f172a; color: #f5f1e8;
+    border-radius: 12px; padding: 1.2rem 1.6rem; text-align: center; font-size: 1.1rem;
+  }
+  .score.show { display: block; }
+  .score b { color: #4ade80; font-size: 1.4rem; }
+
+  /* Checklist Card */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--blue); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 07 · QA Subagent、双 MCP 与四类证据链</div>
+    <h1>让 Agent 实际操作页面完成验收</h1>
+    <p class="sub"><b>口说无凭，证据落盘；双 MCP 齐发力，四证总卡放心交接。</b><br>掌握 <b>QA Subagent 只读沙箱 🕵️‍♂️</b>、<b>Playwright + DevTools 双 MCP 工具链 🛠️</b> 与 <b>【四类证据链 + LESSON_07_EVIDENCE_INDEX 验收总卡 ⚖️】</b>！</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 掌握调度 QA Subagent (`.claude/agents/qa-tester.md`) 运行 Playwright MCP 慢动作测试演示；② 掌握 Chrome DevTools MCP 审计 Console 0 报错与 127.0.0.1 网络白名单；③ 物理提取并落盘“视觉照片、行为脚印、工程体检、范围存根”四类证据及 `docs/LESSON_07_EVIDENCE_INDEX.md` 验收总卡，完成 HITL 签署归档。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 01: INTERACTIVE TESTING DEMONSTRATOR -->
+<section>
+  <h2><span class="num">01</span> 核心架构演进：痛点反例 (嘴巴口头问答) vs 双 MCP 受控测试流</h2>
+  <p>通过下方交互演示，直观对比“凭借口头问答凭空猜测上线被打回”与“QA Subagent 双 MCP 慢动作 ➔ 四类证据与总卡落盘 ➔ 销毁沙箱”的流转过程：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎬 双 MCP 自动化测试与四类证据链动态演示</span>
+      <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
+    </div>
+    <div class="sim-body">
+      
+      <div class="mode-tabs">
+        <button class="mode-btn active raw" id="mBtnRaw" onclick="runMode('raw')">🔴 模式 A：痛点反例 (嘴巴口头问答/无证据/向 IT 汇报被打回)</button>
+        <button class="mode-btn bounded" id="mBtnBounded" onclick="runMode('bounded')">🟢 模式 B：双 MCP 受控测试 (慢动作演示/四证落盘/销毁沙箱)</button>
+      </div>
+
+      <div class="flow-display-canvas" id="flowCanvas">
+        <!-- JS rendered steps -->
+      </div>
+
+      <div class="console-output" id="consoleLog">
+        > 点击上方按钮运行模式推演…
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote">
+    💡 <b>一句话口诀</b>：“口说无凭，证据落盘；双 MCP 齐发力，四证总卡放心交接。”
+  </div>
+</section>
+
+<!-- SECTION 02: 3 CORE CONCEPTS -->
+<section>
+  <h2><span class="num">02</span> 核心概念卡：四步公式解析三大测试工程概念</h2>
+
+  <div class="grid-2">
+    <div class="card focus">
+      <h3 style="color: var(--blue);">🕵️‍♂️ 1. QA Subagent & Dual MCP Tooling</h3>
+      <p>• <b>硬核定义</b>：主 Agent 调度的只读沙箱子进程，协同 Playwright MCP（UI 操作）与 Chrome DevTools MCP（Console/Network 审计）执行端到端质量验收。<br>
+      • <b>底层机制</b>：QA Subagent 在隔离子进程中运行，调用 Playwright 驱动 DOM 交互，DevTools 捕获 0 报错与 127.0.0.1 请求，完结后自动销毁沙箱。<br>
+      • <b>业务比喻</b>：<b>带专业仪器进场的外聘第三方 QA 审计员 🕵️‍♂️</b>。检测完自动退场，不占用主桌。<br>
+      • <b>IT 沟通</b>：“我们调度了 QA Subagent 挂载 Playwright 与 DevTools 双 MCP 进行了端到端自动化质量审计。”</p>
+    </div>
+    <div class="card focus">
+      <h3 style="color: var(--plum);">⚖️ 2. Four-Category Evidence Chain & Index</h3>
+      <p>• <b>硬核定义</b>：由视觉截图 (`screenshot.png`)、行为脚印 (`action.log`)、工程体检 (`typecheck.log`)、范围存根 (`diff.patch`) 及汇总索引 (`LESSON_07_EVIDENCE_INDEX.md`) 构成的全方位客观审计证据集合。<br>
+      • <b>底层机制</b>：视觉 `照片` ➔ 行为 `脚印` ➔ 工程 `体检` ➔ 范围 `存根` + 4 行 YAML Header 索引总卡。<br>
+      • <b>业务比喻</b>：<b>法庭举证的物证、足迹、体检报告与合同存根 ⚖️</b>。四证合一，绝不凭口头凭空猜测。<br>
+      • <b>IT 沟通</b>：“我们物理落盘输出了四类证据链与 EVIDENCE_INDEX 验收总卡，可供 100% 解析复核。”</p>
+    </div>
+  </div>
+
+  <div class="card tinted">
+    <h3 style="color: var(--teal);">🏎️ 3. Headed SlowMo vs. Headless Sandbox Lifecycle</h3>
+    <p>• <b>硬核定义</b>：支持前端交互可视化慢动作展示 (`headed: true, slowMo: 500`) 与后台高效静默落盘 (`headless: true`)，并在完结后销毁子进程的资源管理范式。<br>
+    • <b>底层机制</b>：Task 1 开启 Headed 慢动作建立信任；Task 2 开启 Headless 静默落盘证据；测试结束自动 Kill Subagent 进程。<br>
+    • <b>业务比喻</b>：<b>无人驾驶车观摩演练 ➔ 封闭赛道高速全自动测试 🏎️</b>。先看示范建立信任，再全自动跑数据。<br>
+    • <b>IT 沟通</b>：“测试过程在只读沙箱中完成，测试完即刻销毁，保证主开发环境 Context 干净隔离。”</p>
+  </div>
+</section>
+
+<!-- SECTION 03: INTERACTIVE FOUR EVIDENCE CHAIN TERMINAL -->
+<section>
+  <h2><span class="num">03</span> 演练：四类证据链拓扑与 `LESSON_07_EVIDENCE_INDEX.md` 审计终端</h2>
+  <p>点击下方四类证据卡，体验物理抓取与生成带有 YAML Frontmatter 的 `EVIDENCE_INDEX.md` 总卡过程：</p>
+
+  <div class="evidence-box">
+    <div class="ev-row" onclick="testEv(1)">
+      <div><span class="ev-badge">Ev 1</span> <span class="ev-label">视觉证据 [照片证据]</span></div>
+      <span class="ev-file">docs/assets/lesson-07/screenshot.png</span>
+    </div>
+    <div class="ev-row" onclick="testEv(2)">
+      <div><span class="ev-badge">Ev 2</span> <span class="ev-label">行为证据 [脚印日志] (Chrome DevTools 审计)</span></div>
+      <span class="ev-file">docs/assets/lesson-07/action.log</span>
+    </div>
+    <div class="ev-row" onclick="testEv(3)">
+      <div><span class="ev-badge">Ev 3</span> <span class="ev-label">工程证据 [体检报告] (Typecheck & Lint)</span></div>
+      <span class="ev-file">docs/assets/lesson-07/typecheck.log</span>
+    </div>
+    <div class="ev-row" onclick="testEv(4)">
+      <div><span class="ev-badge">Ev 4</span> <span class="ev-label">范围证据 [存根 diff] (Git 范围控制)</span></div>
+      <span class="ev-file">docs/assets/lesson-07/diff.patch</span>
+    </div>
+    <div class="ev-row" onclick="testEv(5)" style="border-color: var(--blue); background: var(--blue-soft);">
+      <div><span class="ev-badge" style="background: var(--blue);">INDEX</span> <span class="ev-label">📑 《四类证据链验收总卡》</span></div>
+      <span class="ev-file" style="background: var(--blue); color: #fff;">docs/LESSON_07_EVIDENCE_INDEX.md</span>
+    </div>
+  </div>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🛡️ 证据链物理抓取与 EVIDENCE_INDEX 预览终端</span>
+      <span style="font-size: .8rem; opacity: .8;">点击上方证据项预览落盘输出</span>
+    </div>
+    <div class="sim-body">
+      <div class="console-output" id="evTerminal" style="min-height: 160px;">
+        > 点击上方证据项，预览物理落盘文件与 Frontmatter 内容…
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
+<section>
+  <h2><span class="num">04</span> 学员实操 Task 1 ~ Task 3 自然授权口令卡</h2>
+
+  <div class="card focus">
+    <b>Task 1 · 唤醒 QA Subagent 并开启 Playwright 视窗慢动作演示</b><br>
+    在 CLI 窗口中下发唤醒 QA Subagent 慢动作演示口令：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">唤醒 QA Subagent，开启 Headed 慢动作测试演示</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
+    </div>
+    <i>原理：在隔离子进程中调出 Chrome 视窗，以 500ms slowMo 慢动作自动点击示范 DOM 交互。</i>
+  </div>
+
+  <div class="card focus">
+    <b>Task 2 · 挂载 Chrome DevTools MCP 静默抓取并落盘四类证据与总卡</b><br>
+    下发 Headless 双 MCP 静默测试与证据落盘口令：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">同意执行 Headless 双 MCP 测试，落盘四类证据与 EVIDENCE_INDEX</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
+    <i>验证：确认物理磁盘成功落盘 4 个证据文件及 <code>docs/LESSON_07_EVIDENCE_INDEX.md</code>。</i>
+  </div>
+
+  <div class="card focus">
+    <b>Task 3 · 证据链复核与人在回路 (HITL) 签署归档 (销毁沙箱)</b><br>
+    核对证据总卡全 PASS 后，下发最终签署归档与沙箱销毁口令：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">复核四类证据链无误，同意签署第 7 课验收盖章</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
+    <i>原理：在 PROJECT_STATE.md 中更新稳定 Commit，并自动 Kill 销毁 QA Subagent 沙箱。</i>
+  </div>
+</section>
+
+<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<section>
+  <h2><span class="num">05</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
+
+  <h3>1. ✍️ 概念互动填空 (Interactive Fill-in-the-Blanks)</h3>
+  <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空，并点击“核对答案”：</p>
+
+  <div class="blank-card" id="bCard1">
+    1. <b>双 MCP 分工协作</b>：在质量验收中，负责深层审计 DevTools Console 0 报错与 127.0.0.1 网络白名单日志的工具是 
+    <select class="blank-select" id="blank1">
+      <option value="">-- 请选择 --</option>
+      <option value="devtools">Chrome DevTools MCP (Console & Network 审计)</option>
+      <option value="playwright">Playwright MCP (UI DOM 点击)</option>
+    </select>。
+    <div class="blank-feedback" id="bf1"></div>
+  </div>
+
+  <div class="blank-card" id="bCard2">
+    2. <b>验收总卡落盘</b>：专门用于为第 8 课 Codex 独立审查提供 4 行 YAML Header 结构化文本输入的汇总证据卡文件是 
+    <select class="blank-select" id="blank2">
+      <option value="">-- 请选择 --</option>
+      <option value="index">docs/LESSON_07_EVIDENCE_INDEX.md (四类证据总卡)</option>
+      <option value="temp">临时口头对话框聊天记录</option>
+    </select>。
+    <div class="blank-feedback" id="bf2"></div>
+  </div>
+
+  <div class="blank-card" id="bCard3">
+    3. <b>沙箱生命周期管理</b>：在 QA Subagent 完成测试并物理落盘四类证据与总卡后，系统会自动运行 
+    <select class="blank-select" id="blank3">
+      <option value="">-- 请选择 --</option>
+      <option value="destroy">销毁 QA Subagent 沙箱 (保持主 Agent Context 干净)</option>
+      <option value="keep">将 DOM 和大容量 DevTools 日志保留在主会话中</option>
+    </select>。
+    <div class="blank-feedback" id="bf3"></div>
+  </div>
+
+  <button class="btn" style="margin-bottom: 2rem;" onclick="checkAllBlanks()">✅ 核对所有填空答案</button>
+
+  <h3>2. 💡 常见概念误区与正确理解 (3 栏对照表)</h3>
+  <div class="misc-table-container">
+    <table class="misc-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">常见误区 (Misconception)</th>
+          <th style="width: 42%;">正确硬核理解 (Correct Engineering Reality)</th>
+          <th style="width: 30%;">如何纠偏与护栏防护 (Remedy & Guardrails)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-misc red">误区 1</span><br><b>“问问 AI 页面做好没有，AI 答做好了就能向 IT 交接”</b></td>
+          <td>AI 的口头承诺是概率性的，缺乏物理证据的交付 100% 会被 IT 部门打回。</td>
+          <td>唤醒 `evidence-verification` Skill，强制要求落盘四类证据与总卡。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 2</span><br><b>“给 IT 部门看一张页面截图，就说明功能全部开发完成了”</b></td>
+          <td>静态截图无法证明按钮点击逻辑、DevTools 0 报错与网络未外泄。</td>
+          <td>挂载 Chrome DevTools MCP 收集包含截图、DevTools 日志、typecheck 与 diff 的四类证据链。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 3</span><br><b>“测试只能在后台默默跑，看不见过程心里发虚”</b></td>
+          <td>Task 1 支持 Playwright 视窗慢动作演示，可亲眼观看自动点击全过程。</td>
+          <td>下发 `开启 Headed 慢动作测试演示`，可视化建立信任感。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 06: QUIZ & EXIT TICKET -->
+<section>
+  <h2><span class="num">06</span> 测验 + 🎯 退场测试题 + 课后拓展</h2>
+
+  <!-- 4 Scenario Quiz -->
+  <h3>1. 4 道概念选择测验</h3>
+  <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · 专门用于为第 8 课 Codex 独立审查提供结构化文本输入的汇总证据卡文件是什么？</div>
+    <label><input type="radio" name="q1" value="a"> docs/LESSON_07_EVIDENCE_INDEX.md (带 YAML Header 的四类证据总卡)</label>
+    <label><input type="radio" name="q1" value="b"> package.json 依赖配置文件</label>
+    <label><input type="radio" name="q1" value="c"> 聊天框里的临时文字说明</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · 在 QA Subagent 中，用于深层审计 DevTools Console 0 报错与 127.0.0.1 网络白名单的 MCP 工具是什么？</div>
+    <label><input type="radio" name="q2" value="a"> Chrome DevTools MCP</label>
+    <label><input type="radio" name="q2" value="b"> Playwright MCP</label>
+    <label><input type="radio" name="q2" value="c"> Git MCP</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · 为什么说“测试 Subagent 完成任务后必须即刻销毁沙箱”是保持主会话高效的关键？</div>
+    <label><input type="radio" name="q3" value="a"> 及时销毁沙箱可释放 Context 空间，防止测试过程产生的海量 DOM 和 DevTools 日志污染主开发环境</label>
+    <label><input type="radio" name="q3" value="b"> 因为测试脚本运行完会自动损坏代码</label>
+    <label><input type="radio" name="q3" value="c"> 因为计算机内存不允许保存文件</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · 当 IT 部门质疑非技术主管制作的 AI 原型“未经测试、缺乏质量保障”时，你应该如何汇报？</div>
+    <label><input type="radio" name="q4" value="a"> “我们调度了 QA Subagent 挂载双 MCP 运行了剧本，物理落盘了照片、DevTools 脚印、typecheck 体检与 diff 存根及 EVIDENCE_INDEX 总卡，100% PASS 随时可复核。”</label>
+    <label><input type="radio" name="q4" value="b"> “AI 告诉我页面已经做好了，应该没问题。”</label>
+    <label><input type="radio" name="q4" value="c"> “我自己用手点了几下，感觉挺顺畅。”</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：为什么“只读 QA Subagent 沙箱 + 测试后即刻销毁”是保持 AI 主会话长期稳定的关键机制？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      沙箱隔离防止了测试过程中的冗余 DOM 节点与 DevTools 原始日志污染主会话 Context 空间；测试完即刻销毁释放了 Token 与内存，确保后续开发任务不受干扰。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：四类证据链中的“脚印日志 (`action.log`)”包含了哪些关键审计指标？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      由 Chrome DevTools MCP 提取并脱敏打码 (`<REDACTED>`)，重点审计 <b>DevTools Console 0 报错</b> 以及 <b>网络请求白名单仅限 127.0.0.1</b>（无外部敏感数据外泄）。
+    </div>
+  </div>
+
+  <!-- Key Takeaways Box -->
+  <div class="card tinted" style="margin-top: 1.5rem;">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>口说无凭，证据落盘；拒绝无证据交接，四证合一才算终点。</b></li>
+      <li><b>双 MCP 配合好：Playwright 点 DOM 抓照片，DevTools 审日志测白名单。</b></li>
+      <li><b>沙箱隔离不混淆，测试完即刻销毁子进程，落盘 EVIDENCE_INDEX 供 Codex 独立审查。</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第七课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 已在 Headed 视窗慢动作中亲眼观看 Playwright MCP 自动点击 DOM？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 已成功在物理磁盘落盘“照片、脚印、体检、存根”四类证据及 `docs/LESSON_07_EVIDENCE_INDEX.md` 总卡？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 已完成 HITL 签署盖章，并在 PROJECT_STATE.md 中更新 Commit、自动销毁 QA Subagent 沙箱？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--blue);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 Playwright MCP 自动化</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">SlowMo 慢动作与 Headless 静默端到端 UI 自动化。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 Chrome DevTools 协议</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Console Error 捕抓与 127.0.0.1 网络请求白名单。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--teal); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ YAML Frontmatter 格式</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">在 Markdown 头部嵌入结构化元数据供下游 Agent 自动化解析。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🚀 下一阶段预告</h4>
+      <p style="font-size: .88rem; color: var(--amber); font-weight:bold;"><a href="#" style="color: var(--amber);">第 8 课 · Claude Code 开发，Codex 独立审查</a>： 双 Agent 上下文隔离只读审计！</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--blue); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--blue-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--blue);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用法庭举证的比喻，帮我复习四类证据链分别对应哪些物理文件”——它会为您详细拆解。</span>
+  </div>
+</section>
+
+<footer>
+  第 7 课 · 主管 AI 原型制作训练营 · 权威路线图：<a href="../docs/COURSE_ROADMAP.html">docs/COURSE_ROADMAP.html</a> | 术语：<a href="../GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// ---------- Section 01 Testing Demonstrator ----------
+const testScenarios = {
+  raw: {
+    steps: [
+      { title: 'Step 1 · 口头问答“做好了吗” ➔ AI 口头答“做好了”', desc: '无 Playwright 自动化剧本 ➔ 无肉眼慢动作观察 ➔ 口头凭空承诺...', cls: 'error' },
+      { title: 'Step 2 · 无物理证据落盘 ➔ 向 IT 部门提交汇报', desc: '缺少 DevTools 日志与 typecheck 报告 ➔ 仅贴一张静态截屏...', cls: 'error' },
+      { title: 'Step 3 · 💥 控制台底层报错，文件修改超界被打回', desc: '【崩溃】IT 部门复核发现控制台 12 条 Error 报错，文件擅自改动 20 个！项目惨遭打回重做！', cls: 'error' }
+    ],
+    logs: [
+      '> [User Input]: "Is the prototype finished?"',
+      '> [AI Reply]: "Yes, everything is completely done!" (Probability guess without verification)',
+      '🚨 [IT Department Review]: DevTools Console Uncaught TypeError x 12!',
+      '💥 [Result]: 缺少四类证据链，口头交付 100% 被击穿打回！'
+    ]
+  },
+  bounded: {
+    steps: [
+      { title: 'Step 1 · 唤醒 QA Subagent ➔ Headed 慢动作视窗演示', desc: '调出 Chrome 视窗，以 500ms slowMo 慢动作肉眼观摩 Playwright 自动点击。', cls: '' },
+      { title: 'Step 2 · 挂载 Chrome DevTools MCP 静默抓取日志', desc: '切入 Headless 模式 ➔ 审计 Console 0 报错 ➔ 锁定 127.0.0.1 网络白名单。', cls: 'working' },
+      { title: 'Step 3 · 物理落盘四类证据与 LESSON_07_EVIDENCE_INDEX', desc: '抓取照片 `screenshot.png` + 脚印 `action.log` + 体检 `typecheck.log` + 存根 `diff.patch` + 总卡！', cls: 'success' },
+      { title: 'Step 4 · 🎉 主管 HITL 盖章 ➔ 自动销毁 QA Subagent 沙箱', desc: '复核 100% PASS ➔ 更新 PROJECT_STATE ➔ 自动 Kill 测试沙箱，保持主 Context 干净！', cls: 'success' }
+    ],
+    logs: [
+      '> [QA Subagent]: Process spawned in read-only sandbox mode',
+      '> [Playwright MCP]: Headed SlowMo (500ms) DOM interaction completed',
+      '> [Chrome DevTools MCP]: Console Error: 0, Network domain: 127.0.0.1 only (Auth: <REDACTED>)',
+      '📄 [Index Created]: docs/LESSON_07_EVIDENCE_INDEX.md generated with YAML Frontmatter',
+      '🎉 [Result]: HITL signed off, QA Subagent sandbox automatically destroyed!'
+    ]
+  }
+};
+
+let animationTimers = [];
+
+function clearAnimationTimers() {
+  animationTimers.forEach(id => clearTimeout(id));
+  animationTimers = [];
+}
+
+function runMode(mode) {
+  clearAnimationTimers();
+
+  const btnRaw = document.getElementById('mBtnRaw');
+  const btnBounded = document.getElementById('mBtnBounded');
+  const canvas = document.getElementById('flowCanvas');
+  const consoleLog = document.getElementById('consoleLog');
+
+  btnRaw.className = 'mode-btn raw ' + (mode === 'raw' ? 'active' : '');
+  btnBounded.className = 'mode-btn bounded ' + (mode === 'bounded' ? 'active' : '');
+
+  const data = testScenarios[mode];
+  canvas.innerHTML = '';
+  consoleLog.innerHTML = '<span style="color: #94a3b8;">> 正在启动 ' + (mode === 'raw' ? '🔴 痛点反例' : '🟢 双 MCP 受控测试') + ' 动态轨迹推演...</span>';
+
+  data.steps.forEach((s, idx) => {
+    const node = document.createElement('div');
+    node.className = 'flow-step-node ' + (s.cls || '');
+    node.id = 'node_' + idx;
+    node.style.opacity = '0';
+    node.style.transform = 'translateY(12px)';
+    node.style.transition = 'all .4s ease';
+    node.innerHTML = `
+      <div class="node-title">
+        <span>${s.title}</span>
+        <span style="font-size:.75rem; padding: 2px 6px; border-radius:4px; background:rgba(0,0,0,0.05);">Step ${idx + 1}</span>
+      </div>
+      <div class="node-desc">${s.desc}</div>
+    `;
+    canvas.appendChild(node);
+
+    const tId = setTimeout(() => {
+      node.style.opacity = '1';
+      node.style.transform = 'translateY(0)';
+      node.classList.add('active');
+
+      if (data.logs[idx]) {
+        const logLine = document.createElement('div');
+        logLine.style.marginTop = '4px';
+        logLine.innerHTML = data.logs[idx];
+        consoleLog.appendChild(logLine);
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+      }
+    }, (idx + 1) * 500);
+
+    animationTimers.push(tId);
+  });
+}
+runMode('bounded');
+
+// ---------- Section 03 Four Category Evidence Simulator ----------
+function testEv(n) {
+  const term = document.getElementById('evTerminal');
+  if (n === 1) {
+    term.innerHTML = `
+📷 <b>[Ev 1 视觉证据 · 照片]:</b><br>
+物理文件：\`docs/assets/lesson-07/screenshot.png\`<br>
+说明：Playwright MCP 抓取的高分辨率 1080p 界面渲染全页快照，校验 UI 布局与文字无错位。
+    `;
+  } else if (n === 2) {
+    term.innerHTML = `
+👣 <b>[Ev 2 行为证据 · 脚印日志]:</b><br>
+物理文件：\`docs/assets/lesson-07/action.log\`<br>
+说明：Chrome DevTools MCP 审计结果：Console Uncaught Error: 0，网络请求仅限 127.0.0.1 域名，Auth Key 已打码 &lt;REDACTED&gt;。
+    `;
+  } else if (n === 3) {
+    term.innerHTML = `
+🩺 <b>[Ev 3 工程证据 · 体检报告]:</b><br>
+物理文件：\`docs/assets/lesson-07/typecheck.log\`<br>
+说明：运行 \`powershell verify-project.ps1\`，TypeScript 类型检测与规范静态扫描 100% PASS 0 警告。
+    `;
+  } else if (n === 4) {
+    term.innerHTML = `
+📜 <b>[Ev 4 范围证据 · 存根 diff]:</b><br>
+物理文件：\`docs/assets/lesson-07/diff.patch\`<br>
+说明：Git 变更范围审计，确认只修改了许可文件，包含 0 危险超界文件修改。
+    `;
+  } else {
+    term.innerHTML = `
+📑 <b>[INDEX 《四类证据链验收总卡》]:</b><br>
+物理文件：\`docs/LESSON_07_EVIDENCE_INDEX.md\`<br>
+<pre style="background: #020617; padding: .6rem; border-radius: 6px; color: #38bdf8; font-size: .8rem; margin-top: .4rem;">
+---
+title: Lesson 07 Evidence Index
+verified: true
+qa_subagent: destroyed
+candidate_commit: "909dcab"
+---
+# 四类证据链验收总卡
+- [x] screenshot.png (PASS)
+- [x] action.log (PASS 0 Error)
+- [x] typecheck.log (PASS)
+- [x] diff.patch (Clean)
+</pre>
+    `;
+  }
+}
+
+// ---------- Copy Text Function ----------
+function copyText(id) {
+  const txt = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    alert('已成功复制自然授权口令：\n' + txt);
+  }).catch(() => {
+    prompt('复制失败，请手动复制：', txt);
+  });
+}
+
+// ---------- Section 05 Concept Fill-in-the-Blanks Logic ----------
+function checkAllBlanks() {
+  const b1 = document.getElementById('blank1');
+  const b2 = document.getElementById('blank2');
+  const b3 = document.getElementById('blank3');
+
+  const ok1 = b1.value === 'devtools';
+  const ok2 = b2.value === 'index';
+  const ok3 = b3.value === 'destroy';
+
+  b1.className = 'blank-select ' + (ok1 ? 'ok' : 'err');
+  b2.className = 'blank-select ' + (ok2 ? 'ok' : 'err');
+  b3.className = 'blank-select ' + (ok3 ? 'ok' : 'err');
+
+  const bf1 = document.getElementById('bf1');
+  const bf2 = document.getElementById('bf2');
+  const bf3 = document.getElementById('bf3');
+
+  bf1.className = 'blank-feedback show';
+  bf1.style.color = ok1 ? 'var(--green)' : 'var(--red)';
+  bf1.innerHTML = ok1 ? '✅ 填空 1 正确！Chrome DevTools MCP 专门用于深层 Console 0 报错与 127.0.0.1 网络白名单审计。' : '❌ 填空 1 错误：应选择 Chrome DevTools MCP。';
+
+  bf2.className = 'blank-feedback show';
+  bf2.style.color = ok2 ? 'var(--green)' : 'var(--red)';
+  bf2.innerHTML = ok2 ? '✅ 填空 2 正确！docs/LESSON_07_EVIDENCE_INDEX.md 包含了 4 行 YAML Header 供 Codex 独立审查解析。' : '❌ 填空 2 错误：应选择 LESSON_07_EVIDENCE_INDEX.md。';
+
+  bf3.className = 'blank-feedback show';
+  bf3.style.color = ok3 ? 'var(--green)' : 'var(--red)';
+  bf3.innerHTML = ok3 ? '✅ 填空 3 正确！测试完成后自动销毁 QA Subagent 沙箱，可释放 Token 保证主 Context 干净。' : '❌ 填空 3 错误：应选择销毁 QA Subagent 沙箱。';
+}
+
+// ---------- Section 06 Exit Ticket Expand Answer Logic ----------
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+
+// ---------- Quiz Logic ----------
+const explain = {
+  q1: '正确答案：A。docs/LESSON_07_EVIDENCE_INDEX.md 带有 4 行 YAML Header，专门为第 8 课 Codex 审查提供结构化文本解析。',
+  q2: '正确答案：A。Chrome DevTools MCP 专门用于从底座捕获 Console Error 与审计 Network 127.0.0.1 域名白名单。',
+  q3: '正确答案：A。测试 Subagent 沙箱隔离防止了海量 DOM 与 DevTools 原始日志污染主开发环境的 Context。',
+  q4: '正确答案：A。最强硬的交接汇报是物理出示包含照片、脚印、体检、存根与 EVIDENCE_INDEX 总卡的证据包。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 25;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 4) {
+    el.innerHTML = `你已答完 <b>${answered} / 4</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  } else {
+    el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！`;
+  }
+}
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--blue)';
+    res.innerHTML = '🎉 恭喜完成第七课全量退场自查！你已熟练掌握 QA Subagent 双 MCP 测试与四类证据链落盘！';
+  } else {
+    res.style.color = 'var(--blue)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+</script>
+
+</body>
+</html>
