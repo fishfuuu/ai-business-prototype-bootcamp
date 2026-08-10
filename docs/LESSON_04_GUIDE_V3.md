@@ -152,7 +152,18 @@
 
 ---
 
-## ❓ 常见问题与踩坑排除 (Debug Guide)
+## 💡 常见概念误区与正确理解 (Mindset Transformation)
+
+| 常见误区 (Misconception) | 正确硬核理解 (Correct Engineering Reality) | 如何纠偏与护栏防护 (Remedy & Guardrails) |
+| :--- | :--- | :--- |
+| **误区 1：“让 AI 一口气写完页面所有功能效率最高”** | 一口气修改 10 个文件会导致 Working Tree 一片狼藉，爆 Context 且报错时根本无法定位根因。 | 唤醒 `incremental-implementation` 护栏，强制按 3–5 步切片，每次仅授权执行 1 个切片。 |
+| **误区 2：“只要静态编译通过 (Verifier PASS)，就代表切片做对了”** | Verifier 只是静态编译检查，无法替代人工物理点击页面以及主管对业务逻辑与交互美观度的裁决。 | 严格执行 **三层递进验收 (Verifier PASS -> 人工点击 PASS -> 主管业务验收 PASS)**，缺一不可。 |
+| **误区 3：“混淆界面技术呈现状态与业务处理流程状态”** | 将 `Loading` 或 `Error` 误当成业务对象的状态，导致逻辑混乱与调试失败。 | 强制前端植入 `prototypeState` 调试器（`import.meta.env.DEV`），与业务处理流程状态标签物理解耦。 |
+| **误区 4：“切片报错时直接多次下发指令让 AI 撞大运”** | 在 Working Tree 堆积坏代码重试会导致残渣残留，后续 Git 提交误将坏代码打包入库。 | 系统自动备份快照补丁并清扫 Working Tree 还原 Clean 干净源码，下发 `同意记录 Step 1 问题` 归档。 |
+
+---
+
+## ❓ 常见操作报错与 Troubleshooting 指南
 
 | 报错/异常现象 | 物理原因 | 解决与纠偏方案 |
 | :--- | :--- | :--- |
