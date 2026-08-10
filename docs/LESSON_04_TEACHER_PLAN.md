@@ -1,4 +1,4 @@
-# 第四课教师备课与控场指南 (TEACHER_PLAN V2) — 把大需求拆成连续的小成功
+# 第四课教师备课与控场指南 — 把大需求拆成连续的小成功：受控 Agent 循环与 Working Tree 物理状态机
 
 > [!IMPORTANT]
 > 本教案为 **正式采用版**，完整集成了 `teaching-lesson-plan`（逆向设计、建构性对齐、Bloom ABCD、WHERETO）与 `teacher-plan-architect`（22 章节物理硬约束、四步概念卡、HITL 授权盖章口令与 PowerShell 自动化校验）。

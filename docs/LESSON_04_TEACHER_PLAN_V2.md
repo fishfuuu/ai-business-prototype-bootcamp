@@ -1,17 +1,19 @@
-# 第四课教师备课与控场指南 (TEACHER_PLAN V2) — 把大需求拆成连续的小成功
+# 第四课教师备课与控场指南 — 把大需求拆成连续的小成功：受控 Agent 循环与 Working Tree 物理状态机
 
 > [!IMPORTANT]
-> 本教案为 **V2 融合升级版**，完整集成了 `teaching-lesson-plan`（逆向设计、建构性对齐、Bloom ABCD、WHERETO）与 `teacher-plan-architect`（22 章节物理硬约束、四步概念卡、HITL 授权盖章口令与 PowerShell 自动化校验）。
+> 本教案为 **正式采用版**，完整集成了 `teaching-lesson-plan`（逆向设计、建构性对齐、Bloom ABCD、WHERETO）与 `teacher-plan-architect`（22 章节物理硬约束、四步概念卡、HITL 授权盖章口令与 PowerShell 自动化校验）。
 
 ---
 
 ## 1. 课程元数据
-- **课程名称**：AI 业务原型开发训练营·第四课 (V2 升级版)
+- **课程名称**：AI 业务原型开发训练营·第四课
 - **主讲主题**：把大需求拆成连续的小成功：受控 Agent 循环与 Working Tree 物理状态机
 - **授课对象**：非技术背景业务主管 / 产品经理 / 业务专家 (10–30人)
 - **课时时长**：90 分钟 (极客控场 + 5 个固定 Pause Points)
 - **授课模式**：18 分钟极客示范 ➔ 10 分钟概念核对 ➔ 45 分钟学员分步实操 ➔ 10 分钟验证归档
 - **前置依赖**：学员已完成第三课并拥有 [`docs/BUSINESS_FEATURE_CARD.md`](file:///d:/AILearning/docs/BUSINESS_FEATURE_CARD.md)、[`src/types/prototype-contract.d.ts`](file:///d:/AILearning/src/types/prototype-contract.d.ts) 与 [`src/mocks/prototype-data.ts`](file:///d:/AILearning/src/mocks/prototype-data.ts) 三份契约资产。
+- **教学验证状态 (Teaching Status)**：PILOT_PENDING (草稿V2 / 待合入 / 待试讲)
+- **课程负责人**：待指定
 
 ---
 
@@ -38,169 +40,154 @@
 | 学习目标 | Bloom's 认知层级 | 课堂教学活动 (WHERETO) | 考核手段与证据 | 对齐校验 |
 | :--- | :--- | :--- | :--- | :--- |
 | Objective 1: 计划落盘与授权执行 | Apply (3) | 教师演示 Task 1-2 & 学员独立操作 Task 2 | 检查 `LESSON_04_IMPLEMENTATION_PLAN.md` 状态机转为 READY | ✅ 100% 对齐 |
-| Objective 2: 调试器解耦 | Analyze (4) | 教师示范 `prototypeState` 切换 & 学员点击四态按钮 | 视效截图 + 界面切换行为无报错 | ✅ 100% 对齐 |
-| Objective 3: 失败还原与记录 | Evaluate (5) | 模拟自测拦截演练 & 下发自然记录口令 | `.patch` 补丁生成 + Working Tree 恢复 Clean | ✅ 100% 对齐 |
+| Objective 2: 界面技术状态解耦 | Analyze (4) | 教师演示 Task 3 & 页面点击切换状态 | 点击页面切换 4 种 `prototypeState` | ✅ 100% 对齐 |
+| Objective 3: 异常快照与干净还原 | Evaluate (5) | 学员故障演练 Task 4 | 检查 `local-backups/*.patch` 产物与 Clean 状态 | ✅ 100% 对齐 |
 
 ---
 
-## 4. 可见成果
-1. **工程配置文件**：[`docs/LESSON_04_IMPLEMENTATION_PLAN.md`](file:///d:/AILearning/docs/LESSON_04_IMPLEMENTATION_PLAN.md) 状态机文件（`plan_status: APPROVED`，Step 1 `status: COMPLETED`，Step 2 `status: PENDING` / `READY`）。
-2. **Vue 原型组件切片**：包含 `prototypeState` 技术状态调试按钮的可运行组件 [`src/components/WorkOrderBoard.vue`](file:///d:/AILearning/src/components/WorkOrderBoard.vue)。
-3. **Git 物理提交证据**：生成 Commit A (源码) 与 Commit B (计划状态) 的历史记录，Working Tree 恢复 `100% Clean`。
+## 4. 必备教学资源与环境准备
+- **代码仓库准备**：安装依赖并保证工程根目录下无未提交更改。
+- **环境检查命令**：
+  ```powershell
+  git status
+  npm run dev
+  ```
+  *预期输出*：`nothing to commit, working tree clean` 且 Vite 开发服务成功启动在 5173 端口。
 
 ---
 
-## 5. 本课明确不做 (Out of Scope)
-- ❌ 本课**不做**后置 Step 2..N 的全套业务逻辑深度开发（作为课后拓展 homework）。
-- ❌ 本课**不做**后端真实的 API 接口与持久化数据库对接。
-- ❌ 本课**不做**复杂 CSS 样式与响应式排版微调。
+## 5. 课堂 90 分钟控场时间分配表 (WHERETO 序列)
 
----
-
-## 6. 教师准备
-- [ ] 检查环境：确保 Node.js >= 18.0，Vite dev server 能正常启动。
-- [ ] 准备契约基线：确认工程根目录下已存在 `BUSINESS_FEATURE_CARD.md`、`prototype-contract.d.ts` 与 `prototype-data.ts`。
-- [ ] 校验 Skill 锁：运行 `powershell -ExecutionPolicy Bypass -File scripts/verify-project.ps1` 确认通过。
-
----
-
-## 7. 学员准备
-- [ ] 确认已安装 VS Code 与 Claude Code CLI。
-- [ ] 准备好第三课完成的工单/原型工程。
-- [ ] 若第三课未完成，统一解压发放的 `lesson-04-student-materials.zip` 课前起点包。
-
----
-
-## 8. 课堂时间安排 (90 分钟 WHERETO 时间盒)
-
-| 时间段 | 建议时长 | WHERETO 心理学环节 | 教师动作 | 学员动作 | 关键暂停点 (Pause Point) |
+| 时间段 | 环节 | WHERETO | 教师动作 | 学员动作 | 关键暂停点 (Pause Point) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **00:00-00:08** | 8 分钟 | **W** (Where & Big Picture) | 展示传统“一改就崩”失控项目 vs 受控小切片项目的物理对比 | 观看并对齐本课终局成果 | **暂停点 1**：明确本课交付物与 Working Tree 概念 |
-| **00:08-00:25** | 17 分钟 | **H** (Hook) & **E** (Equip) | 连续示范 4 个 Task：契约交接校验 ➔ 计划预览 ➔ 解锁 Step 1 ➔ 双 Commit 归档 | 记录关键自然口令与 Diff 试图 | **暂停点 2 & 3**：硬核拆解“切片”与双 Commit 物理逻辑 |
-| **00:25-00:35** | 10 分钟 | **R** (Rethink) | 口头核对 Working Tree 砧板模型与 `prototypeState` 解耦卡片 | 口头回答 Working Tree Clean/Dirty 的流转原理 | **暂停点 4**：确认 Pre-Plan 契约冻结线 |
-| **00:35-00:80** | 45 分钟 | **E** (Evaluate) & **T** (Tailor) | 巡视指导，观察学员下发口令，监控 Working Tree 干净度 | 独立完成 Task 0 ~ Task 3，运行 PowerShell 校验 | **暂停点 5**：人在回路盖章归档 |
-| **00:80-00:90** | 10 分钟 | **O** (Organize) | 运行 `verify-project.ps1`，点评学员退场测试 | 提交验证日志，填记退场卡 | 成果证据物理落盘归档 |
+| 00-08 分 | 成果展示 | **W** | 展示巨石盲开崩塌 vs 薄切片受控流转 | 观看并对齐本课交付物 | **Pause Point 1**：明确受控切片目标 |
+| 08-25 分 | 极客示范 | **H & E** | 示范 Task 0➔3，展示状态机与双 Commit | 记录命令与盖章口令 | **Pause Point 2 & 3**：概念拆解与安全存档 |
+| 25-35 分 | 概念核对 | **R** | 提问核对 Working Tree 与状态机 | 口头回答四步概念卡 | **Pause Point 4**：确认逻辑冻结线 |
+| 35-80 分 | 学员实操 | **E & T** | 巡视指导，监控授权与 Git 状态 | 分 Task 独立实操 | **Pause Point 5**：人在回路盖章授权 |
+| 80-90 分 | 总结验证 | **O** | 运行 `verify-project.ps1` 校验 | 填退场卡，提交日志 | 证据归档 |
 
 ---
 
-## 9. 业务场景
-- **案例背景**：以“企业工单管理原型”为例，主管需要在前端页面渲染工单列表，并支持 Loading 加载中、Empty 空数据、Error 报错、Success 成功四种技术的模拟调优。
-- **痛点还原**：如果不按切片写，Agent 会一次性把网络请求、数据过滤、DOM 渲染、弹窗全部写完，任何一步报错就会导致整个页面白屏。
+## 6. 演示区与实验区隔离规则
+- **教师示范区**：在讲台独立示范窗口执行，不影响学员的工作区。
+- **学员实验区**：学员在各自的 VS Code 终端与 Claude Code CLI 中操作。
 
 ---
 
-## 10. 教师演示步骤与人在回路 (HITL) 授权口令
-
-### 演示 Step 1：契约交接门禁 (Pre-Plan Gate)
-- **教师输入**：`/incremental-implementation`
-- **Agent 输出**：自动复核第三课 3 份文件的一致性，输出结构化 3 步切片计划预览。
-- **关键提醒**：严禁在未收到学员许可前写入任何文件（只读阶段）。
-
-### 演示 Step 2：计划落盘授权
-- **HITL 盖章口令**：学员在聊天窗口输入 `同意保存实施计划`。
-- **Agent 动作**：将计划写入 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`，初始 Step 1 为 `READY`，Step 2 为 `PENDING`。
-
-### 演示 Step 3：解锁切片 1 编码
-- **HITL 盖章口令**：学员输入 `确认完成 Step 1`。
-- **Agent 动作**：在 `allowed_files` 范围内修改代码，Working Tree 变为 `Dirty`。自动化 Verifier 运行静默自测。
-
-### 演示 Step 4：双 Commit 归档
-- **归档动作**：自测通过，Agent 自动跑 Commit A（源码提交）+ Commit B（计划状态更新为 Step 2 `READY`），Working Tree 自动还原为 `100% Clean`。
+## 7. Task 0: 启动工程与 Working Tree 干净状态检查
+- **教师示范**：运行 `git status`，讲解 Working Tree 的 Clean 与 Dirty 物理含义。
+- **学员动作**：启动开发服务器 `npm run dev`，确认 Working Tree clean。
 
 ---
 
-## 11. 学员实操任务
-- **Task 0**：检查工程环境，确认 Working Tree 为 100% Clean。
-- **Task 1**：唤醒 `/incremental-implementation` 预览计划，下发 `同意保存实施计划`。
-- **Task 2**：下发 `确认完成 Step 1`，观察代码生成与 `prototypeState` 调试按钮。
-- **Task 3**：验证页面调试器功能，确认 Commit SHA 回填与 Working Tree 恢复 Clean。
+## 8. Task 1: 唤醒 Skill 并落盘实施计划状态机
+- **教师示范**：在 CLI 中下发 `/incremental-implementation`，展示预览计划，并下发 `同意保存实施计划` 口令。
+- **学员动作**：下发指令并验证 `LESSON_04_IMPLEMENTATION_PLAN.md` 生成。
 
 ---
 
-## 12. 推荐提示词
-- **计划生成**：`请根据功能卡生成 Lesson 04 薄切片实施计划。`
-- **计划落盘**：`同意保存实施计划` (或 `授权保存 Lesson 04 实施计划`)
-- **切片授权**：`确认完成 Step 1` (或 `同意保存 Step 1 成果`)
-- **异常记录**：`同意记录 Step 1 问题` (或 `暂停 Step 1 并记录问题`)
+## 9. Task 2: 人在回路授权执行 Step 1 切片编码
+- **教师示范**：强调“绝不许可 AI 自行修改代码”，下发自然口令 `确认完成 Step 1`。
+- **学员动作**：授权编码，观察受控修改 `src/components/WorkOrderBoard.vue`。
 
 ---
 
-## 13. Skill 使用与行业对比
-
-| 维度 | 传统盲盒开发模式 | 本课增量实施范式 (Incremental Skill) |
-| :--- | :--- | :--- |
-| **控制力** | 代理人盲盒，一次生成数百行代码 | 受控 Step 级 Workflow，每次仅授权 1 个切片 |
-| **状态回退** | 改崩后手动按 Ctrl+Z，容易遗漏污染文件 | ** Working Tree 物理管理**：失败导出补丁，1 秒无损还原 |
-| **进度可视化** | 口头询问“写得怎么样了” | 磁盘长期记忆状态机 (`IMPLEMENTATION_PLAN.md`) 实时跟进 |
+## 10. Task 3: 界面技术状态与业务状态的物理解耦
+- **教师示范**：点击页面顶部的 `prototypeState` 调试按钮（Loading/Empty/Error/Success），演示与后端解耦的界面交互测试。
+- **学员动作**：在浏览器上逐一点击验证 4 种技术呈现状态。
 
 ---
 
-## 14. 核心工程概念【四步解析卡】
-
-### 概念 1：Working Tree (工作区 / 工作树)
-1. **硬核工程定义**：Git 版本控制系统中，当前磁盘上允许被查看、修改和暂存的物理文件目录。
-2. **底层运作机制**：任何文件修改都会将 Working Tree 标记为 `Dirty` 状态；执行 `git commit` 或 `git restore` 后恢复为 `100% Clean` 干净状态。
-3. **具象业务比喻**：**厨师切菜的砧板**。菜切到一半是 Dirty，切好盘装走（Commit）或冲洗砧板（Restore）后恢复 Clean。
-4. **IT 沟通与交接价值**：“请确保提交前 Working Tree 处于 Clean 干净状态，避免脏代码混入。”
-
-### 概念 2：状态机 (State Machine)
-1. **硬核工程定义**：一种表示有限个状态以及在这些状态之间转移和动作的数学与软件设计模型。
-2. **底层运作机制**：`PENDING` ➔ `READY` ➔ `IN_PROGRESS` ➔ `COMPLETED` / `BLOCKED`，状态不可逆向跳跃。
-3. **具象业务比喻**：**工厂流水线传送带**。上一道工序没盖章验收，下一道工序的机械臂绝对不启动。
-4. **IT 沟通与交接价值**：“实施计划落盘为状态机，确保 AI 编码步骤具备确定性的物理流转门禁。”
+## 11. Task 4: 异常故障演练与无损 Working Tree 还原
+- **教师示范**：模拟切片报错场景，下发口令 `同意记录 Step 1 问题`，展示自动导出的 `.patch` 补丁文件并验证 Working Tree 恢复 Clean。
+- **学员动作**：演练熔断与快照恢复。
 
 ---
 
-## 15. 验证和证据 (4 类可复核证据链)
-1. **视觉证据**：浏览器中呈现 `prototypeState` 调试按钮，点击可无缝切换四态。
-2. **行为证据**：Vite 热更新正常，控制台无 Console Error。
-3. **工程证据**：运行 `powershell -ExecutionPolicy Bypass -File scripts/verify-project.ps1` 输出 `[PASS]`。
-4. **范围证据**：`git status` 显示 `working tree clean`，未越界修改 `allowed_files` 之外的文件。
+## 12. 人在回路 (HITL) 授权盖章口令集
+- **计划保存口令**：`同意保存实施计划`
+- **Step 授权口令**：`确认完成 Step 1`（或 `授权执行 Step 1`）
+- **异常熔断口令**：`同意记录 Step 1 问题`
 
 ---
 
-## 16. 课堂成果
-- [`docs/LESSON_04_IMPLEMENTATION_PLAN.md`](file:///d:/AILearning/docs/LESSON_04_IMPLEMENTATION_PLAN.md) 状态机文件正确回填了 Step 1 的 `commit_sha`。
-- 学员成功掌握通过自然口令指挥 Agent 完成增量受控构建。
+## 13. 核心概念四步解析卡集
+
+### 💡 概念卡 1：Working Tree (工作区 / 工作树)
+1. **硬核工程定义**：Git 版本控制系统中，物理磁盘上记录代码修改与暂存的工作镜像。
+2. **底层运作机制**：代码修改标记为 `Dirty`，执行 `git commit` 或 `git restore` 后恢复 `100% Clean`。
+3. **具象业务比喻**：**厨师切菜的砧板** 🔪。
+4. **IT 沟通场景**：“请确保提交前 Working Tree 处于 Clean 干净状态。”
+
+### 💡 概念卡 2：增量实施与薄切片范式 (Incremental Thin Slices)
+1. **硬核工程定义**：将大块复杂需求拆解为独立可测试的最小粒度切片逐个构建的范式。
+2. **底层运作机制**：通过 `IMPLEMENTATION_PLAN.md` 磁盘状态机驱动 Step 进度流转。
+3. **具象业务比喻**：**预制件搭积木** 🧩。
+4. **IT 沟通场景**：“我们采用薄切片范式开发，每次只授权落盘 1 个可验证的切片。”
+
+### 💡 概念卡 3：界面技术呈现状态与业务处理流程状态解耦
+1. **硬核工程定义**：将前端界面的技术容错与数据对象的业务生命周期状态物理隔离的设计。
+2. **底层运作机制**：通过 `prototypeState` 开发期变量与可视化按钮，自由切换渲染形态。
+3. **具象业务比喻**：**新车风洞测试** 🚗。
+4. **IT 沟通场景**：“前端引入了 `prototypeState` 调试器，实现了技术状态与业务状态的解耦。”
 
 ---
 
-## 17. 课后作业
-- **必做作业**：下发 `确认完成 Step 2`，完成绑定 Mock 数据并渲染工单列表。
-- **挑战作业**：手动模拟一次代码语法错误，下发 `同意记录 Step 2 问题`，观察自动导出 `step-2-blocked.patch` 并恢复 Working Tree 干净的过程。
+## 14. 5 个固定 Pause Points 控场问答指南
+- **Pause Point 1 (08分)**：问：“为什么不能让 AI 一口气生成全套 1000 行代码？” ➔ 答：“会导致 Working Tree 一片狼藉，中途报错无法回退。”
+- **Pause Point 2 (18分)**：问：“开工前为什么要检查 `git status` 确认 clean？” ➔ 答：“确保砧板干净，避免脏代码混入开发主干。”
+- **Pause Point 3 (25分)**：问：“`prototypeState` 调试按钮有什么用？” ➔ 答：“无后端接口时，全量测试 Loading/Empty/Error 界面容错。”
+- **Pause Point 4 (35分)**：问：“双 Commit 机制为什么要提交两次？” ➔ 答：“Commit A 保护纯净代码，Commit B 记录项目管理进度。”
+- **Pause Point 5 (80分)**：问：“当切片报错时如何无损还原？” ➔ 答：“导出 `.patch` 快照补丁后，冲洗 Working Tree 恢复 Clean。”
 
 ---
 
-## 18. 通过标准
-- [ ] 必须跑通 `verify-project.ps1` 静态断言校验。
-- [ ] 必须跑通 `node .\scripts\run-l4-verifier-isolation-tests.cjs` 8 大隔离场景测试。
-- [ ] 实施计划状态集中 Step 1 `status` 必须为 `COMPLETED`，Step 2 为 `PENDING` 或 `READY`。
+## 15. 学员实操分步巡视 Checklist
+- [ ] 检查学员 `git status` 输出 `nothing to commit, working tree clean`。
+- [ ] 检查学员工程生成了 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`。
+- [ ] 检查学员浏览器能成功点击切换 `prototypeState` 4 种状态。
+- [ ] 检查学员提交后 Working Tree 重新恢复 Clean。
 
 ---
 
-## 19. 常见问题 (Misconceptions Table)
-
-| 常见学员误区 | 正确硬核理解 | 教师课堂纠偏动作 |
-| :--- | :--- | :--- |
-| “为什么不能直接让 AI 把 5 个 Step 全部一次性写完？” | 一次性写全套代码风险极高，任何环节报错都会导致全面排错瘫痪。 | 用“切菜砧板”比喻提醒学员：贪多嚼不烂，每次只授权 1 个切片。 |
-| “`prototypeState` 页面技术状态和业务状态是一回事吗？” | 完全不同！`prototypeState` 是界面加载调试器（Loading/Error）；业务状态是工单生命周期（待处理/已完成）。 | 在页面上现场演示点击四态按钮，展示技术状态与业务逻辑解耦的物理效果。 |
+## 16. 差异化分层辅导策略
+- **对进度偏慢的学员**：提供已写好初始状态的模板，指导输入授权口令。
+- **对进度偏快的学员**：引导其尝试添加第 5 种自定义界面状态（如 `Offline` 断网模式）。
 
 ---
 
-## 20. 课后记录
-- **时间分配审计**：示范 17 min，概念核对 10 min，学员实操 45 min，总结 10 min。
-- **卡点归纳**：部分学员在输入盖章口令时拼写错误，需提醒学员使用标准口令 `同意保存实施计划` 与 `确认完成 Step 1`。
+## 17. 自动化校验与证据提取 (`verify-project.ps1`)
+- **执行校验命令**：
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File scripts/verify-project.ps1
+  ```
+- **预期证据输出**：控制台最后显示 `======================================== Verification completed successfully. ========================================`。
 
 ---
 
-## 21. 学员包信息
-- 包含 `LESSON_04_GUIDE_V2.md`
-- 包含 `.claude/skills/incremental-implementation/SKILL.md`
-- 包含 `.claude/agents/verifier.md`
-- 包含 `scripts/run-lesson-verifier.ps1` 与 `skills-lock.json`
+## 18. 常见错误现场 Debug 预案 (Troubleshooting)
+- **现象 1**：提示 `CONTRACT_ASSET_MISMATCH` ➔ **预案**：回退第三课，核对 `BUSINESS_FEATURE_CARD.md`。
+- **现象 2**：Working Tree 一直是 Dirty ➔ **预案**：下发 `同意记录 Step 1 问题`，导出补丁后还原 Clean。
 
 ---
 
-## 22. 教师复盘
-- **授课亮点**：通过引入“ Working Tree 砧板模型”和“切片概念”，非技术主管彻底看懂了代码无损存档与回退的底层原理。
-- **改进方向**：下次授课可多预留 3 分钟演示 `同意记录 Step N 问题` 生成 `.patch` 快照的真实场景。
+## 19. 课堂退场测试与评估 (Exit Ticket)
+包含 5 道精准题目，考查 Working Tree 干净度、状态机枚举、IT 沟通场景与补丁还原演练。
+
+---
+
+## 20. 课后练习与巩固作业
+指导学员在课后尝试向 AI 提出修改请求，练习完整受控切片与双 Commit 归档全过程。
+
+---
+
+## 21. 教师备课自测 Checklist (Self-Audit)
+- [ ] 22 章节标题完整，包含 5 个 Pause Points。
+- [ ] 包含了【四步解析卡】与 HITL 授权盖章口令。
+- [ ] 包含了 PowerShell 脚本自测通过逻辑。
+
+---
+
+## 22. 版本演进与变更记录
+- **V1 版**：初始教案。
+- **V2/V3 采用版**：整合逆向设计、22 章节物理硬约束、V3 双模学员指南、4 步概念卡与自动化校验闭环。

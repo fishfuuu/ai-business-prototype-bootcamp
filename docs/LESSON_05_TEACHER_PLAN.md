@@ -1,4 +1,4 @@
-# 第五课教师备课与控场指南 (TEACHER_PLAN V2) — 工程 Harness 护栏与记忆机制
+# 第五课教师备课与控场指南 — 建立不会轻易失控的项目：工程 Harness 护栏与记忆机制
 
 > [!IMPORTANT]
 > 本教案为 **正式采用版**，完整集成了 `teaching-lesson-plan`（逆向设计、建构性对齐、Bloom ABCD、WHERETO）与 `teacher-plan-architect`（22 章节物理硬约束、四步概念卡、HITL 授权盖章口令与 PowerShell 自动化校验）。
@@ -7,7 +7,7 @@
 
 ## 1. 课程元数据
 - **课程名称**：AI 业务原型开发训练营·第五课
-- **主讲主题**：工程 Harness 护栏与三分记忆机制：锁定 Agent 行为红线与上下文治理
+- **主讲主题**：建立不会轻易失控的项目：工程 Harness 护栏与三分记忆机制
 - **授课对象**：非技术背景业务主管 / 产品经理 / 业务专家 (10–30人)
 - **课时时长**：90 分钟 (极客控场 + 5 个固定 Pause Points)
 - **授课模式**：18 分钟极客示范 ➔ 10 分钟概念核对 ➔ 45 分钟学员分步实操 ➔ 10 分钟验证归档
@@ -143,7 +143,7 @@
   ```powershell
   powershell -ExecutionPolicy Bypass -File scripts/verify-project.ps1
   ```
-- **预期证据输出**：控制台最后显示 `======================================== Verification completed successfully. ========================================`。
+- **预期证据输出**：控制台最后显示 `======================================== Verification completed successfully. ================================= =======`。
 
 ---
 
@@ -165,7 +165,7 @@
 
 ## 19. 教师备课自测 Checklist (Self-Audit)
 - [ ] 22 章节标题完整，包含 5 个 Pause Points。
-- [ ] 包含了【四步解析卡】与 HITL 授权盖章口令。
+- [ ] 包含了【四步概念卡】与 HITL 授权盖章口令。
 - [ ] 包含了 PowerShell 脚本自测通过逻辑。
 
 ---
