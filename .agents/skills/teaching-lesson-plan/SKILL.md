@@ -1,11 +1,24 @@
 ---
 name: teaching-lesson-plan
-description: "Design a structured lesson plan for any subject, audience, or format. Use when asked to write a lesson plan, course outline, teaching session, workshop curriculum, or training module. Produces a complete lesson plan with learning objectives, activities, timing, assessment, and differentiation guidance."
+description: "Design a structured lesson plan incorporating Backward Design (Wiggins & McTighe), Constructive Alignment (Biggs), Bloom's Taxonomy ABCD framework, WHERETO activities, and evidence-based assessment. Use when asked to write a lesson plan, course outline, teaching session, workshop curriculum, or training module."
 ---
 
-# Teaching Lesson Plan Skill
+# Teaching Lesson Plan Skill (Advanced Pedagogy Fused Version)
 
-Produces a complete, structured lesson plan for any subject, age group, or setting — from a one-hour corporate training to a full school lesson. Built around clear learning objectives, varied activities, and formative assessment.
+Produces a complete, highly structured lesson plan for any subject, audience, or corporate setting. Fuses **Backward Design**, **Constructive Alignment**, and **Bloom's Taxonomy (ABCD)** with practical time-boxed activities, formative assessment, and misconception tables.
+
+## Core Frameworks Integrated
+
+1. **Backward Design (逆向设计)**:
+   - **Stage 1 (Desired Results)**: Enduring understandings, essential questions, knowledge & skills.
+   - **Stage 2 (Acceptable Evidence)**: Formative and summative assessment strategy before planning activities.
+   - **Stage 3 (Learning Plan - WHERETO)**: Where, Hook, Equip, Rethink, Evaluate, Tailor, Organize.
+2. **Constructive Alignment (建构性对齐)**:
+   - Ensure 100% alignment between **Learning Outcomes**, **Teaching Activities**, and **Assessment Tasks**.
+3. **Bloom's Revised Taxonomy (ABCD Formula)**:
+   - **A**udience ("Students will..."), **B**ehavior (Action verb), **C**ondition ("Given a scenario..."), **D**egree ("with 80% accuracy / according to standard").
+
+---
 
 ## Required Inputs
 
@@ -16,6 +29,8 @@ Ask the user for these if not provided:
 - **Setting** (classroom / workshop / online / corporate training / one-to-one)
 - **Learning goal** (what should participants know or be able to do by the end?)
 - **Prior knowledge** (what can you assume they already know?)
+
+---
 
 ## Output Structure
 
@@ -28,99 +43,101 @@ Ask the user for these if not provided:
 
 ---
 
-## Learning Objectives
+## 1. Backward Design: Desired Results & Alignment Map
 
+### Established Goals & Essential Questions
+- **Big Idea / Enduring Understanding**: [What learners retain 1 year later]
+- **Essential Questions**: [1–2 provoking questions guiding inquiry]
+
+### Learning Objectives (Bloom's ABCD Framework)
 By the end of this session, participants will be able to:
-1. [Objective 1 — use Bloom's taxonomy verbs: recall, explain, apply, analyse, evaluate, create]
-2. [Objective 2]
-3. [Objective 3 — maximum 3–4 objectives per session]
+1. **[Objective 1 - Apply/Analyze/Create]**: Given [Condition], learners will [Behavior verb] to [Degree/Standard].
+2. **[Objective 2]**: Given [Condition], learners will [Behavior verb] to [Degree/Standard].
+3. **[Objective 3]**: Given [Condition], learners will [Behavior verb] to [Degree/Standard].
 
-**Key vocabulary:** [3–5 terms participants will need to know]
+**Key vocabulary / IT Terms:** [3–5 core terms with plain analogies]
 
----
-
-## Materials and Preparation
-
-- [ ] [Resource 1 — slides, handout, equipment]
-- [ ] [Resource 2]
-- [ ] Room setup: [configuration — rows / circles / tables / breakout spaces]
+### Constructive Alignment Audit
+| Learning Objective | Bloom's Level | Teaching Activity | Assessment Method | Alignment Check |
+|---|---|---|---|---|
+| Objective 1 | Apply (3) | Demonstration & Guided Practice | Hands-on Task / Log Verification | ✅ Aligned |
+| Objective 2 | Analyze (4) | Scenario Audit & Debugging | Misconception Discussion | ✅ Aligned |
 
 ---
 
-## Lesson Structure
+## 2. Materials and Preparation
 
-| Time | Phase | Activity | Format |
+- [ ] [Resource 1 — slides, handout, equipment, code repository]
+- [ ] [Resource 2 — pre-requisite files, environment scripts]
+- [ ] Room / Environment setup: [CLI, VS Code, Git clean state, room layout]
+
+---
+
+## 3. Lesson Structure (WHERETO Sequence & Timeboxing)
+
+| Time | WHERETO Phase | Activity & Content | Format / Interaction |
 |---|---|---|---|
-| [00:00] | Hook / Opener | [How you grab attention and establish relevance] | [Whole group / Individual / Pairs] |
-| [00:05] | Prior knowledge | [How you connect to what they already know] | [Discussion / Quiz / Think-pair-share] |
-| [00:15] | Instruction | [Direct teaching of new content] | [Explanation / Demo / Video] |
-| [00:30] | Guided practice | [Supported practice with feedback] | [Worked examples / Group task] |
-| [00:50] | Independent practice | [Students apply learning independently] | [Task / Problem / Discussion] |
-| [01:05] | Check for understanding | [Formative assessment] | [Exit ticket / Quiz / Q&A] |
-| [01:15] | Closure | [Summarise, connect to next session] | [Whole group] |
+| [00:00] | **W** (Where & Big Picture) | Hook / Opener: Grab attention, show end-state comparison | Whole group |
+| [00:05] | **H** (Hook Curiosity) | Connect prior knowledge & surface real-world pain points | Discussion / Q&A |
+| [00:15] | **E** (Equip Knowledge) | Direct instruction of core concepts (Engineering definition -> Mechanism -> Metaphor -> Value) | Explanation / Live Demo |
+| [00:30] | **R** (Rethink & Practice) | Guided practice with worked examples & step-by-step scaffolding | Hands-on task / Pairs |
+| [00:50] | **E** (Evaluate Progress) | Independent practice & HITL gate verification | Independent task |
+| [01:05] | **T** (Tailor & Support) | Formative assessment check & individual debugging support | Check-in / Q&A |
+| [01:15] | **O** (Organize & Closure) | Summary, Exit Ticket assessment, connect to next session | Whole group |
 
 ---
 
-## Key Explanations and Worked Examples
+## 4. Key Explanations & Four-Step Concept Cards
 
 ### [Concept 1]
-[Clear explanation + one concrete worked example. Explain the concept the way a good teacher would — no jargon without definition, one idea at a time.]
+1. **Engineering Definition**: [Standard technical/business definition]
+2. **Underlying Mechanism**: [How data/code flows under the hood]
+3. **Business Metaphor**: [Relatable real-world analogy]
+4. **Handoff / Communication Value**: [What to say when talking to IT/team]
 
 ### [Concept 2]
-[Explanation + example]
+1. **Engineering Definition**: ...
+2. **Underlying Mechanism**: ...
+3. **Business Metaphor**: ...
+4. **Handoff / Communication Value**: ...
 
 ---
 
-## Differentiation
+## 5. Formative Assessment & Exit Ticket
 
-**For those who need more support:**
-- [Scaffold: e.g. sentence starters, worked examples, vocabulary cards]
-- [Modified task or reduced scope]
+**During session (Assessment FOR Learning):**
+- Method 1: Cold calling / Thumbs up-down check
+- Method 2: Command/Log verification (`verify-project.ps1`)
 
-**For those ready for a challenge:**
-- [Extension: e.g. apply to a new context, evaluate, create something]
-
----
-
-## Formative Assessment (Check for Understanding)
-
-**During session:**
-- [Method 1: e.g. Cold calling with no-stakes approach, thumbs up/down, mini whiteboards]
-- [Method 2: e.g. Think-pair-share before moving on]
-
-**Exit ticket (last 5 minutes):**
-[One specific question that directly tests the learning objective — not "what did you enjoy?" but "solve this problem" or "explain this concept in your own words"]
+**Exit Ticket (Last 5–10 minutes):**
+- **Question 1**: [Tests core cognitive objective]
+- **Question 2**: [Tests real-world application/IT communication scenario]
 
 ---
 
-## Common Misconceptions to Address
+## 6. Common Misconceptions Table
 
-| Misconception | Correct understanding | How to address it |
+| Misconception | Correct Understanding | How to Address in Class |
 |---|---|---|
-| [What learners often get wrong] | [The correct version] | [Specific activity or explanation] |
+| [What learners get wrong] | [The correct engineering/business reality] | [Specific demo, guardrail, or explanation] |
 
 ---
 
-## Quality Checks
+## 7. Differentiation & Support Strategies
 
-- [ ] Learning objectives use action verbs (not "understand" or "know")
-- [ ] Session has a clear hook that establishes relevance
-- [ ] Activities are varied (not all listening)
-- [ ] Formative assessment checks the actual learning objective
-- [ ] Differentiation is specified for both support and extension
-- [ ] Timing adds up to session length
+**For those who need more support (Scaffold):**
+- Provide pre-built starter packages, sentence starters, or worked examples.
 
-## Anti-Patterns
+**For those ready for a challenge (Extension):**
+- Provide advanced edge-case debugging, custom rule additions, or architecture extensions.
 
-- [ ] Do not design a lesson plan without explicitly stating the learning objectives — activities must trace back to outcomes
-- [ ] Do not allocate timing that does not add up to the total session length — the plan must be time-feasible
-- [ ] Do not create activities with no assessment component — learning must be measurable, not just delivered
-- [ ] Do not ignore differentiation — a plan with no accommodation for different learning levels or abilities is incomplete
-- [ ] Do not front-load all content delivery without interactive breaks — passive listening degrades retention after 15–20 minutes
+---
 
-## Example Trigger Phrases
+## Quality Checks & Anti-Patterns
 
-- "Write a lesson plan on [topic] for [audience]"
-- "Design a 60-minute session on [subject]"
-- "Create a training module on [skill]"
-- "Plan a workshop on [topic] for [group]"
+- [ ] Learning objectives use action verbs (ABCD format, avoiding vague "understand")
+- [ ] 100% Constructive Alignment (Outcomes, Activities, Assessments point in the same direction)
+- [ ] WHERETO sequence is followed with timeboxed activities adding up to session length
+- [ ] Includes Four-Step Concept Cards (Definition -> Mechanism -> Metaphor -> Value)
+- [ ] Exit Ticket tests actual learning outcome, not just "enjoyment"
+- [ ] Differentiation and Misconceptions Table are specified
