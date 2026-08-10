@@ -1,28 +1,28 @@
 ---
 name: teacher-plan-architect
-description: Master skill for designing high-caliber enterprise AI lesson plans and teaching guides. Enforces the 4-step concept definition framework (Definition -> Mechanism -> Metaphor -> Handoff Value), 5-pause-point time allocation, and evidence-driven verification.
+description: Master skill for designing high-caliber enterprise AI lesson plans and student guides. Enforces the 4-step concept definition framework (Definition -> Mechanism -> Metaphor -> Handoff Value), 22-section Teacher Plan structure, 5-pause-point time allocation, V3 Dual-Mode Student Guide architecture, and evidence-driven verification.
 ---
 
 # Teacher Plan Architect (企业级 AI 课程教案设计高手 Skill)
 
-当需要编写或重构《教师备课与控场指南 (TEACHER_PLAN)》或《学员操作卡 (GUIDE)》时，严格遵守以下 5 维硬核教学设计架构。
+当需要编写或重构《教师备课与控场指南 (TEACHER_PLAN)》或《学员操作指南 (GUIDE)》时，严格遵守以下 6 维硬核教学设计架构。
 
 ---
 
-## 1. 核心概念【四步解析公式】(Mandatory Concept Formula)
+## 1. 核心概念【四步解析公式】与每课精选原则
 
-拒绝任何“只给比喻不给原理”的浅薄解释。教案中出现的每一个专业概念（如 Git, Token, MCP, Linter, Harness, Assertion），必须按以下 4 步递进解析：
+拒绝任何“只给比喻不给原理”的浅薄解释，也不贪多嚼不烂。每节课精选 **2–3 个最核心概念**（1 个标准 IT 术语 + 1-2 个工程范式），统一按以下 4 步递进解析：
 
 1. **硬核工程定义 (Engineering Definition)**：使用标准的 IT/软件工程术语，不作修饰，讲清物理本质。
 2. **底层运作机制 (Underlying Mechanism)**：解释代码、内存、接口或数据在底层到底是如何流转与执行的。
-3. **具象业务比喻 (Business Metaphor)**：抛出形象比喻，帮助非技术主管建立大脑记忆锚点。
-4. **IT 沟通与交接价值 (Handoff Value)**：明确主管学完后在业务落地与向 IT 交接时的具体表达与产出。
+3. **具象业务比喻 (Business Metaphor)**：抛出形象比喻（如厨师砧板、赛马鞍具），帮助非技术主管建立大脑记忆锚点。
+4. **IT 沟通与交接价值 (Handoff Value)**：明确主管学完后在业务落地与向 IT 部门开会交接时的具体专业表达与产出。
 
 ---
 
-## 2. 课堂时间与控场节奏 (90 分钟极客控场)
+## 2. 课堂时间与控场节奏 (90 分钟极客控场 & 22 章节硬约束)
 
-标准教案必须精确拆解为 5 大环节与 5 个固定暂停点（Pause Points）：
+教师备课教案 (`TEACHER_PLAN.md`) 必须精确满足 **22 章节物理硬约束**，并划分为 5 大环节与 5 个固定暂停点（Pause Points）：
 
 | 阶段 | 建议时长 | 教师动作 | 学员动作 | 关键暂停点 (Pause Point) |
 | :--- | :--- | :--- | :--- | :--- |
@@ -34,29 +34,50 @@ description: Master skill for designing high-caliber enterprise AI lesson plans 
 
 ---
 
-## 3. 人在回路 (HITL) 授权与安全防护线
+## 3. 学员操作指南 (GUIDE V3) 双模构建规范
+
+学员指南 (`GUIDE_V3.md`) 必须兼具“课堂极速实操”与“无痛独立自学”双重体验，严格遵循以下 5 大输出标准：
+
+1. **引言顶置核心金句**：
+   - 顶部必须用引用框顶置该课的核心思想金句（如 `> 💡 **本课的核心思想只有一句话：...**`）。
+2. **集中【💡 本课核心工程概念卡】专栏**：
+   - 在 Task 之前单独设区，精选 2-3 个核心概念，统一按四步解析卡格式输出。
+3. **流程图三层元模式 (Diagram Meta-Pattern)**：
+   - **模式 A (痛点反例)**：展现实用野生盲开导致的白屏/失控灾难。
+   - **模式 B (受控流转图)**：展示标准工作流，必须画出 **PASS 双提交归档** 与 **FAIL 补丁快照清扫还原** 双分支。
+   - **模式 C (机制/调试器图解)**：针对当前课的核心概念（调试器/三分记忆/诊断卡等）给出现场视效框图。
+4. **Task 任务双轨道设计**：
+   - 每个 Task 必须区分：`⚡ 极速操作步骤 (课堂看这里)`、`💡 独立自学原理解析 (自学看这里)` 与 `🔍 代码 Before/After 对比`。
+5. **双重误区与排错保障**：
+   - 必须同时包含 **`💡 常见概念误区与正确理解` (思维观念重塑 4 大误区表)** 与 **`❓ 常见操作报错` (Troubleshooting 排错指南)**。
+
+---
+
+## 4. 人在回路 (HITL) 授权与安全防护线
 
 教案中必须显式标明**安全隔离防护墙**：
 * **改前必存档**：在下达修改指令前，必须执行节点手动存档 `git commit -m "baseline: ..."`。
-* **修改须授权**：明确绝不允许 Agent 自行修改代码，必须等待主管输入明确盖章口令（如 `同意方案，请开始修改代码`）。
-* **越界一键撤销**：指导主管监视 Diff 红绿视图，一旦改崩，通过 `Discard Changes` 1 秒无损还原。
+* **修改须授权**：明确绝不允许 Agent 自行修改代码，必须等待主管输入明确盖章口令（如 `同意保存实施计划` / `确认完成 Step 1`）。
+* **越界一键撤销**：指导主管监视 Diff 红绿视图，一旦改崩，通过 `git restore` 或还原命令 1 秒无损恢复干净工作区。
 
 ---
 
-## 4. 四类可复核证据链 (Evidence-Driven Validation)
+## 5. 四类可复核证据链 (Evidence-Driven Validation)
 
 教案结尾必须包含明确的证据验收机制：
-1. **视觉证据**：试衣镜页面对比截图。
-2. **行为证据**：交互点击无报错日志。
+1. **视觉证据**：试衣镜页面对比截图或调试器状态切换。
+2. **行为证据**：交互点击无报错日志，终端网络输出正常。
 3. **工程证据**：`powershell -File .\scripts\verify-project.ps1` 输出 `[PASS]`。
-4. **范围证据**：`git diff` 确认未修改超出许可范围的文件。
+4. **范围证据**：`git status` 确认未修改超出许可范围的文件，Working Tree 恢复 `100% Clean`。
 
 ---
 
-## 5. 教师教案质量自我审计 Checklist
+## 6. 教案与指南质量自我审计 Checklist
 
 在生成或重构教案后，自我审计是否满足：
+- [ ] 教师教案 100% 匹配 22 章节标题，包含 5 个固定 Pause Points。
 - [ ] 所有核心概念均包含了【硬核定义 + 底层机制 + 业务比喻 + IT交接】4 步。
-- [ ] 包含了精确到分钟的时间分配表与 5 个固定暂停提问点。
-- [ ] 包含了明显的“人在回路 (HITL) 盖章口令”与 Git 防护动作。
+- [ ] 学员指南顶部包含核心金句，且在 Task 之前集中输出了 2-3 个核心概念卡。
+- [ ] 学员指南流程图包含了模式 A (反例) + 模式 B (PASS/FAIL双分支) + 模式 C (机制图)。
+- [ ] 学员指南包含了“双轨道任务步骤”与“双重误区与排错保障表”。
 - [ ] 包含了 PowerShell 自动化校验脚本的 `[PASS]` 验证闭环。

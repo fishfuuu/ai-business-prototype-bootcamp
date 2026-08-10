@@ -1,22 +1,24 @@
 ---
 name: teaching-lesson-plan
-description: "Design a structured lesson plan incorporating Backward Design (Wiggins & McTighe), Constructive Alignment (Biggs), Bloom's Taxonomy ABCD framework, WHERETO activities, and evidence-based assessment. Use when asked to write a lesson plan, course outline, teaching session, workshop curriculum, or training module."
+description: "Design a structured lesson plan incorporating Backward Design (Wiggins & McTighe), Constructive Alignment (Biggs), Bloom's Taxonomy ABCD framework, WHERETO activities, V3 Dual-Mode Student Guide architecture, and evidence-based assessment. Use when asked to write a lesson plan, course outline, teaching session, workshop curriculum, or training module."
 ---
 
-# Teaching Lesson Plan Skill (Advanced Pedagogy Fused Version)
+# Teaching Lesson Plan Skill (Advanced Pedagogy Fused Version V3)
 
-Produces a complete, highly structured lesson plan for any subject, audience, or corporate setting. Fuses **Backward Design**, **Constructive Alignment**, and **Bloom's Taxonomy (ABCD)** with practical time-boxed activities, formative assessment, and misconception tables.
+Produces a complete, highly structured lesson plan and student guide for any subject, audience, or corporate setting. Fuses **Backward Design**, **Constructive Alignment**, **Bloom's Taxonomy (ABCD)**, and **V3 Dual-Mode Student Architecture** with practical time-boxed activities, formative assessment, and dual-layer misconception tables.
 
 ## Core Frameworks Integrated
 
 1. **Backward Design (逆向设计)**:
-   - **Stage 1 (Desired Results)**: Enduring understandings, essential questions, knowledge & skills.
+   - **Stage 1 (Desired Results)**: Enduring understandings ("Big Idea"), essential questions, knowledge & skills.
    - **Stage 2 (Acceptable Evidence)**: Formative and summative assessment strategy before planning activities.
    - **Stage 3 (Learning Plan - WHERETO)**: Where, Hook, Equip, Rethink, Evaluate, Tailor, Organize.
 2. **Constructive Alignment (建构性对齐)**:
    - Ensure 100% alignment between **Learning Outcomes**, **Teaching Activities**, and **Assessment Tasks**.
 3. **Bloom's Revised Taxonomy (ABCD Formula)**:
    - **A**udience ("Students will..."), **B**ehavior (Action verb), **C**ondition ("Given a scenario..."), **D**egree ("with 80% accuracy / according to standard").
+4. **V3 Dual-Mode Student Guide (双模学员指南)**:
+   - Fast-Track in-class steps + Self-Study Deep-Dive原理解析 + 2–3 个精选核心概念卡 + 三层流程图元模式 + 双重误区保障。
 
 ---
 
@@ -55,8 +57,6 @@ By the end of this session, participants will be able to:
 2. **[Objective 2]**: Given [Condition], learners will [Behavior verb] to [Degree/Standard].
 3. **[Objective 3]**: Given [Condition], learners will [Behavior verb] to [Degree/Standard].
 
-**Key vocabulary / IT Terms:** [3–5 core terms with plain analogies]
-
 ### Constructive Alignment Audit
 | Learning Objective | Bloom's Level | Teaching Activity | Assessment Method | Alignment Check |
 |---|---|---|---|---|
@@ -87,19 +87,19 @@ By the end of this session, participants will be able to:
 
 ---
 
-## 4. Key Explanations & Four-Step Concept Cards
+## 4. Key Explanations & Standard Four-Step Concept Cards (2–3 精选)
 
-### [Concept 1]
-1. **Engineering Definition**: [Standard technical/business definition]
-2. **Underlying Mechanism**: [How data/code flows under the hood]
-3. **Business Metaphor**: [Relatable real-world analogy]
-4. **Handoff / Communication Value**: [What to say when talking to IT/team]
+### 💡 核心概念卡 1：[IT标准术语 (中文常用译名)]
+1. **硬核工程定义**: [Standard technical/business definition]
+2. **底层运作机制**: [How data/code flows under the hood]
+3. **具象业务比喻**: [Relatable real-world analogy]
+4. **IT 沟通场景**: [What to say when talking to IT/team]
 
-### [Concept 2]
-1. **Engineering Definition**: ...
-2. **Underlying Mechanism**: ...
-3. **Business Metaphor**: ...
-4. **Handoff / Communication Value**: ...
+### 💡 核心概念卡 2：[本课工程范式/机制]
+1. **硬核工程定义**: ...
+2. **底层运作机制**: ...
+3. **具象业务比喻**: ...
+4. **IT 沟通场景**: ...
 
 ---
 
@@ -115,11 +115,17 @@ By the end of this session, participants will be able to:
 
 ---
 
-## 6. Common Misconceptions Table
+## 6. Dual-Layer Misconceptions & Troubleshooting
 
-| Misconception | Correct Understanding | How to Address in Class |
+### 💡 常见概念误区与正确理解 (Mindset Transformation)
+| 常见误区 | 正确硬核理解 | 如何纠偏与护栏防护 |
 |---|---|---|
 | [What learners get wrong] | [The correct engineering/business reality] | [Specific demo, guardrail, or explanation] |
+
+### ❓ 常见操作报错与 Troubleshooting 指南
+| 报错/异常现象 | 物理原因 | 解决与纠偏方案 |
+|---|---|---|
+| [Error message / symptom] | [Root cause] | [Actionable fix command] |
 
 ---
 
@@ -138,6 +144,6 @@ By the end of this session, participants will be able to:
 - [ ] Learning objectives use action verbs (ABCD format, avoiding vague "understand")
 - [ ] 100% Constructive Alignment (Outcomes, Activities, Assessments point in the same direction)
 - [ ] WHERETO sequence is followed with timeboxed activities adding up to session length
-- [ ] Includes Four-Step Concept Cards (Definition -> Mechanism -> Metaphor -> Value)
-- [ ] Exit Ticket tests actual learning outcome, not just "enjoyment"
-- [ ] Differentiation and Misconceptions Table are specified
+- [ ] Includes Standard Four-Step Concept Cards (2–3 精选: Definition -> Mechanism -> Metaphor -> Value)
+- [ ] Student Guide features V3 Dual-Track instructions & Three-Layer Flow Diagram Meta-Pattern
+- [ ] Includes Dual-Layer Misconceptions (Mindset table + Troubleshooting guide)
