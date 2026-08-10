@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第 5 课 · 建立不会轻易失控的项目 | 主管 AI 训练营</title>
+<title>第 5 课 · 建立不会轻易失控的项目：工程 Harness 护栏与记忆机制 | 主管 AI 训练营</title>
 <style>
   :root {
     --paper: #faf7f2;
@@ -163,6 +163,18 @@
     padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 160px; overflow-y: auto;
   }
 
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .9rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  }
+  .prompt-copy-text { font-family: "Consolas", monospace; font-size: .92rem; font-weight: 700; color: #0f172a; }
+  .btn-copy {
+    background: #334155; color: #fff; border: none; border-radius: 6px; padding: .35rem .85rem;
+    font-size: .8rem; font-weight: 700; cursor: pointer; transition: background .15s; white-space: nowrap;
+  }
+  .btn-copy:hover { background: #0f172a; }
+
   /* Interactive Concept Fill-in-the-Blanks */
   .blank-card {
     background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem;
@@ -252,11 +264,11 @@
 <!-- HERO HEADER -->
 <div class="hero">
   <div class="wrap">
-    <div class="kicker">Lesson 05 · 工程护栏与三分记忆 (V2 闭环版)</div>
+    <div class="kicker">Lesson 05 · 工程 Harness 护栏与记忆机制</div>
     <h1>建立不会轻易失控的项目</h1>
-    <p class="sub">通过配置项目最高工程规约 <b>CLAUDE.md</b> 锁死包管理器与框架规约。掌握 <b>三分记忆模型（工作记忆 / 外部长期记忆 / 版本证据）</b>、<b>【解药 1：环境脱幻工具箱】</b> 与单机游戏 <b>S/L (Save & Load) 存档还原机制</b>，确保原型项目稳如磐石。</p>
+    <p class="sub">不要信任 AI 的短期口头承诺！通过配置项目最高工程规约 <b>CLAUDE.md 物理挂载护栏</b>，锁死包管理器与修改边界。掌握 <b>三分记忆模型（长期/中期/短期）</b>、<b>`/compact` 上下文提纯</b> 与单机游戏 <b>S/L 存读档恢复机制</b>，确保原型稳如磐石。</p>
     <div class="goal">
-      🎯 <b>本课目标</b>：① 配置项目最高规约 <code>CLAUDE.md</code> 锁定 4 大防错红线；② 理解三分记忆模型；③ 掌握【解药 1：环境脱幻工具箱】；④ 运用 S/L 存档还原机制一键撤销坏修改；⑤ 完成全量项目巡检并进行稳定 Commit 归档。
+      🎯 <b>本课目标</b>：① 使用原生 `/init` 秒级生成 `CLAUDE.md` 并补充 4 大防错红线；② 掌握使用 `/compact` 清理提纯短期 Context 缓存；③ 掌握关机重开/跨会话场景下的 S/L 存读档状态恢复 (`State Restore`)。
     </div>
   </div>
 </div>
@@ -265,19 +277,19 @@
 
 <!-- SECTION 01: INTERACTIVE HARNESS & S/L SIMULATOR -->
 <section>
-  <h2><span class="num">01</span> 核心架构演进：无护栏失控 vs CLAUDE.md 护栏 + 三分记忆</h2>
-  <p>看看缺少护栏时 AI 乱装依赖、改坏 Vite 配置导致白屏，与绑定 <code>CLAUDE.md</code> 物理拦截及 S/L 读档还原的动态效果：</p>
+  <h2><span class="num">01</span> 核心架构演进：无护栏失控 vs CLAUDE.md 物理挂载 + 三分记忆</h2>
+  <p>看看缺少物理护栏时 AI 乱用 `yarn` 安装依赖导致工程崩溃，与绑定 `CLAUDE.md` 物理挂载及 `/compact` 提纯的动态差异：</p>
 
   <div class="sim-container">
     <div class="sim-header">
-      <span>🎬 CLAUDE.md 物理拦截与 S/L 存档还原动态演示</span>
+      <span>🎬 CLAUDE.md 物理挂载与 S/L 存读档恢复动态演示</span>
       <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
     </div>
     <div class="sim-body">
       
       <div class="mode-tabs">
-        <button class="mode-btn active raw" id="mBtnUncontrolled" onclick="runHarnessMode('uncontrolled')">🔴 第一层：无护栏失控 (乱装依赖/改坏 Vite/白屏)</button>
-        <button class="mode-btn harness" id="mBtnHarness" onclick="runHarnessMode('harness')">🔵 第二层：CLAUDE.md 护栏 + S/L 读档 (本课实操)</button>
+        <button class="mode-btn active raw" id="mBtnUncontrolled" onclick="runHarnessMode('uncontrolled')">🔴 模式 A：无护栏失控 (乱装依赖/修改未授权文件/白屏)</button>
+        <button class="mode-btn harness" id="mBtnHarness" onclick="runHarnessMode('harness')">🔵 模式 B：CLAUDE.md 护栏 + `/compact` 提纯 (本课范式)</button>
       </div>
 
       <div class="flow-display-canvas" id="harnessCanvas">
@@ -292,56 +304,55 @@
   </div>
 
   <div class="quote">
-    💡 <b>核心思想</b>：用工程规约（<code>CLAUDE.md</code>）死死约束 AI 的越界行为，用三分记忆与 S/L 基线存档保障项目永不失控。
+    💡 <b>核心思想</b>：用工程物理规约（`CLAUDE.md`）死死约束 AI 的修改边界，用三分记忆与 S/L 存读档保障项目永远安全接续。
   </div>
 </section>
 
-<!-- SECTION 02: 4 CORE CONCEPTS -->
+<!-- SECTION 02: 3 CORE CONCEPTS -->
 <section>
-  <h2><span class="num">02</span> 核心概念卡：最高规约、三分记忆与 S/L 机制</h2>
+  <h2><span class="num">02</span> 核心概念卡：四步公式解析三大工程概念</h2>
 
   <div class="grid-2">
     <div class="card focus">
-      <h3 style="color: var(--blue);">📜 1. 最高工程规约 (CLAUDE.md)</h3>
-      <p>根目录下的系统级 Prompt 护栏，AI 每次对话前<b>强制读取</b>。<br>
-      锁定包管理器 (npm)、UI 框架 (Vue 3 + Element Plus)、禁止修改核心配置与敏感安全红线。</p>
+      <h3 style="color: var(--blue);">🏇 1. Engineering Harness (工程鞍具 / 物理护栏)</h3>
+      <p>• <b>硬核定义</b>：为了约束 AI Agent 行为边界而建立的物理配置文件与防火墙。<br>
+      • <b>底层机制</b>：在 Agent 发起系统调用或修改代码前，强制读取 Harness 物理规则。<br>
+      • <b>业务比喻</b>：<b>赛马的鞍具与缰绳 🏇</b>。戴上缰绳，骑手（主管）才能把控方向。<br>
+      • <b>IT 沟通</b>：“项目部署了工程 Harness 护栏，物理锁定了包管理器与编码规则。”</p>
     </div>
     <div class="card focus">
-      <h3 style="color: var(--plum);">🧠 2. 三分记忆模型 (3-Layer Memory)</h3>
-      <p>• <b>工作记忆</b> (聊天窗口: 随用随清)<br>
-      • <b>外部长期记忆</b> (<code>PROJECT_STATE.md</code> / 实施计划: 跨会话继承)<br>
-      • <b>版本证据</b> (Git Commit 节点: 物理可追溯与 S/L 读档)</p>
+      <h3 style="color: var(--plum);">🧠 2. 三分记忆模型 (3-Layer Memory Architecture)</h3>
+      <p>• <b>硬核定义</b>：解耦为长期物理记忆 (`CLAUDE.md`)、中期进度记忆 (`IMPLEMENTATION_PLAN.md`) 与短期对话缓存 (Context Buffer)。<br>
+      • <b>底层机制</b>：长期规则在每轮对话开始前物理挂载 Prompt 顶部；短期缓存用 `/compact` 提纯。<br>
+      • <b>业务比喻</b>：<b>公司章程 (长期) + 盘点账本 (中期) + 电话临时记事本 (短期) 📝</b>。<br>
+      • <b>IT 沟通</b>：“建立三分记忆模型，有效防止了 AI Token 溢出与规则遗忘。”</p>
     </div>
   </div>
 
-  <div class="grid-2">
-    <div class="card tinted">
-      <h3 style="color: var(--teal);">🧪 3. 解药 1：环境脱幻工具箱</h3>
-      <p>修改代码或安装依赖前，强制要求 Agent <b>先主动读取工程实际文件与依赖版本</b>（如运行 <code>verify-project.ps1</code>），严禁凭空盲猜。</p>
-    </div>
-    <div class="card tinted">
-      <h3 style="color: var(--amber);">💾 4. S/L 存档还原机制 (Save & Load)</h3>
-      <p>• <b>存档 (Save)</b>：三层验收通过后立即 Commit 入库；<br>
-      • <b>读档 (Load)</b>：当 Agent 产生幻觉或改坏代码时，下发指令要求其<b>一键撤销并恢复至最近的稳定 Git Commit</b>！</p>
-    </div>
+  <div class="card tinted">
+    <h3 style="color: var(--amber);">🎮 3. S/L 存读档状态恢复机制 (State Save / Load Restore)</h3>
+    <p>• <b>硬核定义</b>：通过读取磁盘持久化的状态机文件，无缝重建注意力锚点并恢复断点任务。<br>
+    • <b>底层机制</b>：中断对话或关机重开后，下发恢复口令，Agent 1 秒读取磁盘 `current_waiting_step`。<br>
+    • <b>业务比喻</b>：<b>单机游戏的 S/L 存档与读档 🎮</b>。关机重开后 1 秒载入最新关卡！<br>
+    • <b>IT 沟通</b>：“支持 S/L 存读档状态恢复，跨会话开发时 1 秒无缝接续实施进度。”</p>
   </div>
 </section>
 
 <!-- SECTION 03: INTERACTIVE DEMO OF /INIT & CLAUDE.MD INTERCEPTION -->
 <section>
-  <h2><span class="num">03</span> 演练：`/init` 指令与违规拦截现场模拟</h2>
-  <p>在模拟 CLI 终端中体验下发违规命令（如请求安装未经授权的第三方图标库）时，`CLAUDE.md` 护栏物理拦截的物理过程：</p>
+  <h2><span class="num">03</span> 演练：原生 `/init` 指令与 4 大防错红线物理拦截</h2>
+  <p>在模拟 CLI 终端中体验下发违规命令（如请求使用 `yarn` 安装第三方包）时，`CLAUDE.md` 物理挂载拦截的过程：</p>
 
   <div class="sim-container">
     <div class="sim-header">
-      <span>🛡️ CLAUDE.md 拦截测试终端模拟器</span>
-      <span style="font-size: .8rem; opacity: .8;">输入越界指令测试物理拦截</span>
+      <span>🛡️ CLAUDE.md 防错红线物理拦截终端模拟器</span>
+      <span style="font-size: .8rem; opacity: .8;">点击按钮测试物理拦截</span>
     </div>
     <div class="sim-body">
       <div style="margin-bottom: 1rem; display:flex; gap:.6rem; flex-wrap:wrap;">
         <button class="btn" onclick="testInterception('init')">⚡ 运行 /init 探查自动生成 CLAUDE.md</button>
-        <button class="btn secondary" onclick="testInterception('violating')">🔴 下发违规指令 ("安装 echarts 并修改 vite.config.ts")</button>
-        <button class="btn secondary" style="background:var(--amber);" onclick="testInterception('sl')">💾 执行 S/L 读档 ("一键还原至最近 Git Commit")</button>
+        <button class="btn secondary" onclick="testInterception('violating')">🔴 下发违规指令 ("我们可以用 yarn 安装新包吗？")</button>
+        <button class="btn secondary" style="background:var(--amber);" onclick="testInterception('compact')">🧹 运行 /compact 上下文提纯</button>
       </div>
 
       <div class="console-output" id="interceptionTerminal" style="min-height: 180px;">
@@ -351,31 +362,37 @@
   </div>
 </section>
 
-<!-- SECTION 04: STUDENT TASKS WORKFLOW -->
+<!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
 <section>
-  <h2><span class="num">04</span> 学员实操 Task 0 ~ Task 3 指令全景</h2>
+  <h2><span class="num">04</span> 学员实操 Task 1 ~ Task 3 自然口令卡</h2>
 
   <div class="card focus">
-    <b>Task 0 · 基线检查</b><br>
-    确认上一课成果完好，工作区处于 clean 干净状态：<br>
-    <code>请检查当前 Git 状态，确认 docs/PROJECT_STATE.md 存在且工作区干净。</code>
+    <b>Task 1 · 使用原生 `/init` 指令生成基础护栏</b><br>
+    在 Claude Code CLI 窗口中输入原生初始化指令：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">/init</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制指令</button>
+    </div>
+    <i>原理：自动一键扫描 `package.json`，在根目录落盘 `CLAUDE.md` 初稿框架。</i>
   </div>
 
   <div class="card focus">
-    <b>Task 1 · 唤醒 Skill 生成并落盘 CLAUDE.md</b><br>
-    在 CLI 中下发内置指令并追加 4 大防错红线：<br>
-    <code>/init</code> ➔ <code>请在 CLAUDE.md 中补充 4 大防错红线 (限定 npm / 禁用未授权包 / 锁 Vite 配置 / 强制读盘)</code>
+    <b>Task 2 · 补充 4 大防错红线并盖章落盘</b><br>
+    要求 AI 补充 <code>npm</code> 限制、<code>allowed_files</code> 范围限制、Early Return 规范与 Error Handling 4 大红线，并下发落盘口令：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">同意保存 CLAUDE.md 项目护栏配置</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
   </div>
 
   <div class="card focus">
-    <b>Task 2 · 体验工程护栏拦截与 S/L 存档还原</b><br>
-    测试违规指令：<code>请帮我安装 echarts 并修改 vite.config.ts</code> ➔ 触发 <code>[工程护栏拦截]</code>！<br>
-    测试 S/L 读档：<code>放弃刚才的所有临时修改，一键恢复到最近的稳定 Git Commit 基线。</code>
-  </div>
-
-  <div class="card focus">
-    <b>Task 3 · 项目全量巡检与 Git 稳定 Commit 归档</b><br>
-    运行全量巡检脚本 ➔ 确认输出 <code>[PASS]</code> ➔ 更新 <code>PROJECT_STATE.md</code> 为 L05 PASS ➔ 执行 Git 稳定提交！
+    <b>Task 3 · 上下文提纯与 S/L 存读档恢复演练</b><br>
+    • <b>提纯短期缓存</b>：在 CLI 中输入 <code>/compact</code> 指令提纯 Token。<br>
+    • <b>S/L 存读档恢复 (State Restore)</b>：关机重开或新开会话后，下发自然恢复口令 1 秒无缝载入进度：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">请读取 IMPLEMENTATION_PLAN 恢复当前 Step 状态</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
   </div>
 </section>
 
@@ -387,41 +404,37 @@
   <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空，并点击“核对答案”：</p>
 
   <div class="blank-card" id="bCard1">
-    1. <b>最高工程规约</b>：根目录下的 
+    1. <b>原生初始化指令</b>：在 Claude Code CLI 中，用于自动一键扫描工程结构并落盘 `CLAUDE.md` 初稿的基础指令是 
     <select class="blank-select" id="blank1">
       <option value="">-- 请选择 --</option>
-      <option value="CLAUDE.md">CLAUDE.md</option>
-      <option value="README.md">README.md</option>
-      <option value="INDEX.html">INDEX.html</option>
-    </select>
-    是 Agent 每次对话前强制读取的最高规范，用于锁定包管理器与安全防错红线。
+      <option value="init">/init</option>
+      <option value="compact">/compact</option>
+    </select>。
     <div class="blank-feedback" id="bf1"></div>
   </div>
 
   <div class="blank-card" id="bCard2">
-    2. <b>三分记忆模型</b>：聊天窗口属于 
+    2. <b>三分记忆模型</b>：包管理器禁令与 4 大防错红线存放于 
     <select class="blank-select" id="blank2">
       <option value="">-- 请选择 --</option>
-      <option value="working-mem">工作记忆 (随用随清)</option>
-      <option value="long-term-mem">外部长期记忆</option>
-      <option value="version-evidence">版本证据</option>
+      <option value="long">长期记忆 (CLAUDE.md 物理挂载)</option>
+      <option value="short">短期记忆 (聊天框 Context Buffer)</option>
     </select>
-    ；而 <code>PROJECT_STATE.md</code> 属于 
+    ；而 Step 实施进度存放于 
     <select class="blank-select" id="blank3">
       <option value="">-- 请选择 --</option>
-      <option value="long-term-mem">外部长期记忆 (跨会话继承)</option>
-      <option value="working-mem">工作记忆</option>
-    </select>
-    ；Git Commit 属于版本证据。
+      <option value="mid">中期记忆 (IMPLEMENTATION_PLAN.md 磁盘文件)</option>
+      <option value="short">短期记忆</option>
+    </select>。
     <div class="blank-feedback" id="bf2"></div>
   </div>
 
   <div class="blank-card" id="bCard3">
-    3. <b>S/L 存档还原机制</b>：当 Agent 产生严重幻觉或改坏代码配置时，最正确的动作是 
+    3. <b>S/L 存读档恢复</b>：关机重开或中断会话后，下发自然口令 `请读取 IMPLEMENTATION_PLAN 恢复当前 Step 状态`，AI 会在 
     <select class="blank-select" id="blank4">
       <option value="">-- 请选择 --</option>
-      <option value="sl-load">放弃当前错误尝试，恢复至最近的稳定 Git Commit</option>
-      <option value="retry-forever">在污染的代码上不断发指令撞大运</option>
+      <option value="restore">1 秒读取磁盘状态机并恢复断点注意力</option>
+      <option value="forget">完全遗忘，必须重新向 AI 解释背景</option>
     </select>。
     <div class="blank-feedback" id="bf3"></div>
   </div>
@@ -440,24 +453,19 @@
       </thead>
       <tbody>
         <tr>
-          <td><span class="badge-misc red">误区 1</span><br><b>“让 AI 自由选择安装流行的第三方库效率更高”</b></td>
-          <td>擅自安装未知依赖容易导致版本冲突、打包体积膨胀甚至引入恶意代码，生产环境物理禁止。</td>
-          <td>在 <code>CLAUDE.md</code> 中写入依赖禁令，触发护栏物理拦截未授权 install。</td>
+          <td><span class="badge-misc red">误区 1</span><br><b>“把所有规则粘贴在聊天框里 AI 就永远记得”</b></td>
+          <td>聊天框是短期记忆（Context Buffer），随对话轮数增多必然面临 Token 溢出与注意力衰减（AI 幻觉）。</td>
+          <td>实行三分记忆模型，长期红线落盘至 `CLAUDE.md`，中期计划落盘至 `IMPLEMENTATION_PLAN.md`。</td>
         </tr>
         <tr>
-          <td><span class="badge-misc red">误区 2</span><br><b>“以为在聊天窗口里说过的规则 AI 永远记得”</b></td>
-          <td>聊天窗口属于工作记忆，随着对话变长（Context 满溢），前面的规则会被自动挤出蒸发。</td>
-          <td>将项目规约写入 <code>CLAUDE.md</code>，将业务事实写入 <code>PROJECT_STATE.md</code> 外部长期记忆。</td>
+          <td><span class="badge-misc red">误区 2</span><br><b>“`CLAUDE.md` 需要手动一行行从头撰写”</b></td>
+          <td>官方原生 `/init` 指令会自动一键扫描目录架构并生成初稿，主管只需补充 4 大防错红线。</td>
+          <td>在 CLI 中输入 `/init` 自动生成初稿框架，消除对配置文件的恐惧感。</td>
         </tr>
         <tr>
-          <td><span class="badge-misc red">误区 3</span><br><b>“项目改坏了就不断发指令让 AI 尝试修复”</b></td>
-          <td>在污染的错代码上继续修复会导致错误叠加，如同在流沙上建塔。</td>
-          <td>运用 S/L 存档机制，一键放弃错误尝试，还原回最近的稳定 Git Commit 基线。</td>
-        </tr>
-        <tr>
-          <td><span class="badge-misc red">误区 4</span><br><b>“CLAUDE.md 是给程序员看的说明文档”</b></td>
-          <td><code>CLAUDE.md</code> 是专门写给 AI Agent 看的系统级 Prompt 护栏，具有最高优先级的指令效力。</td>
-          <td>项目起手即配置 <code>CLAUDE.md</code>，死死约束 Agent 修改边界。</td>
+          <td><span class="badge-misc red">误区 3</span><br><b>“中断对话或断电后，只能重头向 AI 重新解释背景”</b></td>
+          <td>实施计划与配置均保存在本地磁盘物理文件中，恢复会话只需要 1 秒读取磁盘状态。</td>
+          <td>下发 `请读取 IMPLEMENTATION_PLAN 恢复当前 Step 状态`，1 秒完成 S/L 存读档恢复。</td>
         </tr>
       </tbody>
     </table>
@@ -468,49 +476,40 @@
 <section>
   <h2><span class="num">06</span> 测验 + 🎯 退场测试题 + 🎓 训练营通关总结</h2>
 
-  <!-- 5 Scenario Quiz -->
-  <h3>1. 5 道概念选择测验</h3>
+  <!-- 4 Scenario Quiz -->
+  <h3>1. 4 道概念选择测验</h3>
   <div class="quiz-q" data-q="1">
-    <div class="q">Q1 · 为什么不能把项目规约只保存在聊天窗口里，而必须落盘到 CLAUDE.md？</div>
-    <label><input type="radio" name="q1" value="a"> 聊天窗口属于工作记忆会随对话满溢而蒸发；CLAUDE.md 是系统级护栏，每次对话前强制读取</label>
-    <label><input type="radio" name="q1" value="b"> 没有任何区别，完全看心情</label>
-    <label><input type="radio" name="q1" value="c"> 为了节省内存空间</label>
+    <div class="q">Q1 · 在 Claude Code CLI 中，用于自动一键扫描工程结构并生成 `CLAUDE.md` 项目护栏的基础指令是什么？</div>
+    <label><input type="radio" name="q1" value="a"> /init</label>
+    <label><input type="radio" name="q1" value="b"> /compact</label>
+    <label><input type="radio" name="q1" value="c"> /reset</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="a">提交答案</button>
   </div>
 
   <div class="quiz-q" data-q="2">
-    <div class="q">Q2 · 三分记忆模型中，`PROJECT_STATE.md` 与实施计划属于哪一层记忆？</div>
-    <label><input type="radio" name="q2" value="a"> 外部长期记忆 (External Long-Term Memory)</label>
-    <label><input type="radio" name="q2" value="b"> 工作记忆 (Working Memory)</label>
-    <label><input type="radio" name="q2" value="c"> 版本证据 (Version Evidence)</label>
+    <div class="q">Q2 · 在三分记忆模型中，项目的包管理器禁令与防错红线应当存放在哪一层？</div>
+    <label><input type="radio" name="q2" value="a"> 长期记忆 (CLAUDE.md 物理挂载)</label>
+    <label><input type="radio" name="q2" value="b"> 短期记忆 (聊天框 Context Buffer)</label>
+    <label><input type="radio" name="q2" value="c"> 临时缓存</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="a">提交答案</button>
   </div>
 
   <div class="quiz-q" data-q="3">
-    <div class="q">Q3 · 什么是【解药 1：环境脱幻与独立工具箱】？</div>
-    <label><input type="radio" name="q3" value="a"> 在修改代码或安装依赖前，强制要求 Agent 先主动读取工程实际文件与依赖版本，杜绝凭空假想</label>
-    <label><input type="radio" name="q3" value="b"> 让 AI 自由发明版本号</label>
-    <label><input type="radio" name="q3" value="c"> 忽略本地代码，只看在线文档</label>
+    <div class="q">Q3 · 为什么要定期使用 `/compact` 指令？</div>
+    <label><input type="radio" name="q3" value="a"> 清理提纯短期 Context 缓存，防止 Token 溢出与注意力衰减引发 AI 规则遗忘</label>
+    <label><input type="radio" name="q3" value="b"> 为了强行删除项目里的代码文件</label>
+    <label><input type="radio" name="q3" value="c"> 为了重启开发服务器</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="a">提交答案</button>
   </div>
 
   <div class="quiz-q" data-q="4">
-    <div class="q">Q4 · 当 Agent 在某次尝试中改坏工程配置或产生严重幻觉时，最正确的动作是什么？</div>
-    <label><input type="radio" name="q4" value="a"> 运用 S/L 读档机制，一键放弃错误尝试，恢复至最近的稳定 Git Commit 基线</label>
-    <label><input type="radio" name="q4" value="b"> 继续疯狂发指令让 AI 尝试修复</label>
-    <label><input type="radio" name="q4" value="c"> 删除整个 Git 历史重来</label>
-    <div class="feedback"></div>
-    <button class="btn q-btn" data-a="a">提交答案</button>
-  </div>
-
-  <div class="quiz-q" data-q="5">
-    <div class="q">Q5 · 主管 AI 原型制作训练营的终极能力目标是什么？</div>
-    <label><input type="radio" name="q5" value="a"> 不写代码，凭借工程护栏、契约卡与增量切片，驾驭 Agent 打造高保真、IT零摩擦复用的生产级原型！</label>
-    <label><input type="radio" name="q5" value="b"> 成为全栈程序员并手写 TypeScript 逻辑</label>
-    <label><input type="radio" name="q5" value="c"> 只进行口头 Prompt 发令</label>
+    <div class="q">Q4 · 当发生断电或关机重开后，最快恢复上一次开发断点的方法是什么？</div>
+    <label><input type="radio" name="q4" value="a"> 下发口令 `请读取 IMPLEMENTATION_PLAN 恢复当前 Step 状态` 1秒载入 S/L 读档</label>
+    <label><input type="radio" name="q4" value="b"> 重新把全部需求卡重新发给 AI 一遍</label>
+    <label><input type="radio" name="q4" value="c"> 删除整个 Git 历史重头再来</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="a">提交答案</button>
   </div>
@@ -522,37 +521,29 @@
   <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
 
   <div class="exit-q-card">
-    <div class="exit-q-title">❓ 退出门禁题 1：为什么不能把项目规约只保存在聊天窗口里，而必须落盘到 `CLAUDE.md`？</div>
+    <div class="exit-q-title">❓ 退出门禁题 1：当团队中有成员使用不同工具导致依赖冲突时，你应该如何解释 `CLAUDE.md` 的作用？</div>
     <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
     <div class="ans-box" id="ans1">
       <b>参考答案解析：</b><br>
-      聊天窗口属于“工作记忆”，会随对话变长或新开会话而蒸发丢失；落盘到 <code>CLAUDE.md</code> 属于物理工程护栏，Agent 每次对话前都会强制读取，能够跨会话保持最高约束力。
+      “我们在根目录配置了 `CLAUDE.md` 工程 Harness 护栏，它作为全局长期记忆，锁定了包管理器命令与 4 大编码红线，无论是谁唤醒 AI 助手都会物理执行统一规范。”
     </div>
   </div>
 
   <div class="exit-q-card">
-    <div class="exit-q-title">❓ 退出门禁题 2：当 Agent 产生严重幻觉或改坏工程配置时，最正确的处理动作是什么？</div>
+    <div class="exit-q-title">❓ 退出门禁题 2：简述短期记忆、中期记忆与长期记忆的物理分工与协作关系？</div>
     <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
     <div class="ans-box" id="ans2">
       <b>参考答案解析：</b><br>
-      运用 S/L 存档机制，立即下发指令要求 Agent“放弃当前错误尝试，恢复至最近的稳定 Git Commit”，重新从干净基线开工，绝不在污染的代码上叠加修改。
+      • <b>短期记忆 (聊天框 Context Buffer)</b>：负责当前实时对话交互，用 `/compact` 定期提纯；<br>
+      • <b>中期记忆 (`IMPLEMENTATION_PLAN.md`)</b>：记录 Step 级实施进度与 SHA 记录，防关机丢失；<br>
+      • <b>长期记忆 (`CLAUDE.md`)</b>：每轮对话物理挂载，定义不可违背的全局规则与构建约束。
     </div>
   </div>
 
   <!-- Graduation Banner Box -->
   <div class="card green" style="margin-top: 2rem; border-width: 2px;">
-    <h3 style="color: var(--green); margin-top:0;">🎓 恭喜你！通关《主管 AI 原型制作训练营》全五课课程！</h3>
-    <p style="font-size: .95rem; line-height: 1.7;">你已经成功从“盲发口头 Prompt 的旁观者”，蜕变成为<b>“用视觉护栏 (DESIGN.md)、需求契约 (grill-me)、增量切片 (incremental-implementation) 与工程规约 (CLAUDE.md) 掌控全局的 10x 业务主管”</b>！你所产出的 Prototype 已具备高保真外观、强类型数据契约与 Clean 版本历史，可直接与 IT 研发无缝协同！</p>
-  </div>
-
-  <!-- Key Takeaways Box -->
-  <div class="card tinted" style="margin-top: 1.2rem;">
-    <b>三句话带走 (Key Takeaways)：</b>
-    <ol style="margin-top: .5rem;">
-      <li><b>用 <code>CLAUDE.md</code> 最高工程规约物理锁死包管理器与修改边界。</b></li>
-      <li><b>建立三分记忆模型，把长久规则与项目事实落盘为 Markdown。</b></li>
-      <li><b>出现幻觉或坏修改时，运用 S/L 机制一键还原至稳定 Commit 基线。</b></li>
-    </ol>
+    <h3 style="color: var(--green); margin-top:0;">🎓 恭喜通关！《主管 AI 原型制作训练营》核心控盘能力达成！</h3>
+    <p style="font-size: .95rem; line-height: 1.7;">你已经成功从“盲发口头 Prompt 的旁观者”，蜕变成为<b>“用视觉护栏 (DESIGN.md)、需求契约 (grill-me)、增量切片 (incremental-implementation) 与工程规约 (CLAUDE.md) 物理控盘的 10x 业务主管”</b>！你所产出的 Prototype 稳如磐石，可直接无缝交接给 IT 部门落地！</p>
   </div>
 
   <!-- Exit Checklist Card -->
@@ -561,15 +552,15 @@
     <div class="chk-list">
       <label class="chk-item">
         <input type="checkbox" id="c1" onchange="chkUpdate()">
-        <span>1. 已在项目根目录生成并落盘 <code>CLAUDE.md</code> 锁定 4 大防错红线？</span>
+        <span>1. 已运行 `/init` 并在根目录落盘 `CLAUDE.md` 4 大防错红线？</span>
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c2" onchange="chkUpdate()">
-        <span>2. 成功测试了 <code>CLAUDE.md</code> 越界指令物理拦截与 S/L 读档还原机制？</span>
+        <span>2. 成功测试了违规指令拦截与 `/compact` 上下文提纯？</span>
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c3" onchange="chkUpdate()">
-        <span>3. 完成全量工程巡检，更新 <code>docs/PROJECT_STATE.md</code> 为 L05 PASS 并打上 Git 稳定 Commit？</span>
+        <span>3. 已测试关机重开/新开会话后，下发自然口令 1 秒完成 S/L 存读档恢复？</span>
       </label>
     </div>
     <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--blue);">
@@ -580,16 +571,16 @@
   <!-- Knowledge Expansion Grid 2x2 Array -->
   <div class="next-grid-2x2">
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
-      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 配套阅读 (10 分钟)</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);">Claude Code 官方 CLAUDE.md 规范：<a href="https://docs.anthropic.com" target="_blank" style="color: var(--blue); font-weight: bold;">docs.anthropic.com</a>。学习 Prompt Harness 原理。</p>
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 官方文档阅读</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Claude Code 官方 CLAUDE.md 规范：学习 Prompt Harness 物理挂载原理。</p>
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 记忆模型理论</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);">Cognitive Load & Context Windows：理解大模型 Context 满溢与外部记忆落盘的物理机制。</p>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Context Windows & Memory Retention：理解大模型注意力衰减物理机制。</p>
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ Slash 命令快捷指南</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);">在 CLI 终端输入 <code>/init</code> 一键自动探查工程结构并生成 <code>CLAUDE.md</code> 护栏初稿。</p>
+      <p style="font-size: .88rem; color: var(--ink-soft);">在 CLI 终端输入 <code>/init</code> 秒级生成 <code>CLAUDE.md</code> 护栏初稿框架。</p>
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--green); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🎉 结业徽章认证</h4>
@@ -600,7 +591,7 @@
   <!-- Interactive Ask AI Box -->
   <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--blue); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--blue-soft); text-align: center;">
     <b style="font-size: 1.05rem; color: var(--blue);">💡 有疑问？直接问你的 AI 老师。</b><br>
-    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“检查我当前项目的 CLAUDE.md 是否具备足够的工程防御效力”——它会为您出具评估建议。</span>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用公司章程、盘点账本和电话记事本的比喻，帮我再复习一遍三分记忆模型”——它会为您详细拆解。</span>
   </div>
 </section>
 
@@ -615,30 +606,30 @@
 const harnessScenarios = {
   uncontrolled: {
     steps: [
-      { title: 'Step 1 · 业务口头提出复杂需求', desc: '用户: "帮我加个图表，顺便改改 Vite 配置优化打包速度"', cls: '' },
-      { title: 'Step 2 · AI 自由发挥，擅自 npm install 未知包', desc: 'Agent 凭空臆测环境，盲目运行 `npm install echarts echarts-gl` 并重写 vite.config.ts...', cls: 'error' },
-      { title: 'Step 3 · 💥 包版本冲突，配置破坏，项目白屏崩溃', desc: '【废弃】依赖冲突且工作记忆蒸发，在污染的代码上越改越乱，导致原型全盘崩溃白屏！', cls: 'error' }
+      { title: 'Step 1 · 对话进行 30 轮，Context 缓存溢出', desc: 'AI 遗忘第 1 轮订立的包管理器规则，擅自使用 `yarn` 安装依赖...', cls: 'error' },
+      { title: 'Step 2 · 盲目修改未授权的底层系统文件', desc: '修改了 `vite.config.ts` 核心配置导致环境崩溃！', cls: 'error' },
+      { title: 'Step 3 · 💥 爆 Context 规则蒸发，全盘崩溃', desc: '【废弃】由于缺少 CLAUDE.md 物理挂载，AI 产生严重的规则遗忘幻觉！', cls: 'error' }
     ],
     logs: [
-      '> [User Input]: "帮我加个图表，顺便改改 Vite 配置"',
-      '> [LLM Execution]: npm install echarts echarts-gl --save',
-      '❌ [Vite Build Error]: Failed to resolve plugin "vite-plugin-echarts".',
-      '💥 [Result]: 缺少 CLAUDE.md 工程护栏，AI 擅自装包与修改配置导致项目白屏瘫痪！'
+      '> [Context Window Full]: 35,000 Tokens reached.',
+      '> [LLM Execution]: yarn add unexpected-package',
+      '❌ [Package Manager Error]: Lockfile collision! yarn.lock mixed with package-lock.json',
+      '💥 [Result]: 缺少 CLAUDE.md 物理挂载，AI 产生规则遗忘幻觉，项目瘫痪崩盘！'
     ]
   },
   harness: {
     steps: [
-      { title: 'Step 1 · 项目起手配置最高规约 CLAUDE.md', desc: '根目录落盘 CLAUDE.md，锁死 npm 包管理器、Vue 3 + Element Plus，严禁擅自修改 Vite 配置。', cls: '' },
-      { title: 'Step 2 · 下发违规指令 ➔ 触发 CLAUDE.md 物理拦截', desc: '用户请求安装未知包 ➔ Agent 强行读取 CLAUDE.md ➔ 输出 `[工程护栏拦截]` 拒绝对话！', cls: 'blocked' },
-      { title: 'Step 3 · 改坏代码时发起 S/L 读档一键还原', desc: '下发 `放弃错误尝试，恢复至最近 Git Commit` ➔ 物理恢复干净稳定基线！', cls: 'success' },
-      { title: 'Step 4 · 🎉 全量巡检 PASS，项目稳如磐石归档', desc: '运行 verify-student-project.ps1 ➔ 输出 [PASS] ➔ 打上 Git 稳定 Commit。', cls: 'success' }
+      { title: 'Step 1 · 运行 /init 落盘 CLAUDE.md 最高护栏', desc: '根目录落盘 CLAUDE.md，锁死 npm 包管理器与 4 大防错红线。', cls: '' },
+      { title: 'Step 2 · 违规指令物理挂载拦截', desc: '提问“能用 yarn 吗？” ➔ AI 强制读取 CLAUDE.md 顶部规则 ➔ 引用规则物理拒绝！', cls: 'blocked' },
+      { title: 'Step 3 · 运行 /compact 提纯 Context 缓存', desc: '输入 `/compact` 清理提纯短期缓存，保持注意力集中。', cls: 'success' },
+      { title: 'Step 4 · 🎮 关机重开 1 秒 S/L 存读档恢复', desc: '下发口令 `请读取 IMPLEMENTATION_PLAN 恢复当前 Step 状态` ➔ 1 秒载入进度！', cls: 'success' }
     ],
     logs: [
-      '> [Command]: /init -> Created CLAUDE.md',
-      '> [User Input]: "帮我安装 echarts"',
-      '🛡️ [CLAUDE.md Interception]: 物理拒绝！根据 CLAUDE.md 规约，严禁擅自 install 未授权包。',
-      '> [S/L Action]: git reset --hard HEAD -> Restored to Clean Commit SHA: 8a91cf2',
-      '🎉 [Result]: 工程护栏守住底线，S/L 机制秒级恢复，项目 100% 稳定控盘！'
+      '> [Command]: /init -> Created CLAUDE.md with 4 Core Red Lines',
+      '> [User Prompt]: "能用 yarn 安装包吗？"',
+      '🛡️ [CLAUDE.md Harness]: 物理拒绝！根据项目 CLAUDE.md 规定，禁止使用 yarn，必须统一使用 npm。',
+      '> [Command]: /compact -> Context Window Compacted & Pure',
+      '🎮 [S/L State Restore]: Read LESSON_04_IMPLEMENTATION_PLAN.md -> Restored Step 2 READY in 1s!'
     ]
   }
 };
@@ -687,30 +678,39 @@ function testInterception(type) {
   if (type === 'init') {
     term.innerHTML = `
 > 下发指令: /init<br>
-🔍 正在探查当前工程 package.json, vite.config.ts 与组件目录...<br>
+🔍 正在探查当前工程 package.json, tsconfig.json 与组件目录...<br>
 ✅ 检测到技术栈: Vue 3 + Element Plus, 包管理器: npm<br>
 📄 正在生成项目最高工程规约: CLAUDE.md...<br>
-🎉 CLAUDE.md 已经落盘至项目根目录！AI 每次对话将自动读取最高防错规约。
+🎉 CLAUDE.md 已经落盘至项目根目录！AI 每次对话前将强制物理挂载最高防错规约。
     `;
   } else if (type === 'violating') {
     term.innerHTML = `
-> [User Prompt]: 请帮我安装一个新的图表库 echarts，并修改 vite.config.ts 增加复杂插件。<br>
-📖 Agent 强制读取根目录 CLAUDE.md...<br>
-🛡️ <b>[工程护栏拦截 - Rule Violation]</b><br>
-根据 CLAUDE.md 最高规约：<br>
-1. 严禁擅自 npm install 未在需求卡中确认的第三方 npm 包；<br>
-2. 严禁修改 vite.config.ts 基础配置文件！<br>
-❌ 动作已物理拒绝。请先修改需求卡并获得主管授权。
+> [User Prompt]: 我们可以用 yarn 安装一个新包吗？<br>
+📖 Agent 强制读取根目录 CLAUDE.md 物理挂载...<br>
+🛡️ <b>[工程 Harness 防火墙物理拦截]</b><br>
+根据根目录 CLAUDE.md 最高规约：<br>
+1. [包管理器禁令] 强制统一使用 npm，绝对禁止混用 yarn 或 pnpm！<br>
+❌ 动作已物理拒绝。如需使用新包，请统一运行 npm install。
     `;
   } else {
     term.innerHTML = `
-> [User Prompt]: 放弃刚才的所有临时修改，请帮我一键恢复到最近的稳定 Git Commit 基线。<br>
-💾 正在启动 S/L (Save & Load) 存档还原流程...<br>
-🔄 运行 git reset --hard HEAD...<br>
-🧹 清扫 Working Tree 未跟踪残渣...<br>
-✅ 成功读档！工程源码已秒级恢复至 100% Clean 干净稳定基线 (Commit: 8a91cf2)。
+> 下发指令: /compact<br>
+🧹 正在清理提纯短期 Context Buffer 缓存...<br>
+✂️ 压缩冗余对话 Token，提纯核心业务事实与代码片段...<br>
+🛡️ 重新物理挂载 CLAUDE.md 长期记忆...<br>
+✅ 上下文提纯完成！有效消除 Token 溢出与规则遗忘幻觉。
     `;
   }
+}
+
+// ---------- Copy Text Function ----------
+function copyText(id) {
+  const txt = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    alert('已成功复制自然授权口令：\n' + txt);
+  }).catch(() => {
+    prompt('复制失败，请手动复制：', txt);
+  });
 }
 
 // ---------- Section 05 Concept Fill-in-the-Blanks Logic ----------
@@ -720,10 +720,10 @@ function checkAllBlanks() {
   const b3 = document.getElementById('blank3');
   const b4 = document.getElementById('blank4');
 
-  const ok1 = b1.value === 'CLAUDE.md';
-  const ok2 = b2.value === 'working-mem';
-  const ok3 = b3.value === 'long-term-mem';
-  const ok4 = b4.value === 'sl-load';
+  const ok1 = b1.value === 'init';
+  const ok2 = b2.value === 'long';
+  const ok3 = b3.value === 'mid';
+  const ok4 = b4.value === 'restore';
 
   b1.className = 'blank-select ' + (ok1 ? 'ok' : 'err');
   b2.className = 'blank-select ' + (ok2 ? 'ok' : 'err');
@@ -736,15 +736,15 @@ function checkAllBlanks() {
 
   bf1.className = 'blank-feedback show';
   bf1.style.color = ok1 ? 'var(--green)' : 'var(--red)';
-  bf1.innerHTML = ok1 ? '✅ 填空 1 正确！CLAUDE.md 是项目根目录下的最高工程规约。' : '❌ 填空 1 错误：应选择 CLAUDE.md。';
+  bf1.innerHTML = ok1 ? '✅ 填空 1 正确！/init 是官方原生一键生成 CLAUDE.md 的指令。' : '❌ 填空 1 错误：应选择 /init。';
 
   bf2.className = 'blank-feedback show';
   bf2.style.color = (ok2 && ok3) ? 'var(--green)' : 'var(--red)';
-  bf2.innerHTML = (ok2 && ok3) ? '✅ 填空 2 全对！聊天窗口为工作记忆，PROJECT_STATE.md 为外部长期记忆。' : '❌ 填空 2 存在错误：聊天窗口为工作记忆，PROJECT_STATE.md 为外部长期记忆。';
+  bf2.innerHTML = (ok2 && ok3) ? '✅ 填空 2 全对！防错红线为长期记忆 (CLAUDE.md)，实施进度为中期记忆 (IMPLEMENTATION_PLAN.md)。' : '❌ 填空 2 存在错误：防错红线为长期记忆，实施进度为中期记忆。';
 
   bf3.className = 'blank-feedback show';
   bf3.style.color = ok4 ? 'var(--green)' : 'var(--red)';
-  bf3.innerHTML = ok4 ? '✅ 填空 3 正确！改坏代码时，下发 S/L 读档恢复至最近的稳定 Git Commit 基线。' : '❌ 填空 3 错误：应选择放弃错误尝试，恢复至最近 Git Commit。';
+  bf3.innerHTML = ok4 ? '✅ 填空 3 正确！下发自然恢复口令可在 1 秒内读取磁盘状态机完成 S/L 存读档恢复。' : '❌ 填空 3 错误：应选择 1 秒读取磁盘状态机恢复。';
 }
 
 // ---------- Section 06 Exit Ticket Expand Answer Logic ----------
@@ -761,11 +761,10 @@ function toggleAns(id) {
 
 // ---------- Quiz Logic ----------
 const explain = {
-  q1: '正确答案：A。聊天窗口属于工作记忆，随对话满溢蒸发；CLAUDE.md 是每次对话强制读取的工程物理护栏。',
-  q2: '正确答案：A。PROJECT_STATE.md 与实施计划落盘为文件，属于外部长期记忆。',
-  q3: '正确答案：A。【解药 1】强制要求 Agent 修改前先主动读取工程实际文件与依赖版本，杜绝盲猜。',
-  q4: '正确答案：A。运用 S/L 机制一键恢复至最近的稳定 Git Commit，不在污染的代码上叠加修改。',
-  q5: '正确答案：A。训练营终极目标是凭借工程护栏与增量切片，驾驭 Agent 打造高保真、IT 零摩擦复用的生产级原型！'
+  q1: '正确答案：A。/init 是 Claude Code CLI 的原生初始化指令，用于秒级一键扫描目录并生成 CLAUDE.md 初稿。',
+  q2: '正确答案：A。包管理器禁令与全局防错红线存放在长期记忆 (CLAUDE.md) 中，每轮对话物理挂载。',
+  q3: '正确答案：A。/compact 用于清理提纯短期 Context 缓存，防止 Token 溢出与注意力衰减引发 AI 规则遗忘。',
+  q4: '正确答案：A。关机重开后，下发口令 `请读取 IMPLEMENTATION_PLAN 恢复当前 Step 状态` 可 1 秒载入 S/L 读档。'
 };
 
 document.querySelectorAll('.quiz-q').forEach(q => {
@@ -796,13 +795,13 @@ function calcScore() {
     const sel = q.querySelector('input:checked');
     if (sel) {
       answered++;
-      if (sel.value === btn.dataset.a) score += 20;
+      if (sel.value === btn.dataset.a) score += 25;
     }
   });
   const el = document.getElementById('score');
   el.className = 'score show';
-  if (answered < 5) {
-    el.innerHTML = `你已答完 <b>${answered} / 5</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  if (answered < 4) {
+    el.innerHTML = `你已答完 <b>${answered} / 4</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
   } else {
     el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！`;
   }
@@ -815,7 +814,7 @@ function chkUpdate() {
   }
   const res = document.getElementById('chkResult');
   if(count === 3) {
-    res.style.color = 'var(--green)';
+    res.style.color = 'var(--blue)';
     res.innerHTML = '🎉 恭喜！训练营全五课课程全部圆满通关！你已具备 10x 业务主管的 Agent 原型控盘能力！';
   } else {
     res.style.color = 'var(--blue)';
