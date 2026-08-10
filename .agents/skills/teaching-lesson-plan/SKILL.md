@@ -18,7 +18,7 @@ Produces a complete, highly structured lesson plan and student guide for any sub
 3. **Bloom's Revised Taxonomy (ABCD Formula)**:
    - **A**udience ("Students will..."), **B**ehavior (Action verb), **C**ondition ("Given a scenario..."), **D**egree ("with 80% accuracy / according to standard").
 4. **V3 Dual-Mode Student Guide (双模学员指南)**:
-   - Fast-Track in-class steps + Self-Study Deep-Dive原理解析 + 2–3 个精选核心概念卡 + 三层流程图元模式 + 双重误区保障。
+   - 引言背景原理目标 + Fast-Track 步骤 + Self-Study Deep-Dive原理解析 + 2–3 个精选核心概念卡 + 三层流程图元模式 + 双重误区保障 + 3–5 题测试题库。
 
 ---
 
@@ -103,15 +103,17 @@ By the end of this session, participants will be able to:
 
 ---
 
-## 5. Formative Assessment & Exit Ticket
+## 5. Formative Assessment & Exit Ticket (3–5 题)
 
 **During session (Assessment FOR Learning):**
 - Method 1: Cold calling / Thumbs up-down check
 - Method 2: Command/Log verification (`verify-project.ps1`)
 
-**Exit Ticket (Last 5–10 minutes):**
+**Exit Ticket & Question Bank (3–5 题，上限 5 题):**
 - **Question 1**: [Tests core cognitive objective]
 - **Question 2**: [Tests real-world application/IT communication scenario]
+- **Question 3**: [Tests conceptual distinction]
+- **Question 4-5 (Optional)**: [Self-study extension / hands-on scenario]
 
 ---
 
@@ -146,4 +148,6 @@ By the end of this session, participants will be able to:
 - [ ] WHERETO sequence is followed with timeboxed activities adding up to session length
 - [ ] Includes Standard Four-Step Concept Cards (2–3 精选: Definition -> Mechanism -> Metaphor -> Value)
 - [ ] Student Guide features V3 Dual-Track instructions & Three-Layer Flow Diagram Meta-Pattern
+- [ ] Student Guide includes Background, Principles & Objectives in Intro (No meta-explanation fluff)
+- [ ] Student Guide assessment bank contains 3–5 questions (Max 5)
 - [ ] Includes Dual-Layer Misconceptions (Mindset table + Troubleshooting guide)
