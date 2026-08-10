@@ -670,7 +670,16 @@ const debugScenarios = {
   }
 };
 
+let animationTimers = [];
+
+function clearAnimationTimers() {
+  animationTimers.forEach(id => clearTimeout(id));
+  animationTimers = [];
+}
+
 function runMode(mode) {
+  clearAnimationTimers();
+
   const btnRaw = document.getElementById('mBtnRaw');
   const btnBounded = document.getElementById('mBtnBounded');
   const canvas = document.getElementById('flowCanvas');
@@ -681,12 +690,15 @@ function runMode(mode) {
 
   const data = debugScenarios[mode];
   canvas.innerHTML = '';
-  consoleLog.innerHTML = '';
+  consoleLog.innerHTML = '<span style="color: #94a3b8;">> 正在启动 ' + (mode === 'raw' ? '🔴 痛点反例' : '🟢 受控排错') + ' 动态轨迹推演...</span>';
 
   data.steps.forEach((s, idx) => {
     const node = document.createElement('div');
     node.className = 'flow-step-node ' + (s.cls || '');
     node.id = 'node_' + idx;
+    node.style.opacity = '0';
+    node.style.transform = 'translateY(12px)';
+    node.style.transition = 'all .4s ease';
     node.innerHTML = `
       <div class="node-title">
         <span>${s.title}</span>
@@ -695,16 +707,23 @@ function runMode(mode) {
       <div class="node-desc">${s.desc}</div>
     `;
     canvas.appendChild(node);
-  });
 
-  data.steps.forEach((s, idx) => {
-    setTimeout(() => {
-      const el = document.getElementById('node_' + idx);
-      if (el) el.classList.add('active');
-    }, idx * 400);
-  });
+    const tId = setTimeout(() => {
+      node.style.opacity = '1';
+      node.style.transform = 'translateY(0)';
+      node.classList.add('active');
 
-  consoleLog.innerHTML = data.logs.join('<br>');
+      if (data.logs[idx]) {
+        const logLine = document.createElement('div');
+        logLine.style.marginTop = '4px';
+        logLine.innerHTML = data.logs[idx];
+        consoleLog.appendChild(logLine);
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+      }
+    }, (idx + 1) * 500);
+
+    animationTimers.push(tId);
+  });
 }
 runMode('bounded');
 
