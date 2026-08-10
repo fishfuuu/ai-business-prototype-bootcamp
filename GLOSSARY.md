@@ -67,3 +67,15 @@ _Avoid_: 依靠聊天记录记忆
 **S/L 存档还原机制 (Save & Load Baseline)**:
 通过 Git Commit 进行稳定存档（Save），并在 Agent 产生幻觉或改坏工程时一键撤销并读档还原（Load）至干净基线。
 _Avoid_: 在破损代码上继续试错
+
+**五层诊断卡 (Five-Layer Diagnostic Map)**:
+将 Web 应用排错物理拆解为环境层、数据源层、组件状态层、日志层与契约断言层五层口语化诊断拓扑，精准定位问题所在层级。
+_Avoid_: 盲目试错, 控制台恐慌
+
+**事实锚定排错 (Fact-Anchored Feedback Loop)**:
+修改任何代码前强制先建立物理可测的 PASS/FAIL 验证信号，脱敏日志并落盘写报告 `DEBUG_REPORT.md` 的受控排错范式。
+_Avoid_: 直接复制敏感 Token 抓包, 无断言盲改
+
+**2 轮硬熔断机制 (Two-Round Circuit Breaker)**:
+排错前下发 Checkpoint 无痛存档，在 Agent 自修达到 2 轮上限仍未 PASS 时自动运行 `git restore .` 安全恢复 Checkpoint 干净状态并打上补丁。
+_Avoid_: 盲目死循环修复, 越改越崩白屏

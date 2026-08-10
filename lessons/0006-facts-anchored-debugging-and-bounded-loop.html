@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 课 · 学会定位和修复问题：五层诊断卡、diagnosing-bugs Skill 与有界排错 Loop | 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #b91c1c 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #fca5a5; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #fecaca; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #fca5a5; }
+  
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+  
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--red); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+  
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+  
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--red-soft); border-color: #fca5a5; }
+  .card.warn { background: var(--amber-soft); border-color: #ecd3a8; }
+  .card.focus { background: var(--plum-soft); border-color: #d8b4fe; }
+  .card.green { background: var(--green-soft); border-color: #a7d7b4; }
+  
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+  
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+  
+  .quote {
+    border-left: 4px solid var(--red); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+
+  /* Grid Layouts - Symmetric 2x2 Grid */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--red); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(185, 28, 28, 0.2);
+  }
+  .btn:hover { background: #991b1b; box-shadow: 0 4px 12px rgba(185, 28, 28, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Interactive Simulator Container */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: .9rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+  
+  .mode-tabs {
+    display: flex; gap: .6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+  }
+  .mode-btn {
+    flex: 1; min-width: 200px; padding: .8rem 1rem; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: .88rem; font-weight: 700; cursor: pointer; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s; text-align: center;
+  }
+  .mode-btn:hover { background: #e2e8f0; }
+  .mode-btn.active.raw { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .mode-btn.active.bounded { background: #fee2e2; border-color: var(--red); color: #991b1b; }
+
+  .flow-display-canvas {
+    background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.4rem;
+    min-height: 280px; position: relative; transition: all .3s;
+  }
+  .flow-step-node {
+    background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .8rem 1.1rem;
+    margin-bottom: .8rem; font-size: .9rem; opacity: .4; transition: all .3s; transform: translateY(5px);
+  }
+  .flow-step-node.active { opacity: 1; transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .flow-step-node.error { border-color: #ef4444; background: #fff5f5; color: #991b1b; }
+  .flow-step-node.success { border-color: #10b981; background: #f0fdf4; color: #065f46; }
+  .flow-step-node.working { border-color: #3b82f6; background: #eff6ff; color: #1e40af; }
+
+  .node-title { font-weight: 800; font-size: .95rem; margin-bottom: .2rem; display: flex; align-items: center; justify-content: space-between; }
+  .node-desc { font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Consolas", monospace; font-size: .82rem;
+    padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 160px; overflow-y: auto;
+  }
+
+  /* Five Layer Map Box */
+  .five-layer-box {
+    display: flex; flex-direction: column; gap: .6rem; margin: 1.2rem 0;
+  }
+  .layer-row {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 10px; padding: .8rem 1.2rem;
+    display: flex; justify-content: space-between; align-items: center; transition: all .2s; cursor: pointer;
+  }
+  .layer-row:hover { border-color: var(--red); background: var(--red-soft); }
+  .layer-num { font-weight: 800; font-size: .88rem; padding: 2px 8px; border-radius: 6px; background: #0f172a; color: #fff; }
+  .layer-label { font-weight: 700; font-size: .95rem; color: #0f172a; }
+  .layer-tag { font-size: .82rem; font-weight: 700; color: var(--red); background: #fee2e2; padding: 2px 8px; border-radius: 4px; }
+
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .9rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  }
+  .prompt-copy-text { font-family: "Consolas", monospace; font-size: .92rem; font-weight: 700; color: #0f172a; }
+  .btn-copy {
+    background: #334155; color: #fff; border: none; border-radius: 6px; padding: .35rem .85rem;
+    font-size: .8rem; font-weight: 700; cursor: pointer; transition: background .15s; white-space: nowrap;
+  }
+  .btn-copy:hover { background: #0f172a; }
+
+  /* Interactive Concept Fill-in-the-Blanks */
+  .blank-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem; font-size: .95rem; line-height: 1.8;
+  }
+  .blank-select {
+    padding: .25rem .6rem; border-radius: 6px; border: 1.5px solid var(--red); font-size: .9rem;
+    font-weight: 700; color: var(--red); background: var(--red-soft); cursor: pointer; outline: none;
+  }
+  .blank-select.ok { border-color: #10b981; background: #dcfce7; color: #15803d; }
+  .blank-select.err { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+  .blank-feedback { font-size: .85rem; margin-top: .5rem; font-weight: 600; display: none; }
+  .blank-feedback.show { display: block; }
+
+  /* Misconceptions 3-Column Table Card */
+  .misc-table-container {
+    overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  }
+  .misc-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem;
+  }
+  .misc-table th {
+    background: #0f172a; color: #fff; font-weight: 700; padding: .85rem 1.1rem; border-bottom: 1px solid var(--line);
+  }
+  .misc-table td {
+    padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6;
+  }
+  .misc-table tr:hover { background: #fafaf9; }
+  .badge-misc { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .78rem; font-weight: 800; }
+  .badge-misc.red { background: #fee2e2; color: #991b1b; }
+  .badge-misc.green { background: #dcfce7; color: #15803d; }
+  .badge-misc.blue { background: #dbeafe; color: #1e40af; }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem;
+  }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box {
+    background: var(--red-soft); border: 1px solid #fca5a5; border-radius: 10px; padding: 1rem 1.2rem;
+    margin-top: .8rem; font-size: .92rem; color: #991b1b; display: none; line-height: 1.6;
+  }
+  .ans-box.show { display: block; }
+
+  /* Quiz Cards & Label Formatting */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; width: 100%; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--red-soft); }
+  .quiz-q label input { margin-top: .35rem; accent-color: var(--red); }
+  .quiz-q label.sel { background: var(--red-soft); border-color: #fca5a5; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+  .q-btn { margin-top: .6rem; }
+  
+  .score {
+    display: none; margin-top: 1.2rem; margin-bottom: 1.5rem; background: #0f172a; color: #f5f1e8;
+    border-radius: 12px; padding: 1.2rem 1.6rem; text-align: center; font-size: 1.1rem;
+  }
+  .score.show { display: block; }
+  .score b { color: #4ade80; font-size: 1.4rem; }
+
+  /* Checklist Card */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--red); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 06 · 五层诊断卡、diagnosing-bugs Skill 与有界排错 Loop</div>
+    <h1>学会定位和修复问题</h1>
+    <p class="sub"><b>排错前先存档，不盲猜、先断言；日志脱敏写报告，两轮不通安全熔断。</b><br>掌握 <b>五层诊断卡口语化拓扑 (汽车诊断仪 🚗)</b>、<b>日志脱敏与 DEBUG_REPORT 落盘 (病例归档 🩺)</b> 与 <b>【无痛存档 Checkpoint + 2 轮硬熔断 (游戏 Save Point & 保鲜开关 🎮⚡)】</b>！</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 掌握排错前下发 Checkpoint 无痛存档并唤醒 `diagnosing-bugs` 构建物理 PASS/FAIL 反馈闭环；② 掌握五层诊断卡口语化排查与落盘 `docs/LESSON_06_DEBUG_REPORT.md`；③ 掌握“2 轮硬熔断机制”，在自修 2 轮未 PASS 时一键执行 `git restore .` 无损恢复 Clean 状态。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 01: INTERACTIVE DEBUGGING DEMONSTRATOR -->
+<section>
+  <h2><span class="num">01</span> 核心架构演进：痛点反例 (野生盲猜/外泄 Token) vs 受控有界排错流</h2>
+  <p>通过下方交互演示，直观对比“遇到 Bug 随意粘贴 Token 盲改导致全盘白屏”与“Checkpoint 存档 + 脱敏落盘报告 + 2 轮硬熔断”的运行差异：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎬 事实锚定排错与 2 轮硬熔断动态演示</span>
+      <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
+    </div>
+    <div class="sim-body">
+      
+      <div class="mode-tabs">
+        <button class="mode-btn active raw" id="mBtnRaw" onclick="runMode('raw')">🔴 模式 A：痛点反例 (野生盲猜/直接贴 Key 外泄/越改越崩白屏)</button>
+        <button class="mode-btn bounded" id="mBtnBounded" onclick="runMode('bounded')">🟢 模式 B：受控有界排错 (Checkpoint 存档/脱敏落盘/2轮熔断)</button>
+      </div>
+
+      <div class="flow-display-canvas" id="flowCanvas">
+        <!-- JS rendered steps -->
+      </div>
+
+      <div class="console-output" id="consoleLog">
+        > 点击上方按钮运行模式推演…
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote">
+    💡 <b>一句话口诀</b>：“进战场前存 Save Point (Checkpoint Commit)，打不过时只清扫本场坏试错 (git restore)，历史装备毫发无损。”
+  </div>
+</section>
+
+<!-- SECTION 02: 3 CORE CONCEPTS -->
+<section>
+  <h2><span class="num">02</span> 核心概念卡：四步公式解析三大排错工程概念</h2>
+
+  <div class="grid-2">
+    <div class="card focus">
+      <h3 style="color: var(--red);">🚗 1. Five-Layer Diagnostic Map (五层诊断卡)</h3>
+      <p>• <b>硬核定义</b>：物理拆解为环境层、数据源层、组件状态层、日志层与契约断言层五层诊断拓扑。<br>
+      • <b>口语标签</b>：`物理服务` ➔ `种子数据` ➔ `组件状态` (数据变了界面没动) ➔ `报错日志` ➔ `契约断言` (名字写错配不上)。<br>
+      • <b>业务比喻</b>：<b>汽车故障五级诊断仪 🚗</b>。依次检查电池、汽油、仪表盘显示、故障码与行驶标准。<br>
+      • <b>IT 沟通</b>：“通过五层诊断卡定位到了数据源层与组件状态层的绑定断裂。”</p>
+    </div>
+    <div class="card focus">
+      <h3 style="color: var(--plum);">🩺 2. 事实锚定与诊断报告落盘 (DEBUG_REPORT)</h3>
+      <p>• <b>硬核定义</b>：修改代码前建立确切 PASS/FAIL 验证信号，脱敏日志并落盘写报告的范式。<br>
+      • <b>底层机制</b>：基于 `diagnosing-bugs` Skill，日志替换敏感 Key (`<REDACTED>`) 并落盘 `LESSON_06_DEBUG_REPORT.md`。<br>
+      • <b>业务比喻</b>：<b>医生开处方前的验血报告与病例归档 🩺</b>。没拿到视觉与数据证据前绝不开刀。<br>
+      • <b>IT 沟通</b>：“我们在修改前先建立了自动化反馈闭环，并将诊断结论落盘生成了 DEBUG_REPORT 审计报告。”</p>
+    </div>
+  </div>
+
+  <div class="card tinted">
+    <h3 style="color: var(--amber);">🎮⚡ 3. Checkpoint Breaker (无痛存档与 2 轮硬熔断)</h3>
+    <p>• <b>硬核定义</b>：排错前先下发 Checkpoint 存档，限定排错仅在契约层，且设置最多 2 轮自修上限、失败自动安全回滚。<br>
+    • <b>底层机制</b>：排错前 `git commit` Checkpoint 存档；自修第 2 轮未 PASS 则强行触发 `git restore .` 恢复 Checkpoint 并打上 `.patch`。<br>
+    • <b>业务比喻</b>：<b>单机游戏 Boss 战前的 Save Point 与跳闸保鲜开关 🎮⚡</b>！打不过只清扫本场坏试错，历史装备毫发无损。<br>
+    • <b>IT 沟通</b>：“项目设置了 Checkpoint 存档与 2 轮硬熔断，一旦超 2 轮未 PASS 自动安全回滚，避免代码越改越崩。”</p>
+  </div>
+</section>
+
+<!-- SECTION 03: INTERACTIVE FIVE-LAYER DIAGNOSTICS & LOG ANONYMIZER -->
+<section>
+  <h2><span class="num">03</span> 演练：五层诊断卡口语化拓扑与日志脱敏终端</h2>
+  <p>点击下方五层诊断卡层级，体验口语化定位与脱敏敏感信息 (`<REDACTED>`) 落盘报告的过程：</p>
+
+  <div class="five-layer-box">
+    <div class="layer-row" onclick="testLayer(5)">
+      <div><span class="layer-num">Layer 5</span> <span class="layer-label">契约断言层 (Contract Assertion)</span></div>
+      <span class="layer-tag">🚨 [名字写错了，界面配不上契约]</span>
+    </div>
+    <div class="layer-row" onclick="testLayer(4)">
+      <div><span class="layer-num">Layer 4</span> <span class="layer-label">报错日志层 (Console / Terminal Log)</span></div>
+      <span class="layer-tag">⚠️ [控制台第一行红字报错 / 堆栈留给 AI]</span>
+    </div>
+    <div class="layer-row" onclick="testLayer(3)">
+      <div><span class="layer-num">Layer 3</span> <span class="layer-label">组件状态层 (Component State)</span></div>
+      <span class="layer-tag">🔄 [数据变了，但界面没跟着动]</span>
+    </div>
+    <div class="layer-row" onclick="testLayer(2)">
+      <div><span class="layer-num">Layer 2</span> <span class="layer-label">种子数据源层 (Mock Data / API)</span></div>
+      <span class="layer-tag">📭 [没数据或拿到了 null 空值]</span>
+    </div>
+    <div class="layer-row" onclick="testLayer(1)">
+      <div><span class="layer-num">Layer 1</span> <span class="layer-label">环境物理服务层 (Dev Server)</span></div>
+      <span class="layer-tag">🌐 [物理服务跑不起来 / Vite 端口关闭]</span>
+    </div>
+  </div>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🛡️ 日志脱敏与 DEBUG_REPORT 落盘模拟终端</span>
+      <span style="font-size: .8rem; opacity: .8;">点击排查结果预览物理输出</span>
+    </div>
+    <div class="sim-body">
+      <div class="console-output" id="layerTerminal" style="min-height: 160px;">
+        > 点击上方五层诊断卡层级，预览口语化排查日志与脱敏落盘…
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
+<section>
+  <h2><span class="num">04</span> 学员实操 Task 1 ~ Task 3 自然授权口令卡</h2>
+
+  <div class="card focus">
+    <b>Task 1 · 装载故障包、排错前无痛存档并建立 PASS/FAIL 反馈闭环</b><br>
+    在 Claude Code CLI 窗口中下发排错前 Checkpoint 存档口令：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">执行排错前 Checkpoint 存档，并唤醒 diagnosing-bugs 建立验证闭环</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
+    </div>
+    <i>原理：自动执行 git commit -m "checkpoint: before lesson 6 debug"，留存稳定 Save Point。</i>
+  </div>
+
+  <div class="card focus">
+    <b>Task 2 · 口语化五层诊断排查、日志脱敏与落盘 DEBUG_REPORT</b><br>
+    复制控制台第一行 Error Message，下发脱敏与落盘口令：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">按五层诊断卡口语标签定位 Bug，脱敏日志并落盘 DEBUG_REPORT</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
+    <i>验证：确认工程根目录下自动生成 <code>docs/LESSON_06_DEBUG_REPORT.md</code>。</i>
+  </div>
+
+  <div class="card focus">
+    <b>Task 3 · 契约修补与 2 轮硬熔断演练</b><br>
+    • <b>修补 PASS 场景</b>：下发契约层修补口令：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">同意执行契约层最小化修补</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
+    • <b>2 轮熔断场景</b>：若自修 2 轮未 PASS，下发硬熔断口令安全回滚 Clean 并导出补丁：
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p4">触发 2 轮硬熔断，安全恢复 Checkpoint 状态</span>
+      <button class="btn-copy" onclick="copyText('p4')">📋 一键复制口令</button>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<section>
+  <h2><span class="num">05</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
+
+  <h3>1. ✍️ 概念互动填空 (Interactive Fill-in-the-Blanks)</h3>
+  <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空，并点击“核对答案”：</p>
+
+  <div class="blank-card" id="bCard1">
+    1. <b>无痛存档机制</b>：为防止 2 轮硬熔断回滚抹杀历史代码，在动手排错前必须先执行 
+    <select class="blank-select" id="blank1">
+      <option value="">-- 请选择 --</option>
+      <option value="checkpoint">Checkpoint 存档 (git commit留存 Save Point)</option>
+      <option value="delete">直接强行删除所有历史提交</option>
+    </select>。
+    <div class="blank-feedback" id="bf1"></div>
+  </div>
+
+  <div class="blank-card" id="bCard2">
+    2. <b>五层诊断卡口语标签</b>：当遇到“字段拼写与 TS 契约不一致”导致渲染失效时，属于 
+    <select class="blank-select" id="blank2">
+      <option value="">-- 请选择 --</option>
+      <option value="layer5">Layer 5 [契约断言] 名字写错了，界面配不上契约</option>
+      <option value="layer1">Layer 1 [物理服务] 网页跑不起来</option>
+    </select>。
+    <div class="blank-feedback" id="bf2"></div>
+  </div>
+
+  <div class="blank-card" id="bCard3">
+    3. <b>2 轮硬熔断保护</b>：当 Agent 自动排错达到 2 轮上限仍未 PASS 时，系统会自动运行 
+    <select class="blank-select" id="blank3">
+      <option value="">-- 请选择 --</option>
+      <option value="restore">git restore . (安全清扫本场坏试错，历史装备毫发无损)</option>
+      <option value="retry">疯狂死循环尝试 100 轮</option>
+    </select>。
+    <div class="blank-feedback" id="bf3"></div>
+  </div>
+
+  <button class="btn" style="margin-bottom: 2rem;" onclick="checkAllBlanks()">✅ 核对所有填空答案</button>
+
+  <h3>2. 💡 常见概念误区与正确理解 (3 栏对照表)</h3>
+  <div class="misc-table-container">
+    <table class="misc-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">常见误区 (Misconception)</th>
+          <th style="width: 42%;">正确硬核理解 (Correct Engineering Reality)</th>
+          <th style="width: 30%;">如何纠偏与护栏防护 (Remedy & Guardrails)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-misc red">误区 1</span><br><b>“遇到 Bug 就把报错截图或 Network 原始抓包贴给 AI”</b></td>
+          <td>含有 Token 或 Auth Header 的原始抓包外泄存在严重安全风险，且无验证信号的修改是盲改。</td>
+          <td>执行“前置隐私防线”，所有日志脱敏 <code>&lt;REDACTED&gt;</code>，先建立 PASS/FAIL 验证信号。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 2</span><br><b>“控制台全是红字，肯定是我把系统底层全部搞砸了”</b></td>
+          <td>控制台长堆栈是框架内部的链式抛错，主管只需提取第一行 Error Message 交给 AI 处理。</td>
+          <td>执行“控制台解焦虑”，第一行取事实，长堆栈留给 AI。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 3</span><br><b>“执行 `git restore .` 熔断会把我之前写的代码全抹掉”</b></td>
+          <td>在排错前下发 `git commit` Checkpoint 存档后，回滚只清除坏修补，历史代码毫发无损。</td>
+          <td>执行“排错前无痛存档”，先存 Checkpoint 档再下发修复指令。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 4</span><br><b>“排错完了只要界面能出来就行，不需要留存书面记录”</b></td>
+          <td>缺乏排错记录会导致第 7 课自动化验收无法溯源故障审计源。</td>
+          <td>执行“诊断报告落盘”，强制落盘生成 <code>docs/LESSON_06_DEBUG_REPORT.md</code>。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 06: QUIZ & EXIT TICKET -->
+<section>
+  <h2><span class="num">06</span> 测验 + 🎯 退场测试题 + 课后拓展</h2>
+
+  <!-- 4 Scenario Quiz -->
+  <h3>1. 4 道概念选择测验</h3>
+  <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · 为防范 2 轮硬熔断回滚抹杀历史代码，在动手排错前必须先执行什么操作？</div>
+    <label><input type="radio" name="q1" value="a"> 下发 `git commit` Checkpoint 无痛存档 (留存 Save Point)</label>
+    <label><input type="radio" name="q1" value="b"> 强行删除 package-lock.json 文件</label>
+    <label><input type="radio" name="q1" value="c"> 直接把带有 Auth Token 的全套抓包贴给 AI</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · 当遇到“点击筛选按钮后数据没有变化”时，根据五层诊断卡口语标签，该问题属于哪一层？</div>
+    <label><input type="radio" name="q2" value="a"> Layer 3 [组件状态] 数据变了，但界面没跟着动</label>
+    <label><input type="radio" name="q2" value="b"> Layer 1 [物理服务] 网页跑不起来</label>
+    <label><input type="radio" name="q2" value="c"> Layer 2 [种子数据] 没数据或拿到了 null 空值</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · 看到 DevTools 控制台密密麻麻的红字报错时，非技术主管最正确的做法是什么？</div>
+    <label><input type="radio" name="q3" value="a"> 记住解焦虑口诀：只提取第一行 Error Message，长堆栈留给 diagnosing-bugs Skill 自动排查</label>
+    <label><input type="radio" name="q3" value="b"> 逐行阅读几十行底层堆栈并手写修补代码</label>
+    <label><input type="radio" name="q3" value="c"> 慌张关闭浏览器并重装操作系统</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · 当 IT 部门质疑你的 AI 原型在排错过程中可能外泄 Token 或改崩系统时，你应该如何向他们解释？</div>
+    <label><input type="radio" name="q4" value="a"> “我们引入了 diagnosing-bugs 范式，日志脱敏 &lt;REDACTED&gt;，排错前 Checkpoint 存档，落盘 DEBUG_REPORT，且 2 轮未 PASS 自动 safe restore 回滚。”</label>
+    <label><input type="radio" name="q4" value="b"> “AI 很聪明，绝对不可能写错代码。”</label>
+    <label><input type="radio" name="q4" value="c"> “我也不清楚 AI 怎么改的，坏了就刷新页面。”</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：为什么说“Checkpoint 存档 + 诊断报告落盘 + 2 轮硬熔断”是防范 AI 排错死循环的终极保险？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      Checkpoint 存档消除了回滚的抹杀恐惧；诊断报告落盘建立了解焦虑审计追踪；2 轮硬熔断切断了盲目试错死循环，确保代码库永远安全退回到上一个百分百可工作的稳定 Commit 点。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：在排错过程中，遇到包含敏感密钥或 Token 的 Log 时应该如何处理？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      绝对禁止直接粘贴原始抓包文本！必须执行前置隐私防线，将所有 Authorization Header、Cookie 或密钥统一替换为 <code>&lt;REDACTED&gt;</code> 占位符后再提交给 AI。
+    </div>
+  </div>
+
+  <!-- Key Takeaways Box -->
+  <div class="card tinted" style="margin-top: 1.5rem;">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>进战场前存 Save Point (Checkpoint Commit)，坏试错随便撤，历史装备毫发无损。</b></li>
+      <li><b>控制台报错不慌张，只提取第一行 Error 事实，日志脱敏 `<REDACTED>` 落盘 DEBUG_REPORT。</b></li>
+      <li><b>修不过去不硬撑，2 轮未 PASS 自动触发硬熔断，安全 restore 恢复 Clean 干净砧板。</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第六课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 已在排错前下发 `git commit` 完成 Checkpoint 无痛存档？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 已学会使用五层诊断卡口语标签定位，并成功落盘 `docs/LESSON_06_DEBUG_REPORT.md`？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 已体验自修 2 轮未 PASS 时，运行 `git restore .` 安全恢复 Checkpoint 干净状态？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--red);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--red); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 Matt Pocock 排错范式</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">diagnosing-bugs 4 阶段排错法：Understand, Reproduce, Diagnose, Fix。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 前端 DevTools 基础</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Console Error & Network Filtering：学会脱敏过滤敏感 Key。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ Slash 命令快捷指南</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">唤醒 <code>diagnosing-bugs</code> 技能一键启动受控排错自动化流程。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🚀 下一阶段预告</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);"><a href="#" style="color: var(--blue); font-weight:bold;">第 7 课 · 让 Agent 实际操作页面完成验收</a>： Playwright 浏览器自动化与四类证据链！</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--red); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--red-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--red);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用汽车五级诊断仪的比喻，帮我再复习一遍五层诊断卡的各层口语标签”——它会为您详细拆解。</span>
+  </div>
+</section>
+
+<footer>
+  第 6 课 · 主管 AI 原型制作训练营 · 权威路线图：<a href="../docs/COURSE_ROADMAP.html">docs/COURSE_ROADMAP.html</a> | 术语：<a href="../GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// ---------- Section 01 Debugging Demonstrator ----------
+const debugScenarios = {
+  raw: {
+    steps: [
+      { title: 'Step 1 · 发现页面异常 / 抓包外泄 Key', desc: '用户直接复制带 Authorization Key 的原始抓包文字贴进聊天框... 💥 敏感数据外泄风险！', cls: 'error' },
+      { title: 'Step 2 · 没做 Checkpoint 存档 ➔ AI 盲猜深挖', desc: '无验证信号 ➔ AI 盲目修改 Vue 核心机制与 node_modules 依赖，修改 15 个文件...', cls: 'error' },
+      { title: 'Step 3 · 💥 越改越崩，想要回滚发现历史代码被抹杀', desc: '【崩溃】缺少 Checkpoint 存档，执行回滚将过去写的合法功能全部抹杀！', cls: 'error' }
+    ],
+    logs: [
+      '> [User Input]: Copy-pasted raw Network trace with Bearer token: eyJhbGciOi...',
+      '🚨 [Security Alert]: Sensitive Token Leaked to Context!',
+      '❌ [AI Execution]: Modifying node_modules/vue/dist/vue.runtime.esm.js...',
+      '💥 [Result]: 没有无痛存档与 2 轮硬熔断，项目彻底坍塌，历史装备丢失！'
+    ]
+  },
+  bounded: {
+    steps: [
+      { title: 'Step 1 · 执行 Checkpoint 无痛存档 (Save Point)', desc: '运行 `git commit -m "checkpoint: before lesson 6 debug"`，锁定历史装备安全。', cls: '' },
+      { title: 'Step 2 · 唤醒 diagnosing-bugs ➔ 脱敏落盘 DEBUG_REPORT', desc: '日志敏感 Key 脱敏为 `<REDACTED>` ➔ 口语化五层定位 ➔ 落盘 `LESSON_06_DEBUG_REPORT.md`。', cls: 'working' },
+      { title: 'Step 3 · 契约层修补 ➔ 2 轮硬熔断安全保护', desc: '仅修补契约层 ➔ 若自修 2 轮仍未 PASS，自动运行 `git restore .` 恢复 Clean，导出 `.patch`！', cls: 'success' },
+      { title: 'Step 4 · 🎉 历史装备毫风无损，有界排错圆满收官', desc: '验证 PASS 提交归档；即便熔断，Checkpoint 上的历史成果 100% 稳如泰山！', cls: 'success' }
+    ],
+    logs: [
+      '> [User Command]: Checkpoint Commit SHA: c6f1a8e (Save Point Saved)',
+      '> [diagnosing-bugs]: Anonymized log -> Authorization: <REDACTED>',
+      '> [Report Created]: docs/LESSON_06_DEBUG_REPORT.md generated with 5-layer diagnostic map',
+      '✅ [Validation]: Static test PASS (Layer 5 contract match: status -> status_name)',
+      '🎉 [Result]: 排错完成，Working Tree 恢复 100% Clean 干净状态！'
+    ]
+  }
+};
+
+function runMode(mode) {
+  const btnRaw = document.getElementById('mBtnRaw');
+  const btnBounded = document.getElementById('mBtnBounded');
+  const canvas = document.getElementById('flowCanvas');
+  const consoleLog = document.getElementById('consoleLog');
+
+  btnRaw.className = 'mode-btn raw ' + (mode === 'raw' ? 'active' : '');
+  btnBounded.className = 'mode-btn bounded ' + (mode === 'bounded' ? 'active' : '');
+
+  const data = debugScenarios[mode];
+  canvas.innerHTML = '';
+  consoleLog.innerHTML = '';
+
+  data.steps.forEach((s, idx) => {
+    const node = document.createElement('div');
+    node.className = 'flow-step-node ' + (s.cls || '');
+    node.id = 'node_' + idx;
+    node.innerHTML = `
+      <div class="node-title">
+        <span>${s.title}</span>
+        <span style="font-size:.75rem; padding: 2px 6px; border-radius:4px; background:rgba(0,0,0,0.05);">Step ${idx + 1}</span>
+      </div>
+      <div class="node-desc">${s.desc}</div>
+    `;
+    canvas.appendChild(node);
+  });
+
+  data.steps.forEach((s, idx) => {
+    setTimeout(() => {
+      const el = document.getElementById('node_' + idx);
+      if (el) el.classList.add('active');
+    }, idx * 400);
+  });
+
+  consoleLog.innerHTML = data.logs.join('<br>');
+}
+runMode('bounded');
+
+// ---------- Section 03 Five Layer Diagnostic Simulator ----------
+function testLayer(l) {
+  const term = document.getElementById('layerTerminal');
+  if (l === 5) {
+    term.innerHTML = `
+🔍 <b>[Layer 5 契约断言层 Diagnostic]:</b><br>
+现象：名字写错了，界面配不上契约！<br>
+检测到 Vue 组件模板中的字段 \`item.status_name\` 在 \`prototype-contract.d.ts\` 中定义为 \`item.status\`。<br>
+🛡️ <b>脱敏控制台日志:</b> GET /api/work-orders 200 OK (Auth: &lt;REDACTED&gt;)<br>
+📄 <b>DEBUG_REPORT 状态:</b> Layer 5 [契约断言] FAIL ➔ 建议修补组件模板字段。
+    `;
+  } else if (l === 4) {
+    term.innerHTML = `
+🔍 <b>[Layer 4 报错日志层 Diagnostic]:</b><br>
+现象：控制台第一行红字报错！<br>
+Error Message: \`Uncaught TypeError: Cannot read property 'status' of undefined\`<br>
+💡 <b>解焦虑提示:</b> 只抓取第一行 Error Message，后面的 40 行框架内部长堆栈留给 AI 自动分析。<br>
+📄 <b>DEBUG_REPORT 状态:</b> Layer 4 [报错日志] 包含可用视觉事实 ➔ 已提取 Error 根因。
+    `;
+  } else if (l === 3) {
+    term.innerHTML = `
+🔍 <b>[Layer 3 组件状态层 Diagnostic]:</b><br>
+现象：数据变了，但界面没跟着动！<br>
+检测到 Vue 响应式变量未在 \`ref()\` 或 \`reactive()\` 中初始化，导致 DOM 重新渲染没有触发。<br>
+📄 <b>DEBUG_REPORT 状态:</b> Layer 3 [组件状态] FAIL ➔ 建议将普通变量转为 ref 响应式状态。
+    `;
+  } else if (l === 2) {
+    term.innerHTML = `
+🔍 <b>[Layer 2 种子数据层 Diagnostic]:</b><br>
+现象：没数据或拿到了 null 空值！<br>
+检测到 \`prototype-data.ts\` 导出的列表为空数组 \`[]\` 或接口返回了空句柄。<br>
+📄 <b>DEBUG_REPORT 状态:</b> Layer 2 [种子数据] FAIL ➔ 检查 Mock 数据补全默认填空。
+    `;
+  } else {
+    term.innerHTML = `
+🔍 <b>[Layer 1 环境服务层 Diagnostic]:</b><br>
+现象：物理服务跑不起来！<br>
+检测到 Dev Server 未在 127.0.0.1:5173 监听，或者终端运行 `npm run dev` 提前退出了。<br>
+📄 <b>DEBUG_REPORT 状态:</b> Layer 1 [环境服务] FAIL ➔ 请在终端重新执行 npm run dev。
+    `;
+  }
+}
+
+// ---------- Copy Text Function ----------
+function copyText(id) {
+  const txt = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    alert('已成功复制自然授权口令：\n' + txt);
+  }).catch(() => {
+    prompt('复制失败，请手动复制：', txt);
+  });
+}
+
+// ---------- Section 05 Concept Fill-in-the-Blanks Logic ----------
+function checkAllBlanks() {
+  const b1 = document.getElementById('blank1');
+  const b2 = document.getElementById('blank2');
+  const b3 = document.getElementById('blank3');
+
+  const ok1 = b1.value === 'checkpoint';
+  const ok2 = b2.value === 'layer5';
+  const ok3 = b3.value === 'restore';
+
+  b1.className = 'blank-select ' + (ok1 ? 'ok' : 'err');
+  b2.className = 'blank-select ' + (ok2 ? 'ok' : 'err');
+  b3.className = 'blank-select ' + (ok3 ? 'ok' : 'err');
+
+  const bf1 = document.getElementById('bf1');
+  const bf2 = document.getElementById('bf2');
+  const bf3 = document.getElementById('bf3');
+
+  bf1.className = 'blank-feedback show';
+  bf1.style.color = ok1 ? 'var(--green)' : 'var(--red)';
+  bf1.innerHTML = ok1 ? '✅ 填空 1 正确！Checkpoint 存档留存 Save Point，防止回滚抹杀历史代码。' : '❌ 填空 1 错误：应选择 Checkpoint 存档。';
+
+  bf2.className = 'blank-feedback show';
+  bf2.style.color = ok2 ? 'var(--green)' : 'var(--red)';
+  bf2.innerHTML = ok2 ? '✅ 填空 2 正确！字段拼写不一致属于 Layer 5 [契约断言] 名字写错了，界面配不上契约。' : '❌ 填空 2 错误：属于 Layer 5 契约断言。';
+
+  bf3.className = 'blank-feedback show';
+  bf3.style.color = ok3 ? 'var(--green)' : 'var(--red)';
+  bf3.innerHTML = ok3 ? '✅ 填空 3 正确！2 轮硬熔断运行 git restore . 安全清扫坏试错，历史装备毫发无损。' : '❌ 填空 3 错误：应选择 git restore . 安全回滚。';
+}
+
+// ---------- Section 06 Exit Ticket Expand Answer Logic ----------
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+
+// ---------- Quiz Logic ----------
+const explain = {
+  q1: '正确答案：A。在排错前下发 git commit Checkpoint 存档留存 Save Point，能消除回滚对历史代码的抹杀恐惧。',
+  q2: '正确答案：A。“数据变了，但界面没跟着动”属于 Layer 3 组件状态层 (Vue 响应式或绑定缺失)。',
+  q3: '正确答案：A。记住解焦虑口诀：只提取第一行 Error Message，后面的长堆栈留给 AI 自动排查。',
+  q4: '正确答案：A。完整的工程防护包括：日志脱敏 <REDACTED>、排错前 Checkpoint 存档、落盘 DEBUG_REPORT 审计报告与 2 轮熔断 safe restore 回滚。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 25;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 4) {
+    el.innerHTML = `你已答完 <b>${answered} / 4</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  } else {
+    el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！`;
+  }
+}
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--red)';
+    res.innerHTML = '🎉 恭喜完成第六课全量退场自查！你已熟练掌握受控排错与 2 轮硬熔断防护！';
+  } else {
+    res.style.color = 'var(--red)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+</script>
+
+</body>
+</html>

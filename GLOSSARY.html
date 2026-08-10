@@ -115,7 +115,7 @@
 <div class="wrap">
   <div class="nav-bar">
     <a href="javascript:history.back()" class="back-btn">⬅️ 返回上一级课程</a>
-    <div style="font-size: .88rem; color: var(--ink-soft); font-weight: 600;">共收录 15 个核心工程与业务术语</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); font-weight: 600;">共收录 18 个核心工程与业务术语</div>
   </div>
 
   <div class="search-box">
@@ -273,6 +273,36 @@
       </div>
       <div class="term-def">通过 Git Commit 进行稳定存档（Save），当 Agent 产生严重幻觉或改坏工程配置时，下发指令一键撤销并读档还原（Load）至最近的干净 Commit 基线。</div>
       <div class="term-avoid">🚫 避免误用: 在破损代码上继续试错</div>
+    </div>
+
+    <!-- TERM 16 -->
+    <div class="term-card" data-kw="五层诊断卡 five layer diagnostic map 排错 汽车诊断仪">
+      <div class="term-header">
+        <div class="term-title">五层诊断卡 (Five-Layer Diagnostic Map)</div>
+        <span class="term-tag red" style="background:#fee2e2; color:#991b1b;">排错拓扑</span>
+      </div>
+      <div class="term-def">物理拆解为环境层、数据源层、组件状态层、日志层与契约断言层五层口语化诊断拓扑（汽车诊断仪 🚗），精准定位 Bug 物理层级。</div>
+      <div class="term-avoid">🚫 避免误用: 盲目试错, 控制台恐慌</div>
+    </div>
+
+    <!-- TERM 17 -->
+    <div class="term-card" data-kw="事实锚定排错 fact anchored debug report 报告落盘 脱敏">
+      <div class="term-header">
+        <div class="term-title">事实锚定排错 (Fact-Anchored Loop)</div>
+        <span class="term-tag red" style="background:#fee2e2; color:#991b1b;">验证闭环</span>
+      </div>
+      <div class="term-def">修改代码前强制建立物理可测的 PASS/FAIL 验证信号，日志脱敏敏感 Key (`<REDACTED>`)，并将五层结论物理落盘写入 `LESSON_06_DEBUG_REPORT.md`。</div>
+      <div class="term-avoid">🚫 避免误用: 粘贴敏感 Token 抓包, 无断言盲改</div>
+    </div>
+
+    <!-- TERM 18 -->
+    <div class="term-card" data-kw="2轮硬熔断 two round circuit breaker checkpoint restore 补丁">
+      <div class="term-header">
+        <div class="term-title">2 轮硬熔断机制 (Checkpoint Breaker)</div>
+        <span class="term-tag red" style="background:#fee2e2; color:#991b1b;">安全保护</span>
+      </div>
+      <div class="term-def">排错前下发 Checkpoint 无痛存档 (Save Point)，当 Agent 自修 2 轮仍未 PASS 时，自动触发 `git restore .` 安全恢复 Checkpoint 干净状态并导出补丁。</div>
+      <div class="term-avoid">🚫 避免误用: 盲目死循环修复, 越改越崩白屏</div>
     </div>
 
   </div>
