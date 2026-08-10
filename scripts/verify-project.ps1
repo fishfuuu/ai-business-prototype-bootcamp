@@ -66,7 +66,7 @@ if (Test-Path ".claude\skills\find-skills\SKILL.md") {
     throw "Prohibited out-of-scope Skill found: .claude/skills/find-skills/SKILL.md must be removed from Lessons 01-04 PR."
 }
 
-# Verify Teacher Plan 22-section structure for Lesson 02, 03, 04
+# Verify Teacher Plan structure (22-section for L02/L03, 8-module for L04/L05)
 $tp2 = Get-Content "docs\LESSON_02_TEACHER_PLAN.md" -Encoding UTF8 -Raw
 for ($s=1; $s -le 22; $s++) {
     if ($tp2 -notmatch "## $s\.") {
@@ -81,14 +81,22 @@ for ($s=1; $s -le 22; $s++) {
     }
 }
 
+$modules = @("一", "二", "三", "四", "五", "六", "七", "八")
 $tp4 = Get-Content "docs\LESSON_04_TEACHER_PLAN.md" -Encoding UTF8 -Raw
-for ($s=1; $s -le 22; $s++) {
-    if ($tp4 -notmatch "## $s\.") {
-        throw "LESSON_04_TEACHER_PLAN.md is missing section header: ## $s."
+foreach ($m in $modules) {
+    if ($tp4 -notmatch "## $m[、\.]") {
+        throw "LESSON_04_TEACHER_PLAN.md is missing module header: ## $m"
     }
 }
 
-Write-Host "[PASS] Required files are present and Teacher Plans match 22-section structure."
+$tp5 = Get-Content "docs\LESSON_05_TEACHER_PLAN.md" -Encoding UTF8 -Raw
+foreach ($m in $modules) {
+    if ($tp5 -notmatch "## $m[、\.]") {
+        throw "LESSON_05_TEACHER_PLAN.md is missing module header: ## $m"
+    }
+}
+
+Write-Host "[PASS] Required files are present and Teacher Plans match 8-module/22-section structure."
 Write-Host ""
 
 Write-Host "[1.5/5] Running Layered Contract Assertions across Roadmap & Execution Docs..."

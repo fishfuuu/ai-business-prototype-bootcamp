@@ -1,6 +1,6 @@
 ---
 name: teacher-plan-architect
-description: Master skill for designing high-caliber enterprise AI lesson plans and student guides. Enforces the 4-step concept definition framework (Definition -> Mechanism -> Metaphor -> Handoff Value), 22-section Teacher Plan structure, 5-pause-point time allocation, V3 Dual-Mode Student Guide architecture, and evidence-driven verification.
+description: Master skill for designing high-caliber enterprise AI lesson plans and student guides. Enforces the 4-step concept definition framework (Definition -> Mechanism -> Metaphor -> Handoff Value), 8-module Teacher Plan structure, 5-pause-point time allocation, V3 Dual-Mode Student Guide architecture, and evidence-driven verification.
 ---
 
 # Teacher Plan Architect (企业级 AI 课程教案设计高手 Skill)
@@ -20,23 +20,26 @@ description: Master skill for designing high-caliber enterprise AI lesson plans 
 
 ---
 
-## 2. 课堂时间与控场节奏 (90 分钟极客控场 & 22 章节硬约束)
+## 2. 课堂时间与控场节奏 (90 分钟极客控场 & 8 大执教模块硬约束)
 
-教师备课教案 (`TEACHER_PLAN.md`) 必须精确满足 **22 章节物理硬约束**，并划分为 5 大环节与 5 个固定暂停点（Pause Points）：
+教师备课教案 (`TEACHER_PLAN.md`) 必须按**讲师执教动线**严格划分为 **8 大执教模块**，并包含 5 个固定暂停点（Pause Points）：
 
-| 阶段 | 建议时长 | 教师动作 | 学员动作 | 关键暂停点 (Pause Point) |
-| :--- | :--- | :--- | :--- | :--- |
-| **1. 成果展示** | 8 分钟 | 展示重构前后试衣镜对比 | 观看并对齐终局目标 | **暂停点 1**：明确本课核心交付物 |
-| **2. 连续微型演示** | 17 分钟 | 连续示范 4 个 Task，展示底层逻辑 | 记录关键提示词与盖章口令 | **暂停点 2 & 3**：概念硬核拆解与安全存档 |
-| **3. 概念核对** | 10 分钟 | 提问并核对【四步概念卡】 | 口头回答原理与业务价值 | **暂停点 4**：确认逻辑冻结线 |
-| **4. 学员实操** | 45 分钟 | 巡视并解答卡点，监控授权 | 分 Task 独立实操与 Git 存档 | **暂停点 5**：人在回路盖章 |
-| **5. 总结验证** | 10 分钟 | 运行 `verify-project.ps1` 校验 | 填记卡，提交日志 | 成果证据归档 |
+| 模块 | 核心内容 | 关键要求 |
+| :--- | :--- | :--- |
+| **一、 课程元数据与定位** | 元数据、定位、背景痛点、版本记录 | 集中定义课程基本属性与演进信息 |
+| **二、 逆向目标与四步概念卡** | Bloom ABCD 能力矩阵 + 2-3 个核心概念卡 | 目标与硬核概念集中对齐 |
+| **三、 教学准备与沙箱隔离** | 准备资源、沙箱规则、环境检查命令 | 罗列开课前需要运行的 powershell 命令 |
+| **四、 90分钟控场主线与 Pause Points** | WHERETO 时间表 + 5 个固定 Pause Points | 提问问答直接嵌入时间表，避免翻页 |
+| **五、 逐 Task 极客示范与巡视指导** | 按 Task 深度聚合：示范、口令、巡视、辅导 | 示范动作、盖章口令、巡视卡点全在同一 Task 下 |
+| **六、 现场 Debug 预案与自动化校验** | Troubleshooting 表 + `verify-project.ps1` | 应急排错与脚本校验指令 |
+| **七、 退场测试与课后拓展作业** | Exit Ticket 题库 (3-5题) + 巩固作业 | 结束前 10 分钟评估与总结 |
+| **八、 教师备课质量自测 Checklist** | 课前 1 分钟检查 Checklist | 确保备课质量闭环 |
 
 ---
 
 ## 3. 学员操作指南 (GUIDE V3) 双模构建规范
 
-学员指南 (`GUIDE_V3.md`) 必须兼具“课堂极速实操”与“无痛独立自学”双重体验，严格遵循以下 6 大输出标准：
+学员指南 (`GUIDE.md`) 必须兼具“课堂极速实操”与“无痛独立自学”双重体验，严格遵循以下 6 大输出标准：
 
 1. **引言【背景/宏观闭环/目标】专栏与解耦原则**：
    - 顶部用 `> 💡 **本课的核心思想只有一句话：...**` 顶置理念。
@@ -80,7 +83,7 @@ description: Master skill for designing high-caliber enterprise AI lesson plans 
 ## 6. 教案与指南质量自我审计 Checklist
 
 在生成或重构教案后，自我审计是否满足：
-- [ ] 教师教案 100% 匹配 22 章节标题，包含 5 个固定 Pause Points。
+- [ ] 教师教案 100% 匹配 **8 大执教模块** 标题，包含 5 个固定 Pause Points。
 - [ ] 所有核心概念均包含了【硬核定义 + 底层机制 + 业务比喻 + IT交接】4 步。
 - [ ] 学员指南 1.2 聚焦宏观端到端流程闭环（不与 2 核心概念卡产生重叠）。
 - [ ] 学员指南在 Task 之前集中输出了 2-3 个核心概念卡。
