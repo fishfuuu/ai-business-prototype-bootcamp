@@ -1,177 +1,183 @@
-# 第三课学员指南 (V2 闭环版)：把模糊想法变成可执行的业务契约
+# 第三课学员操作指南 — 把模糊想法变成可执行的业务契约：grill-me 澄清与 3 份契约冻结
 
-欢迎来到第三课！在前两课中，我们完成了界面搭建与视觉规则约束（`DESIGN.md`）。本节课我们将解决业务原型研发中最核心的问题——**“如何把模糊业务想法变成可执行、可验收的业务契约”**。需求不是一句简单的 Prompt，而是一组经过确认的业务决定。你将学习如何唤醒 `grill-me` 追问护栏进行结构化澄清，前置锁定 **6 大业务要素**，将数据契约统一收扣至 `docs/BUSINESS_FEATURE_CARD.md`，并生成数据字典定义表 (`src/types/prototype-contract.d.ts`) 与模拟数据 (`src/mocks/prototype-data.ts`)，通过 **三层验收（工程验证、契约验证、主管验收）** 完成阶段版本归档。
-
----
-
-## 0. 本课教学目标 (Learning Objectives)
-
-完成本课学习后，你将能够：
-1. **对比与阐述** 单次口头 Prompt 的模糊局限，以及使用 `grill-me` 技能护栏收敛业务契约的底层优势。
-2. **区分与解构** **业务验收场景 (Given-When-Then: 假如...当...则...)** 与 **请示主管门禁 (触发暂停条件)** 的本质区别。
-3. **推导与锁定** 业务契约 **6 大核心要素**（Goal 业务目标、User & Problem 问题定义、Boundary 边界线、Risk 风险隐私、Acceptance Criteria 验收场景、Stop Conditions 停止条件）。
-4. **校验与把控** **强校验需求门禁 (没想清楚不准开工)**，确保无未决阻断项落盘。
-5. **生成与归档** 承载 9 大完整章节的《业务功能卡与数据契约》(`docs/BUSINESS_FEATURE_CARD.md`)、数据字典定义表 (`src/types/prototype-contract.d.ts`) 与 Mock 数据 (`src/mocks/prototype-data.ts`)。
-6. **执行** **三层验收（工程验证、契约验证、主管验收）**，更新 `docs/PROJECT_STATE.md`，并通过 `git add --` 选择性暂存完成 Git 稳定存档。
+> 💡 **本课的核心思想只有一句话：**  
+> **不要急着写代码，先用三份契约锁定业务边界与测试验收标准。**
 
 ---
 
-### 核心模式对比线框图 (Prompting -> Harness 契约锁定 -> 进阶 Loop 预告)
+## 一、 本课背景、底层原理与学习目标
+
+### 1.1 业务背景与真实痛点
+在实际业务开发中，最常踩的坑是“需求模糊不清就直接开工”。主管口头说“做一个工单管理功能”，AI 凭空想象补充了许多不符合实际业务逻辑的字段；或者遇到歧义时 AI 自作主张，导致最终写出来的代码与真实业务大相径庭。
+
+### 1.2 宏观受控闭环
+本课的核心工程机制，是将业务需求澄清纳入一条**“`grill-me` 追问澄清 ➔ 契约文档冻结 ➔ TS 类型声明 ➔ 模拟数据灌入 ➔ 升阶与只读预检”**的受控闭环中：
+1. **唤醒 `grill-me` 互动追问**：通过 `/grill-me` 追问式 Skill，AI 像资深架构师一样反向提问主管，澄清边界条件、`Given-When-Then` 验收标准与 `Stop / Escalation` 条件（升阶熔断条件）。
+2. **三份契约落盘与冻结**：
+   - 契约 1：[`docs/BUSINESS_FEATURE_CARD.md`](file:///d:/AILearning/docs/BUSINESS_FEATURE_CARD.md)（业务功能卡与边界）。
+   - 契约 2：[`src/types/prototype-contract.d.ts`](file:///d:/AILearning/src/types/prototype-contract.d.ts)（TypeScript 数据契约字典）。
+   - 契约 3：[`src/mocks/prototype-data.ts`](file:///d:/AILearning/src/mocks/prototype-data.ts)（静态 Mock 模拟数据集）。
+3. **Task 3A 只读预览门禁**：在生成最终代码前，必须先进行 Task 3A 只读结构预览，未经主管授权不得修改任何现有源码（严禁使用路径切换命令 `cd <project-path>`）。
+
+### 1.3 核心学习目标
+完成本课实操后，你将能够：
+1. 掌握唤醒并使用 `/grill-me` 互动澄清 Skill 梳理业务边界。
+2. 掌握落盘与冻结 3 份业务与数据契约的方法。
+3. 掌握 `Given-When-Then` 验收条件与 `Stop / Escalation` 升阶熔断机制。
+
+---
+
+## 二、 💡 本课核心工程概念卡 (Core Concepts)
+
+### 核心概念 1：`grill-me` 追问澄清机制与业务功能卡 (`BUSINESS_FEATURE_CARD.md`)
+- **硬核工程定义**：AI 扮演资深产品架构师，通过连续多轮针对性提问，逼平业务模糊点并落盘为结构化功能契约的交互范式。
+- **底层运作机制**：AI 扫描现有工程上下文，针对输入输出、边界异常与用户角色依次提问，最终输出包含 `Given-When-Then` 的 Markdown 功能卡。
+- **具象业务比喻**：**装修开工前的主材确认清单** 📝。在敲墙前，业主和工长必须对齐瓷砖品牌、开关插座数量并签字确认。
+- **IT 沟通场景**：“需求已通过 `grill-me` 完成澄清，并落盘为 `BUSINESS_FEATURE_CARD.md` 业务契约。”
+
+### 核心概念 2：数据契约 (Data Contract TS Types & Mock Data)
+- **硬核工程定义**：使用 TypeScript Interface 强类型定义业务对象的物理字段，并配合 Mock 数据文件实现的前后端数据协议。
+- **底层运作机制**：在 `prototype-contract.d.ts` 中声明字段类型（如 `status: 'pending' | 'resolved'`），在 `prototype-data.ts` 中填充静态测试对象。
+- **具象业务比喻**：**海关进口商品的标准报关单海关编码** 📦。规定了每个包裹里装什么物品、什么格式，违规格式直接扣留。
+- **IT 沟通场景**：“我们冻结了 `prototype-contract.d.ts` 数据契约，保证前端界面与数据字典 100% 匹配。”
+
+### 核心概念 3：`Given-When-Then` 验收标准与 `Stop / Escalation` 升阶条件
+- **硬核工程定义**：行为驱动开发 (BDD) 的结构化验收语法，配合异常越界时的自动停止与人工升阶响应机制。
+- **底层运作机制**：定义 `Given`(前置条件) -> `When`(触发动作) -> `Then`(预期结果)；当遇到数据丢失或规则冲突时触发 Stop 熔断，升阶至主管干预。
+- **具象业务比喻**：**工厂流水线的紧急拉绳熔断阀** 🛑。组装顺畅时按流程运转，一旦发现零部件开裂，拉绳停机并升阶给车间主任。
+- **IT 沟通场景**：“功能卡包含了完整的 Given-When-Then 验收链条与 Stop / Escalation 升阶条件，规避了黑盒风险。”
+
+---
+
+## 三、 🔄 三份契约流转模型
 
 ```text
 ===================================================================================
-【第一层：裸 Prompting 模式】 (无护栏约束，口头指令模糊，AI 凭空脑补与数据漂移)
+【模式 A：野生拍脑门盲开】(反面案例：无澄清、无契约 ➔ 字段混乱/自作主张)
 
-  [模糊口头指令] -------> ( LLM 自由发散 ) -------> [凭空脑补字段 / 数据幻觉 / 需求越界]
-   "帮我做个退款页"
-
-===================================================================================
-【第二层：Harness Engineering 模式】 (本课实操：把模糊想法变成可执行的业务契约)
-
-  [一句话需求] ---> [ Skill 护栏: grill-me ] ---> 结构化解构 6 大业务要素:
-                       (3-5分支, 5-7轮)           - 1. User & Problem (使用者与问题定义)
-                                                  - 2. Goal (业务目标与成功指标)
-                                                  - 3. Boundary (In/Out of Scope 边界)
-                                                  - 4. Risk (数据敏感度与隐私)
-                                                  - 5. Acceptance Criteria (业务验收场景: 假如...当...则...)
-                                                  - 6. Stop / Escalation (请示主管门禁 / 触发暂停条件)
-                                                         │
-                                                         ▼
-                                          [ 强校验需求门禁: 没想清楚不准开工 ]
-                                          (未通过: [需求遗漏拦截] 拒绝落盘)
-                                                         │ (全通过: 允许落盘)
-                                                         ▼
-  [ 数据字典表 ] <--- [ 模拟数据 ] <--- [ 业务功能卡与数据契约 (9大完整章节) ]
-  (contract.d.ts)   (prototype-data.ts)     (docs/BUSINESS_FEATURE_CARD.md)
+  [模糊想法] ───> ( 凭空直接写代码 ) ───> [ 字段拼写错误 / 业务逻辑脱节 ]
 
 ===================================================================================
-【第三层：Bounded Agent Loop 模式】 (第四课预演：基于契约护栏的受控自主循环)
+【模式 B：grill-me 澄清与 3 份契约冻结】(本课标准范式)
 
-  ┌─────────────────────────────────────────────────────────────────────────────┐
-  │  [输入 Goal] ──> [ Plan 实施计划 ] ──> [ 增量写代码 ] ──> [ 自动化断言 Verify ]│
-  │                         ▲                                        │          │
-  │                         └────── (验证失败: 停止上提) ─────────────┘ (PASS: 交付)│
-  └─────────────────────────────────────────────────────────────────────────────┘
-   * 验证失败规则：停止执行 -> 保存证据 -> 由主管裁决修复、调整计划或上提，决不盲目自动循环！
+  [唤醒 /grill-me 追问] ───> ( 3-5 轮深度问答 ) ───> [ Given-When-Then / Stop 条件 ]
+                                                                 │
+                                                                 ▼
+  ┌──────────────────────────────────────────────────────────────┐
+  │ 冻结 3 份物理契约资产:                                       │
+  │ 1. BUSINESS_FEATURE_CARD.md  (业务功能卡)                   │
+  │ 2. prototype-contract.d.ts    (TS 数据契约字典)             │
+  │ 3. prototype-data.ts          (静态 Mock 数据源)             │
+  └──────────────────────────────────────────────────────────────┘
+                                                                 │
+                                                                 ▼
+  [ Task 3A: 只读结构预览门禁 (禁止直接修改代码) ] ───> [ 主管自然盖章授权落盘 ]
 ===================================================================================
 ```
 
 ---
 
-## 1. 核心概念与护栏机制
+## 四、 🛠️ 课堂实操与自学导引任务清单
 
-### 1.1 核心概念卡：Prompting -> Harness (5分钟概念卡)
-- **Prompting (单次指令)**：口头描述任务，AI 容易产生凭空脑补与需求漂移；
-- **Harness Engineering (工程护栏)**：本课核心。通过配置文件、`grill-me` 追问与 `BUSINESS_FEATURE_CARD.md` 业务契约，死死约束 Agent 修改范围。
+### Task 1: 唤醒 `/grill-me` 追问 Skill 澄清需求
 
-### 1.2 关键概念区分：业务验收场景 vs. 请示主管门禁
-- **业务验收场景 (Acceptance Criteria)**：用于判断**功能做出来后是否正确**，格式采用通俗表达：`假如 [上下文] / 当 [操作] / 则 [预期结果]`。
-- **请示主管门禁 (Stop Conditions)**：用于判断 **Agent 什么时候必须熔断暂停并呈报主管**。例如：关键字段来源未确认、需求超界、规则冲突或达到追问轮数上限。
+#### ⚡ 极速操作步骤
+1. 在 Claude Code CLI 窗口中输入：
+   ```text
+   /grill-me
+   ```
+2. 针对工单管理功能回答 AI 提出的 3 轮追问（包括正常流、边界容错与 `Stop / Escalation` 升阶条件）。
 
-### 1.3 强校验需求门禁 (没想清楚不准开工)
-在 3–5 个主要决策分支、5–7 轮追问中，若以下 6 项核心内容仍存在 `[待确认]` 或缺失，**`grill-me` 会输出提示 `[需求遗漏拦截] 核心需求尚有未决事项，暂不开工` (BLOCKING_GATE_FAILED)，拒绝落盘文件，不得进入第四课**：
-1. 核心使用者与责任角色；
-2. 核心字段来源；
-3. 关键业务规则；
-4. 敏感数据处理方式；
-5. In Scope 边界线；
-6. 至少 1 个核心业务验收场景 (假如...当...则...)。
-
-非阻断问题留在 Section 9 `Open Decisions`，格式：`[事项 | 负责人 | 截止日期 | 是否阻断: 否 | 影响范围]`。
-
-### 1.4 `BUSINESS_FEATURE_CARD.md` 9 大完整章节
-数据契约统一写入 `docs/BUSINESS_FEATURE_CARD.md`：
-1. User & Problem；2. Goal；3. In Scope / Out of Scope；4. Business Rules；5. Risks and Data Policy；6. Acceptance Scenarios；7. Stop / Escalation Conditions；8. Data Contract；9. Open Decisions。
-
-### 1.5 契约冻结与变更规则 (Contract Freeze Rule)
-> **主管验收 PASS 后，`BUSINESS_FEATURE_CARD.md` 成为第四课的唯一需求基线。后续如需修改范围、业务规则、数据契约或验收场景，必须先更新 `BUSINESS_FEATURE_CARD.md` 并重新获得主管确认，不得直接在实施代码中静默改变需求。**
+#### 💡 独立自学原理解析
+> **为什么不能让 AI 直接生成代码？**  
+> AI 擅长回答问题，但在没有约束时极易自行脑补业务细节。`/grill-me` 强制 AI 提问主管，把隐藏在脑海中的业务细节梳理出来。
 
 ---
 
-## 2. 学员实操任务
+### Task 2: 落盘并冻结三份契约资产
 
-### 任务 0：基线检查
-检查项目环境与上一课状态：
-```text
-请检查当前 Git 状态，确认 docs/PROJECT_STATE.md 存在且工作区干净。
+#### ⚡ 极速操作步骤
+1. 检查并确认落盘的三份契约资产：
+   - 契约 1：[`docs/BUSINESS_FEATURE_CARD.md`](file:///d:/AILearning/docs/BUSINESS_FEATURE_CARD.md)
+   - 契约 2：[`src/types/prototype-contract.d.ts`](file:///d:/AILearning/src/types/prototype-contract.d.ts)
+   - 契约 3：[`src/mocks/prototype-data.ts`](file:///d:/AILearning/src/mocks/prototype-data.ts)
+2. 输入自然盖章口令：
+   ```text
+   同意冻结三份业务与数据契约
+   ```
+
+#### 🔍 代码/契约声明预览
+```typescript
+// src/types/prototype-contract.d.ts
+export interface WorkOrder {
+  id: string;
+  title: string;
+  priority: 'low' | 'medium' | 'high';
+  status: 'pending' | 'in_progress' | 'resolved';
+}
 ```
 
 ---
 
-### 任务 1：唤醒 `grill-me` 追问澄清 (Interview 阶段)
+### Task 3A: 只读结构预览门禁 (Read-Only Preview)
 
-**操作指令**：
-```text
-/grill-me
-我想针对我选定的业务原型方向做需求澄清。请一次只问一个问题，控制在 5-7 轮内帮助我澄清使用者与问题、目标、边界、风险、业务验收场景、请示门禁与数据契约。
-```
+#### ⚡ 极速操作步骤
+1. 在生成任何新代码前，命令 AI 仅展示 Task 3A 只读结构预览：
+   ```text
+   请输出 Task 3A 只读结构预览，展示即将生成的组件文件目录结构，不要修改任何代码。
+   ```
+2. **安全防线**：检查控制台，确认未执行任何文件写入操作，严禁在命令中使用 `cd <project-path>` 等路径切换操作。
 
----
-
-### 任务 2：生成契约预览与 HITL 授权落盘 (Preview & Write 阶段)
-
-**操作指令 1 (Task 3A 聊天窗口预览)**：
-```text
-澄清完成，请在聊天窗口中输出 docs/BUSINESS_FEATURE_CARD.md (含9大章节)、src/types/prototype-contract.d.ts 与 src/mocks/prototype-data.ts 的预览。不要修改任何磁盘文件。
-```
-
-**操作指令 2 (Task 3B HITL 授权落盘)**：
-```text
-同意方案，请开始落盘功能卡与契约资产
-```
+#### 💡 独立自学原理解析
+> **Task 3A 只读预览门禁的作用**  
+> 在真正写入代码前，让主管预览即将修改的文件清单。只有在主管确认物理结构合理后，才过渡到 Task 3B 的授权落盘。
 
 ---
 
-### 任务 3：三层验收、更新 PROJECT_STATE.md 与选择性暂存 Commit (Verify & Commit 阶段)
+### Task 3B: 授权落盘并验证数据契约
 
-**三层验收标准**：
-1. **工程验证**：运行 `npm run typecheck` 与 `npm run build` PASS。
-2. **契约验证**：确认 `prototype-contract.d.ts` 与 `prototype-data.ts` 字段名、类型、必填性、枚举和示例语义一致。
-3. **主管验收**：主管核对 `BUSINESS_FEATURE_CARD.md` 包含 9 大章节，无未决阻断事项。
-
-**更新 PROJECT_STATE.md 与 Git 选择性暂存指令**：
-1. 更新 `docs/PROJECT_STATE.md`：
-   - 设置 `L03` 状态为 `PASS`；
-   - 记录本课产物路径与下一课输入。
-2. 执行选择性暂存与 Commit：
-```bash
-git status
-git add -- docs/BUSINESS_FEATURE_CARD.md
-git add -- src/types/prototype-contract.d.ts
-git add -- src/mocks/prototype-data.ts
-git add -- docs/PROJECT_STATE.md
-git diff --cached --name-only
-git diff --cached
-git commit -m "feat: complete lesson 3 business and data contracts"
-```
+#### ⚡ 极速操作步骤
+1. 下发授权口令：
+   ```text
+   确认 Task 3A 预览无误，授权写入数据契约
+   ```
+2. 验证浏览器 `http://localhost:5173/` 页面成功加载了 `prototype-data.ts` 中的数据。
 
 ---
 
-## 3. 学员课后记忆卡与退场测试 (Exit Ticket & Misconceptions)
-
-### ✍️ 学员概念互动填空 (Interactive Concept Fill-in-the-Blanks)
-1. **Prompting vs. Harness**：盲发口头 Prompt 容易引发 AI 凭空脑补与需求漂移；通过 **`grill-me` 技能护栏** 进行 3–5 分支、5–7 轮结构化追问，本质是将模糊需求转化为 **确定性的业务契约**。
-2. **业务验收场景 vs. 请示主管门禁**：基于场景的 `假如...当...则...` 用于判断 **功能做出来后是否正确**（验收条件）；而 `Stop Conditions` 用于判断 **Agent 什么时候必须熔断暂停并呈报主管**（请示主管门禁）。
-3. **契约三件套**：第三课落盘的三大契约资产分别是 Markdown 格式的《业务功能卡》(`docs/BUSINESS_FEATURE_CARD.md`)、数据字典定义表 (`src/types/prototype-contract.d.ts`) 以及运行时模拟种子数据 (`src/mocks/prototype-data.ts`)。
-4. **强校验需求门禁 (没想清楚不准开工)**：若使用者角色、核心字段来源、业务规则、敏感数据处理方式、In Scope 边界线或业务验收场景存在未决事项，`grill-me` 会输出 **`[需求遗漏拦截] 核心需求尚有未决事项，暂不开工`** (BLOCKING_GATE_FAILED) 拒绝落盘文件。
-
-### 💡 常见概念误区与正确理解 (Misconceptions vs. Correct Engineering Reality)
+## 五、 💡 常见概念误区与正确理解 (Mindset Transformation)
 
 | 常见误区 (Misconception) | 正确硬核理解 (Correct Engineering Reality) | 如何纠偏与护栏防护 (Remedy & Guardrails) |
 | :--- | :--- | :--- |
-| **误区 1：“直接给 AI 发‘帮我做个工单预警页面’最省事”** | 口头一句话需求缺乏数据来源与规则边界，AI 会凭空编造字段名与数据结构，到了第四课增量编码时直接产生类型崩溃。 | 唤醒 `grill-me` 护栏，强制通过 3–5 个决策分支、5–7 轮追问锁死 6 大业务要素。 |
-| **误区 2：“把‘假如...当...则...’用例当成请示门禁”** | 验收用例是描述成功/异常的页面行为预期（Acceptance Criteria）；请示门禁是约束 Agent 权限越界、规则冲突或未决事项时的暂停呈报点。 | 明确区分两类概念，请示门禁必须包含“触发未决阻断项时自动暂停并上呈主管”。 |
-| **误区 3：“带着未决事项也能强行落盘写代码”** | 阻断性事项未澄清意味着需求基准缺失，在缺失基准上写代码会导致后续大面积二次重构与沟通蒸发。 | 触发强校验需求门禁，未通过时输出 `[需求遗漏拦截] 核心需求尚有未决事项，暂不开工` 拒绝落盘。 |
-| **误区 4：“在 Mock 假数据里标记敏感度是多此一举”** | 在原型中标记敏感等级是写给未来 IT 部门的 **生产网关脱敏规约**，告知生产环境哪些字段物理禁止送入 LLM 模型。 | Task 2 契约表格中必须显式标明敏感等级（Public / Internal / Secret）。 |
+| **误区 1：“需求只需要口头说一句，AI 会自动补全所有逻辑”** | AI 补全的逻辑 90% 不符合真实业务，会导致后续大面积重构。 | 唤醒 `/grill-me` 互动追问，强迫梳理边界与异常处理。 |
+| **误区 2：“数据类型随意写，不需要定义 TypeScript 数据契约”** | 没有强类型 Interface 约束，前端组件和 Mock 数据字段容易对不上。 | 强制冻结 `prototype-contract.d.ts`，作为物理字段数据契约。 |
+| **误区 3：“遇到业务异常或数据缺失时让 AI 随意猜测 fallback”** | 盲目静默掩盖报错会导致坏数据写入系统。 | 在功能卡中明确定义 `Stop / Escalation` 升阶条件，异常时拉绳停机。 |
+| **误区 4：“AI 生成代码前不需要经过只读预览”** | 直接让 AI 修改源码可能误删已有逻辑。 | 执行 Task 3A 只读结构预览门禁，确认无误后再授权 Task 3B 写入。 |
 
 ---
 
-### 🎯 退场测试题 (Exit Ticket)
+## 六、 ❓ 常见操作报错与 Troubleshooting 指南
 
-* **问题 1**：`业务验收场景 (假如...当...则...)` 与 `请示主管门禁 (触发暂停条件)` 的本质区别是什么？
-* **参考答案**：
-  - `业务验收场景` 描述功能开发完成后如何判断其输出与逻辑是否正确（假如 [上下文] / 当 [操作] / 则 [预期结果]）。
-  - `请示主管门禁` 描述 Agent 在执行过程中遇阻或触及权限边界时，何时必须熔断暂停并向上呈报主管裁决。
-* **问题 2**：为什么在写入磁盘前要生成 `src/types/prototype-contract.d.ts` 数据字典定义表？
-* **参考答案**：
-  - 数据字典定义表是强类型的数据契约，能在编码前锁定字段名称、数据类型与必填属性，防止第四课 AI 增量编码时字段随心所欲飘移；同时 IT 部门接手后可直接复用该接口定义。
+| 报错/异常现象 | 物理原因 | 解决与纠偏方案 |
+| :--- | :--- | :--- |
+| 页面提示 `TypeError: Cannot read property of undefined` | Mock 数据字段与 TS 接口声明不一致 | 核对 `prototype-contract.d.ts` 与 `prototype-data.ts` 字段。 |
+| AI 尝试运行 `cd <project-path>` 导致报错 | 执行了多余的路径切换指令 | 提示 AI 保持在工程根目录，禁止执行 `cd` 指令。 |
+
+---
+
+## 七、 📝 巩固与退场测试题库 (4 题精选)
+
+### 阶段 1：课堂退场盖章测试 (Exit Ticket)
+1. **[概念填空题]** 在第三课中，用于逼平业务模糊点并反向追问主管的 Slash Command 指令是 ____________。
+2. **[契约选择题]** 在第三课冻结的三份契约资产中，用于定义 TypeScript 数据字段接口的文件是 ____________。
+   - A. `BUSINESS_FEATURE_CARD.md`
+   - B. `prototype-contract.d.ts`
+   - C. `prototype-data.ts`
+   - D. `PROJECT_STATE.md`
+3. **[IT 沟通场景题]** 当你需要向 IT 开发团队交接需求时，你应该怎么说？
+   - **参考回答**：“我们已经通过 `grill-me` 完成了需求澄清，落盘了包含 Given-When-Then 的业务功能卡与 `prototype-contract.d.ts` 数据契约。”
+
+---
+
+### 阶段 2：课后自学拓展思考题 (Self-Study Extension)
+4. **[原理思考题]** 为什么我们在 Task 3 中强调必须先进行 Task 3A 只读结构预览，然后再执行 Task 3B 写入？

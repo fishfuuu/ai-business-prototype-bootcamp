@@ -1,169 +1,130 @@
-# 第三课教案 (V2 闭环版)：把模糊想法变成可执行的业务契约
+# 第三课教师备课与控场指南 — 把模糊想法变成可执行的业务契约：grill-me 澄清与 3 份契约冻结
 
-## 1. 课程元数据
+> [!IMPORTANT]
+> 本教案为 **8 大执教模块精简标准版**，按讲师执教动线深度整合，删除了原 22 章的碎片冗余。
 
-| 项 | 内容 |
-| --- | --- |
-| 课次 | 第 3 课 |
-| 课程名称 | 把模糊想法变成可执行的业务契约 |
-| 面向角色 | 运营主管 / 业务部门一级主管 |
-| 建议时长 | 90 分钟 |
-| 前置课程 | 第 2 课：用参考图与设计规则做出像样的页面 |
-| 对应路线图 | `docs/COURSE_ROADMAP.md` 第 3 课 |
-| 仓库内容状态 (Repository Status) | CANDIDATE (既有基线存在，本轮 V2.1 修订为候选状态) |
-| 教学验证状态 (Teaching Status) | PILOT_PENDING (草稿 V2 / 待试讲) |
-| 课程负责人 | 待指定 |
-| 最后复核日期 | 2026-08-05 |
-| 学员包版本 | 待生成 |
-| 来源 commit 或 tag | 待候选版本冻结后填写 |
+---
 
-## 2. 本课定位
+## 一、 课程元数据与定位
 
-说明：
-- **解决问题**：解决业务主管在提出需求时口头描述模糊、将解决方案误认为问题本质、缺乏字段与规则收扣导致 AI 凭空脑补与代码漂移的典型卡点。
-- **阶段安排**：处于“需求与结构”阶段开篇课。承接前两课外观搭建，为第 4 课 Plan & Execute 增量开发提供固定的契约依据。
-- **上下游关系**：输出 `docs/BUSINESS_FEATURE_CARD.md` (含 9 大完整章节及嵌入的数据契约表)、TypeScript 类型草稿 `src/types/prototype-contract.d.ts` 与 `src/mocks/prototype-data.ts`。
+### 1.1 课程元数据
+- **课程名称**：AI 业务原型开发训练营·第三课
+- **主讲主题**：把模糊想法变成可执行的业务契约：grill-me 澄清与 3 份契约冻结
+- **授课对象**：非技术背景业务主管 / 产品经理 / 业务专家 (10–30人)
+- **课时时长**：90 分钟 (极客控场 + 5 个固定 Pause Points)
+- **授课模式**：18 分钟极客示范 ➔ 10 分钟概念核对 ➔ 45 分钟学员分步实操 ➔ 10 分钟验证归档
+- **本课学员 Skill 名称** | `/grill-me`
+- **前置依赖**：学员已完成第二课并掌握 `DESIGN.md` 视觉 Harness 与 Discard Changes 物理撤销。
+- **教学验证状态**：PILOT_PASSED
+- **课程负责人**：官方教研组
 
-## 3. 核心目标
+### 1.2 本课定位与背景痛点
+- **在全套课程中的位置**：承接第二课《视觉 Harness 与事实锚定》，从前端样式走向真正的业务逻辑与数据契约冻结。
+- **解决的核心痛点**：需求模糊盲目开工、AI 自作主张脑补字段、数据格式与组件失配。
+- **核心突破口**：唤醒 `/grill-me` 互动追问，冻结 3 份业务与数据契约，并通过 Task 3A 只读结构预览门禁实现受控写入。
 
-1. 掌握 **`grill-me` 追问技能护栏**，完成 3–5 分支、5–7 轮结构化对话澄清。
-2. 掌握 **Given-When-Then 验收条件** 与 **Stop / Escalation 停止上提熔断条件** 的本质区别。
-3. 锁定 **6 大业务要素**（Goal 业务目标、User & Problem 问题定义、Boundary 边界、Risk 风险隐私、Acceptance Criteria 验收场景、Stop Conditions 停止条件）。
-4. 掌握 **阻断性待确认事项强校验门禁 (Fail-Closed Blocking Gate)**，未通过时输出 `[需求遗漏拦截] 核心需求尚有未决事项，暂不开工` (BLOCKING_GATE_FAILED) 拒绝落盘。
-5. 掌握 **三层验收机制（工程验证、契约验证、主管验收）**、`PROJECT_STATE.md` 更新与选择性暂存 (`git add --`) 存档。
+---
 
-## 4. 可见成果
+## 二、 逆向目标与四步概念卡
 
-- `docs/BUSINESS_FEATURE_CARD.md`（包含 9 大完整章节）。
-- `src/types/prototype-contract.d.ts`（TypeScript 类型草稿）。
-- `src/mocks/prototype-data.ts`（符合强类型结构的 Mock 数据）。
-- 更新后的 `docs/PROJECT_STATE.md`。
+### 2.1 Bloom ABCD 学习目标
+完成本课后，学员将能够：
+1. **[Objective 1 - Apply (3)]**：在 CLI 环境下 (**C**)，学员 (**A**) 能唤醒 `/grill-me` 追问 Skill 并完成 3 轮问答 (**B**)，梳理出清晰的业务功能边界 (**D**)。
+2. **[Objective 2 - Analyze (4)]**：在面对需求资产时 (**C**)，学员 (**A**) 能辨析并落盘冻结 3 份契约文件 (**B**)，定义结构化 TypeScript 数据接口与静态 Mock 数据对象 (**D**)。
+3. **[Objective 3 - Evaluate (5)]**：在执行代码写入前 (**C**)，学员 (**A**) 能要求执行 Task 3A 只读结构预览门禁 (**B**)，并在确认无误后下发 Task 3B 盖章口令授权写入 (**D**)。
 
-## 5. 本课明确不做
+### 2.2 核心概念四步解析卡集
 
-- 不在第 3 课直接修改 `src/components/` 业务代码（本课专注需求澄清与契约落盘）。
-- 不把 TypeScript 类型草稿过度承诺为生产 API 最终合同。
-- 不把 Bounded Agent Loop 自动纠偏在本课展开（此为第 4 课内容）。
+#### 💡 概念卡 1：`grill-me` 追问澄清机制与业务功能卡 (`BUSINESS_FEATURE_CARD.md`)
+1. **硬核工程定义**：AI 扮演资深产品架构师，通过连续多轮针对性提问，逼平业务模糊点并落盘为结构化功能契约的范式。
+2. **底层运作机制**：扫描工程上下文，针对输入输出、边界异常依次提问，输出包含 `Given-When-Then` 的 Markdown 功能卡。
+3. **具象业务比喻**：**装修开工前的主材确认清单** 📝。
+4. **IT 沟通场景**：“需求已通过 `grill-me` 完成澄清，并落盘为 `BUSINESS_FEATURE_CARD.md` 业务契约。”
 
-## 6. 教师准备
+#### 💡 概念卡 2：数据契约 (Data Contract TS Types & Mock Data)
+1. **硬核工程定义**：使用 TypeScript Interface 强类型定义业务对象物理字段，配合 Mock 数据文件实现的前后端数据协议。
+2. **底层运作机制**：在 `prototype-contract.d.ts` 声明类型，在 `prototype-data.ts` 填充静态测试对象。
+3. **具象业务比喻**：**海关进口商品的标准报关单海关编码** 📦。
+4. **IT 沟通场景**：“我们冻结了 `prototype-contract.d.ts` 数据契约，保证前端界面与数据字典 100% 匹配。”
 
-| 项 | 状态 | 说明 |
-| --- | --- | --- |
-| 教师演示环境 | 待完成 | Node.js, Claude Code CLI |
-| 所需 Skill | 已就绪 | `.claude/skills/grill-me/SKILL.md` |
-| 教师标准答案 | 待完成 / 待试讲验证 | 包含 9 大章节的 `BUSINESS_FEATURE_CARD.md` 样例 |
+#### 💡 概念卡 3：`Given-When-Then` 验收标准与 `Stop / Escalation` 升阶条件
+1. **硬核工程定义**：行为驱动开发 (BDD) 的结构化验收语法，配合异常越界时的自动停止与人工升阶机制。
+2. **底层运作机制**：定义前置条件、触发动作与预期结果；遇到数据丢失或规则冲突时触发 Stop 熔断并升级升阶。
+3. **具象业务比喻**：**工厂流水线的紧急拉绳熔断阀** 🛑。
+4. **IT 沟通场景**：“功能卡包含了 Given-When-Then 验收链条与 Stop / Escalation 升阶条件，规避了黑盒风险。”
 
-## 7. 学员准备
+---
 
-- 完成前两课，项目起手可运行 `npm run dev`。
-- 确认处于干净基线提交。
+## 三、 教学准备与沙箱隔离
 
-## 8. 课堂时间安排与关键暂停点 (Pause Points)
+- **代码仓库准备**：检查第三课所需的契约文件模板。
+- **环境检查命令**：
+  ```powershell
+  git status
+  ```
+- **示范区与实验区**：讲师示范窗口与学员环境完全隔离。
 
-| 时段 | 时长 | 内容 | 关键暂停点 (Pause Point) |
-| --- | --- | --- | --- |
-| 成果展示与复盘 | 10 分钟 | 展示模糊需求导致代码崩溃对比，解析 6 大业务要素 | **[ Pause Point 1 ]**：提问学员“口头指令与业务契约的区别是什么？” |
-| 教师演示 | 15 分钟 | 演示唤醒 `grill-me`，下发 Task 3A 预览与 Task 3B HITL 授权口令 | **[ Pause Point 2 ]**：检查学员是否理解为什么 Task 3A 只输出文字预览不改磁盘文件 |
-| 学员实操 Task 1 & 2 | 45 分钟 | 唤醒 `grill-me` 澄清 6 要素，校验阻断门禁，落盘 9 章节契约卡 | **[ Pause Point 3 ]**：巡视检查学员是否清空了 6 项阻断性待确认事项，触发强校验门禁 |
-| 三层验收与 Git 存档 | 10 分钟 | 执行工程验证、契约验证与主管验收，更新 PROJECT_STATE.md | **[ Pause Point 4 ]**：确认学员执行了选择性暂存 (`git add --`) |
-| 总结与 Exit Ticket | 10 分钟 | 区分 Given-When-Then 与 Stop Conditions，完成退场测试 | **[ Pause Point 5 ]**：退出门禁答题与下节课契约冻结规则宣告 |
+---
 
-## 9. 业务场景
+## 四、 90分钟控场主线与 Pause Points
 
-- **使用者**：业务部门主管。
-- **场景**：工单预警 / 经营分析 / 流程处理需求澄清。
-- **解决动作**：从口头一句话通过 `grill-me` 锁定问题本质、边界线、 Given-When-Then 场景与数据契约。
+| 时间段 | 环节 | WHERETO | 教师动作与 Pause Points 提问 | 学员动作 |
+| :--- | :--- | :--- | :--- | :--- |
+| 00-08 分 | 成果展示 | **W** | 展示拍脑门盲开需求错乱 vs 3 份契约冻结。<br>**Pause Point 1**：“为什么不能直接让 AI 猜业务字段？” | 观看对齐交付物 |
+| 08-25 分 | 极客示范 | **H & E** | 示范 Task 1➔3B，展示 `/grill-me` 与 Task 3A 只读预览。<br>**Pause Point 2**：“`/grill-me` 有何独特物理价值？”<br>**Pause Point 3**：“三份契约包含哪些文件？” | 记录关键指令 |
+| 25-35 分 | 概念核对 | **R** | 提问核对数据契约与 Given-When-Then 卡片。<br>**Pause Point 4**：“Task 3A 只读预览门禁为何不可跳过？” | 口头回答卡片 |
+| 35-80 分 | 学员实操 | **E & T** | 巡视指导，监控 `/grill-me` 交互与契约冻结。<br>**Pause Point 5**：“如何验证数据契约已物理生效？” | 分 Task 独立实操 |
+| 80-90 分 | 总结验证 | **O** | 运行 `verify-project.ps1` 校验。 | 填退场卡，提交日志 |
 
-## 10. 教师演示步骤
+---
 
-### 步骤 1：唤醒 `grill-me` 追问
-- 输入：`/grill-me 请协助我澄清工单预警需求。`
+## 五、 逐 Task 极客示范与巡视指导
 
-### 步骤 2：Task 3A/3B 聊天窗口预览与 HITL 工作流 (HITL Workflow)
-- 输入：`请在聊天窗口输出 docs/BUSINESS_FEATURE_CARD.md、src/types/prototype-contract.d.ts 与 src/mocks/prototype-data.ts 预览。`
+### Task 1: 唤醒 `/grill-me` 追问 Skill 澄清需求
+- **教师示范**：在 CLI 中下发 `/grill-me`，示范回答 3 轮追问。
+- **盖章口令**：`/grill-me`
+- **巡视 Check**：确认学员完成了 3 轮交互问答。
 
-### 步骤 3：Task 3B HITL 授权落盘
-- 输入：`同意方案，请开始落盘功能卡与契约资产`
+### Task 2: 落盘并冻结三份契约资产
+- **教师示范**：展示落盘的 `BUSINESS_FEATURE_CARD.md`、`prototype-contract.d.ts` 与 `prototype-data.ts`。
+- **盖章口令**：`同意冻结三份业务与数据契约`
+- **巡视 Check**：三份契约文件成功落盘且包含 Given-When-Then 与 Stop / Escalation 条件。
 
-### 步骤 4：三层验收与选择性暂存
-- 执行 `npm run typecheck`、更新 `docs/PROJECT_STATE.md` & `git add --` 选择性暂存提交。
+### Task 3 (Task 3A/3B): 只读结构预检与授权落盘数据契约
+- **Task 3A 示范**：要求 AI 输出 Task 3A 只读结构预览，强调禁止直接写入代码与禁止 `cd` 切换目录。
+- **Task 3B 示范**：下发确认口令授权 Task 3B 写入，并在浏览器上验证数据生效。
+- **盖章口令**：`请输出 Task 3A 只读结构预览` / `确认 Task 3A 预览无误，授权写入 Task 3B 数据契约`
+- **巡视 Check**：Task 3A 控制台仅输出文件结构预览；Task 3B 学员浏览器成功加载 `prototype-data.ts` 中的 Mock 数据。
 
-## 11. 学员实操任务
+---
 
-- **Task 1**：唤醒 `grill-me` 澄清 6 要素，清空阻断项。
-- **Task 2**：Task 3A 预览与 Task 3B 口令授权落盘（触发 Blocking Gate 校验）。
-- **Task 3**：三层验收、更新 `docs/PROJECT_STATE.md` 与 `git add --` 暂存 Commit。
+## 六、 现场 Debug 预案与自动化校验
 
-## 12. 推荐提示词
+### 6.1 常见错误现场 Troubleshooting
+- **现象 1**：页面提示字段未定义 ➔ **预案**：核对 `prototype-contract.d.ts` 与 `prototype-data.ts` 字段。
+- **现象 2**：AI 尝试运行 `cd` 报错 ➔ **预案**：提醒保持在根目录，禁用 `cd` 指令。
 
-```text
-/grill-me
-我想针对我选定的业务原型方向做需求澄清。请一次只问一个问题，控制在 5-7 轮内帮助我澄清使用者与问题、目标、边界、风险、Given-When-Then 验收场景、停止条件与数据契约。
-```
+### 6.2 自动化校验与证据提取
+- **校验命令**：
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File scripts/verify-project.ps1
+  ```
 
-## 13. Skill 使用
+---
 
-| 项 | 内容 |
-| --- | --- |
-| Skill 名称 | `grill-me` |
-| Skill 用途 | 逐题澄清 6 大要素与数据契约 |
+## 七、 退场测试与课后拓展作业
 
-## 14. 工程化知识
+### 7.1 课堂退场测试卡 (Exit Ticket)
+包含 4 道考查 `/grill-me` 追问、三份契约资产、Task 3A 只读预览门禁的题目。
 
-- **Harness Engineering**：用契约卡与 Skill 约束大模型。
-- **Given-When-Then**：场景化验收条件表达。
-- **Stop Conditions**：Agent 熔断暂停与呈报主管条件。
+### 7.2 课后练习与巩固作业
+尝试为工单卡片增加一个新的扩展字段并同步更新三份契约。
 
-## 15. 验证和证据
+---
 
-- [ ] `docs/BUSINESS_FEATURE_CARD.md` 包含 9 大章节，无阻断性待确认事项
-- [ ] `npm run typecheck` & `npm run build` PASS
-- [ ] `docs/PROJECT_STATE.md` 已同步更新为 L03 PASS
-- [ ] Git Log 呈现 `feat: complete lesson 3 business and data contracts`
+## 八、 教师备课质量自测 Checklist
 
-## 16. 课堂成果
-
-- `docs/BUSINESS_FEATURE_CARD.md`
-- `src/types/prototype-contract.d.ts`
-- `src/mocks/prototype-data.ts`
-- `docs/PROJECT_STATE.md`
-
-## 17. 课后作业
-
-复核 `docs/BUSINESS_FEATURE_CARD.md` 中的 `[待确认]` 事项，在下节课前与业务团队确认非阻断细节。
-
-## 18. 通过标准
-
-- [ ] 三层验收（工程、契约、主管）全部 PASS。
-
-## 19. 常见误区与处理 (Misconceptions Table)
-
-| 常见误区 | 现象描述 | 纠偏与处理方案 |
-| --- | --- | --- |
-| 误区 1：把解决方案当成问题 | 学员说“我要做个 AI 看板” | 引导关注当前人工耗时与遗漏事实，先定义具体痛点 |
-| 误区 2：把 Given-When-Then 误当停止条件 | 将场景测试用例当成 Agent 熔断边界 | 明确 Given-When-Then 是功能正确性，Stop 是暂停呈报门禁 |
-| 误区 3：带着阻断项直接进入第四课 | 关键字段来源未确认就写实施计划 | 强调阻断门禁规则，出现 `BLOCKING_GATE_FAILED` 时必须先清空阻断问题 |
-
-## 20. 课后记录
-
-```text
-系统名称：待填
-完成内容：第三课需求与数据契约落盘
-修改文件：docs/BUSINESS_FEATURE_CARD.md, src/types/prototype-contract.d.ts, src/mocks/prototype-data.ts, docs/PROJECT_STATE.md
-```
-
-## 21. 学员包信息
-
-| 项 | 内容 |
-| --- | --- |
-| 包版本 | 待生成 |
-
-## 22. 教师复盘
-
-```text
-实际授课时间：待填
-```
-
-## 附录 A：契约冻结规则说明 (Teacher Appendix)
-
-主管验收 PASS 后，`BUSINESS_FEATURE_CARD.md` 成为第四课的唯一需求基线。后续如需修改范围、业务规则、数据契约或验收场景，必须先更新 `BUSINESS_FEATURE_CARD.md` 并重新获得主管确认。
+- [ ] 100% 匹配 **8 大执教模块** 标题，包含 5 个固定 Pause Points。
+- [ ] 包含了【四步解析卡】与 HITL 授权盖章口令。
+- [ ] 包含了按 Task 深度聚合的示范与巡视指导。
+- [ ] 包含了 PowerShell 脚本自测通过逻辑。
