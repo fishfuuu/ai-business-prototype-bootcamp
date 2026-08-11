@@ -3,196 +3,899 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第三课 · 把模糊想法变成可执行的业务契约：grill-me 澄清与 3 份契约冻结 | AI 业务原型训练营</title>
+<title>第 3 课 · 把模糊想法变成可执行的业务契约 | 主管 AI 训练营</title>
 <style>
   :root {
-    --paper: #faf7f2; --card: #ffffff; --ink: #26313b; --ink-soft: #5b6771;
-    --line: #e3dcd2; --teal: #0f766e; --teal-soft: #e6f2f0; --amber: #b45309;
-    --amber-soft: #fdf3e3; --plum: #6d28d9; --plum-soft: #f1ebfb; --red: #b91c1c; --red-soft: #fdecec;
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
   }
+  
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--paper); color: var(--ink); font-family: "Segoe UI", sans-serif; line-height: 1.8; padding-bottom: 5rem; }
-  .hero { background: linear-gradient(160deg, #0f172a 0%, #581c87 100%); color: #f5f1e8; padding: 3.5rem 1.25rem 3rem; }
+  
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #4c1d95 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
   .hero .wrap { max-width: 880px; margin: 0 auto; }
-  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #d8b4fe; font-weight: 700; }
-  .hero h1 { font-family: Georgia, serif; font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem; font-weight: 800; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #c4b5fd; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #ddd6fe; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #c4b5fd; }
+  
   .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
   section { margin-top: 3rem; }
-  h2 { font-family: Georgia, serif; font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a; display: flex; align-items: center; gap: .6rem; }
-  h2 .num { font-size: .85rem; font-weight: 800; background: var(--teal); color: #fff; border-radius: 6px; padding: .2rem .55rem; }
   
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; }
-  .card.tinted { background: var(--teal-soft); border-color: #b8ddd8; }
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--plum); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+  
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+  
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--plum-soft); border-color: #d8b4fe; }
   .card.warn { background: var(--amber-soft); border-color: #ecd3a8; }
-  .card.focus { background: var(--plum-soft); border-color: #d5c8ef; }
-
-  /* Concept Cards Grid */
-  .concept-box { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
-  .concept-box h4 { font-size: 1.05rem; font-weight: 800; color: var(--teal); margin-bottom: .6rem; }
-  .concept-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; margin-top: .6rem; }
-  @media (max-width: 640px) { .concept-grid { grid-template-columns: 1fr; } }
-  .concept-step { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: .8rem; font-size: .88rem; }
-  .concept-step .label { font-weight: 800; color: #0f172a; display: block; margin-bottom: .2rem; }
-
-  /* Prompt Box with Copy Button */
-  .prompt-box {
-    position: relative; background: #0f172a; color: #cbd5e1; border-radius: 10px;
-    padding: 1rem 1.2rem; margin: 1rem 0; font-family: monospace; font-size: .88rem; line-height: 1.7; overflow-x: auto;
+  .card.focus { background: var(--teal-soft); border-color: #b8ddd8; }
+  .card.blue { background: var(--blue-soft); border-color: #bfdbfe; }
+  
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+  
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
   }
-  .copy-btn {
-    position: absolute; top: .6rem; right: .6rem; background: var(--teal); color: #fff;
-    border: none; border-radius: 6px; padding: .3rem .7rem; font-size: .75rem; font-weight: 700; cursor: pointer;
+  
+  .quote {
+    border-left: 4px solid var(--plum); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
   }
-  .copy-btn:hover { background: #0b5f58; }
 
-  .btn { display: inline-block; background: var(--teal); color: #fff; border: none; border-radius: 8px; padding: .5rem 1.2rem; font-weight: 700; cursor: pointer; }
+  /* Grid Layouts - Symmetric 2x2 Grid */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--plum); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(109, 40, 217, 0.2);
+  }
+  .btn:hover { background: #5b21b6; box-shadow: 0 4px 12px rgba(109, 40, 217, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Interactive Simulator Container */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: .9rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+  
+  .mode-tabs {
+    display: flex; gap: .6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+  }
+  .mode-btn {
+    flex: 1; min-width: 200px; padding: .8rem 1rem; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: .88rem; font-weight: 700; cursor: pointer; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s; text-align: center;
+  }
+  .mode-btn:hover { background: #e2e8f0; }
+  .mode-btn.active.raw { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .mode-btn.active.harness { background: #f3e8ff; border-color: var(--plum); color: #5b21b6; }
+  .mode-btn.active.loop { background: #ccfbf1; border-color: var(--teal); color: #0f766e; }
+
+  .flow-display-canvas {
+    background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.4rem;
+    min-height: 280px; position: relative; transition: all .3s;
+  }
+  .flow-step-node {
+    background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .8rem 1.1rem;
+    margin-bottom: .8rem; font-size: .9rem; opacity: .4; transition: all .3s; transform: translateY(5px);
+  }
+  .flow-step-node.active { opacity: 1; transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .flow-step-node.error { border-color: #ef4444; background: #fff5f5; color: #991b1b; }
+  .flow-step-node.success { border-color: #10b981; background: #f0fdf4; color: #065f46; }
+  .flow-step-node.gate-block { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+
+  .node-title { font-weight: 800; font-size: .95rem; margin-bottom: .2rem; display: flex; align-items: center; justify-content: space-between; }
+  .node-desc { font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Consolas", monospace; font-size: .82rem;
+    padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 160px; overflow-y: auto;
+  }
+
+  /* Interactive Grill Simulator */
+  .sim-box {
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; margin: 1.2rem 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  }
+  .sim-bar {
+    background: #0f172a; color: #fff; padding: .75rem 1.2rem; font-weight: 700; font-size: .9rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+  
+  .chat-flow {
+    background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; padding: 1.2rem;
+    max-height: 340px; overflow-y: auto; display: flex; flex-direction: column; gap: .8rem; margin-bottom: 1rem;
+  }
+  .bubble { max-width: 88%; padding: .75rem 1.1rem; border-radius: 10px; font-size: .9rem; line-height: 1.6; }
+  .bubble.agent { background: #fff; border: 1px solid #cbd5e1; align-self: flex-start; color: #0f172a; }
+  .bubble.user { background: var(--plum); color: #fff; align-self: flex-end; }
+  .bubble.gate-fail { background: #fee2e2; border: 1px solid #f87171; color: #991b1b; align-self: flex-start; }
+
+  .contract-code {
+    background: #0f172a; color: #a78bfa; padding: 1.2rem; border-radius: 10px;
+    font-family: "Consolas", monospace; font-size: .85rem; line-height: 1.6; display: none; margin-top: .8rem;
+  }
+  .contract-code.show { display: block; }
+
+  /* Interactive Concept Fill-in-the-Blanks */
+  .blank-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem; font-size: .95rem; line-height: 1.8;
+  }
+  .blank-select {
+    padding: .25rem .6rem; border-radius: 6px; border: 1.5px solid var(--plum); font-size: .9rem;
+    font-weight: 700; color: var(--plum); background: var(--plum-soft); cursor: pointer; outline: none;
+  }
+  .blank-select.ok { border-color: #10b981; background: #dcfce7; color: #15803d; }
+  .blank-select.err { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+  .blank-feedback { font-size: .85rem; margin-top: .5rem; font-weight: 600; display: none; }
+  .blank-feedback.show { display: block; }
+
+  /* Misconceptions 3-Column Table Card */
+  .misc-table-container {
+    overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  }
+  .misc-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem;
+  }
+  .misc-table th {
+    background: #0f172a; color: #fff; font-weight: 700; padding: .85rem 1.1rem; border-bottom: 1px solid var(--line);
+  }
+  .misc-table td {
+    padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6;
+  }
+  .misc-table tr:hover { background: #fafaf9; }
+  .badge-misc { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .78rem; font-weight: 800; }
+  .badge-misc.red { background: #fee2e2; color: #991b1b; }
+  .badge-misc.green { background: #dcfce7; color: #15803d; }
+  .badge-misc.plum { background: #ede9fe; color: #5b21b6; }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem;
+  }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box {
+    background: var(--teal-soft); border: 1px solid #b8ddd8; border-radius: 10px; padding: 1rem 1.2rem;
+    margin-top: .8rem; font-size: .92rem; color: #0f766e; display: none; line-height: 1.6;
+  }
+  .ans-box.show { display: block; }
+
+  /* Quiz */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem;
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--plum-soft); }
+  .quiz-q label input { margin-top: .3rem; accent-color: var(--plum); }
+  .quiz-q label.sel { background: var(--plum-soft); border-color: #d8b4fe; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+
+  /* Checklist */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--plum); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
 </style>
 </head>
 <body>
 
+<!-- HERO HEADER -->
 <div class="hero">
   <div class="wrap">
-    <div class="kicker">Lesson 03 · 需求澄清与数据契约</div>
-    <h1>把模糊想法变成可执行的业务契约<br><span style="font-size:1.4rem;font-weight:400;color:#d8b4fe;">grill-me 澄清与 3 份契约冻结</span></h1>
-    <div class="goal" style="margin-top:1rem;background:rgba(255,255,255,.08);padding:1rem;border-radius:8px;">
-      🎯 <b>本课目标</b>：不要急着写代码！通过 `/grill-me` 逼平 6 大业务要素，标注敏感度脱敏规约，落盘并冻结 3 份业务与数据契约，通过 Task 3A 只读结构预览门禁。
+    <div class="kicker">Lesson 03 · 需求澄清与业务契约 (V2 闭环版)</div>
+    <h1>把模糊想法变成<br>可执行的业务契约</h1>
+    <p class="sub">针对你选择的 <b>A. 监控与决策型原型（商品履约预警看板）</b>，唤醒 <code>grill-me</code> 技能护栏，结构化解构 <b>6 大业务要素</b>，落盘 <b>9 大完整章节业务功能卡</b> 与 <b>数据契约资产</b>，通过<b>三层验收</b>完成阶段归档。</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 掌握单次 Prompt 与 Harness 契约的物理区别；② 区分 Acceptance Criteria (Given-When-Then) 与 Stop / Escalation 熔断条件；③ 触发“阻断性事项强校验门禁 (Fail-Closed Gate)”；④ 落盘 <code>docs/BUSINESS_FEATURE_CARD.md</code>、<code>prototype-contract.d.ts</code> 与 <code>prototype-data.ts</code>；⑤ 通过三层验收并暂存 Commit。
     </div>
   </div>
 </div>
 
 <div class="wrap">
 
+<!-- SECTION 01: INTERACTIVE TIER SIMULATOR -->
 <section>
-  <h2><span class="num">01</span> 本课背景与核心原理</h2>
-  <div class="card focus">
-    <b>记住核心法则：</b><br>
-    需求模糊盲开会导致 AI 凭空脑补字段与数据幻觉。通过 `grill-me` 追问与三份契约（功能卡、TS 类型字典、Mock 模拟数据），锁定业务边界与测试验收标准。
+  <h2><span class="num">01</span> 三层架构演进：交互式动态演示模拟器</h2>
+  <p>点击下方 3 个不同的架构模式按钮，亲自体验与观察“裸 Prompt 口头渲染”与“绑定 `grill-me` 契约护栏”在物理推演过程中的本质区别：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎬 需求演进三层架构动态演示面板</span>
+      <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
+    </div>
+    <div class="sim-body">
+      
+      <div class="mode-tabs">
+        <button class="mode-btn active raw" id="mBtnRaw" onclick="runTierMode('raw')">🔴 第一层：裸 Prompting 模式 (口头指令)</button>
+        <button class="mode-btn harness" id="mBtnHarness" onclick="runTierMode('harness')">🟣 第二层：Harness Engineering 模式 (本课实操)</button>
+        <button class="mode-btn loop" id="mBtnLoop" onclick="runTierMode('loop')">🟢 第三层：Bounded Agent Loop 模式 (第四课)</button>
+      </div>
+
+      <div class="flow-display-canvas" id="flowCanvas">
+        <!-- JS rendered steps -->
+      </div>
+
+      <div class="console-output" id="consoleLog">
+        > 点击上方按钮运行模式推演…
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote">
+    💡 <b>契约冻结规则 (Contract Freeze Rule)</b><br>
+    <b>主管验收 PASS 后，`BUSINESS_FEATURE_CARD.md` 成为第四课的唯一需求基线。</b>后续如需修改范围、业务规则或数据契约，必须先更新契约卡并获得主管确认，不得直接在代码中静默改变需求。
   </div>
 </section>
 
-<!-- SECTION 02: 4 CONCEPT CARDS -->
+<!-- SECTION 02 -->
 <section>
-  <h2><span class="num">02</span> 💡 本课 4 大核心工程概念卡</h2>
+  <h2><span class="num">02</span> 解构 6 大业务要素与关键概念区分</h2>
 
-  <!-- Card 1 -->
-  <div class="concept-box">
-    <h4><span>📝 核心概念 1：grill-me 追问澄清机制与 6 大业务要素</span></h4>
-    <div class="concept-grid">
-      <div class="concept-step"><span class="label">1. 硬核工程定义</span>AI 扮演资深产品架构师，通过连续多轮针对性提问，逼平业务模糊点并落盘功能契约的范式。</div>
-      <div class="concept-step"><span class="label">2. 底层运作机制</span>依次解构 6 大要素：1. User & Problem, 2. Goal, 3. Boundary, 4. Risk, 5. Acceptance, 6. Stop / Escalation。</div>
-      <div class="concept-step"><span class="label">3. 具象业务比喻</span><b>装修开工前的主材确认清单 📝</b>。在敲墙前，业主和工长必须对齐瓷砖品牌、插座数量并签字。</div>
-      <div class="concept-step"><span class="label">4. IT 沟通场景</span>“需求已通过 grill-me 完成澄清，落盘为包含 6 大要素的 BUSINESS_FEATURE_CARD.md。”</div>
+  <h3>1. 业务契约 6 大核心要素</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color: var(--plum);">👤 1. User & Problem</h3>
+      <p>使用者身份（如履约主管）与痛点事实（如人工巡检容易遗漏超时订单）。</p>
+    </div>
+    <div class="card">
+      <h3 style="color: var(--teal);">🎯 2. Goal & Metrics</h3>
+      <p>核心业务目标与成功量化指标（如超时预警响应时间缩短 50%）。</p>
     </div>
   </div>
 
-  <!-- Card 2 -->
-  <div class="concept-box">
-    <h4><span>⚠️ 核心概念 2：工程拨乱反正卡：为什么假数据也要标记敏感度？</span></h4>
-    <div class="concept-grid">
-      <div class="concept-step"><span class="label">1. 硬核工程定义</span>在原型阶段为 Mock 字段标注隐私等级（公开/内部/严禁发送AI），建立面向未来生产网关的脱敏规约。</div>
-      <div class="concept-step"><span class="label">2. 底层运作机制</span>告知未来 IT 部门生产网关必须在物理层切断该敏感字段，禁止送入公共 LLM 模型。</div>
-      <div class="concept-step"><span class="label">3. 具象业务比喻</span><b>演习炸药箱上的红字警示标签 ⚠️</b>。即使装的是无害沙子，也必须贴好标签防止真打仗搬错。</div>
-      <div class="concept-step"><span class="label">4. IT 沟通场景</span>“数据契约表标注了敏感等级，作为未来生产 API 网关脱敏过滤的交接规约。”</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color: var(--blue);">🚧 3. Boundary (In/Out)</h3>
+      <p>明确 In Scope（首屏 4 KPI + 异常明细）与 Out of Scope（不做复杂大盘）。</p>
+    </div>
+    <div class="card">
+      <h3 style="color: var(--amber);">🛡️ 4. Risk & Privacy</h3>
+      <p>敏感数据脱敏、隐私合规与 Mock Data 道具边界。</p>
     </div>
   </div>
 
-  <!-- Card 3 -->
-  <div class="concept-box">
-    <h4><span>📦 核心概念 3：数据契约与海关报关单 (Data Contract TS Types & Mock)</span></h4>
-    <div class="concept-grid">
-      <div class="concept-step"><span class="label">1. 硬核工程定义</span>使用 TypeScript Interface 强类型定义物理字段，配合 Mock 数据文件实现的前后端数据协议。</div>
-      <div class="concept-step"><span class="label">2. 底层运作机制</span>在 `prototype-contract.d.ts` 声明类型，在 `prototype-data.ts` 填充静态测试对象。</div>
-      <div class="concept-step"><span class="label">3. 具象业务比喻</span><b>海关进口商品的标准报关单海关编码 📦</b>。功能卡是集装箱，TS 类型是标准海关报关单。</div>
-      <div class="concept-step"><span class="label">4. IT 沟通场景</span>“我们冻结了 prototype-contract.d.ts 数据契约，保证前端界面与数据字典 100% 匹配。”</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color: var(--green);">✅ 5. Acceptance Criteria</h3>
+      <p><b>Given-When-Then 场景条件</b>：判断功能做出来后<b>是否正确</b>。</p>
+    </div>
+    <div class="card">
+      <h3 style="color: var(--red);">🛑 6. Stop / Escalation</h3>
+      <p><b>停止与上提熔断条件</b>：判断 Agent 什么时候必须<b>熔断暂停呈报主管</b>。</p>
     </div>
   </div>
 
-  <!-- Card 4 -->
-  <div class="concept-box">
-    <h4><span>🛑 核心概念 4：Given-When-Then 验收标准与 Stop / Escalation 升阶条件</span></h4>
-    <div class="concept-grid">
-      <div class="concept-step"><span class="label">1. 硬核工程定义</span>行为驱动开发 (BDD) 的结构化验收语法，配合异常越界时的自动停止与人工升阶响应机制。</div>
-      <div class="concept-step"><span class="label">2. 底层运作机制</span>定义 Given 前置条件 ➔ When 触发动作 ➔ Then 预期结果；数据冲突时触发 Stop 熔断并上报。</div>
-      <div class="concept-step"><span class="label">3. 具象业务比喻</span><b>工厂流水线的紧急拉绳熔断阀 🛑</b>。组装顺畅时按流程运转，零部件开裂时拉绳停机并上报。</div>
-      <div class="concept-step"><span class="label">4. IT 沟通场景</span>“功能卡包含了完整的 Given-When-Then 验收链条与 Stop / Escalation 升阶条件。”</div>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION 03: TASKS WITH COPY PROMPT -->
-<section>
-  <h2><span class="num">03</span> 🛠️ 课堂实操任务清单</h2>
-
-  <h3>Task 1: 唤醒 grill-me 技能进行需求追问</h3>
-  <div class="prompt-box">
-    <button class="copy-btn" onclick="copyCode(this)">📋 复制提示词</button>
-    <pre>请使用 grill-me 技能帮我梳理需求。
-
-我的业务原型类型是：【B. 任务与流程型】
-我的业务痛点与一句话需求是：【运营主管每天需要手动统计超时未履约的工单，效率低且容易漏单，希望能有一个自动预警和催单的工单处理看板】
-
-请按照 grill-me 规范，每次只问我 1 个最关键的问题，帮我理清目标、边界与核心字段。
-在需求澄清完毕前，绝对不要修改任何代码与文件。</pre>
-  </div>
-
-  <div class="card warn">
-    <b>🚨 防错救急路径 (Skill 装载降级救援)：</b><br>
-    如果 Agent 一次抛出了 2 个以上问题，或者擅自开启了文件修改，请立即发送：<br>
-    👉 <code>请重新读取并严格遵循 .claude/skills/grill-me/SKILL.md 的物理指令，一次只问我一个问题！</code>
-  </div>
-
-  <h3>Task 2: 数据契约卡梳理与敏感度标记</h3>
-  <div class="prompt-box">
-    <button class="copy-btn" onclick="copyCode(this)">📋 复制提示词</button>
-    <pre>基于刚才的对话，请帮我整理一份 Markdown 格式的《轻量数据契约卡》。
-
-包含以下两部分：
-
-1. 基础数据契约表：
-   - 字段名称 (英文字段名)
-   - 业务含义 (中文名称)
-   - 数据类型 (文本/数字/布尔/日期/枚举)
-   - 是否必填
-   - 数据来源 (固定为 Mock 数据)
-   - 示例值
-   - 敏感等级 (公开 / 内部 / 严禁发送 AI)
-
-2. 针对我的原型类型的专属扩展契约：
-   - 【监控决策型】：指标口径/计算公式、对比基准、异常阈值、下钻维度
-   - 【任务流程型】：发起/处理角色、业务状态机(草稿->待处理->已完成)、允许动作、驳回/撤销规则
-   - 【操作工具型】：输入结构、校验规则、处理逻辑、输出结构、HITL 人工确认点
-
-先不要写入文件，仅输出内容方案预览呈报给我确认。</pre>
-  </div>
-
-  <h3>Task 3: Task 3A 只读预览与 Task 3B 契约冻结落盘</h3>
-  <div class="prompt-box">
-    <button class="copy-btn" onclick="copyCode(this)">📋 复制提示词</button>
-    <pre>请将前面的讨论成果汇总：
-
-1. 拟定 Markdown 文档《业务功能卡》内容预览（包含 Goal、Boundaries、Risks、Given-When-Then 格式的 Stop Conditions）。
-2. 拟定 TypeScript 接口草稿（src/types/prototype-contract.d.ts）与 Mock 种子数据（src/mocks/prototype-data.ts）的导出代码预览。
-
-请只输出预览方案，等待我回复许可口令，严禁提前写入文件。</pre>
-  </div>
-
+  <h3>2. 核心概念对比：Acceptance Criteria vs. Stop Conditions</h3>
   <div class="card tinted">
-    收到 Agent 输出预览无误后，发送 <b>HITL 授权盖章口令</b>：<br>
-    👉 <code>同意方案，请开始落盘功能卡与契约资产</code><br>
-    确认物理落盘 3 份文件：<code>docs/BUSINESS_FEATURE_CARD.md</code>、<code>src/types/prototype-contract.d.ts</code>、<code>src/mocks/prototype-data.ts</code>。
+    <ul>
+      <li><b>Acceptance Criteria (验收条件)</b>：功能层的质量标准。格式：<code>Given [上下文] / When [操作] / Then [预期结果]</code>。（例：<i>Given 存在 42 单超时，When 点击催办，Then 展开对应抽屉。</i>）</li>
+      <li><b>Stop Conditions (停止/上提熔断条件)</b>：Agent 执行层的安全边界。（例：<i>字段来源存在 [待确认]、遇到代码编译报错超 2 次、或需求超出 Scope 时，Agent 必须立即熔断保留现场！</i>）</li>
+    </ul>
   </div>
 </section>
+
+<!-- SECTION 03: BLOCKING GATE -->
+<section>
+  <h2><span class="num">03</span> 阻断性待确认事项强校验门禁 (Fail-Closed Blocking Gate)</h2>
+  
+  <div class="card warn">
+    <b>🛡️ 门禁机制规则 (Fail-Closed Blocking Gate)：</b><br>
+    在 `grill-me` 追问过程中，若以下 6 项核心内容中任何一项包含 <code>[待确认]</code>，Agent 将输出 <b>`BLOCKING_GATE_FAILED`</b> 拒绝落盘文件，强行阻止带病进入第四课：
+    <ol style="margin-top: .5rem;">
+      <li>核心使用者与责任角色未明确；</li>
+      <li>核心字段来源未物理确认；</li>
+      <li>关键业务逻辑规则存在冲突；</li>
+      <li>敏感数据处理方式未定义；</li>
+      <li>In Scope 边界线模糊不清；</li>
+      <li>缺失至少 1 个完整的 Given-When-Then 验收场景。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- SECTION 04: GRILL SIMULATOR -->
+<section>
+  <h2><span class="num">04</span> 动手体验：`grill-me` 澄清与 Blocking Gate 强校验模拟</h2>
+  <p>亲自体验模拟终端中发起 <code>/grill-me</code> 后，不同回答方式触发的<b>【强门禁阻断】</b>与<b>【契约落盘】</b>闭环：</p>
+
+  <div class="sim-box">
+    <div class="sim-bar">
+      <span>💬 Grill-Me 需求澄清与门禁校验模拟器</span>
+      <span style="font-size: .8rem; opacity: .8;">A类 监控与决策型 (履约预警)</span>
+    </div>
+    <div class="sim-body">
+      <div class="chat-flow" id="chatFlow">
+        <div class="bubble agent">
+          <b>AI Agent (/grill-me 追问中):</b> 欢迎开启需求澄清！请告诉我：<br>
+          1. 商品履约预警看板的核心使用者是谁？痛点是什么？<br>
+          2. 履约超时的判定规则，以及一键催办动作带出的核心字段有哪些？
+        </div>
+      </div>
+
+      <div style="display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem;">
+        <button class="btn" onclick="sendReply('pass')">✅ 提供明确规则 (触发门禁 [PASS] 落盘)</button>
+        <button class="btn secondary" onclick="sendReply('block')">🔴 留存待确认项 (触发 BLOCKING_GATE_FAILED 阻断)</button>
+        <button class="btn secondary" style="background:#475569;" onclick="resetChat()">🔄 重置演练</button>
+      </div>
+
+      <div class="contract-code" id="contractCode">
+        <!-- JS rendered code preview -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<section>
+  <h2><span class="num">05</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
+
+  <h3>1. ✍️ 概念互动填空 (Interactive Fill-in-the-Blanks)</h3>
+  <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空，并点击“核对答案”：</p>
+
+  <div class="blank-card" id="bCard1">
+    1. <b>Prompting vs. Harness</b>：盲发口头 Prompt 容易引发 AI 凭空脑补与需求漂移；通过 
+    <select class="blank-select" id="blank1">
+      <option value="">-- 请选择 --</option>
+      <option value="grill-me">grill-me 技能护栏</option>
+      <option value="free-prompt">口头自由提问</option>
+      <option value="css-style">CSS 页面样式</option>
+    </select>
+    进行 3–5 分支、5–7 轮结构化追问，本质是将模糊需求转化为确定性的 
+    <select class="blank-select" id="blank2">
+      <option value="">-- 请选择 --</option>
+      <option value="contract">业务契约 (BUSINESS_FEATURE_CARD.md)</option>
+      <option value="temporary-code">临时测试代码</option>
+      <option value="chat-history">聊天记录</option>
+    </select>。
+    <div class="blank-feedback" id="bf1"></div>
+  </div>
+
+  <div class="blank-card" id="bCard2">
+    2. <b>Given-When-Then vs. Stop Conditions</b>：基于场景的 Given-When-Then 用于判断 
+    <select class="blank-select" id="blank3">
+      <option value="">-- 请选择 --</option>
+      <option value="correctness">功能做出来后是否正确 (验收条件)</option>
+      <option value="stop-agent">Agent 何时停止熔断</option>
+      <option value="git-commit">Git 是否能够提交</option>
+    </select>；而 Stop Conditions 用于判断 
+    <select class="blank-select" id="blank4">
+      <option value="">-- 请选择 --</option>
+      <option value="escalate">Agent 什么时候必须熔断暂停并呈报主管 (停止/上提条件)</option>
+      <option value="css-theme">页面采用什么字体与颜色</option>
+      <option value="speed">代码运行速度快慢</option>
+    </select>。
+    <div class="blank-feedback" id="bf2"></div>
+  </div>
+
+  <div class="blank-card" id="bCard3">
+    3. <b>强校验门禁 (Fail-Closed Blocking Gate)</b>：若使用者角色、核心字段来源、业务规则等存在 <code>[待确认]</code> 事项，<code>grill-me</code> 会输出 
+    <select class="blank-select" id="blank5">
+      <option value="">-- 请选择 --</option>
+      <option value="BLOCKING_GATE_FAILED">BLOCKING_GATE_FAILED 拒绝落盘</option>
+      <option value="AUTO_PASS">AUTO_PASS 自动忽略</option>
+      <option value="SKIP">SKIP 强制跳转</option>
+    </select>。
+    <div class="blank-feedback" id="bf3"></div>
+  </div>
+
+  <button class="btn" style="margin-bottom: 2rem;" onclick="checkAllBlanks()">✅ 核对所有填空答案</button>
+
+  <h3>2. 💡 常见概念误区与正确理解 (3 栏对照表)</h3>
+  <div class="misc-table-container">
+    <table class="misc-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">常见误区 (Misconception)</th>
+          <th style="width: 42%;">正确硬核理解 (Correct Engineering Reality)</th>
+          <th style="width: 30%;">如何纠偏与护栏防护 (Remedy & Guardrails)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-misc red">误区 1</span><br><b>“直接给 AI 发‘帮我做个工单预警页面’最省事”</b></td>
+          <td>口头一句话需求缺乏数据来源与规则边界，AI 会凭空编造字段名与数据结构，到了第四课增量编码时直接产生类型崩溃。</td>
+          <td>唤醒 <code>grill-me</code> 护栏，强制通过 3–5 个决策分支、5–7 轮追问锁死 6 大业务要素。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 2</span><br><b>“把 Given-When-Then 用例当成 Stop Conditions”</b></td>
+          <td>验收用例是描述成功/异常的页面行为预期（Acceptance Criteria）；Stop Conditions 是约束 Agent 权限越界、规则冲突或未决事项时的熔断自杀开关。</td>
+          <td>明确区分两类概念，Stop Conditions 必须包含“触发未决阻断项时自动暂停并上呈主管”。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 3</span><br><b>“带着 `[待确认]` 事项也能强行落盘写代码”</b></td>
+          <td>阻断性事项未澄清意味着需求基准缺失，在缺失基准上写代码会导致后续大面积二次重构与沟通蒸发。</td>
+          <td>触发 Blocking Gate 强校验门禁，未通过时输出 <code>BLOCKING_GATE_FAILED</code> 拒绝落盘。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 4</span><br><b>“在 Mock 假数据里标记敏感度是多此一举”</b></td>
+          <td>在原型中标记敏感等级是写给未来 IT 部门的<b>生产网关脱敏规约</b>，告知生产环境哪些字段物理禁止送入 LLM 模型。</td>
+          <td>Task 2 契约表格中必须显式标明敏感等级（Public / Internal / Secret）。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 06: QUIZ, EXIT TICKET & NEXT STEPS -->
+<section>
+  <h2><span class="num">06</span> 测验 + 🎯 退场测试题 + 知识扩充</h2>
+
+  <!-- 5 Scenario Quiz -->
+  <h3>1. 5 道概念选择测验</h3>
+  <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · 为什么在让 Agent 写页面代码前，要通过 `grill-me` 解构 6 大业务要素并生成契约？</div>
+    <label><input type="radio" name="q1" value="a"> 单次口头 Prompt 会导致 AI 凭空脑补字段与数据漂移；Harness 契约能建立物理约束基线</label>
+    <label><input type="radio" name="q1" value="b"> 没有任何作用，单句 Prompt 最快</label>
+    <label><input type="radio" name="q1" value="c"> 为了给服务器增加日志</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · Acceptance Criteria (验收条件) 与 Stop Conditions (停止条件) 的核心区别是什么？</div>
+    <label><input type="radio" name="q2" value="a"> 验收条件判断功能做出来后是否正确(Given-When-Then)；停止条件判断 Agent 何时熔断暂停并呈报主管</label>
+    <label><input type="radio" name="q2" value="b"> 两者完全是一回事</label>
+    <label><input type="radio" name="q2" value="c"> 验收条件是给 IT 看的，停止条件是给财务看的</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · 什么是“阻断性待确认事项强校验门禁 (Fail-Closed Blocking Gate)”？</div>
+    <label><input type="radio" name="q3" value="a"> 只要 6 项关键要素中存在 [待确认]，`grill-me` 输出 BLOCKING_GATE_FAILED 拒绝落盘文件，阻止带病开发</label>
+    <label><input type="radio" name="q3" value="b"> 只要有待确认事项，就直接自动帮主管猜测填上</label>
+    <label><input type="radio" name="q3" value="c"> 忽略待确认事项，强制进行 Git Commit</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · `BUSINESS_FEATURE_CARD.md` 包含多少个完整章节？包含哪些核心资产？</div>
+    <label><input type="radio" name="q4" value="a"> 包含 9 大完整章节，同时衍生落盘 contract.d.ts 类型草稿与 prototype-data.ts Mock 数据</label>
+    <label><input type="radio" name="q4" value="b"> 只有 2 个章节，包含一句话描述</label>
+    <label><input type="radio" name="q4" value="c"> 只有代码，没有 Markdown 文本</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="5">
+    <div class="q">Q5 · 本课的“三层验收机制”指的是哪三层？</div>
+    <label><input type="radio" name="q5" value="a"> 工程验证(typecheck/build)、契约验证(字段类型语义一致)、主管验收(9大章节无阻断项)</label>
+    <label><input type="radio" name="q5" value="b"> 单元测试、集成测试、压力测试</label>
+    <label><input type="radio" name="q5" value="c"> 一级部门验收、二级部门验收、CEO 验收</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
+  <!-- Exit Ticket Questions -->
+  <h3 style="margin-top: 2rem;">2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：Acceptance Criteria (Given-When-Then 验收条件) 与 Stop Conditions (停止上提条件) 的本质区别是什么？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      • <code>Acceptance Criteria</code> 描述功能开发完成后如何判断其输出与逻辑是否正确（格式为 Given 上下文 / When 操作 / Then 预期结果）。<br>
+      • <code>Stop Conditions</code> 描述 Agent 在执行过程中遇阻、触及权限边界或遇到未决待确认事项时，何时必须<b>熔断暂停并向上呈报主管裁决</b>。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：为什么在写入磁盘前要生成 `src/types/prototype-contract.d.ts` 类型草稿？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      TypeScript 类型草稿是强类型的数据契约，能在编码前锁定字段名称、数据类型与必填属性，防止第四课 AI 增量编码时字段随心所欲飘移；同时 IT 部门接手后可直接复用该接口定义。
+    </div>
+  </div>
+
+  <!-- Key Takeaways Box -->
+  <div class="card tinted" style="margin-top: 2rem;">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>先澄清 6 要素，清空阻断项，落盘 9 章节契约卡，最后才写代码。</b></li>
+      <li><b>分清 Given-When-Then 功能验收与 Stop Conditions Agent 熔断边界。</b></li>
+      <li><b>`BUSINESS_FEATURE_CARD.md` 冻结为唯一基线，无后置静默需求变更。</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第三课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 已通过 <code>grill-me</code> 澄清 6 要素，确保零阻断项通过 Fail-Closed 门禁？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 物理落盘了 <code>docs/BUSINESS_FEATURE_CARD.md</code>、<code>contract.d.ts</code> 与 <code>prototype-data.ts</code>？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 完成三层验收，更新 <code>docs/PROJECT_STATE.md</code> 为 L03 PASS 并通过 <code>git add --</code> 选择性暂存 Commit？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--plum);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--teal); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 配套阅读 (10 分钟)</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">微软《AI Agents for Beginners》需求规范章节：<a href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" style="color: var(--teal); font-weight: bold;">在线阅读</a>。学习澄清与上下文 Prompt 技术。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 数据契约理论</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Open API / JSON Schema 规范简介：<a href="https://json-schema.org/" target="_blank" style="color: var(--plum); font-weight: bold;">json-schema.org</a>。了解工程级数据契约的国际标准。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ Slash 命令快捷指南</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Antigravity Slash Command：在终端输入 <code>/grill-me</code> 即可一键拉起 3-5 分支、5-7 轮追问流程。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">▶ 第 4 课开启</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">《受控 Agent 循环与物理写盘》：<a href="0004-controlled-agent-loop-and-disk-persistence.html" style="color: var(--blue); font-weight: bold;">点击直接进入第 4 课 HTML</a>！学习 Plan & Execute 增量切片与 Working Tree 状态控制。</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--plum); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--plum-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--plum);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“帮助我编写履约预警看板的 BUSINESS_FEATURE_CARD.md 9 大章节草案”——它会实时为您列出。</span>
+  </div>
+</section>
+
+<footer>
+  第 3 课 · 主管 AI 原型制作训练营 · 权威路线图：<a href="../docs/COURSE_ROADMAP.html">docs/COURSE_ROADMAP.html</a> | 术语：<a href="../GLOSSARY.html">GLOSSARY.html</a>
+</footer>
 
 </div>
 
 <script>
-  function copyCode(btn) {
-    const pre = btn.nextElementSibling;
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.innerText = '✅ 已复制！';
-      setTimeout(() => btn.innerText = '📋 复制提示词', 2000);
-    });
+// ---------- Section 01 Interactive Tier Demonstrator Simulator ----------
+const tierScenarios = {
+  raw: {
+    steps: [
+      { title: 'Step 1 · 业务口头给出一句话指令', desc: '用户输入: "帮我做个商品履约预警看板页面"', cls: '' },
+      { title: 'Step 2 · LLM 内存中自由概率推演', desc: 'Agent 无任何需求与契约约束，开始在 Context 内存中随机猜测后端字段与组件结构...', cls: '' },
+      { title: 'Step 3 · 💥 产生字段漂移与数据幻觉报错！', desc: '【物理冲突】Agent 脑补了字段 `delay_seconds`，而企业数据库真实名称为 `overtime_hours`。组件由于 `undefined` 字段直接编译报错，页面渲染白屏崩溃！', cls: 'error' }
+    ],
+    logs: [
+      '> [User Prompt]: "帮我做个商品履约预警看板页面"',
+      '> [LLM Thought]: 无需求功能卡约束，随机猜测字段结构...',
+      '> [Tool Exec]: write_file("src/pages/Dashboard.vue")',
+      '❌ [Runtime Error]: Property "delay_seconds" is undefined on Object OrderData.',
+      '💥 [Result]: 缺少结构化契约，AI 随机推演破坏数据模型，页面崩溃白屏！'
+    ]
+  },
+  harness: {
+    steps: [
+      { title: 'Step 1 · 唤醒 /grill-me 技能护栏', desc: '发起 3-5 分支、5-7 轮结构化反向追问对话，精准锁定 User, Goal, Boundary, Risk 4 要素。', cls: '' },
+      { title: 'Step 2 · 确认 Given-When-Then 验收与 Stop 熔断边界', desc: '锁定：Given 42 单超时，When 点击催办，Then 弹框抽屉；Stop 条件：字段存在 [待确认] 物理熔断！', cls: '' },
+      { title: 'Step 3 · 🛡️ 触发 Fail-Closed 阻断性门禁校验', desc: '检查确认 6 大要素中无任何 [待确认] 阻断项！输出门禁结果: GATE_CHECK [PASS]', cls: 'gate-block' },
+      { title: 'Step 4 · 🎉 物理写盘落盘 9 大章节功能卡与契约资产', desc: '物理生成并冻结: docs/BUSINESS_FEATURE_CARD.md, prototype-contract.d.ts, prototype-data.ts', cls: 'success' }
+    ],
+    logs: [
+      '> [Command]: /grill-me',
+      '> [Grill Agent]: 逐轮澄清 Goal/Boundary/Given-When-Then/Stop 条件...',
+      '> [Gate Check]: Fail-Closed Blocking Gate: 0 [待确认] Blocking Items Found. [PASS]',
+      '> [Tool Exec]: write_file("docs/BUSINESS_FEATURE_CARD.md") (包含 9 大完整章节)',
+      '> [Tool Exec]: write_file("src/types/prototype-contract.d.ts")',
+      '> [Tool Exec]: write_file("src/mocks/prototype-data.ts")',
+      '🎉 [Result]: 契约成功落盘并冻结，为第四课 Plan & Execute 增量开发提供 100% 可靠需求基线！'
+    ]
+  },
+  loop: {
+    steps: [
+      { title: 'Step 1 · 读取第 3 课冻结的契约基线', desc: '读取 BUSINESS_FEATURE_CARD.md，锁死 In-Scope 与类型草稿，绝不超出范围推演。', cls: '' },
+      { title: 'Step 2 · Plan 规划与增量写代码', desc: '按照实施计划，基于 prototype-contract.d.ts 的接口契约，增量编写 Vue/Vite 视图组件。', cls: '' },
+      { title: 'Step 3 · 🧪 运行 verify 命令行断言与 127.0.0.1 试衣镜', desc: '执行 npm run typecheck & build，如果失败则在 Stop 条件保护下熔断呈报主管，成功则打上 [PASS] 标签。', cls: 'success' }
+    ],
+    logs: [
+      '> [Input Goal]: 基于 docs/BUSINESS_FEATURE_CARD.md 增量开发看板前端',
+      '> [Agent Loop Step 1]: Plan 制定增量步骤...',
+      '> [Agent Loop Step 2]: Code Edition with Contract Assertion...',
+      '> [Agent Loop Step 3]: verify-student-project.ps1 -> PASS',
+      '🎉 [Result]: 契约受控自主循环完成！127.0.0.1 试衣镜高保真呈现，IT 可无损接入后端 API。'
+    ]
   }
+};
+
+function runTierMode(mode) {
+  const btnRaw = document.getElementById('mBtnRaw');
+  const btnHarness = document.getElementById('mBtnHarness');
+  const btnLoop = document.getElementById('mBtnLoop');
+  const canvas = document.getElementById('flowCanvas');
+  const consoleLog = document.getElementById('consoleLog');
+
+  btnRaw.className = 'mode-btn raw ' + (mode === 'raw' ? 'active' : '');
+  btnHarness.className = 'mode-btn harness ' + (mode === 'harness' ? 'active' : '');
+  btnLoop.className = 'mode-btn loop ' + (mode === 'loop' ? 'active' : '');
+
+  const data = tierScenarios[mode];
+  canvas.innerHTML = '';
+  consoleLog.innerHTML = '';
+
+  data.steps.forEach((s, idx) => {
+    const node = document.createElement('div');
+    node.className = 'flow-step-node ' + (s.cls || '');
+    node.id = 'node_' + idx;
+    node.innerHTML = `
+      <div class="node-title">
+        <span>${s.title}</span>
+        <span style="font-size:.75rem; padding: 2px 6px; border-radius:4px; background:rgba(0,0,0,0.05);">Step ${idx + 1}</span>
+      </div>
+      <div class="node-desc">${s.desc}</div>
+    `;
+    canvas.appendChild(node);
+  });
+
+  data.steps.forEach((s, idx) => {
+    setTimeout(() => {
+      const el = document.getElementById('node_' + idx);
+      if (el) el.classList.add('active');
+    }, idx * 400);
+  });
+
+  consoleLog.innerHTML = data.logs.join('<br>');
+}
+runTierMode('harness');
+
+// ---------- Section 04 Grill Simulator Logic ----------
+function sendReply(type) {
+  const flow = document.getElementById('chatFlow');
+  const code = document.getElementById('contractCode');
+  
+  if (type === 'pass') {
+    flow.innerHTML += `
+      <div class="bubble user"><b>主管:</b> 1. 使用者：履约主管，解决人工巡检超时遗漏问题；2. 超时规则：超时 > 2 小时记为严重超时；催办字段：订单号、责任人、超时时长；In Scope：4 KPI + 明细列表；Stop 条件：遇到组件未定义或代码报错超 2 次熔断呈报。</div>
+      <div class="bubble agent"><b>AI Agent:</b> 检查强校验门禁中…<br>✅ 6 大阻断项全部通过 (Fail-Closed Blocking Gate [PASS])！<br>已在聊天窗口渲染 Task 3A 预览，等待 Task 3B 授权口令落盘 <code>docs/BUSINESS_FEATURE_CARD.md</code>、<code>contract.d.ts</code> 与 <code>prototype-data.ts</code>。</div>
+    `;
+    code.innerHTML = `
+// 物理落盘契约文件: src/types/prototype-contract.d.ts<br>
+export interface OrderAlert {<br>
+&nbsp;&nbsp;id: string; // 订单号 e.g. "ORD-2026-9901"<br>
+&nbsp;&nbsp;status: 'OVERTIME' | 'WARNING' | 'NORMAL';<br>
+&nbsp;&nbsp;delayHours: number; // 超时时长（小时）<br>
+&nbsp;&nbsp;owner: string; // 责任人姓名<br>
+}<br><br>
+// 物理落盘 Mock 数据: src/mocks/prototype-data.ts<br>
+export const mockOrderAlerts: OrderAlert[] = [<br>
+&nbsp;&nbsp;{ id: 'ORD-2026-9901', status: 'OVERTIME', delayHours: 3.5, owner: '张主管' }<br>
+];
+    `;
+    code.className = 'contract-code show';
+  } else {
+    flow.innerHTML += `
+      <div class="bubble user"><b>主管:</b> 规则你帮我看情况脑补一下就行，核心字段先写个 [待确认]，过几天再定。</div>
+      <div class="bubble gate-fail"><b>AI Agent (强校验门禁阻断):</b><br>🚫 <b>BLOCKING_GATE_FAILED! 阻断性待确认事项拦截！</b><br>检测到核心字段包含 [待确认]，无法落盘！在 Harness 模式下，阻断项未清空前禁止进入第四课开发，请明确字段具体定义。</div>
+    `;
+    code.className = 'contract-code';
+  }
+  flow.scrollTop = flow.scrollHeight;
+}
+
+function resetChat() {
+  const flow = document.getElementById('chatFlow');
+  const code = document.getElementById('contractCode');
+  flow.innerHTML = `
+    <div class="bubble agent">
+      <b>AI Agent (/grill-me 追问中):</b> 欢迎开启需求澄清！请告诉我：<br>
+      1. 商品履约预警看板的核心使用者是谁？痛点是什么？<br>
+      2. 履约超时的判定规则，以及一键催办动作带出的核心字段有哪些？
+    </div>
+  `;
+  code.className = 'contract-code';
+}
+
+// ---------- Section 05 Concept Fill-in-the-Blanks Logic ----------
+function checkAllBlanks() {
+  const b1 = document.getElementById('blank1');
+  const b2 = document.getElementById('blank2');
+  const b3 = document.getElementById('blank3');
+  const b4 = document.getElementById('blank4');
+  const b5 = document.getElementById('blank5');
+
+  const ok1 = b1.value === 'grill-me';
+  const ok2 = b2.value === 'contract';
+  const ok3 = b3.value === 'correctness';
+  const ok4 = b4.value === 'escalate';
+  const ok5 = b5.value === 'BLOCKING_GATE_FAILED';
+
+  b1.className = 'blank-select ' + (ok1 ? 'ok' : 'err');
+  b2.className = 'blank-select ' + (ok2 ? 'ok' : 'err');
+  b3.className = 'blank-select ' + (ok3 ? 'ok' : 'err');
+  b4.className = 'blank-select ' + (ok4 ? 'ok' : 'err');
+  b5.className = 'blank-select ' + (ok5 ? 'ok' : 'err');
+
+  const bf1 = document.getElementById('bf1');
+  const bf2 = document.getElementById('bf2');
+  const bf3 = document.getElementById('bf3');
+
+  bf1.className = 'blank-feedback show';
+  bf1.style.color = (ok1 && ok2) ? 'var(--green)' : 'var(--red)';
+  bf1.innerHTML = (ok1 && ok2) ? '✅ 填空 1 全对！`grill-me` 技能护栏能够将盲目口头 Prompt 转换为确定性的业务契约。' : '❌ 填空 1 存在错误，请核对：应填【grill-me 技能护栏】与【业务契约】。';
+
+  bf2.className = 'blank-feedback show';
+  bf2.style.color = (ok3 && ok4) ? 'var(--green)' : 'var(--red)';
+  bf2.innerHTML = (ok3 && ok4) ? '✅ 填空 2 全对！Given-When-Then 校验功能正确性，Stop Conditions 用于熔断暂停并呈报主管。' : '❌ 填空 2 存在错误，请核对：Given-When-Then 为【功能做出来后是否正确】，Stop 为【何时熔断暂停呈报】。';
+
+  bf3.className = 'blank-feedback show';
+  bf3.style.color = ok5 ? 'var(--green)' : 'var(--red)';
+  bf3.innerHTML = ok5 ? '✅ 填空 3 正确！存在待确认项时，强校验门禁输出 BLOCKING_GATE_FAILED 拦截落盘！' : '❌ 填空 3 错误：应选择 BLOCKING_GATE_FAILED 拒绝落盘。';
+}
+
+// ---------- Section 06 Exit Ticket Expand Answer Logic ----------
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+
+// ---------- Quiz Logic ----------
+const explain = {
+  q1: '正确答案：A。单次口头 Prompt 会导致 AI 自由发散与字段漂移；Harness 契约能建立物理约束基线。',
+  q2: '正确答案：A。验收条件判断功能做出来后是否正确 (Given-When-Then)；停止条件判断 Agent 何时熔断暂停呈报主管。',
+  q3: '正确答案：A。Fail-Closed 强门禁确保 6 项关键要素不能留存 [待确认]，阻断带病开发。',
+  q4: '正确答案：A。BUSINESS_FEATURE_CARD.md 包含 9 大完整章节，衍生落盘 contract.d.ts 与 prototype-data.ts。',
+  q5: '正确答案：A。三层验收机制包含工程验证(typecheck/build)、契约验证与主管验收(9大章节无阻断项)。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 20;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 5) {
+    el.innerHTML = `你已答完 <b>${answered} / 5</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  } else {
+    el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！`;
+  }
+}
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--green)';
+    res.innerHTML = '🎉 恭喜！三层验收与自查全通关 (3 / 3)，准备开启第四课《受控 Agent 循环与物理写盘》！';
+  } else {
+    res.style.color = 'var(--plum)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
 </script>
+
 </body>
 </html>

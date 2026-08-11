@@ -40,11 +40,36 @@ $requiredFiles = @(
     "docs\LESSON_04_TEACHER_PLAN.md",
     "docs\LESSON_05_GUIDE.md",
     "docs\LESSON_05_TEACHER_PLAN.md",
+    "docs\LESSON_06_GUIDE.md",
+    "docs\LESSON_06_TEACHER_PLAN.md",
+    "docs\LESSON_07_GUIDE.md",
+    "docs\LESSON_07_TEACHER_PLAN.md",
+    "docs\LESSON_08_GUIDE.md",
+    "docs\LESSON_08_TEACHER_PLAN.md",
+    "docs\LESSON_09_GUIDE.md",
+    "docs\LESSON_09_TEACHER_PLAN.md",
+    "docs\LESSON_10_GUIDE.md",
+    "docs\LESSON_10_TEACHER_PLAN.md",
+    "docs\DEPARTMENT_REDLINES.md",
+    "docs\IT_ENGINEER_QUICKSTART.md",
     ".claude\skills\incremental-implementation\SKILL.md",
+    ".claude\skills\diagnosing-bugs\SKILL.md",
+    ".claude\skills\evidence-verification\SKILL.md",
+    ".claude\skills\codex-audit\SKILL.md",
+    "lessons\0006-facts-anchored-debugging-and-bounded-loop.html",
+    "lessons\0007-browser-mcp-and-four-evidence-chains.html",
+    "lessons\0008-codex-independent-review-and-context-isolation.html",
+    "lessons\0009-business-agent-scenarios-and-mock-fallback.html",
+    "lessons\0010-finite-ai-features-and-it-handover.html",
+    "course-fixtures\lesson-06-buggy-fixture\README.md",
     ".claude\agents\verifier.md",
+    ".claude\agents\qa-tester.md",
+    ".claude\agents\codex-auditor.md",
     "scripts\run-lesson-verifier.ps1",
     "scripts\verify-lesson-04-student.ps1",
     "scripts\run-l4-verifier-isolation-tests.cjs",
+    "scripts\package-it-handover.ps1",
+    "src\utils\calculator.ts",
     "skills-lock.json",
     "src\main.ts",
     "src\App.vue",
@@ -66,14 +91,19 @@ if (Test-Path ".claude\skills\find-skills\SKILL.md") {
     throw "Prohibited out-of-scope Skill found: .claude/skills/find-skills/SKILL.md must be removed from Lessons 01-04 PR."
 }
 
-# Verify Teacher Plan 8-module structure for Lessons 01 through 05
+# Verify Teacher Plan 8-module structure for Lessons 01 through 10
 $modules = @("一", "二", "三", "四", "五", "六", "七", "八")
 $teacherPlans = @(
     "docs\LESSON_01_TEACHER_PLAN.md",
     "docs\LESSON_02_TEACHER_PLAN.md",
     "docs\LESSON_03_TEACHER_PLAN.md",
     "docs\LESSON_04_TEACHER_PLAN.md",
-    "docs\LESSON_05_TEACHER_PLAN.md"
+    "docs\LESSON_05_TEACHER_PLAN.md",
+    "docs\LESSON_06_TEACHER_PLAN.md",
+    "docs\LESSON_07_TEACHER_PLAN.md",
+    "docs\LESSON_08_TEACHER_PLAN.md",
+    "docs\LESSON_09_TEACHER_PLAN.md",
+    "docs\LESSON_10_TEACHER_PLAN.md"
 )
 
 foreach ($tpFile in $teacherPlans) {

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 7 课 · 让 Agent 实际操作页面完成验收：QA Subagent、双 MCP 与四类证据链 | 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #047857 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #a7f3d0; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #d1fae5; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #a7f3d0; }
+  
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+  
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--teal); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+  
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+  
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--teal-soft); border-color: #a7f3d0; }
+  .card.warn { background: var(--amber-soft); border-color: #ecd3a8; }
+  .card.focus { background: var(--plum-soft); border-color: #d8b4fe; }
+  .card.green { background: var(--green-soft); border-color: #a7d7b4; }
+  
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+  
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.2rem; margin: 1rem 0;
+  }
+
+  .badge {
+    display: inline-block; padding: 0.2rem 0.6rem; font-size: 0.8rem; font-weight: 700;
+    border-radius: 999px; text-transform: uppercase; margin-right: 0.4rem;
+  }
+  .badge.teal { background: #d1fae5; color: #065f46; }
+  .badge.blue { background: #dbeafe; color: #1e40af; }
+  .badge.amber { background: #fef3c7; color: #92400e; }
+  .badge.green { background: #dcfce7; color: #166534; }
+
+  .evidence-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0;
+  }
+  .evidence-box {
+    background: #fff; border: 2px solid var(--line); border-radius: 10px; padding: 1.2rem;
+    text-align: center; cursor: pointer; transition: all 0.2s;
+  }
+  .evidence-box:hover { border-color: var(--teal); transform: translateY(-4px); box-shadow: 0 4px 12px rgba(15,118,110,0.1); }
+
+  .sim-box {
+    background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 1.5rem; font-family: "Consolas", monospace;
+    margin: 1.5rem 0; border: 1px solid #334155;
+  }
+  .sim-status { font-weight: 700; padding: 0.4rem 0.8rem; border-radius: 6px; display: inline-block; margin-bottom: 1rem; }
+  .sim-status.pass { background: #166534; color: #4ade80; }
+  .sim-btn {
+    background: var(--teal); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 6px;
+    font-weight: 600; cursor: pointer; margin-right: 0.5rem; transition: background 0.2s;
+  }
+  .sim-btn:hover { background: #047857; }
+
+  .quiz-option {
+    background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.8rem 1.2rem;
+    margin: 0.5rem 0; cursor: pointer; transition: all 0.2s;
+  }
+  .quiz-option:hover { border-color: var(--teal); background: var(--teal-soft); }
+  .quiz-option.selected-correct { border-color: var(--green); background: var(--green-soft); font-weight: 700; }
+  .quiz-option.selected-wrong { border-color: var(--red); background: var(--red-soft); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">主管 AI 原型制作训练营 · 第 7 课</div>
+    <h1>让 Agent 实际操作页面完成验收</h1>
+    <div class="sub">QA Subagent 沙箱、Playwright + DevTools 双 MCP 与 EVIDENCE_INDEX 物理落盘</div>
+    <div class="goal">
+      <b>💡 核心理念：</b> 口说无凭，证据落盘；视觉、行为、工程、范围四证合一，加上 EVIDENCE_INDEX 验收总卡，放心交接。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <h2><span class="num">01</span> QA Subagent 与双 MCP 架构</h2>
+    <div class="grid-2">
+      <div class="card tinted">
+        <span class="badge teal">Subagent</span>
+        <h3>QA Tester Subagent</h3>
+        <p>只读沙箱子进程 (<code>.claude/agents/qa-tester.md</code>)，专责测试验收，完结自动销毁沙箱，保护主 Context 干净。</p>
+      </div>
+
+      <div class="card focus">
+        <span class="badge blue">MCP 1</span>
+        <h3>Playwright MCP</h3>
+        <p>负责 DOM 自动化点击、填表与截屏。Task 1 支持 <b>Headed 慢动作视窗</b> 演示，Task 2 抓取 <code>screenshot.png</code>。</p>
+      </div>
+
+      <div class="card warn">
+        <span class="badge amber">MCP 2</span>
+        <h3>Chrome DevTools MCP</h3>
+        <p>深层审计 Console 第一行 Error Message、127.0.0.1 域名白名单与 0 报错日志，落盘 <code>action.log</code>。</p>
+      </div>
+
+      <div class="card green">
+        <span class="badge green">Index</span>
+        <h3>EVIDENCE_INDEX 总卡落盘</h3>
+        <p>自动汇总四类证据并落盘 <code>docs/LESSON_07_EVIDENCE_INDEX.md</code>，为第 8 课 Codex 独立审查提供权威输入。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span> 四类可复核证据链 (Four Reconstructible Evidences)</h2>
+    <p>点击下方四大证据卡，查看在 <code>docs/assets/lesson-07/</code> 目录下的物理落盘标准：</p>
+
+    <div class="evidence-grid">
+      <div class="evidence-box" onclick="showEvidence(1)">
+        <div style="font-size: 2rem;">📸</div>
+        <strong>视觉证据 [照片]</strong>
+        <div style="font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.4rem;">screenshot.png</div>
+      </div>
+
+      <div class="evidence-box" onclick="showEvidence(2)">
+        <div style="font-size: 2rem;">🐾</div>
+        <strong>行为证据 [脚印]</strong>
+        <div style="font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.4rem;">action.log</div>
+      </div>
+
+      <div class="evidence-box" onclick="showEvidence(3)">
+        <div style="font-size: 2rem;">🩺</div>
+        <strong>工程证据 [体检]</strong>
+        <div style="font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.4rem;">typecheck.log</div>
+      </div>
+
+      <div class="evidence-box" onclick="showEvidence(4)">
+        <div style="font-size: 2rem;">🧾</div>
+        <strong>范围证据 [存根]</strong>
+        <div style="font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.4rem;">diff.patch</div>
+      </div>
+    </div>
+
+    <div id="evidence-detail" class="card tinted" style="display:none; margin-top: 1rem;">
+      <h3 id="ev-title">证据详情</h3>
+      <p id="ev-body">点击上方证据查看规范。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span> QA Subagent 双 MCP 测试模拟器</h2>
+    <div class="sim-box">
+      <div><strong>Sandbox Lifecycle:</strong> <span id="sb-state">IDLE (Subagent Destroyed)</span></div>
+      <div style="margin: 0.6rem 0;"><strong>Active MCPs:</strong> Playwright MCP + Chrome DevTools MCP</div>
+      <div class="sim-status pass" id="sim-status-pill">STATUS: READY TO RUN QA SUBAGENT DUAL MCP TEST</div>
+      <div id="sim-log" style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 1.2rem; height: 95px; overflow-y: auto; background: #1e293b; padding: 0.5rem; border-radius: 6px;">
+        > Press button to spawn QA Subagent (.claude/agents/qa-tester.md) and run test.
+      </div>
+      <div>
+        <button class="sim-btn" onclick="runHeadedDemo()">1. 运行 Headed 慢动作视窗演示 (Task 1)</button>
+        <button class="sim-btn" style="background:#059669;" onclick="runHeadlessTest()">2. 静默双 MCP 落盘证据与 EVIDENCE_INDEX (Task 2)</button>
+        <button class="sim-btn" style="background:#475569;" onclick="resetSim()">重置沙箱</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span> 课堂退场盖章测试 (Exit Ticket)</h2>
+    <div class="card">
+      <h3>题目：在 QA Subagent 中，用于深层审计 DevTools Console 0 报错与 127.0.0.1 网络白名单的 MCP 工具是？</h3>
+      <div class="quiz-option" onclick="checkQuiz(this, false)">A. Playwright MCP</div>
+      <div class="quiz-option" onclick="checkQuiz(this, true)">B. Chrome DevTools MCP</div>
+      <div class="quiz-option" onclick="checkQuiz(this, false)">C. Git MCP</div>
+      <div class="quiz-option" onclick="checkQuiz(this, false)">D. File MCP</div>
+      <div id="quiz-result" style="margin-top: 1rem; font-weight: 700; display: none;"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const evData = {
+  1: { title: "📸 视觉证据: screenshot.png", body: "落盘路径：docs/assets/lesson-07/screenshot.png。Playwright MCP 抓取 Headless 浏览器完成点击后的 DOM 渲染对比截图，证明页面无错位、白屏或遮挡。" },
+  2: { title: "🐾 行为证据: action.log", body: "落盘路径：docs/assets/lesson-07/action.log。Chrome DevTools MCP 记录 DOM click/fill 轨迹、Console 0 报错与 127.0.0.1 域名白名单审计。" },
+  3: { title: "🩺 工程证据: typecheck.log", body: "落盘路径：docs/assets/lesson-07/typecheck.log。记录 verify-project.ps1 与 vue-tsc 的全量编译检查，证明类型无断裂，输出 [PASS]。" },
+  4: { title: "🧾 范围证据: diff.patch", body: "落盘路径：docs/assets/lesson-07/diff.patch。记录 git status / git diff 变动文件清单，证明修改限定在许可范围，Working Tree 保持 100% Clean。" }
+};
+
+function showEvidence(id) {
+  const detail = document.getElementById('evidence-detail');
+  document.getElementById('ev-title').innerText = evData[id].title;
+  document.getElementById('ev-body').innerText = evData[id].body;
+  detail.style.display = 'block';
+}
+
+function runHeadedDemo() {
+  const log = document.getElementById('sim-log');
+  const sbState = document.getElementById('sb-state');
+  const statusPill = document.getElementById('sim-status-pill');
+
+  sbState.innerText = "RUNNING (QA Subagent Sandbox Active)";
+  sbState.style.color = "#60a5fa";
+
+  log.innerHTML = "> Spawning QA Subagent with Playwright MCP (headed: true, slowMo: 500ms)...<br>";
+  setTimeout(() => {
+    log.innerHTML += "> [Chrome Window Popped] Human eye watching Playwright click('.filter-btn')...<br>";
+    log.innerHTML += "> [Visually Verified] Dom element clicked smoothly in slowMo mode!<br>";
+    log.innerHTML += "<span style='color:#60a5fa;'>ℹ️ Headed slowMo demo finished. Ready to run Task 2 silent evidence extraction.</span>";
+    statusPill.innerText = "STATUS: HEADED DEMO PASS [Visually Verified]";
+  }, 1000);
+}
+
+function runHeadlessTest() {
+  const log = document.getElementById('sim-log');
+  const sbState = document.getElementById('sb-state');
+  const statusPill = document.getElementById('sim-status-pill');
+
+  sbState.innerText = "RUNNING (Dual MCP Silent Extraction)";
+  sbState.style.color = "#34d399";
+
+  log.innerHTML += "<br>> Running Dual MCP Silent Extraction (Playwright + Chrome DevTools)...<br>";
+  setTimeout(() => {
+    log.innerHTML += "> [Playwright MCP] Screenshot -> docs/assets/lesson-07/screenshot.png<br>";
+    log.innerHTML += "> [Chrome DevTools MCP] Console 0 errors & 127.0.0.1 verified -> action.log<br>";
+    log.innerHTML += "> [Engineering] typecheck PASS -> docs/assets/lesson-07/typecheck.log<br>";
+    log.innerHTML += "> [Scope] Clean working tree -> docs/assets/lesson-07/diff.patch<br>";
+    log.innerHTML += "> [Summary Card] Persisted -> docs/LESSON_07_EVIDENCE_INDEX.md<br>";
+    log.innerHTML += "<span style='color:#4ade80;'>✅ All 4 Evidences & EVIDENCE_INDEX Persisted! Destroying QA Subagent Sandbox.</span>";
+    
+    sbState.innerText = "DESTROYED (QA Subagent Auto-Cleaned)";
+    sbState.style.color = "#94a3b8";
+    statusPill.innerText = "STATUS: PASS [EVIDENCE_INDEX Ready for Codex Review in Lesson 8]";
+  }, 1200);
+}
+
+function resetSim() {
+  document.getElementById('sb-state').innerText = "IDLE (Subagent Destroyed)";
+  document.getElementById('sb-state').style.color = "#e2e8f0";
+  document.getElementById('sim-status-pill').innerText = "STATUS: READY TO RUN QA SUBAGENT DUAL MCP TEST";
+  document.getElementById('sim-log').innerHTML = "> Press button to spawn QA Subagent (.claude/agents/qa-tester.md) and run test.";
+}
+
+function checkQuiz(el, isCorrect) {
+  const result = document.getElementById('quiz-result');
+  document.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.classList.remove('selected-correct', 'selected-wrong');
+  });
+  if (isCorrect) {
+    el.classList.add('selected-correct');
+    result.style.color = 'var(--green)';
+    result.innerText = '✅ 正确！Chrome DevTools MCP 专门用于深层审计 Console 0 报错与 127.0.0.1 网络白名单！';
+  } else {
+    el.classList.add('selected-wrong');
+    result.style.color = 'var(--red)';
+    result.innerText = '❌ 错误。请重新对比 Playwright MCP 与 Chrome DevTools MCP 的工具分工！';
+  }
+  result.style.display = 'block';
+}
+</script>
+
+</body>
+</html>

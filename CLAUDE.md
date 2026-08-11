@@ -44,6 +44,11 @@
 * 导出学员包必须通过 [scripts/export-student-package.ps1](file:///d:/AILearning/scripts/export-student-package.ps1) 脚本进行。
 * 学员包必须遵守 [docs/STUDENT_PACKAGE_SPEC.md](file:///d:/AILearning/docs/STUDENT_PACKAGE_SPEC.md) 白名单，不得将教师教案、路线图或测试脚本打包进学员 ZIP。
 
-### 2.8 验证和完成标准
+### 2.8 部门不可 Agent 化物理红线清册 (DEPARTMENT_REDLINES)
+* 必须严格遵守 [docs/DEPARTMENT_REDLINES.md](file:///d:/AILearning/docs/DEPARTMENT_REDLINES.md) 中规定的安全红线禁区。
+* **物理代码拒止**：绝对禁止任何试图自动进行银行资金转账 (`HOOK_REFUSE_BANK_TRANSFER`)、自动签署法律合同 (`HOOK_REFUSE_CONTRACT_SIGN`) 或导出未脱敏敏感数据 (`HOOK_REFUSE_DATA_EXPORT`) 的 Tool Call。一旦检测到越权请求，Agent 必须物理打断并输出拒绝日志！
+* **确定性算术物理函数锁**：绝对锁定 [src/utils/calculator.ts](file:///d:/AILearning/src/utils/calculator.ts) 中的 `calculateTotal()` 函数 (`HOOK_LOCK_DETERMINISTIC_CALC`)，算术计算严禁剥离给 LLM 概率生成！
+
+### 2.9 验证和完成标准
 * 任何代码与文档变更完成前，必须通过 `powershell -File .\scripts\verify-project.ps1` 校验。
 * 保证 `npm run typecheck` 和 `npm run build` 100% 通过。

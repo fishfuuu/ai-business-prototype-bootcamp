@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 10 课 · 落地有限 AI 功能与 IT 交接：物理红线清册与《IT 原型交接包》 | 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #15803d 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #86efac; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #dcfce7; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #86efac; }
+  
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+  
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--green); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+  
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+  
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.green { background: var(--green-soft); border-color: #a7d7b4; }
+  .card.tinted { background: var(--blue-soft); border-color: #93c5fd; }
+  .card.warn { background: var(--red-soft); border-color: #fca5a5; }
+
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .badge {
+    display: inline-block; padding: 0.2rem 0.6rem; font-size: 0.8rem; font-weight: 700;
+    border-radius: 999px; text-transform: uppercase; margin-right: 0.4rem;
+  }
+  .badge.green { background: #dcfce7; color: #166534; }
+  .badge.red { background: #fee2e2; color: #991b1b; }
+  .badge.blue { background: #dbeafe; color: #1e40af; }
+
+  /* Interactive Package Simulator */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: .9rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Consolas", monospace; font-size: .82rem;
+    padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 180px; overflow-y: auto;
+  }
+
+  .sim-btn {
+    background: var(--green); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 6px;
+    font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  .sim-btn:hover { background: #15803d; }
+
+  .quiz-option {
+    background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.8rem 1.2rem;
+    margin: 0.5rem 0; cursor: pointer; transition: all 0.2s;
+  }
+  .quiz-option:hover { border-color: var(--green); background: var(--green-soft); }
+  .quiz-option.selected-correct { border-color: var(--green); background: var(--green-soft); font-weight: 700; }
+  .quiz-option.selected-wrong { border-color: var(--red); background: var(--red-soft); }
+
+  .cert-box {
+    border: 4px double var(--green); border-radius: 16px; padding: 2rem; background: #f0fdf4;
+    text-align: center; margin: 2rem 0; box-shadow: 0 4px 15px rgba(21,128,61,0.1);
+  }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 10 · 终局收官课 · 物理红线与 IT 交接包</div>
+    <h1>落地有限 AI 功能与 IT 交接</h1>
+    <p class="sub"><b>划清部门物理红线，一键输出交接大礼包；从业务主管到超级 PM，受控 AI 完美收官！</b><br>编制 <b>部门不可 Agent 化物理红线清册 (`docs/DEPARTMENT_REDLINES.md`)</b>、打包 <b>《IT 原型交接包》 (`dist/IT_HANDOVER_PACKAGE.zip`)</b> 与 <b>【5 分钟极客汇报演练】</b>！</p>
+    <div class="goal">
+      🎉 <b>终局目标</b>：① 划定资金划扣与法务合规物理拒止红线；② 一键运行打包脚本输出标准 ZIP 交付包与程序员导览；③ 掌握向 IT 汇报的 3 大攻防答辩卡！
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 01: DEPARTMENT REDLINES & REFUSAL HOOKS -->
+<section>
+  <h2><span class="num">01</span> 部门不可 Agent 化物理红线清册与引擎拒止钩子</h2>
+  <div class="grid-2">
+    <div class="card warn">
+      <span class="badge red">物理代码拒止钩子 (Refusal Hooks)</span>
+      <h3>AI 越权请求强制物理打断</h3>
+      <p>• <code>HOOK_REFUSE_BANK_TRANSFER</code>: 检测到打款指令 ➔ 物理拦截拒止<br>• <code>HOOK_REFUSE_CONTRACT_SIGN</code>: 检测到签署合同 ➔ 物理打断<br>• <code>HOOK_REFUSE_DATA_EXPORT</code>: 未脱敏数据导出 ➔ 拦截物理报错</p>
+    </div>
+
+    <div class="card green">
+      <span class="badge green">HITL 审批领地</span>
+      <h3>人类主管最高裁决权</h3>
+      <p>• <b>原型代码改动</b>：等待主管授权口令方可保存。<br>• <b>代码合并归档</b>：Codex 盲审报告通过后，由主管手工行使 <code>git merge</code>。<br>• <b>交付交接</b>：亲自签署交付包归档。</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 02: HANDOVER PACKAGE SIMULATOR -->
+<section>
+  <h2><span class="num">02</span> 演练：一键打包生成《IT 原型交接包》 (IT_HANDOVER_PACKAGE.zip)</h2>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎁 IT 原型交接包一键生成仿真终端</span>
+      <span style="font-size: .8rem; opacity: .8;">点击按钮打包 6 大核心资产（含 IT 解包导览）</span>
+    </div>
+    <div class="sim-body">
+      
+      <div class="card tinted" id="simDisplayCard">
+        <h3 style="color: var(--blue); margin-top:0;">📦 待打包资产清单 (6 大核心交付物)</h3>
+        <ol style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
+          <li><b>IT_ENGINEER_QUICKSTART.md (IT 程序员接包一页纸导览)</b></li>
+          <li>前端 Vue3/TS 源码资产</li>
+          <li>TypeScript 数据契约 (prototype-data.ts)</li>
+          <li>四类测试证据总卡 (LESSON_07_EVIDENCE_INDEX.md)</li>
+          <li>Codex 独立盲审报告 (LESSON_08_AUDIT_REPORT.md)</li>
+          <li>部门物理红线清册 (DEPARTMENT_REDLINES.md)</li>
+        </ol>
+      </div>
+
+      <div class="console-output" id="simConsoleLog">
+        > Ready to package. Click button below to run package-it-handover.ps1.
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <button class="sim-btn" onclick="runPackaging()">🚀 一键生成 IT_HANDOVER_PACKAGE.zip 大礼包</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 03: IT DEFENSE COUNTERMEASURES -->
+<section>
+  <h2><span class="num">03</span> 🛡️ 向 IT 部门汇报时的 3 大尖锐问题攻防答辩卡</h2>
+  
+  <div class="card focus">
+    <span class="badge blue">答辩卡 1: API 与数据库接入</span>
+    <h3>IT 架构师问：“你这个原型如何接入我们现有的后端 MySQL 和 API？”</h3>
+    <p style="font-size: .92rem; color: #1e3a8a; background: #eff6ff; padding: .6rem .8rem; border-radius: 6px;">
+      🎙️ <b>主管标准回答</b>：“我们在第 9 课已经对确定性业务逻辑和 AI 概率逻辑进行了物理切割，并挂载了标准 API MCP 插座。前端数据流完全由 TypeScript 类型契约所定义。你们 IT 接手后，只需用真实 REST API 替代 Mock 接口插座，前端 1 行代码都不需改！”
+    </p>
+  </div>
+
+  <div class="card focus">
+    <span class="badge blue">答辩卡 2: 代码漏洞与权责</span>
+    <h3>IT 架构师问：“如果 AI 生成的代码存在隐蔽安全漏洞，谁来负责？”</h3>
+    <p style="font-size: .92rem; color: #1e3a8a; background: #eff6ff; padding: .6rem .8rem; border-radius: 6px;">
+      🎙️ <b>主管标准回答</b>：“所有代码都经过了主从多 Agent 架构盲审。部署了 CLAUDE.md 护栏、四类测试证据链与 Codex 只读盲审报告。每行合入代码都有物理证据存根，最高合并裁决权 100% 由我人工签署，权责物理清晰！”
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 04: GRADUATION CERTIFICATE -->
+<section>
+  <h2><span class="num">04</span> 🎉 全套 10 课结业与超级业务 PM 证书</h2>
+
+  <div class="cert-box">
+    <h3 style="font-size: 1.8rem; color: var(--green); margin-bottom: 0.5rem;">🏆 AI 业务原型开发训练营 · 结业证明</h3>
+    <p style="font-size: 1.05rem; color: var(--ink-soft);">恭喜您成功穿透从 <b>L1 单工具调用</b> 到 <b>L5 多 Agent 协作盲审</b> 的完整受控 AI 架构！</p>
+    <div style="margin: 1.2rem 0; font-weight: 800; font-size: 1.2rem; color: #0f172a;">
+      获得称号：【超级业务 PM / 受控 AI 原型总架构师】
+    </div>
+    <div style="font-size: 0.88rem; color: var(--ink-soft);">
+      掌握核心能力：薄切片状态机 | `CLAUDE.md` 护栏 | 双 MCP 四类证据链 | Codex 独立盲审 | Mock 降级保护 | IT 交接包
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 05: EXIT TICKET QUIZ -->
+<section>
+  <h2><span class="num">05</span> 课堂退场盖章测试 (Exit Ticket)</h2>
+  <div class="card">
+    <h3>题目：明确划定绝对禁止 AI 自动化代理、必须由人类全流程审批的文件被称为？</h3>
+    <div class="quiz-option" onclick="checkQuiz(this, true)">A. 部门不可 Agent 化物理红线清册 (DEPARTMENT_REDLINES.md)</div>
+    <div class="quiz-option" onclick="checkQuiz(this, false)">B. package.json 依赖文件</div>
+    <div class="quiz-option" onclick="checkQuiz(this, false)">C. 临时聊天框记录</div>
+    <div id="quiz-result" style="margin-top: 1rem; font-weight: 700; display: none;"></div>
+  </div>
+</section>
+
+<footer>
+  第 10 课 · 终局收官 · 主管 AI 原型制作训练营全套完结！路线图：<a href="../docs/COURSE_ROADMAP.html">docs/COURSE_ROADMAP.html</a>
+</footer>
+
+</div>
+
+<script>
+function runPackaging() {
+  const log = document.getElementById('simConsoleLog');
+  log.innerHTML = "> Executing scripts/package-it-handover.ps1...<br>";
+  setTimeout(() => {
+    log.innerHTML += "> [1/3] Verifying key handover assets...<br>";
+    log.innerHTML += "  [OK] docs/IT_ENGINEER_QUICKSTART.md<br>";
+    log.innerHTML += "  [OK] docs/DEPARTMENT_REDLINES.md<br>";
+    log.innerHTML += "  [OK] docs/LESSON_07_EVIDENCE_INDEX.md<br>";
+    log.innerHTML += "  [OK] docs/LESSON_08_AUDIT_REPORT.md<br>";
+    log.innerHTML += "  [OK] src/mocks/prototype-data.ts<br>";
+    log.innerHTML += "  [OK] CLAUDE.md<br>";
+    log.innerHTML += "> [2/3] Compressing into dist/IT_HANDOVER_PACKAGE.zip...<br>";
+    log.innerHTML += "<span style='color:#4ade80;'>✅ [3/3] Package generated successfully! Output: dist/IT_HANDOVER_PACKAGE.zip (100% IT Ready)</span>";
+  }, 1000);
+}
+
+function checkQuiz(el, isCorrect) {
+  const result = document.getElementById('quiz-result');
+  document.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.classList.remove('selected-correct', 'selected-wrong');
+  });
+  if (isCorrect) {
+    el.classList.add('selected-correct');
+    result.style.color = 'var(--green)';
+    result.innerText = '✅ 正确！`docs/DEPARTMENT_REDLINES.md` 是明确划定资金与法务等安全禁区的物理红线清册！';
+  } else {
+    el.classList.add('selected-wrong');
+    result.style.color = 'var(--red)';
+    result.innerText = '❌ 错误。请重新选择！';
+  }
+  result.style.display = 'block';
+}
+</script>
+
+</body>
+</html>

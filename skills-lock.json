@@ -1,11 +1,11 @@
 {
   "version": 1,
   "skills": {
-    "teaching-lesson-plan": {
-      "source": "mohitagw15856/pm-claude-skills",
+    "alterlab-teaching-design": {
+      "source": "alterlab-ieu/alterlab-academic-skills",
       "sourceType": "github",
-      "skillPath": "skills/teaching-lesson-plan/SKILL.md",
-      "computedHash": "cd5017102672ac09a06ecebb718ef1f3bd5bd212b7130703def104a944cafda5"
+      "skillPath": "skills/core/alterlab-teaching-design/SKILL.md",
+      "computedHash": "ee6b9fcddc9a58e39227461997528ee3a261f8b75697c0ca048feffda4f84451"
     },
     "incremental-implementation": {
       "source": "addyosmani/agent-skills",
@@ -15,6 +15,12 @@
       "upstreamRef": "bdf76c7c6b7b3b3e01bb15c9fdc42ac5351855c1",
       "adaptationNotes": "Adapted for Claude Code CLI with Step-level Workflow authorization gate (授权执行 Step N), persistent plan state machine (docs/LESSON_04_IMPLEMENTATION_PLAN.md), selective two-commit state transition protocol, prototypeState debug toggle, and Verifier Subagent silent self-tests.",
       "computedHash": "f086bddf64e992d7db8b701db5f5aca9aa7cb13ec5fb2bed053c01b3cf2a5bc7"
+    },
+    "teaching-lesson-plan": {
+      "source": "mohitagw15856/pm-claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/teaching-lesson-plan/SKILL.md",
+      "computedHash": "cd5017102672ac09a06ecebb718ef1f3bd5bd212b7130703def104a944cafda5"
     }
   }
 }
