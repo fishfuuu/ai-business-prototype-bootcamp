@@ -1,153 +1,68 @@
 ---
 name: teaching-lesson-plan
-description: "Design a structured lesson plan incorporating Backward Design (Wiggins & McTighe), Constructive Alignment (Biggs), Bloom's Taxonomy ABCD framework, WHERETO activities, V3 Dual-Mode Student Guide architecture, and evidence-based assessment. Use when asked to write a lesson plan, course outline, teaching session, workshop curriculum, or training module."
+description: "Design a Lesson Design Brief (教学推理中间层) using Backward Design (Wiggins & McTighe), Constructive Alignment (Biggs), Bloom's Taxonomy ABCD framework, and WHERETO as diagnostic/coverage lenses. Use when asked to design learning objectives, evidence, or activity logic for a lesson. This skill produces only the Lesson Design Brief; it does not produce final TEACHER_PLAN or GUIDE files."
 ---
 
-# Teaching Lesson Plan Skill (Advanced Pedagogy Fused Version V3)
+# Teaching Lesson Plan Skill (Lesson Design Brief)
 
-Produces a complete, highly structured lesson plan and student guide for any subject, audience, or corporate setting. Fuses **Backward Design**, **Constructive Alignment**, **Bloom's Taxonomy (ABCD)**, and **V3 Dual-Mode Student Architecture** with practical time-boxed activities, formative assessment, and dual-layer misconception tables.
+Produces a **Lesson Design Brief** — the pedagogical reasoning intermediate layer for a single lesson. It does **not** produce final `TEACHER_PLAN` or `GUIDE` files, and it does not modify repository course materials.
 
-## Core Frameworks Integrated
+## Role Boundaries
 
-1. **Backward Design (逆向设计)**:
-   - **Stage 1 (Desired Results)**: Enduring understandings ("Big Idea"), essential questions, knowledge & skills.
-   - **Stage 2 (Acceptable Evidence)**: Formative and summative assessment strategy before planning activities.
-   - **Stage 3 (Learning Plan - WHERETO)**: Where, Hook, Equip, Rethink, Evaluate, Tailor, Organize.
-2. **Constructive Alignment (建构性对齐)**:
-   - Ensure 100% alignment between **Learning Outcomes**, **Teaching Activities**, and **Assessment Tasks**.
-3. **Bloom's Revised Taxonomy (ABCD Formula)**:
-   - **A**udience ("Students will..."), **B**ehavior (Action verb), **C**ondition ("Given a scenario..."), **D**egree ("with 80% accuracy / according to standard").
-4. **V3 Dual-Mode Student Guide (双模学员指南)**:
-   - 引言背景原理目标 + Fast-Track 步骤 + Self-Study Deep-Dive原理解析 + 2–3 个精选核心概念卡 + 三层流程图元模式 + 双重误区保障 + 3–5 题测试题库。
+- This skill only generates the Lesson Design Brief (教学推理中间层).
+- Final `TEACHER_PLAN` / `GUIDE` rendering is the sole responsibility of `teacher-plan-architect` (TPA), which consumes a HANDOFF_READY Brief.
+- This skill does not own the Brief artifact, lifecycle state, artifact ownership, or approval power. It only provides method and rendering constraints.
+- `HANDOFF_READY` means the Brief is complete per the schema; it is **not** an approval, not DESIGN_REVIEWED/FROZEN, and not user approval.
 
----
+## Schema Authority
+
+- The **only** schema authority for the Brief is:
+  `.agents/skills/teaching-lesson-plan/references/lesson-design-brief-template.md`
+- That reference file is the sole owner of `contract_version`. TPA only declares which version it consumes and validates fields against it.
+- If the reference file is missing, unreadable, or its `contract_version` cannot be resolved, fail closed: stop and report; do not proceed with an ad-hoc schema.
+
+## Trigger Boundaries
+
+Use this skill when the request is to design **learning objectives, evidence, or activity logic** for a lesson (Lesson Design Brief only).
+
+Do **not** use this skill when the request is to write repository `TEACHER_PLAN` / `GUIDE` files — that is TPA's trigger.
 
 ## Required Inputs
 
 Ask the user for these if not provided:
-- **Subject or topic**
-- **Audience** (age group, experience level, group size)
-- **Session length** (30 / 45 / 60 / 90 / 120 minutes)
-- **Setting** (classroom / workshop / online / corporate training / one-to-one)
+- **Lesson number and course context** (must reference the locked UIC / frozen design specification / approved roadmap)
+- **Audience** (this project: business department heads, default no code/Git/MCP/terminal background)
+- **Session length** (this project: 90 minutes hard upper bound, adjustable blocks)
 - **Learning goal** (what should participants know or be able to do by the end?)
 - **Prior knowledge** (what can you assume they already know?)
 
----
-
 ## Output Structure
 
----
+The Brief must follow the field contract in `references/lesson-design-brief-template.md` exactly, including:
 
-# Lesson Plan: [Topic]
+1. **Lesson metadata**: lesson number, course context, authority chain references (locked UIC → frozen design specification → approved roadmap → approved lesson artifacts → skill defaults).
+2. **Learning objectives**: Bloom ABCD format; recognition-level objectives are allowed, but this course's summative objectives default to Apply and above, with business-observable Degree.
+3. **Evidence design**: what evidence would show the objective is met; distinguish auto-checkable fixed-answer items from teacher-judged reasoning/risk/quality evidence.
+4. **Activity logic**: coverage functions (teacher demo / standard case / personal migration / evidence / closure) that may be merged or reordered; must sum to the upstream time budget (≤ 90 minutes).
+5. **Concept exposure ledger entry**: first-introduced vs revisited; student-facing named label vs plain-language experience vs teacher-only background; independently assessed judgments (composite names must not hide concept load).
+6. **Safety boundary declaration**: Mock/no-key rules, pre-de-identification, teacher real calls outside the repository, no fabricated capabilities.
+7. **Readiness declaration**: `brief_readiness: DRAFT | HANDOFF_READY` — completeness only, not approval.
 
-**Subject:** [Subject] | **Audience:** [Description] | **Duration:** [X minutes]
-**Setting:** [Setting] | **Group size:** [N]
+## Fail-Closed Rules
 
----
-
-## 1. Backward Design: Desired Results & Alignment Map
-
-### Established Goals & Essential Questions
-- **Big Idea / Enduring Understanding**: [What learners retain 1 year later]
-- **Essential Questions**: [1–2 provoking questions guiding inquiry]
-
-### Learning Objectives (Bloom's ABCD Framework)
-By the end of this session, participants will be able to:
-1. **[Objective 1 - Apply/Analyze/Create]**: Given [Condition], learners will [Behavior verb] to [Degree/Standard].
-2. **[Objective 2]**: Given [Condition], learners will [Behavior verb] to [Degree/Standard].
-3. **[Objective 3]**: Given [Condition], learners will [Behavior verb] to [Degree/Standard].
-
-### Constructive Alignment Audit
-| Learning Objective | Bloom's Level | Teaching Activity | Assessment Method | Alignment Check |
-|---|---|---|---|---|
-| Objective 1 | Apply (3) | Demonstration & Guided Practice | Hands-on Task / Log Verification | ✅ Aligned |
-| Objective 2 | Analyze (4) | Scenario Audit & Debugging | Misconception Discussion | ✅ Aligned |
-
----
-
-## 2. Materials and Preparation
-
-- [ ] [Resource 1 — slides, handout, equipment, code repository]
-- [ ] [Resource 2 — pre-requisite files, environment scripts]
-- [ ] Room / Environment setup: [CLI, VS Code, Git clean state, room layout]
-
----
-
-## 3. Lesson Structure (WHERETO Sequence & Timeboxing)
-
-| Time | WHERETO Phase | Activity & Content | Format / Interaction |
-|---|---|---|---|
-| [00:00] | **W** (Where & Big Picture) | Hook / Opener: Grab attention, show end-state comparison | Whole group |
-| [00:05] | **H** (Hook Curiosity) | Connect prior knowledge & surface real-world pain points | Discussion / Q&A |
-| [00:15] | **E** (Equip Knowledge) | Direct instruction of core concepts (Engineering definition -> Mechanism -> Metaphor -> Value) | Explanation / Live Demo |
-| [00:30] | **R** (Rethink & Practice) | Guided practice with worked examples & step-by-step scaffolding | Hands-on task / Pairs |
-| [00:50] | **E** (Evaluate Progress) | Independent practice & HITL gate verification | Independent task |
-| [01:05] | **T** (Tailor & Support) | Formative assessment check & individual debugging support | Check-in / Q&A |
-| [01:15] | **O** (Organize & Closure) | Summary, Exit Ticket assessment, connect to next session | Whole group |
-
----
-
-## 4. Key Explanations & Standard Four-Step Concept Cards (2–3 精选)
-
-### 💡 核心概念卡 1：[IT标准术语 (中文常用译名)]
-1. **硬核工程定义**: [Standard technical/business definition]
-2. **底层运作机制**: [How data/code flows under the hood]
-3. **具象业务比喻**: [Relatable real-world analogy]
-4. **IT 沟通场景**: [What to say when talking to IT/team]
-
-### 💡 核心概念卡 2：[本课工程范式/机制]
-1. **硬核工程定义**: ...
-2. **底层运作机制**: ...
-3. **具象业务比喻**: ...
-4. **IT 沟通场景**: ...
-
----
-
-## 5. Formative Assessment & Exit Ticket (3–5 题)
-
-**During session (Assessment FOR Learning):**
-- Method 1: Cold calling / Thumbs up-down check
-- Method 2: Command/Log verification (`verify-project.ps1`)
-
-**Exit Ticket & Question Bank (3–5 题，上限 5 题):**
-- **Question 1**: [Tests core cognitive objective]
-- **Question 2**: [Tests real-world application/IT communication scenario]
-- **Question 3**: [Tests conceptual distinction]
-- **Question 4-5 (Optional)**: [Self-study extension / hands-on scenario]
-
----
-
-## 6. Dual-Layer Misconceptions & Troubleshooting
-
-### 💡 常见概念误区与正确理解 (Mindset Transformation)
-| 常见误区 | 正确硬核理解 | 如何纠偏与护栏防护 |
-|---|---|---|
-| [What learners get wrong] | [The correct engineering/business reality] | [Specific demo, guardrail, or explanation] |
-
-### ❓ 常见操作报错与 Troubleshooting 指南
-| 报错/异常现象 | 物理原因 | 解决与纠偏方案 |
-|---|---|---|
-| [Error message / symptom] | [Root cause] | [Actionable fix command] |
-
----
-
-## 7. Differentiation & Support Strategies
-
-**For those who need more support (Scaffold):**
-- Provide pre-built starter packages, sentence starters, or worked examples.
-
-**For those ready for a challenge (Extension):**
-- Provide advanced edge-case debugging, custom rule additions, or architecture extensions.
-
----
+- **Wrong lesson**: if the Brief's lesson number does not match the requested lesson, stop and report.
+- **Stale source**: if the Brief references a source (UIC/design/roadmap) that is not the current locked/frozen/approved version, stop and report.
+- **Invalid readiness**: if `brief_readiness` is not HANDOFF_READY, downstream (TPA) must not consume the Brief.
+- **Spec gap**: if the Brief would change objectives, non-goals, or acceptance meaning, classify it as a specification gap and return to DRAFT; do not silently absorb it.
 
 ## Quality Checks & Anti-Patterns
 
 - [ ] Learning objectives use action verbs (ABCD format, avoiding vague "understand")
-- [ ] 100% Constructive Alignment (Outcomes, Activities, Assessments point in the same direction)
-- [ ] WHERETO sequence is followed with timeboxed activities adding up to session length
-- [ ] Includes Standard Four-Step Concept Cards (2–3 精选: Definition -> Mechanism -> Metaphor -> Value)
-- [ ] Student Guide features V3 Dual-Track instructions & Three-Layer Flow Diagram Meta-Pattern
-- [ ] Student Guide includes Background, Principles & Objectives in Intro (No meta-explanation fluff)
-- [ ] Student Guide assessment bank contains 3–5 questions (Max 5)
-- [ ] Includes Dual-Layer Misconceptions (Mindset table + Troubleshooting guide)
+- [ ] Constructive Alignment is used as a diagnostic lens; do not claim "100% alignment" as a mechanical guarantee
+- [ ] WHERETO is used as a diagnostic/coverage lens, not a mandatory seven-cell compliance table or the only script
+- [ ] Coverage functions sum to the upstream time budget (≤ 90 minutes); no fixed seven-segment sequence is required
+- [ ] Concept exposure ledger distinguishes named/plain/background and independently assessed judgments
+- [ ] Exit Ticket: 1–2 mandatory prompts; additional questions go to an optional after-class question bank
+- [ ] No fabricated capabilities: do not claim `verify-project.ps1`, `npm run verify`, `doctor`, or `test:ui` as implemented classroom capabilities unless the repository actually provides them
+- [ ] Safety boundary: Mock/no-key, pre-de-identification, teacher real calls outside the repository
+- [ ] `brief_readiness` is set and means completeness only, not approval

@@ -1,93 +1,87 @@
 ---
 name: teacher-plan-architect
-description: Master skill for designing high-caliber enterprise AI lesson plans and student guides. Enforces the 4-step concept definition framework (Definition -> Mechanism -> Metaphor -> Handoff Value), 8-module Teacher Plan structure, 5-pause-point time allocation, V3 Dual-Mode Student Guide architecture, and evidence-driven verification.
+description: "The sole final renderer for the 8-module TEACHER_PLAN (教师教案). Consumes a HANDOFF_READY Lesson Design Brief and renders the repository's 8-module teacher plan structure. Does not self-approve, does not auto-produce GUIDE, and does not modify repository course materials beyond the authorized TEACHER_PLAN write."
 ---
 
-# Teacher Plan Architect (企业级 AI 课程教案设计高手 Skill)
+# Teacher Plan Architect (教师教案终稿渲染器)
 
-当需要编写或重构《教师备课与控场指南 (TEACHER_PLAN)》或《学员操作指南 (GUIDE)》时，严格遵守以下 6 维硬核教学设计架构。
+当需要编写或重构《教师备课与控场指南 (TEACHER_PLAN)》时，本 Skill 是**唯一终稿渲染器**。它消费 HANDOFF_READY 的 Lesson Design Brief，按仓库八模块教案结构渲染教师教案。
 
----
+## Role Boundaries
 
-## 1. 核心概念【四步解析公式】与每课精选原则
+- **唯一职责**：渲染八模块教师教案（TEACHER_PLAN）。
+- **不自我授权**：不自我批准教案；教案需 Independent Review + 用户/课程负责人批准后才进入 GUIDE 阶段。
+- **不自动产 GUIDE**：GUIDE 由后续独立步骤生成，需教案批准后执行。
+- **不拥有生命周期**：本 Skill 不持有 lifecycle、artifact ownership 或审批权，只提供方法与渲染约束。
+- **不修改课程材料**：除授权的 TEACHER_PLAN 写入外，不修改 GUIDE、派生资产或其他仓库文件。
 
-拒绝任何“只给比喻不给原理”的浅薄解释，也不贪多嚼不烂。每节课精选 **2–3 个最核心概念**（1 个标准 IT 术语 + 1-2 个工程范式），统一按以下 4 步递进解析：
+## Input Contract
 
-1. **硬核工程定义 (Engineering Definition)**：使用标准的 IT/软件工程术语，不作修饰，讲清物理本质。
-2. **底层运作机制 (Underlying Mechanism)**：解释代码、内存、接口或数据在底层到底是如何流转与执行的。
-3. **具象业务比喻 (Business Metaphor)**：抛出形象比喻（如厨师砧板、赛马鞍具），帮助非技术主管建立大脑记忆锚点。
-4. **IT 沟通与交接价值 (Handoff Value)**：明确主管学完后在业务落地与向 IT 部门开会交接时的具体专业表达与产出。
+本 Skill 只消费 **HANDOFF_READY** 的 Lesson Design Brief：
 
----
+- Brief schema 唯一权威：`.agents/skills/teaching-lesson-plan/references/lesson-design-brief-template.md`
+- `contract_version` 由该 reference 文件唯一拥有；本 Skill 只声明消费的版本并做字段校验。
+- `brief_readiness` 必须为 `HANDOFF_READY`（仅表示完整性，不是批准）。
+- Brief 的 authority refs 必须指向当前 locked UIC / frozen design spec / approved roadmap / approved lesson artifacts。
 
-## 2. 课堂时间与控场节奏 (90 分钟极客控场 & 8 大执教模块硬约束)
+## Fail-Closed Rules
 
-教师备课教案 (`TEACHER_PLAN.md`) 必须按**讲师执教动线**严格划分为 **8 大执教模块**，并包含 5 个固定暂停点（Pause Points）：
+- **Wrong lesson**：Brief 的 `lesson_number` 与请求不符 → 停止并报告。
+- **Stale source**：Brief 引用的 UIC/design/roadmap 不是当前锁定/冻结/批准版本 → 停止并报告。
+- **Invalid readiness**：`brief_readiness` 不是 `HANDOFF_READY` → 停止，不消费。
+- **Schema drift**：`contract_version` 不匹配或字段缺失 → 停止并报告。
+- **Spec gap**：Brief 会改变目标、非目标或验收含义 → 分类为规格缺口，返回 DRAFT，不静默吸收。
+
+## 8-Module Teacher Plan Structure
+
+教师教案按以下 8 大执教模块渲染（模块可合并/重排，但必须覆盖）：
 
 | 模块 | 核心内容 | 关键要求 |
 | :--- | :--- | :--- |
-| **一、 课程元数据与定位** | 元数据、定位、背景痛点、版本记录 | 集中定义课程基本属性与演进信息 |
-| **二、 逆向目标与四步概念卡** | Bloom ABCD 能力矩阵 + 2-3 个核心概念卡 | 目标与硬核概念集中对齐 |
-| **三、 教学准备与沙箱隔离** | 准备资源、沙箱规则、环境检查命令 | 罗列开课前需要运行的 powershell 命令 |
-| **四、 90分钟控场主线与 Pause Points** | WHERETO 时间表 + 5 个固定 Pause Points | 提问问答直接嵌入时间表，避免翻页 |
-| **五、 逐 Task 极客示范与巡视指导** | 按 Task 深度聚合：示范、口令、巡视、辅导 | 示范动作、盖章口令、巡视卡点全在同一 Task 下 |
-| **六、 现场 Debug 预案与自动化校验** | Troubleshooting 表 + `verify-project.ps1` | 应急排错与脚本校验指令 |
-| **七、 退场测试与课后拓展作业** | Exit Ticket 题库 (3-5题) + 巩固作业 | 结束前 10 分钟评估与总结 |
-| **八、 教师备课质量自测 Checklist** | 课前 1 分钟检查 Checklist | 确保备课质量闭环 |
+| **一、课程元数据与定位** | 元数据、定位、背景痛点、版本记录 | 集中定义课程基本属性与演进信息 |
+| **二、逆向目标与四步概念卡** | Bloom ABCD 能力矩阵 + 2–3 个核心概念卡 | 目标与核心概念集中对齐 |
+| **三、教学准备与沙箱隔离** | 准备资源、沙箱规则、环境检查 | 罗列开课前需要检查的环境项 |
+| **四、90 分钟控场主线** | 时间预算表（总 ≤ 90 分钟，可调） | 提问问答嵌入时间表；不设固定暂停点数量与位置 |
+| **五、逐 Task 示范与巡视指导** | 按 Task 聚合：示范、口令、巡视、辅导 | 示范动作、口令、巡视卡点在同一 Task 下 |
+| **六、现场 Debug 预案** | Troubleshooting 表 | 应急排错预案；不虚构未实现的验证命令 |
+| **七、退场测试与课后拓展作业** | Exit Ticket（1–2 个必答提示）+ 巩固作业 | 结束前评估与总结 |
+| **八、教师备课质量自测 Checklist** | 课前检查 Checklist | 确保备课质量闭环 |
 
----
+## 四步概念卡
 
-## 3. 学员操作指南 (GUIDE V3) 双模构建规范
+每个首次出现的“必须掌握”概念使用四步卡，第四步必须回指学员**刚完成的哪一步实操**：
 
-学员指南 (`GUIDE.md`) 必须兼具“课堂极速实操”与“无痛独立自学”双重体验，严格遵循以下 6 大输出标准：
+1. **是什么 / 不是什么**：标准定义与边界。
+2. **机制**：底层实际流转逻辑。
+3. **业务类比与反例**：记忆锚点 + 反例澄清。
+4. **交接价值**：对应刚完成的哪一步实操，以及主管为何需要用该词与 IT 沟通或作出判断。
 
-1. **引言【背景/宏观闭环/目标】专栏与解耦原则**：
-   - 顶部用 `> 💡 **本课的核心思想只有一句话：...**` 顶置理念。
-   - `1.1` 业务背景与真实痛点。
-   - `1.2` 宏观受控闭环（讲清端到端系统工作流，**严禁在 1.2 中逐个拆解单点技术机制，避免与第二专栏重复**）。
-   - `1.3` 核心学习目标。
-2. **集中【💡 本课核心工程概念卡】专栏**：
-   - 在 Task 之前单独设区，精选 2-3 个核心概念，专精微观术语速查，统一按四步解析卡格式物理输出。
-3. **流程图三层元模式 (Diagram Meta-Pattern)**：
-   - **模式 A (痛点反例)**：展现实用野生盲开导致的白屏/失控灾难。
-   - **模式 B (受控流转图)**：展示标准工作流，必须画出 **PASS 双提交归档** 与 **FAIL 补丁快照清扫还原** 双分支。
-   - **模式 C (机制/调试器图解)**：针对当前课的核心概念（调试器/三分记忆/诊断卡等）给出现场视效框图。
-4. **Task 任务双轨道设计**：
-   - 每个 Task 物理区分：`⚡ 极速操作步骤`、`💡 独立自学原理解析` 与 `🔍 代码 Before/After 对比`。
-5. **双重误区与排错保障**：
-   - 必须同时包含 **`💡 常见概念误区与正确理解` (思维观念重塑 4 大误区表)** 与 **`❓ 常见操作报错` (Troubleshooting 排错指南)**。
-6. **灵活测试题库 (3–5 题)**：
-   - 题库根据当堂课重点教学内容**灵活设计 3–5 道题（上限 5 题）**，拆分为“阶段 1 课堂退场测试”与“阶段 2 课后自学拓展思考题”。
+单概念讲解控制在 3–5 分钟。安全/权限/数据前置概念必须在实操前讲。
 
----
+## 双 Commit 与 CEO 决策树边界
 
-## 4. 人在回路 (HITL) 授权与安全防护线
+- **双 Commit** 仅为两阶段版本记录/主管确权比喻（D18），Git 不理解业务审批；不得把 Git 操作描述为业务审批机制。
+- **CEO 三大决策树**是主管处置框架，不是代码运行时硬控制，也不是行业标准。
+- 教案中不得把文字规则冒充 runtime hard control；控制层按 guidance / workflow gate / runtime hard control 分层描述。
 
-教案中必须显式标明**安全隔离防护墙**：
-* **改前必存档**：在下达修改指令前，必须执行节点手动存档 `git commit -m "baseline: ..."`。
-* **修改须授权**：明确绝不允许 Agent 自行修改代码，必须等待主管输入明确盖章口令（如 `同意保存实施计划` / `确认完成 Step 1`）。
-* **越界一键撤销**：指导主管监视 Diff 红绿视图，一旦改崩，通过 `git restore` 或还原命令 1 秒无损恢复干净工作区。
+## 证据链
 
----
+教案结尾必须包含明确的证据验收机制，但不得虚构能力：
 
-## 5. 四类可复核证据链 (Evidence-Driven Validation)
-
-教案结尾必须包含明确的证据验收机制：
-1. **视觉证据**：试衣镜页面对比截图或调试器状态切换。
+1. **视觉证据**：页面/界面对比截图或状态切换。
 2. **行为证据**：交互点击无报错日志，终端网络输出正常。
-3. **工程证据**：`powershell -File .\scripts\verify-project.ps1` 输出 `[PASS]`。
-4. **范围证据**：`git status` 确认未修改超出许可范围的文件，Working Tree 恢复 `100% Clean`。
+3. **工程证据**：以真实运行输出为准；`verify-project.ps1` 是遗留母仓库维护检查，不作为课堂/业务通过证明。
+4. **范围证据**：`git status` 确认未修改超出许可范围的文件；不要求“Working Tree 100% Clean”作为教案通过条件。
 
----
-
-## 6. 教案与指南质量自我审计 Checklist
+## 教案与指南质量自我审计 Checklist
 
 在生成或重构教案后，自我审计是否满足：
-- [ ] 教师教案 100% 匹配 **8 大执教模块** 标题，包含 5 个固定 Pause Points。
-- [ ] 所有核心概念均包含了【硬核定义 + 底层机制 + 业务比喻 + IT交接】4 步。
-- [ ] 学员指南 1.2 聚焦宏观端到端流程闭环（不与 2 核心概念卡产生重叠）。
-- [ ] 学员指南在 Task 之前集中输出了 2-3 个核心概念卡。
-- [ ] 学员指南流程图包含了模式 A (反例) + 模式 B (PASS/FAIL双分支) + 模式 C (机制图)。
-- [ ] 学员指南包含了“双轨道任务步骤”与“双重误区与排错保障表”。
-- [ ] 学员指南巩固测试题根据课程内容设计了 3–5 道题（上限 5 题）。
-- [ ] 包含了 PowerShell 自动化校验脚本的 `[PASS]` 验证闭环。
+
+- [ ] 教师教案覆盖 8 大执教模块（可合并/重排，不设固定暂停点数量）。
+- [ ] 所有核心概念均包含【是什么/不是什么 + 机制 + 业务类比与反例 + 交接价值】4 步，第四步回指刚完成实操。
+- [ ] 时间预算总长 ≤ 90 分钟，真实时长经逐课试讲校准，不伪造精确时间数据。
+- [ ] 概念暴露台账区分 named/plain/background 与独立考核判断。
+- [ ] 双轨教学（教师统一工作台 / 学员个人原型）与三类成果分离（课堂内可见成果 / 课间微任务 / 每周完整成果）已覆盖。
+- [ ] Mock/无密钥/安全边界已声明；教师真实调用完全在仓库外。
+- [ ] 未虚构 `verify-project.ps1`、`npm run verify`、`doctor`、`test:ui` 等未实现能力。
+- [ ] 教案未自我批准；批准记录引用真实 Independent Review + 用户/课程负责人批准。
