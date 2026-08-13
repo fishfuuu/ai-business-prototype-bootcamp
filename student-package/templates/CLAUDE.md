@@ -21,7 +21,6 @@
 1. `START_HERE.md`
 2. `README.md`
 3. `DESIGN.md`
-4. `docs/COMPONENT_CATALOG.md`
 5. 与本次任务直接相关的页面和组件
 
 涉及第一课时，还应阅读：
@@ -130,10 +129,7 @@
 - `SimpleBarChart`
 - `SimplePieChart`
 
-完整说明：
-
-`docs/COMPONENT_CATALOG.md`
-
+完整说明见 DESIGN.md。\r\n
 页面负责业务含义，通用组件负责通用展示和交互。
 
 不得把单个页面的业务字段和计算口径固化进通用组件。

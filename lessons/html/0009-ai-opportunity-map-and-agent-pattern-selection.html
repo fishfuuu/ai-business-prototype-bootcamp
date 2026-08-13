@@ -1,0 +1,1087 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 9 课 · 画出部门 AI 机会与 Agent 范式选型图 | 主管 AI 训练营 V4</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #0f766e 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #5eead4; font-weight: 700; }
+  .hero h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #99f6e4; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #5eead4; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--teal); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--teal-soft); border-color: #5eead4; }
+  .card.warn { background: var(--amber-soft); border-color: #fde68a; }
+  .card.focus { background: var(--plum-soft); border-color: #d8b4fe; }
+  .card.blue { background: var(--blue-soft); border-color: #bfdbfe; }
+
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+
+  code {
+    font-family: "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+
+  .quote {
+    border-left: 4px solid var(--teal); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+
+  /* Grid Layouts */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--teal); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(15, 118, 110, 0.2);
+  }
+  .btn:hover { background: #0f766e; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Simulator */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: .9rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+
+  .mode-tabs {
+    display: flex; gap: .6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+  }
+  .mode-btn {
+    flex: 1; min-width: 200px; padding: .8rem 1rem; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: .88rem; font-weight: 700; cursor: pointer; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s; text-align: center;
+  }
+  .mode-btn:hover { background: #e2e8f0; }
+  .mode-btn.active.raw { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .mode-btn.active.bounded { background: var(--teal-soft); border-color: var(--teal); color: #0f766e; }
+
+  .flow-display-canvas {
+    background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.4rem;
+    min-height: 260px; position: relative; transition: all .3s;
+  }
+  .flow-step-node {
+    background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .8rem 1.1rem;
+    margin-bottom: .8rem; font-size: .9rem; opacity: 0; transition: all .4s ease; transform: translateY(12px);
+  }
+  .flow-step-node.active { opacity: 1; transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .flow-step-node.error { border-color: #ef4444; background: #fff5f5; color: #991b1b; }
+  .flow-step-node.success { border-color: #10b981; background: #f0fdf4; color: #065f46; }
+  .flow-step-node.working { border-color: #0f766e; background: #e6f2f0; color: #0f766e; }
+
+  .node-title { font-weight: 800; font-size: .95rem; margin-bottom: .2rem; display: flex; align-items: center; justify-content: space-between; }
+  .node-desc { font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", monospace; font-size: .82rem;
+    padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 160px; overflow-y: auto;
+  }
+
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 1rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-space-between; align-items: flex-start; gap: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .prompt-copy-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: .92rem; font-weight: 600; line-height: 1.65; color: #0f172a;
+    white-space: pre-wrap; word-break: break-word; flex: 1;
+  }
+  .btn-copy {
+    background: #0f172a; color: #fff; border: none; border-radius: 8px; padding: .5rem 1rem;
+    font-size: .82rem; font-weight: 700; cursor: pointer; transition: all .2s ease; white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; align-self: flex-start;
+  }
+  .btn-copy:hover { background: #d97706; transform: translateY(-1px); }/* Fill in blanks */
+  .blank-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem; font-size: .95rem; line-height: 1.8;
+  }
+  .blank-select {
+    padding: .25rem .6rem; border-radius: 6px; border: 1.5px solid var(--teal); font-size: .9rem;
+    font-weight: 700; color: var(--teal); background: var(--teal-soft); cursor: pointer; outline: none;
+  }
+  .blank-select.ok { border-color: #10b981; background: #dcfce7; color: #15803d; }
+  .blank-select.err { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+  .blank-feedback { font-size: .85rem; margin-top: .5rem; font-weight: 600; display: none; }
+  .blank-feedback.show { display: block; }
+
+  /* Misconceptions Table */
+  .misc-table-container {
+    overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  }
+  .misc-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem;
+  }
+  .misc-table th {
+    background: #0f172a; color: #fff; font-weight: 700; padding: .85rem 1.1rem; border-bottom: 1px solid var(--line);
+  }
+  .misc-table td {
+    padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6;
+  }
+  .misc-table tr:hover { background: #fafaf9; }
+  .badge-misc { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .78rem; font-weight: 800; }
+  .badge-misc.red { background: #fee2e2; color: #991b1b; }
+  .badge-misc.green { background: #dcfce7; color: #15803d; }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem;
+  }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box {
+    background: var(--teal-soft); border: 1px solid #5eead4; border-radius: 10px; padding: 1rem 1.2rem;
+    margin-top: .8rem; font-size: .92rem; color: #0f766e; display: none; line-height: 1.6;
+  }
+  .ans-box.show { display: block; }
+
+  /* Quiz Cards */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; width: 100%; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--teal-soft); }
+  .quiz-q label input { margin-top: .35rem; accent-color: var(--teal); }
+  .quiz-q label.sel { background: var(--teal-soft); border-color: #5eead4; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+  .q-btn { margin-top: .6rem; }
+
+  .score {
+    display: none; margin-top: 1.2rem; margin-bottom: 1.5rem; background: #0f172a; color: #f5f1e8;
+    border-radius: 12px; padding: 1.2rem 1.6rem; text-align: center; font-size: 1.1rem;
+  }
+  .score.show { display: block; }
+  .score b { color: #4ade80; font-size: 1.4rem; }
+
+  /* Checklist Card */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--teal); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  /* Concept Cards Micro Architecture */
+  .concept-list {
+    display: flex; flex-direction: column; gap: 1.5rem; margin: 1.5rem 0;
+  }
+  .concept-card {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem 1.6rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .concept-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+
+  .concept-head {
+    font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; cursor: pointer;
+    list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .concept-head::-webkit-details-marker { display: none; }
+  .concept-head::after { content: '▼'; font-size: 0.6em; color: #94a3b8; transition: transform 0.2s; }
+
+  details[open] .concept-head {
+    border-bottom: 1px solid #f1f5f9; padding-bottom: .8rem; margin-bottom: .8rem;
+  }
+  details[open] .concept-head::after { transform: rotate(180deg); }
+
+  .concept-body { display: flex; flex-direction: column; gap: 1rem; }
+
+  .concept-pill {
+    padding-left: 1rem; font-size: .98rem; line-height: 1.75; color: #334155;
+  }
+  .concept-pill.iswhat { border-left: 3px solid #f59e0b; }
+  .concept-pill.howworks { border-left: 3px solid #64748b; }
+  .concept-pill.metaphor { border-left: 3px solid #0d9488; }
+  .concept-pill.howsee { border-left: 3px solid #3b82f6; }
+
+  .pill-label { font-weight: 800; display: inline-block; margin-bottom: .2rem; color: #1e293b; }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 09 · 流程级 AI 选型与三链责任</div>
+    <h1>画出部门 AI 机会与 Agent 范式选型图</h1>
+    <p class="sub"><b>不是“我的部门能不能用 Agent”，而是逐环节判断任务性质、可验证性、风险和合适范式。</b><br>从单点初筛扩展至流程级选型，明确拒绝不该用 AI 的环节，坚持最简单足够原则，搞清三链（开发工具链/业务 API 链/模型 API 链）责任与 Fallback 降级来源！</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 画出部门真实业务流程（6—10 个动作）；② 逐环节记录任务性质、可验证性、错误代价与数据风险；③ 选择 AI 介入层级并给出至少 1 个“明确不用 AI”的硬理由；④ 选择最简单足够的范式，画出三链责任与 Fallback 降级源，形成《部门 AI 机会与 Agent 范式选型图》。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 00: COURSE CONTEXT -->
+<section>
+  <h2><span class="num">01</span> 从一个智能候选点到整条流程，怎么选？</h2>
+  <p>第五课你选了一个智能候选点，但那只是"一个环节值得加 AI"的初筛。如果扩展到整条业务流程呢？哪些环节该用 AI、哪些不该、各用什么范式、数据从哪来、谁负责失败？第九课把这些判断从"一个点"扩展到"一条完整流程"。</p>
+  <div class="card focus">
+    <p><b>记住这句话：</b><br>
+    逐环节判断任务性质、可验证性、错误代价和数据风险，选择最简单足够的范式。至少要有一个"明确不用 AI"的有理由决定。</p>
+  </div>
+  <p>判断建立在前八课的业务契约、原型行为、失败、证据和评审之上，不是在第一课凭想象拍脑袋。</p>
+</section>
+<!-- SECTION 01: INTERACTIVE DEMONSTRATOR -->
+<section>
+  <h2><span class="num">02</span> 核心架构演进：空泛问“能不能用 Agent” vs 流程级逐环节精细选型</h2>
+  <p>通过下方交互演示，直观对比“盲目追赶时髦全盘加 AI引发混乱”与“流程级拆解 ➔ 拒绝不该用的 ➔ 匹配最简单足够范式 ➔ 三链与 Fallback 清晰”的流转差异：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎬 部门 AI 机会与范式选型图闭环动态演示</span>
+      <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
+    </div>
+    <div class="sim-body">
+
+      <div class="mode-tabs">
+        <button class="mode-btn active raw" id="mBtnRaw" onclick="runMode('raw')">🔴 模式 A：空泛问“能不能用 Agent” (所有环节都加AI/责任不清/出了问题互相推)</button>
+        <button class="mode-btn bounded" id="mBtnBounded" onclick="runMode('bounded')">🟢 模式 B：流程级精细选型 (流程拆解+明确拒绝+范式匹配+三链与Fallback)</button>
+      </div>
+
+      <div class="flow-display-canvas" id="flowCanvas">
+        <!-- JS rendered steps -->
+      </div>
+
+      <div class="console-output" id="consoleLog">
+        > 点击上方按钮运行模式推演…
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote">
+    💡 <b>一句话口诀</b>：拆解业务流程，逐环节评估风险；能用规则的不加 AI，能用 Workflow 的不用 Agent；三链责任划分清，降级 Fallback 标来源！
+  </div>
+</section>
+
+<!-- SECTION 02: 5 CORE CONCEPTS -->
+<section>
+  <section>
+  <section>
+  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <div class="concept-list">
+    <details class="concept-card">
+      <summary class="concept-head">1. AI 机会地图</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>以真实业务流程节点为单位判断 AI 机会，不以"部门想用 AI"为单位；不是从"AI 能做什么"出发，而是从"这个环节需要什么"出发。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>画出部门一条真实业务流程，拆成具体动作，逐个判断任务性质、可验证性、错误代价和数据风险；只有满足条件的动作才进入 AI 候选，不满足的明确拒绝。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>城市交通规划——不是先买公交车再找路线，而是先看每条路的客流需求，再决定哪条线适合公交、哪条适合地铁、哪条走路就行；不能每条路都配公交。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—2 你会画出部门业务流程并逐环节评估，这就是 AI 机会地图的基础。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">2. AI 介入层级迁移</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>不用 AI、辅助、建议、单步执行、受控 Agent 和受控闭环必须按风险与价值选择；不是从 L5 的单点初筛直接跳到部门全面 AI 化，而是把 L5 的方法迁移到每个环节。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>对每个环节判断——能用规则的不用 AI，需要建议但不自动执行用辅助，需要生成但不直接修改用建议，需要单步执行用单步，需要多步调查用受控 Agent，需要闭环但低风险用受控闭环。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>工厂自动化程度迁移——L5 是在一个工序上试自动化，L9 是把所有工序排开逐个判断自动化程度；不是所有工序都配最高自动化，有些工序人工更好。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3 你会对每个环节选择 AI 介入层级，明确拒绝 AI/Agent 的环节及理由。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">3. Agent 范式选型</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>在 Prompt、Skill、Workflow、ReAct、增量实施范式（Plan & Execute）、Routing、Evaluator-Optimizer、多 Agent 等方式中选择最简单足够者；不是越多范式越好，也不是多 Agent 就是高级。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>判断路径是否预先确定（是则用 Workflow），是否需要动态调查（是则用 ReAct），是否需要先规划再执行（是则用 增量实施范式（Plan & Execute）），是否需要评估优化（是则用 Evaluator-Optimizer）；单 Agent 足够时不拆多 Agent。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>工具箱选工具——锤子适合钉钉子，螺丝刀适合拧螺丝，不是每件工具都要用上，也不是越复杂的工具越好；选最简单足够的。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会对保留候选选择范式，补数据、工具、HITL 和停止条件。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">4. 三链区分</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>区分开发工具链、产品业务 API 链和模型 API 链中的对象、凭证、数据与责任；MCP 不等于业务 API，开发工具也不等于产品能力。三链不能混为一谈。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>开发工具链是 Claude/Codex/Playwright 等帮助开发的工具；产品业务 API 链是产品运行时调用的业务接口；模型 API 链是产品运行时调用的 AI 模型接口。三链中的对象、凭证、数据和责任分别归属不同 owner。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>建筑工地三条供应链——施工设备链（开发工具）、建材供应链（业务 API）、设计咨询链（模型 API）；三种链的供应商、合同和责任完全不同，不能混在一起管。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会画三链责任与 fallback，明确每条链的 owner。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. Fallback 来源与失败责任</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>降级结果必须显示来源、原因、限制和 owner，不能把 Mock/缓存结果伪装成真实成功；失败时必须有明确的责任人，不是"AI 出错了所以 AI 负责"。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>对每个 AI 候选环节写明降级方式（人工接管、规则降级、缓存回退）、降级来源标签（模拟/缓存/人工）、降级原因类型和失败责任人；降级结果不能冒充正常结果。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>航空公司备降——航班因天气备降其他机场时，必须告知旅客"备降原因、预计延误、替代方案"，不能假装"已到达目的地"；也不是"天气不好所以没人负责"。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会画三链责任与 fallback，选出一个优先候选和一个明确不做项。
+        </div>
+      </div>
+    </details>
+
+  </div>
+</section></section></section>
+
+<!-- SECTION 03: INTERACTIVE DEMONSTRATOR / THREE CHAINS SIMULATOR -->
+<section>
+  <h2><span class="num">04</span> 演练：三链区分 (开发工具 / 业务 API / 模型 API) 责任架构模拟</h2>
+  <p>点击下方 3 条供应链，预览各链的对象、凭证与责任归属：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🔗 三链架构与 Fallback 降级模拟终端</span>
+      <span style="font-size: .8rem; opacity: .8;">点击按钮查看三链责任划分</span>
+    </div>
+    <div class="sim-body">
+      <div class="mode-tabs">
+        <button class="mode-btn active bounded" onclick="runChain('dev')">🛠️ 1. 开发工具链 (Claude/Playwright/MCP)</button>
+        <button class="mode-btn" style="border-color:var(--amber); color:var(--amber);" onclick="runChain('biz')">🔌 2. 产品业务 API 链 (ERP/WMS 业务接口)</button>
+        <button class="mode-btn" style="border-color:var(--purple); color:var(--purple);" onclick="runChain('model')">🧠 3. 模型 API 链 (LLM 网关服务)</button>
+      </div>
+
+      <div class="console-output" id="chainTerminal" style="min-height: 140px;">
+        > 点击上方按钮查看三链责任与 Fallback 划分...
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
+<section>
+  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然授权口令卡</h2>
+
+<div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：画出部门一条真实业务流程，拆成具体人工/系统动作</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">请帮我画出我部门的一条真实业务流程，拆成具体动作。
+
+业务流程名称：【填写你的部门流程，如"收货→质检→上架→拣货→发货"】
+
+要求：
+1. 画出完整流程，拆成 6—10 个具体人工/系统动作
+2. 每个动作写清：
+   - 动作名称
+   - 输入是什么
+   - 输出是什么
+   - 当前谁在做（人工/系统/混合）
+3. 先不要想 AI，只画现状</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一条完整业务流程，拆成了 6—10 个具体动作，每个有输入、输出和当前做法。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：对每个动作记录输入、判断性质、可验证性、错误代价和数据风险</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">请对我在 Task 1 中拆解的每个业务动作做逐环节评估。
+
+对每个动作回答以下五项：
+1. 输入：需要什么输入数据或信息
+2. 任务性质：确定性（规则清晰、结果唯一）还是概率性（需要判断、语言理解）
+3. 可验证性：结果是否容易验证（高/中/低），验证标准是什么
+4. 错误代价：错了会造成什么后果（高/中/低），是否可逆
+5. 数据风险：涉及什么数据，是否敏感
+
+输出为一张评估表，不要只标"适合AI"。</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一张评估表，每个动作有五项评估，任务性质区分了确定性和概率性。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：选择 AI 介入层级，明确拒绝 AI/Agent 的环节及理由</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">请基于评估表，对每个动作选择 AI 介入层级。
+
+AI 介入层级：
+- 不用 AI：能用规则解决
+- AI 辅助：AI 提供建议但不自动执行
+- AI 建议：AI 生成内容但不直接修改
+- 单步执行：AI 执行一个动作
+- 受控 Agent：AI 多步调查，有人工检查点
+- 受控闭环：低风险可自动闭环
+
+要求：
+1. 对每个动作选一个层级
+2. 明确写出拒绝 AI/Agent 的环节及理由（至少一个"不用AI"）
+3. 理由要基于你自己部门的具体业务约束（如特定风险、责任归属、法规或操作约束），不是泛化的"觉得不需要"或照搬教师案例的逻辑
+4. 遵循最简单足够原则</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了每个动作的 AI 介入层级，有明确的拒绝理由。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：对保留候选选择范式，补数据、工具、HITL 和停止条件</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p4">请对保留 AI 候选的环节选择范式并补充完整方案。
+
+对每个候选环节回答：
+1. 范式选择：Prompt / Skill / Workflow / ReAct / 增量实施范式（Plan & Execute） / Evaluator-Optimizer / 多 Agent
+   - 选择理由（路径是否确定？是否需动态调查？是否需规划？）
+2. 数据：需要什么输入数据（标明 Mock 来源）
+3. 工具：需要调用什么工具
+4. HITL：在哪个具体节点需要人批准或停止
+5. 停止条件：什么情况下停止
+6. owner：谁负责这个环节的运行和失败
+
+单 Agent 足够时不拆多 Agent。选最简单足够的范式。</span>
+      <button class="btn-copy" onclick="copyText('p4')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了每个候选环节的范式选型和完整方案，六项都有明确答案。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：画三链责任与 fallback，选出一个优先候选和一个明确不做项</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p5">请帮我完成三链责任与 fallback，并作出决策。
+
+1. 画三链区分：
+   - 开发工具链：用了什么开发工具（如 Claude/Playwright），owner 是谁
+   - 业务 API 链：产品运行时调什么业务接口，owner 是谁
+   - 模型 API 链：产品运行时调什么 AI 模型，owner 是谁
+   确保三条链的对象和责任不混淆
+
+2. 对每个 AI 候选环节写 fallback：
+   - 降级方式（人工接管/规则降级/缓存回退）
+   - 降级来源标签（模拟/缓存/人工）
+   - 降级原因类型
+   - 失败责任人
+
+3. 作出决策：
+   - 选出一个优先候选（最值得验证的环节）
+   - 选出一个明确不做项（明确不用 AI 的环节，写理由）
+   - 回写原型产品决策
+
+更新 docs/PROJECT_STATE.md 记录选型图摘要和优先候选。</span>
+      <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：三链责任图、每个候选的 fallback、一个优先候选和一个明确不做项。</div>
+  </div>
+
+</section>
+
+<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<section>
+  <h2><span class="num">06</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
+
+  <h3>1. ✍️ 概念互动填空 (Interactive Fill-in-the-Blanks)</h3>
+  <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空：</p>
+
+  <div class="blank-card" id="bCard1">
+    1. <b>流程选型与范式原则</b>：AI 机会地图以
+    <select class="blank-select" id="blank1">
+      <option value="">-- 请选择 --</option>
+      <option value="node">真实业务流程节点 (而非“部门想用AI”)</option>
+      <option value="want">主管的口头临时兴趣</option>
+    </select> 为单位评估；在范式选型时应当遵守
+    <select class="blank-select" id="blank2">
+      <option value="">-- 请选择 --</option>
+      <option value="simple">最简单足够原则 (单 Agent 足够时不拆多 Agent)</option>
+      <option value="complex"> Agent 越多越高级原则</option>
+    </select>。
+    <div class="blank-feedback" id="bf1"></div>
+  </div>
+
+  <div class="blank-card" id="bCard2">
+    2. <b>三链与 Fallback 真实性</b>：MCP 协议属于
+    <select class="blank-select" id="blank3">
+      <option value="">-- 请选择 --</option>
+      <option value="dev">开发工具链 (不等于产品业务 API 链)</option>
+      <option value="biz">产品业务 API 链</option>
+    </select>；当模型服务降级时，降级结果必须
+    <select class="blank-select" id="blank4">
+      <option value="">-- 请选择 --</option>
+      <option value="mark">显式标注来源与 owner (不得伪装真实成功)</option>
+      <option value="fake">伪装成真实生产成功数据</option>
+    </select>。
+    <div class="blank-feedback" id="bf2"></div>
+  </div>
+
+  <button class="btn" style="margin-bottom: 2rem;" onclick="checkAllBlanks()">✅ 核对所有填空答案</button>
+
+  <h3>2. 💡 常见概念误区与正确理解 (3 栏对照表)</h3>
+  <div class="misc-table-container">
+    <table class="misc-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">常见误区 (Misconception)</th>
+          <th style="width: 42%;">正确硬核理解 (Correct Engineering Reality)</th>
+          <th style="width: 30%;">如何纠偏与护栏防护 (Remedy & Guardrails)</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+          <td><span class="badge-misc red">误区 1</span><br><b>"部门所有环节都应该用 AI"</b></td>
+          <td>逐环节判断任务性质，能用规则的不用 AI；至少有一个不做的</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 2</span><br><b>"多 Agent 比单 Agent 高级"</b></td>
+          <td>多 Agent 是复杂度响应不是成熟度象征；单 Agent 足够时不拆</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 3</span><br><b>"Mock 结果也是成功"</b></td>
+          <td>降级结果必须标记来源，不能伪装成真实成功</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 4</span><br><b>"三链都是 API 分不清"</b></td>
+          <td>开发工具链、业务 API 链和模型 API 链是三条不同的链，对象和责任不同</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 5</span><br><b>"选了 AI 就不用写 fallback"</b></td>
+          <td>每个候选环节都必须写 fallback 来源和失败责任人</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 06: QUIZ & EXIT TICKET -->
+<section>
+  <h2><span class="num">07</span> 测验 + 🎯 退场测试题 + 课后拓展</h2>
+
+  <!-- 5 Scenario Quiz -->
+  <h3>1. 5 道概念选择测验</h3>
+          <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · AI 机会地图以什么为基本单位进行评估？为什么？</div>
+    <label><input type="radio" name="q1" value="a"> 以真实业务流程节点为单位，因为不同环节的任务性质、风险与可验证性不同</label>
+    <label><input type="radio" name="q1" value="b"> 以 AI 模型的最新版本号为单位</label>
+    <label><input type="radio" name="q1" value="c"> 以“部门想用 AI”的抽象想法为单位</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · 在 Agent 范式选型中，对待多 Agent 架构的正确态度是什么？</div>
+    <label><input type="radio" name="q2" value="a"> 越多 Agent 越高级，哪怕简单任务也要拆 10 个 Agent</label>
+    <label><input type="radio" name="q2" value="b"> 坚持最简单足够原则，单 Agent 足够时不拆多 Agent</label>
+    <label><input type="radio" name="q2" value="c"> 完全禁止使用任何 Agent</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · 三链区分指的是区分哪三条独立供应链？</div>
+    <label><input type="radio" name="q3" value="a"> 开发工具链 (Claude/Playwright)、产品业务 API 链 (ERP/WMS)、模型 API 链 (LLM)</label>
+    <label><input type="radio" name="q3" value="b"> 网页链、手机链、平板链</label>
+    <label><input type="radio" name="q3" value="c"> 采购链、生产链、销售链</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · 对降级 Fallback 结果的硬性要求是什么？</div>
+    <label><input type="radio" name="q4" value="a"> 伪装成真实生产成功数据骗过用户</label>
+    <label><input type="radio" name="q4" value="b"> 必须显式标注来源、原因与 owner，不得伪装成真实生产成功数据</label>
+    <label><input type="radio" name="q4" value="c"> 直接弹窗导致报错崩盘</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="5">
+    <div class="q">Q5 · 主管在第九课选型决策中必须做出的两个明确表态是什么？</div>
+    <label><input type="radio" name="q5" value="a"> 宣布所有环节全部上线 AI</label>
+    <label><input type="radio" name="q5" value="b"> 放弃当前原型</label>
+    <label><input type="radio" name="q5" value="c"> 选出 1 个最值得验证的优先候选，和 1 个基于部门约束明确不用的“不做项”</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+<div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：AI 机会地图以什么为单位判断？为什么不以"部门想用 AI"为单位？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      以真实业务流程节点为单位判断。不以"部门想用 AI"为单位，因为"部门想用 AI"是空泛的，逐环节判断才能落地——不同环节的任务性质、风险和可验证性不同，不能一刀切。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：AI 介入层级迁移有哪几个程度？为什么不是所有环节都选最高程度？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      不用 AI/辅助/建议/单步执行/受控 Agent/受控闭环。不是所有环节都选最高程度，因为能用规则的不用 AI，能用 Workflow 的不用 Agent；最简单足够优先。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 3：Agent 范式选型的依据是什么？为什么多 Agent 不是成熟度象征？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans3')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans3">
+      <b>参考答案解析：</b><br>
+      依据路径是否确定、是否需动态调查、是否需规划。多 Agent 不是成熟度象征，是复杂度响应——单 Agent 足够时不拆，只有专业分工、并行或独立性确有价值时才采用。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 4：三链区分区分哪三条链？为什么 MCP 不等于业务 API？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans4')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans4">
+      <b>参考答案解析：</b><br>
+      开发工具链（开发用的工具）、业务 API 链（产品运行时调的业务接口）、模型 API 链（产品运行时调的 AI 模型）。MCP 是工具调用标准协议，不是业务接口。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 5：Fallback 来源与失败责任要求什么？为什么不能把 Mock 结果伪装成真实成功？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans5')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans5">
+      <b>参考答案解析：</b><br>
+      降级结果必须显示来源、原因、限制和 owner。不能伪装真实成功，因为这会导致决策者以为系统正常工作，实际是降级运行，可能产生错误判断。
+    </div>
+  </div>
+
+  <div class="card tinted" style="margin-top: 1.5rem;">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>逐环节评估任务性质与风险，明确给出至少 1 个“不用 AI”的确定理由。</b></li>
+      <li><b>范式选型坚持最简单足够，单 Agent 足够时不拆多 Agent。</b></li>
+      <li><b>三链责任划分清，降级 Fallback 显式标来源，选出优先候选与明确不做项！</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第九课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 已完成部门业务流程拆解，并给出至少 1 个“明确不用 AI”的确定理由？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 已完成保留候选的范式选型，并明确三链责任与 Fallback 降级来源？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 已选出 1 个优先候选与 1 个不做项，更新 `docs/PROJECT_STATE.md`？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--teal);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--teal); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 AI 机会地图</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">以流程节点为单位的客观 AI 机会判断。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 三链区分</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">开发工具链、业务 API 链、模型 API 链解耦。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ 最简单足够原则</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">能用规则不用 AI，单 Agent 足够不拆多 Agent。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🚀 下一阶段预告</h4>
+      <p style="font-size: .88rem; color: var(--blue); font-weight:bold;"><a href="0010-prototype-freeze-and-product-decision-package.html" style="color: var(--blue);">第 10 课 · 冻结原型包，形成产品决策与开发启动包</a>： 结业五分钟汇报与 IT Handoff！</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--teal); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--teal-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--teal);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用城市交通规划的比喻，帮我复习 AI 机会地图和介入层级”——它会为您详细拆解。</span>
+  </div>
+</section>
+
+<footer>
+  第 9 课 · 主管 AI 原型制作训练营 V4 · 权威路线图：<a href="COURSE_ROADMAP.html">COURSE_ROADMAP.html</a> | 术语：<a href="GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// ---------- Section 01 Demonstrator ----------
+const scenarios = {
+  raw: {
+    steps: [
+      { title: 'Step 1 · 盲目问“我的部门能不能用 Agent”', desc: '不拆解流程 ➔ 一口要求 AI 给出整套部门 AI 化大方案...', cls: 'working' },
+      { title: 'Step 2 · 盲目全盘套用 AI 导致全线混乱', desc: '连规则计算也强制用 AI 生成，引发严重的数据不一致与崩盘。', cls: 'error' },
+      { title: 'Step 3 · ❌ 出了问题互相推诿，责任不清', desc: '【灾难】缺乏三链分工与 Fallback 来源标记，出了故障无人能背责！', cls: 'error' }
+    ],
+    logs: [
+      '> [User Input]: "给我们部门做一个全套 AI 智能方案"',
+      '> [AI Execution]: 给所有 10 个环节强制套用多 Agent 架构...',
+      '❌ [Result]: 规则任务失效，没有 Fallback 标记，出了事故互相推诿！'
+    ]
+  },
+  bounded: {
+    steps: [
+      { title: 'Step 1 · Task 1/2: 画流程拆动作，完成评估表', desc: '拆解 6—10 个具体动作，评估任务性质 (确定性 vs 概率性)。', cls: '' },
+      { title: 'Step 2 · Task 3: 选介入层级，明确拒绝不该用的', desc: '能用规则的不用 AI，给出至少 1 个基于部门约束的“不做项”。', cls: 'working' },
+      { title: 'Step 3 · Task 4: 保留候选匹配最简单足够范式', desc: '按需求选择 Workflow/ReAct/Plan&Execute，单 Agent 足够不拆。', cls: 'working' },
+      { title: 'Step 4 · 🎉 Task 5: 划分三链责任与 Fallback 标记', desc: '明确三链 owner ➔ 标明 Fallback 降级来源 ➔ 回写 PROJECT_STATE！', cls: 'success' }
+    ],
+    logs: [
+      '> [Task 1/2]: 拆解 8 个动作完成《流程评估表》',
+      '> [Task 3]: 选定介入层级，明确 2 个规则环节“不用 AI”',
+      '> [Task 4]: 候选点匹配 Plan & Execute 最简单足够范式',
+      '✅ [Task 5]: 三链责任划分完成，Fallback 显式标 source，选型图落盘！'
+    ]
+  }
+};
+
+let animationTimers = [];
+
+function clearAnimationTimers() {
+  animationTimers.forEach(id => clearTimeout(id));
+  animationTimers = [];
+}
+
+function runMode(mode) {
+  clearAnimationTimers();
+
+  const btnRaw = document.getElementById('mBtnRaw');
+  const btnBounded = document.getElementById('mBtnBounded');
+  const canvas = document.getElementById('flowCanvas');
+  const consoleLog = document.getElementById('consoleLog');
+
+  btnRaw.className = 'mode-btn raw ' + (mode === 'raw' ? 'active' : '');
+  btnBounded.className = 'mode-btn bounded ' + (mode === 'bounded' ? 'active' : '');
+
+  const data = scenarios[mode];
+  canvas.innerHTML = '';
+  consoleLog.innerHTML = '<span style="color: #94a3b8;">> 正在启动 ' + (mode === 'raw' ? '🔴 空泛问能不能用' : '🟢 流程级精细选型') + ' 动态轨迹推演...</span>';
+
+  data.steps.forEach((s, idx) => {
+    const node = document.createElement('div');
+    node.className = 'flow-step-node ' + (s.cls || '');
+    node.id = 'node_' + idx;
+    node.style.opacity = '0';
+    node.style.transform = 'translateY(12px)';
+    node.style.transition = 'all .4s ease';
+    node.innerHTML = `
+      <div class="node-title">
+        <span>${s.title}</span>
+        <span style="font-size:.75rem; padding: 2px 6px; border-radius:4px; background:rgba(0,0,0,0.05);">Step ${idx + 1}</span>
+      </div>
+      <div class="node-desc">${s.desc}</div>
+    `;
+    canvas.appendChild(node);
+
+    const tId = setTimeout(() => {
+      node.style.opacity = '1';
+      node.style.transform = 'translateY(0)';
+      node.classList.add('active');
+
+      if (data.logs[idx]) {
+        const logLine = document.createElement('div');
+        logLine.style.marginTop = '4px';
+        logLine.innerHTML = data.logs[idx];
+        consoleLog.appendChild(logLine);
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+      }
+    }, (idx + 1) * 500);
+
+    animationTimers.push(tId);
+  });
+}
+runMode('bounded');
+
+// ---------- Three Chains Terminal Simulator ----------
+function runChain(act) {
+  const term = document.getElementById('chainTerminal');
+  if (act === 'dev') {
+    term.innerHTML = `
+🛠️ <b>[1. 开发工具链 (Dev Chain)]:</b><br>
+工具：Claude Code / Codex / Playwright / MCP Protocol<br>
+用途：辅助主管编写原型、辅助测试与代码审查；<br>
+Owner：培训学员主管与开发助教团队（运行于本地开发环境）。
+    `;
+  } else if (act === 'biz') {
+    term.innerHTML = `
+🔌 <b>[2. 产品业务 API 链 (Business API Chain)]:</b><br>
+工具：ERP 订单接口 / WMS 库存 API / 数据库物理连接；<br>
+用途：生产环境运行时真实业务数据的读写与状态更改；<br>
+Owner：IT 部门架构师与生产网关运维人员。
+    `;
+  } else {
+    term.innerHTML = `
+🧠 <b>[3. 模型 API 链 (Model API Chain)]:</b><br>
+工具：企业级 LLM Gateway / Anthropic API / DeepSeek API；<br>
+用途：生产环境运行时处理文本提取与智能推荐概率生成；<br>
+Owner：企业 AI 基础设施团队与网络安全管控节点。
+    `;
+  }
+}
+
+// ---------- Robust Clipboard Copy with Fallback ----------
+function copyText(id) {
+  const txtNode = document.getElementById(id);
+  if (!txtNode) return;
+  const txt = txtNode.innerText;
+
+  let btn = txtNode.nextElementSibling;
+  if (!btn || !btn.classList.contains('btn-copy')) {
+    btn = txtNode.parentElement.querySelector('.btn-copy');
+  }
+
+  function showSuccess() {
+    if (btn) {
+      const originalText = btn.innerText;
+      btn.innerText = '✅ 复制成功!';
+      btn.style.background = '#16a34a';
+      btn.style.color = '#ffffff';
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(showSuccess).catch(function() {
+      fallbackCopy(txt, showSuccess);
+    });
+  } else {
+    fallbackCopy(txt, showSuccess);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    cb();
+  } catch (err) {
+    prompt("请手动复制口令：", text);
+  }
+  document.body.removeChild(textArea);
+}
+
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+// ---------- Quiz Logic ----------
+const explain = {
+  q1: '正确答案：A。AI 机会地图以真实业务流程节点为单位，因为不同环节的任务性质、风险与可验证性不同。',
+  q2: '正确答案：B。范式选型坚持最简单足够原则，单 Agent 足够时不拆多 Agent，多 Agent 是复杂度响应而非成熟度象征。',
+  q3: '正确答案：A。三链区分指开发工具链 (Claude/Playwright)、产品业务 API 链 (ERP/WMS)、模型 API 链 (LLM)，责任与用途各不相同。',
+  q4: '正确答案：B。降级 Fallback 结果必须显式标注来源、原因与 owner，不得伪装成真实生产成功数据。',
+  q5: '正确答案：C。主管必须选出 1 个最值得验证的优先候选，和 1 个基于部门约束明确不用的"不做项"。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 20;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 5) {
+    el.innerHTML = `你已答完 <b>${answered} / 5</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  } else {
+    el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！`;
+  }
+}
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--teal)';
+    res.innerHTML = '🎉 恭喜完成第九课全量退场自查！你已熟练掌握部门 AI 机会地图与 Agent 范式选型图绘制！';
+  } else {
+    res.style.color = 'var(--teal)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+</script>
+
+</body>
+</html>

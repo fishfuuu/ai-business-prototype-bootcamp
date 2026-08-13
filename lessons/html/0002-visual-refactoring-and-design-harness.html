@@ -1,0 +1,878 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 2 课 · 用参考图与设计规则做出像样的企业页面 | 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #93c5fd; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #cbd5e1; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #93c5fd; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--blue); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--teal-soft); border-color: #b8ddd8; }
+  .card.warn { background: var(--amber-soft); border-color: #ecd3a8; }
+  .card.focus { background: var(--plum-soft); border-color: #d5c8ef; }
+  .card.blue { background: var(--blue-soft); border-color: #bfdbfe; }
+
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+
+  .quote {
+    border-left: 4px solid var(--blue); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .cite { font-size: .82rem; color: var(--ink-soft); margin-top: .6rem; }
+  .cite a { color: var(--blue); text-decoration: none; font-weight: 600; }
+
+  /* Grid Layouts - Symmetric 2x2 Grid */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--blue); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(29, 78, 216, 0.2);
+  }
+  .btn:hover { background: #1e40af; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Comparison Playground */
+  .comp-box {
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; margin: 1.2rem 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  }
+  .comp-bar {
+    background: #0f172a; color: #fff; padding: .75rem 1.2rem; font-weight: 700; font-size: .9rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .comp-body { padding: 1.4rem; }
+
+  .toggle-btn-group {
+    display: flex; gap: .6rem; margin-bottom: 1.2rem;
+  }
+  .t-btn {
+    flex: 1; padding: .75rem; border: 1.5px solid var(--line); border-radius: 8px; font-weight: 700;
+    cursor: pointer; text-align: center; font-size: .9rem; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s;
+  }
+  .t-btn:hover { background: #e2e8f0; }
+  .t-btn.active.raw { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .t-btn.active.harness { background: #dbeafe; border-color: #2563eb; color: #1e40af; }
+
+  /* Render Output Mock */
+  .render-window {
+    border: 1px solid #cbd5e1; border-radius: 10px; padding: 1.25rem; background: #fff;
+    min-height: 240px; transition: all .3s;
+  }
+
+  /* Task Steps */
+  .task-card {
+    border-left: 4px solid var(--blue); background: #fff; border: 1px solid var(--line);
+    border-left-width: 4px; border-radius: 8px; padding: 1.2rem; margin-bottom: 1rem;
+  }
+  .task-card h4 { color: #0f172a; font-size: 1.05rem; margin-bottom: .3rem; font-weight: 800; }
+
+  /* Quiz */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem;
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--blue-soft); }
+  .quiz-q label input { margin-top: .3rem; accent-color: var(--blue); }
+  .quiz-q label.sel { background: var(--blue-soft); border-color: #bfdbfe; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+
+  /* Checklist */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--blue); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  /* Concept Cards Micro Architecture */
+  .concept-list {
+    display: flex; flex-direction: column; gap: 1.5rem; margin: 1.5rem 0;
+  }
+  .concept-card {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem 1.6rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .concept-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+
+  .concept-head {
+    font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; cursor: pointer;
+    list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .concept-head::-webkit-details-marker { display: none; }
+  .concept-head::after { content: '▼'; font-size: 0.6em; color: #94a3b8; transition: transform 0.2s; }
+
+  details[open] .concept-head {
+    border-bottom: 1px solid #f1f5f9; padding-bottom: .8rem; margin-bottom: .8rem;
+  }
+  details[open] .concept-head::after { transform: rotate(180deg); }
+
+  .concept-body { display: flex; flex-direction: column; gap: 1rem; }
+
+  .concept-pill {
+    padding-left: 1rem; font-size: .98rem; line-height: 1.75; color: #334155;
+  }
+  .concept-pill.iswhat { border-left: 3px solid #f59e0b; }
+  .concept-pill.howworks { border-left: 3px solid #64748b; }
+  .concept-pill.metaphor { border-left: 3px solid #0d9488; }
+  .concept-pill.howsee { border-left: 3px solid #3b82f6; }
+
+  .pill-label { font-weight: 800; display: inline-block; margin-bottom: .2rem; color: #1e293b; }
+
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 1rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-space-between; align-items: flex-start; gap: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .prompt-copy-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: .92rem; font-weight: 600; line-height: 1.65; color: #0f172a;
+    white-space: pre-wrap; word-break: break-word; flex: 1;
+  }
+  .btn-copy {
+    background: #0f172a; color: #fff; border: none; border-radius: 8px; padding: .5rem 1rem;
+    font-size: .82rem; font-weight: 700; cursor: pointer; transition: all .2s ease; white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; align-self: flex-start;
+  }
+  .btn-copy:hover { background: #d97706; transform: translateY(-1px); }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem; }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box { background: var(--teal-soft); border: 1px solid #b8ddd8; border-radius: 10px; padding: 1rem 1.2rem; margin-top: .8rem; font-size: .92rem; color: #0f766e; display: none; line-height: 1.6; }
+  .ans-box.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 02 · 让原型变得清楚、可信、能用</div>
+    <h1>用参考图与设计规则<br>做出像样的企业级页面</h1>
+    <p class="sub">针对你选择的 <b>A. 监控与决策型原型（商品履约预警看板）</b>，学会利用物理点开 <code>DESIGN.md</code> 与参考图结构提取，用 Design Token 约束 AI 随机性，做出不带“AI 味”的高颜值规范界面。</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 掌握用 Design Token 制衡 AI 随机性的核心机制；② 学会在修改前保存 <b>Git 节点 1 (Baseline)</b> 存盘点；③ 物理点开 <code>DESIGN.md</code> 查字典，下达 Keep / Omit / Remove / Modify 裁决；④ 获得 Git 节点 2 视觉重构提交与测试 <code>[PASS]</code>。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 01 -->
+<section>
+  <h2><span class="num">01</span> 为什么要解决“一股 AI 味”？</h2>
+  <p>很多业务主管在使用 Agent 生成页面时，常遇到以下痛点：</p>
+  <div class="card warn">
+    <p><b>典型的“AI 生成白屏/山寨页面”三硬伤：</b><br>
+    1. <b>颜色乱用</b>：高饱和度的死亡红蓝绿撞色，毫无专业企业质感；<br>
+    2. <b>字号层级混乱</b>：标题、正文、标签字号没有系统缩放规律；<br>
+    3. <b>布局五花八门</b>：单页每次重新生成都会“基因突变”，无法保持团队视觉统一。</p>
+  </div>
+
+  <div class="quote">
+    💡 <b>解药：视觉 Harness (`DESIGN.md`)</b><br>
+    Agent 是大概率预测模型，你不给它视觉轨道，它就会凭空乱编。<b>`DESIGN.md` 就是你给 Agent 建立的物理视觉护栏字典。</b>你要求它物理点开该字典，映射颜色与组件，界面瞬间就能达到专业 UI 设计师水准。
+  </div>
+</section>
+
+<!-- SECTION 02 -->
+<section>
+  <h2><span class="num">02</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <div class="concept-list">
+    <details class="concept-card">
+      <summary class="concept-head">1. 信息优先级与视觉层级</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>重要信息应先被看到，层级服务业务判断；不是装饰美化，也不是把所有信息一样大。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>通过位置、大小、对比度和间距控制信息被看到的顺序；用户第一眼看到的内容决定他能否快速做判断。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>超市货架的视线层——最需要顾客看到的商品放在与眼睛平齐的高度；如果把所有商品都放同一层，顾客反而找不到重点。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 从参考图提取结构时，第一个要问的是"这张图里什么最先被看到"。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">2. 多模态参考提取</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>从参考图提取结构、密度、颜色和交互意图；不是像素级照抄，也不是直接复制参考图的业务字段和数据。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>AI 联合分析文本与图像，将视觉布局转化为结构化描述；提取的是"为什么这样排"的意图，而非"长什么样"的表象。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>建筑设计师的现场测绘拍照——看到一套优质精装房，拍照后在图纸上按比例复刻其硬装结构，但不会搬走房主家的家具。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会看到 AI 如何从参考图提取布局结构，而不是照搬颜色和字体。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">3. 设计约束映射</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>把参考意图写成可核对规则，并指出规则落在哪个页面元素；同时确认 Agent 在改代码前读取行为约束文件。不是写 CSS 代码，也不是直接改页面；也不是手写 CLAUDE.md 全文。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>有两类约束文件 Agent 在生成前必须读取——视觉约束（<code>DESIGN.md</code>：间距、圆角、颜色层级）和行为约束（<code>CLAUDE.md</code> 或 <code>AGENTS.md</code>：包管理器、文件边界、错误处理）。视觉约束用参考图映射后由主管核对；行为约束用 <code>start-project.bat</code> 生成基础版后由主管核对。规则必须指向具体页面元素或具体行为红线。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>乐高积木的标准规格颗粒与品牌字典——视觉约束像统一规格颗粒（改一处 Token 全站变色），行为约束像施工安全守则（不许动承重墙、只用指定工具）；两类规则都贴在工地入口，工人进场前必须看。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会把提取的结构映射到 <code>DESIGN.md</code> 的 <code>--art-*</code> 变量，并确认每条约束指向具体页面元素；同时核对 <code>CLAUDE.md</code>（或 <code>AGENTS.md</code>）的行为约束是否覆盖三条关键红线。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">4. Keep / Omit / Modify</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>主管对参考内容作保留、舍弃和改造裁决；不把决定交给 Agent 猜，也不是全部照搬或全部重做。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>逐项审视参考图中的每个元素，判断"保留并冻结现有业务内容""参考图忽略项""现有页面清理项"和"明确进行的视觉改进"。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>装修方案的取舍——保留承重墙（Keep）、去掉不适合自己家庭的装饰（Omit）、把书房改成儿童房（Modify）；不能把整套方案照搬回家。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3 你会逐项作 Keep/Omit/Modify 裁决，并说明每项的业务理由。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. 视觉证据基线</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>用前后对照和理由证明改变；不只说"更好看了"，也不依赖主观感受。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>重构前截图作为基线，重构后截图作为对照，每处改变附理由；业务路径在视觉修改后仍可操作。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>装修前后的对比照片——每面墙的变化都有原因，不是为了变而变；如果装修后水管不通了，再好看也失败。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4—5 你会在试衣镜中做前后对比，确认业务路径仍可操作，并保存视觉证据。
+        </div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- SECTION 03: REFACTOR SIMULATOR -->
+<section>
+  <h2><span class="num">03</span> 动手体验：A类监控原型 视觉重构对比</h2>
+  <p>点击下方按钮，亲自对比“裸 AI 生成”与“绑定 `DESIGN.md` 视觉 Harness 后”的真正差距：</p>
+
+  <div class="comp-box">
+    <div class="comp-bar">
+      <span>🖥️ A. 监控与决策型原型（商品履约预警看板）视觉渲染对比</span>
+      <span style="font-size: .8rem; opacity: .8;">127.0.0.1:8888 试衣镜</span>
+    </div>
+    <div class="comp-body">
+      <div class="toggle-btn-group">
+        <div class="t-btn active raw" id="btnRaw" onclick="switchView('raw')">🔴 裸 AI 随机生成 (无 Harness)</div>
+        <div class="t-btn harness" id="btnHarness" onclick="switchView('harness')">🔵 绑定 DESIGN.md 规范重构 (有 Harness)</div>
+      </div>
+
+      <div class="render-window" id="renderWin">
+        <!-- Render content via JS -->
+      </div>
+    </div>
+  </div>
+
+  <div class="card focus">
+    <b>针对 A类（监控与决策型）原型的视觉重构要求：</b>
+    <ol>
+      <li><b>KPI 4大指标卡</b>：同环比趋势采用受控标红/标绿，拒绝刺眼杂色；</li>
+      <li><b>异常明细表格</b>：单元格高度统一，支持高亮悬停交互（Hover）；</li>
+      <li><b>预警抽屉</b>：采用规范浮层抽屉（Drawer），不打破主屏监控视野。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- SECTION 04: 4 TASKS -->
+<section>
+  <h2><span class="num">04</span> 实战 4 步工作流 (4-Step Workflow)</h2>
+
+<div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：从参考图提取多模态布局与意图</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">请读取项目中的参考图卡文件：docs/assets/lesson-02/ref-monitor-decision.png
+
+请帮我分析这张参考图的视觉结构，并列出：
+1. 首屏的整体布局（如顶部 KPI 栏、左右双栏、三段式卡片流）
+2. 页面中视觉最醒目的核心模块（主视觉焦点）
+3. 次要信息与操作区域的排布规律
+
+注意：请只提取布局和结构，不要使用参考图中的任何背景颜色、字体或杂乱样式。先不要修改代码，只输出分析结果。</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出描述了首屏布局、主视觉焦点和次要信息排布，没有照搬参考图的业务字段或颜色，也没有修改代码。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：把提取结果映射为设计约束</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">现在，请戴上眼睛读取项目中的设计规范文件：
+- DESIGN.md
+- docs/COMPONENT_CATALOG.md
+
+请将 Task 1 提取的结构与 DESIGN.md 进行映射，说明：
+1. 页面背景、卡片容器与文字颜色如何映射到已有的 --art-* 变量
+2. 间距与圆角如何符合 8/12/16/24px 规范
+3. 哪些区域可以直接复用现有组件库中的结构（如 ElCard, ElTag, ElButton）
+4. 每条约束具体落在哪个页面元素上
+
+注意：不得虚构不存在的 Token，不得新建样式库。先不要修改文件，只输出映射方案。</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：所有样式显式映射到 <code style="background:#f1f5f9; border:1px solid #cbd5e1; padding:2px 5px; border-radius:4px; font-size:.88em; color:#0f172a;">--art-*</code> 变量；每条约束指向具体页面元素；没有虚构不存在的 Token。同时确认 <code style="background:#f1f5f9; border:1px solid #cbd5e1; padding:2px 5px; border-radius:4px; font-size:.88em; color:#0f172a;">CLAUDE.md</code>（或 <code style="background:#f1f5f9; border:1px solid #cbd5e1; padding:2px 5px; border-radius:4px; font-size:.88em; color:#0f172a;">AGENTS.md</code>）的行为约束覆盖了包管理器、文件边界和错误处理三条红线。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：主管 Keep/Omit/Modify 裁决与授权</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">针对第二课页面美化，我的裁决如下：
+
+1. Keep (保留并冻结现有业务内容)：
+【第一课原型中所有显示的业务 ID、标题、状态与 Mock 数据】
+
+2. Omit from Reference (参考图忽略项)：
+【参考图中不需要复制的无关装饰线条或多余小图标】
+
+3. Remove from Current Page (现有页面清理项)：
+【第一课页面中粗糙无用的临时占位文本】
+
+4. Modify (明确进行的 3 项视觉改进)：
+(1) 重构首屏视觉层级，突出核心区域
+(2) 优化卡片布局与 16/24px 间距
+(3) 提升关键状态与核心操作按钮的显眼度
+
+请复述你理解的重构范围。在得到我回复"同意方案，请开始修改代码"前，不要修改文件。</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 复述了你的裁决范围，等待你的同意口令后才修改。每项裁决都有业务理由，不只是"好看/不好看"。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：Agent 受控视觉重构与前后对比</div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0; font-size: .92rem; line-height: 1.7; color: #1e293b;">
+<p style="margin:.4rem 0;"><b>本步目的</b>：Agent 在授权范围内执行一次受控视觉重构，你在试衣镜中做前后对比。</p>
+<p style="margin:.4rem 0;"><b>监视与一键读档救急 (Diff & Discard)</b></p>
+<ul style="padding-left:1.2rem; margin:.4rem 0;">
+  <li style="margin:.3rem 0;">在 VS Code 左侧第 3 个 Git 分支视图中监视红绿修改，确保未误删代码。</li>
+  <li style="margin:.3rem 0;">一旦改崩，右键点击该文件，选择 <b>Discard Changes (放弃更改)</b> 1 秒物理撤销恢复！</li>
+</ul>
+<p style="margin:.4rem 0;"><b>代码 Before vs After 视觉对比</b></p>
+<pre style="background:#0f172a; color:#f8fafc; padding:.8rem 1rem; border-radius:8px; font-family:monospace; font-size:.88rem; overflow-x:auto; margin:.6rem 0;"><code>/* src/components/WorkOrderBoard.vue */
+- background-color: #ff0000; /* 硬编码高饱和度红 */
++ background-color: var(--art-primary); /* 引入 DESIGN.md CSS Token */
++ border-radius: var(--art-radius-md);</code></pre>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：Agent 只在授权范围内修改；业务路径仍可操作；前后差异可见。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：微调、保存视觉证据与裁决记录</div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0; font-size: .92rem; line-height: 1.7; color: #1e293b;">
+<p style="margin:.4rem 0;"><b>本步目的</b>：只做必要微调，保存视觉证据与本次裁决记录，然后停止扩展。</p>
+<ol style="padding-left:1.2rem; margin:.4rem 0;">
+  <li style="margin:.3rem 0;">刷新 <code style="background:#f1f5f9; border:1px solid #cbd5e1; padding:2px 5px; border-radius:4px; font-size:.88em; color:#0f172a;">http://127.0.0.1:8888/</code> 试衣镜，对比重构前后效果。</li>
+  <li style="margin:.3rem 0;">只修一个最影响理解或操作的问题，然后停止扩展。</li>
+  <li style="margin:.3rem 0;"><b>节点 2 完结存档动作</b>：在终端运行完结存档与快照指令：</li>
+</ol>
+<pre style="background:#0f172a; color:#f8fafc; padding:.8rem 1rem; border-radius:8px; font-family:monospace; font-size:.88rem; overflow-x:auto; margin:.6rem 0;"><code>git add .
+   git commit -m "style: complete lesson 2 visual refactor"
+   git log --oneline -5</code></pre>
+<ol style="padding-left:1.2rem; margin:.4rem 0;">
+  <li style="margin:.3rem 0;">确认截屏与快照保存至 <code style="background:#f1f5f9; border:1px solid #cbd5e1; padding:2px 5px; border-radius:4px; font-size:.88em; color:#0f172a;">local-backups/lesson-02-evidence/lesson-02-screenshot.png</code>。</li>
+</ol>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：微调只修了一个问题而非全面重做；视觉证据已保存；裁决记录与实际修改一致。</div>
+  </div>
+
+</section>
+
+<!-- SECTION 05: QUIZ -->
+<section>
+  <h2><span class="num">05</span> 测验：检验你的视觉 Harness 心智模型</h2>
+  <p>5 道题，答完立即查看正确答案与深度解析：</p>
+
+          <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · 为什么 AI 生成的页面经常出现“一股 AI 味”和死板撞色？</div>
+    <label><input type="radio" name="q1" value="a"> 因为 AI 没有设计天赋</label>
+    <label><input type="radio" name="q1" value="b"> 因为电脑屏幕显示器颜色不对</label>
+    <label><input type="radio" name="q1" value="c"> 因为缺乏 `DESIGN.md` 视觉 Harness 护栏，AI Token 概率随机生成了 ad-hoc 杂色内联样式</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · 在修改页面样式前，为什么要先提交 Git 节点 1 (Baseline) 存档？</div>
+    <label><input type="radio" name="q2" value="a"> 没有任何作用，可以省略</label>
+    <label><input type="radio" name="q2" value="b"> 为了防止改崩页面后，有明确的物理基线支持一键还原 (Discard)</label>
+    <label><input type="radio" name="q2" value="c"> 只是为了给 IT 部门看日志</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · 主管在审查 127.0.0.1 试衣镜时，下达的“4 种视觉裁决”指的是哪 4 个动作？</div>
+    <label><input type="radio" name="q3" value="a"> 同意、拒绝、转发、暂存</label>
+    <label><input type="radio" name="q3" value="b"> 复制、粘贴、剪切、删除</label>
+    <label><input type="radio" name="q3" value="c"> Keep (保留) / Omit (省去) / Remove (移除) / Modify (修改)</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · 多模态提取参考图时，正确的原则是什么？</div>
+    <label><input type="radio" name="q4" value="a"> 照单全收，把参考图里的背景图和广告全抄过来</label>
+    <label><input type="radio" name="q4" value="b"> 提取首屏布局与视觉主次，100% 过滤杂色与非标准元素，事实锚定到 `DESIGN.md`</label>
+    <label><input type="radio" name="q4" value="c"> 只看参考图的字号</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="5">
+    <div class="q">Q5 · 物理点开 `DESIGN.md` 在工程上的实际动作是指什么？</div>
+    <label><input type="radio" name="q5" value="a"> 驱动 Agent 发起 `read_file` 工具读取 `DESIGN.md`，将词典内容写入当前 Context 窗口作为生成约束</label>
+    <label><input type="radio" name="q5" value="b"> 手动在记事本里新建文件</label>
+    <label><input type="radio" name="q5" value="c"> 用眼睛盯着屏幕看</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：从参考图提取布局意图时，应该提取什么、不应该提取什么？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      提取布局结构、密度、强调和交互意图；不应该照搬参考图的业务字段、数据和表面颜色。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：设计约束映射要求每条约束指向什么？为什么不能停留在抽象描述？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      指向具体页面元素；因为抽象描述无法核对，也无法让 AI 知道改哪里。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 3：Keep/Omit/Modify 裁决中，至少一项裁决需要说明什么才算有效？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans3')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans3">
+      <b>参考答案解析：</b><br>
+      业务理由——为什么保留、为什么舍弃、为什么改造，不只是"好看"或"不好看"。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 4：视觉证据基线要求用什么证明改变，而不只靠什么？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans4')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans4">
+      <b>参考答案解析：</b><br>
+      用前后对照和理由证明改变；不只靠主观感受或"更好看了"。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 5：为什么视觉重构前必须先 Git 存档？Discard Changes 的作用是什么？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans5')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans5">
+      <b>参考答案解析：</b><br>
+      Git 存档是安全网，锁定重构前的稳定版本；Discard Changes 是文件级无损撤销，改崩后一键读档恢复。
+    </div>
+  </div>
+
+</section>
+
+<!-- SECTION 06: SUMMARY, KNOWLEDGE EXPANSION & NEXT STEPS -->
+<section>
+  <h2><span class="num">06</span> 本课小结 + 知识扩充 + 下一步</h2>
+
+  <!-- Key Takeaways Box -->
+  <div class="card tinted">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>视觉 Harness (`DESIGN.md`) 是制衡 AI Token 随机性的物理铁轨。</b></li>
+      <li><b>修改前存 Node 1 Git Baseline，修改后存 Node 2 视觉重构 Commitment。</b></li>
+      <li><b>主管行使 Keep / Omit / Remove / Modify 裁决权，操控视觉试衣镜。</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第二课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. Agent 已物理 <code>read_file</code> 点开 <code>DESIGN.md</code> 映射 Tokens？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 已在 Git 中提交了节点 1 Baseline 与节点 2 Visual Refactor？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 运行 <code>verify-student-project.ps1</code> 输出了 <code>[PASS]</code> 结论？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--blue);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--teal); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 配套阅读 (10 分钟)</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">微软《AI Agents for Beginners》第 1 课（中文版）：<a href="https://github.com/microsoft/ai-agents-for-beginners/tree/main/translations/zh-CN/01-intro-to-ai-agents" target="_blank" style="color: var(--teal); font-weight: bold;">在线阅读</a>。理解环境护栏与上下文构建。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.3rem;">🧠 进阶架构阅读 (可选)</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Anthropic《Building Effective Agents》：<a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" style="color: var(--plum); font-weight: bold;">building-effective-agents</a>。学习如何通过规范文档引导 LLM 稳定输出。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.3rem;">🎨 W3C Design Tokens 规范</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">W3C Design Tokens Format Standard：<a href="https://tr.designtokens.org/format/" target="_blank" style="color: var(--blue); font-weight: bold;">查看标准草案</a>。了解软件工程中 Token 标准化定义。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.3rem;">▶ 第 3 课预告</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">《让 Agent 帮助自己想清楚需求》：使用 <code>grill-me</code> Skill 锁定 Goal/Boundary/Risk/Stop，产出前置数据契约卡！</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--blue); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--blue-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--blue);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“这一课的 DESIGN.md 如何扩展预警级别的颜色？或者如何把监控抽屉改为全屏 Modal？”——它随时为您解答。</span>
+  </div>
+</section>
+
+<footer>
+  第 2 课 · 主管 AI 原型制作训练营 · 权威路线图：<a href="COURSE_ROADMAP.html">COURSE_ROADMAP.html</a> | 术语查阅：<a href="GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// Simulator Logic for Lesson 2
+const rawHTML = `
+  <div style="font-family: Arial; padding: 10px; background: #ffff00; color: #ff0000;">
+    <h1 style="font-size: 32px; color: blue;">商品履约预警看板 (裸AI生成)</h1>
+    <div style="display:flex; gap:10px; margin: 15px 0;">
+      <div style="background: red; color: white; padding: 20px; font-size: 24px;">超时订单: 42 (严重)</div>
+      <div style="background: green; color: yellow; padding: 20px; font-size: 12px;">正常履约: 1200</div>
+      <div style="background: black; color: white; padding: 5px;">库存告警: 3</div>
+    </div>
+    <table border="1" style="width:100%; background: #eee;">
+      <tr><th>单号</th><th>状态</th><th>操作</th></tr>
+      <tr><td>ORD-9901</td><td>超时</td><td><button style="background:purple; color:white;">发送消息</button></td></tr>
+    </table>
+    <p style="color: gray; font-size: 10px;">样式杂乱，字号无层级，撞色严重（典型的 AI 随机内联杂色）</p>
+  </div>
+`;
+
+const harnessHTML = `
+  <div style="font-family: system-ui, sans-serif; padding: 15px; background: #f8fafc; border-radius: 8px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">
+      <h3 style="font-size: 1.1rem; color: #0f172a; margin:0; font-weight:800;">📦 商品履约预警看板 (符合 DESIGN.md 规范)</h3>
+      <span style="background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 99px; font-size: 0.75rem; font-weight:700;">A类 监控与决策型</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 15px;">
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #ef4444; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 0.75rem; color: #64748b; font-weight:700; text-transform:uppercase;">履约超时预警</div>
+        <div style="font-size: 1.5rem; font-weight: 800; color: #991b1b; margin: 4px 0;">42 单</div>
+        <div style="font-size: 0.75rem; color: #ef4444;">↑ 12% 较昨日</div>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 0.75rem; color: #64748b; font-weight:700; text-transform:uppercase;">正常履约订单</div>
+        <div style="font-size: 1.5rem; font-weight: 800; color: #065f46; margin: 4px 0;">1,200 单</div>
+        <div style="font-size: 0.75rem; color: #10b981;">96.6% 履约率</div>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 0.75rem; color: #64748b; font-weight:700; text-transform:uppercase;">库存临界告警</div>
+        <div style="font-size: 1.5rem; font-weight: 800; color: #92400e; margin: 4px 0;">3 SKUs</div>
+        <div style="font-size: 0.75rem; color: #d97706;">需补货</div>
+      </div>
+    </div>
+
+    <div style="background:#ffffff; border: 1px solid #e2e8f0; border-radius:8px; padding: 12px;">
+      <div style="font-size:0.85rem; font-weight:700; color:#0f172a; margin-bottom:8px;">异常下钻明细列表</div>
+      <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+        <tr style="background:#f1f5f9; text-align:left; color:#475569;">
+          <th style="padding:6px 10px;">订单号</th>
+          <th style="padding:6px 10px;">状态</th>
+          <th style="padding:6px 10px;">超时时长</th>
+          <th style="padding:6px 10px;">操作</th>
+        </tr>
+        <tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:8px 10px; font-weight:600;">ORD-2026-9901</td>
+          <td style="padding:8px 10px;"><span style="background:#fee2e2; color:#991b1b; padding:2px 6px; border-radius:4px; font-size:0.75rem; font-weight:700;">严重超时</span></td>
+          <td style="padding:8px 10px; color:#64748b;">+ 3.5 小时</td>
+          <td style="padding:8px 10px;"><button style="background:#4f46e5; color:white; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">一键催办</button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+`;
+
+function switchView(type) {
+  const btnRaw = document.getElementById('btnRaw');
+  const btnHarness = document.getElementById('btnHarness');
+  const win = document.getElementById('renderWin');
+
+  if (type === 'raw') {
+    btnRaw.className = 't-btn active raw';
+    btnHarness.className = 't-btn harness';
+    win.innerHTML = rawHTML;
+  } else {
+    btnRaw.className = 't-btn raw';
+    btnHarness.className = 't-btn active harness';
+    win.innerHTML = harnessHTML;
+  }
+}
+
+// Initial view
+switchView('harness');
+
+// Quiz Logic
+const explain = {
+  q1: '正确答案：C。AI 是概率模型，不加约束就会产生内联杂色。`DESIGN.md` 为其建立了物理约束框架。',
+  q2: '正确答案：B。修改前存 Node 1 Git Baseline，确保改崩样式后能够物理 Discard 还原。',
+  q3: '正确答案：C。主管的 4 种视觉裁决是 Keep(保留)、Omit(省去)、Remove(移除)、Modify(修改)。',
+  q4: '正确答案：B。多模态提取参考图时要提取布局层级，100% 过滤杂色与广告，事实锚定到 DESIGN.md。',
+  q5: '正确答案：A。物理点开是指驱动 Agent 发起 `read_file` 工具读取 `DESIGN.md` 写入 Context 窗口。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--green)';
+    res.innerHTML = '🎉 恭喜！自查全通关 (3 / 3)，准备开启第三课《需求澄清与数据契约》！';
+  } else {
+    res.style.color = 'var(--blue)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+
+// ---------- Robust Clipboard Copy with Fallback ----------
+function copyText(id) {
+  const txtNode = document.getElementById(id);
+  if (!txtNode) return;
+  const txt = txtNode.innerText;
+
+  let btn = txtNode.nextElementSibling;
+  if (!btn || !btn.classList.contains('btn-copy')) {
+    btn = txtNode.parentElement.querySelector('.btn-copy');
+  }
+
+  function showSuccess() {
+    if (btn) {
+      const originalText = btn.innerText;
+      btn.innerText = '✅ 复制成功!';
+      btn.style.background = '#16a34a';
+      btn.style.color = '#ffffff';
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(showSuccess).catch(function() {
+      fallbackCopy(txt, showSuccess);
+    });
+  } else {
+    fallbackCopy(txt, showSuccess);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    cb();
+  } catch (err) {
+    prompt("请手动复制口令：", text);
+  }
+  document.body.removeChild(textArea);
+}
+
+// ---------- Exit Ticket Expand Answer Logic ----------
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+</script>
+
+</body>
+</html>

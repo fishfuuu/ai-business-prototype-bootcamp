@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>主管 AI 原型制作训练营 全量课程路线图 (V4 标准) | AI Business Prototype Training</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 960px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #38bdf8; font-weight: 700; }
+  .hero h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 2.3rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #cbd5e1; max-width: 72ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .meta-tag {
+    display: inline-block; margin-top: 1.2rem; background: rgba(56,189,248,.12);
+    border: 1px solid rgba(56,189,248,.3); color: #38bdf8; border-radius: 6px;
+    padding: .3rem .8rem; font-size: .85rem; font-weight: 700;
+  }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: #0f172a; color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: #f8fafc; border-color: #cbd5e1; }
+
+  /* Roadmap Cards List */
+  .roadmap-list { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1.5rem; }
+
+  .lesson-card {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 1.4rem 1.6rem;
+    transition: all .2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: .8rem;
+  }
+  .lesson-card:hover { border-color: #0f172a; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.05); }
+
+  .lc-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .8rem; }
+  .lc-badge {
+    font-size: .8rem; font-weight: 800; padding: .25rem .7rem; border-radius: 6px;
+    background: #0f172a; color: #fff; text-transform: uppercase;
+  }
+  .lc-title { font-size: 1.2rem; font-weight: 800; color: #0f172a; text-decoration: none; }
+  .lc-title:hover { color: var(--blue); }
+  .lc-desc { font-size: .95rem; color: var(--ink-soft); line-height: 1.6; }
+
+  .lc-footer {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .8rem;
+    border-top: 1px dashed var(--line); padding-top: .8rem; font-size: .88rem;
+  }
+  .lc-concepts { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .tag-c { background: var(--paper); border: 1px solid var(--line); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: .78rem; }
+
+  .btn-enter {
+    background: var(--blue); color: #fff; border-radius: 8px; padding: .4rem 1rem;
+    font-size: .85rem; font-weight: 700; text-decoration: none; transition: background .15s;
+  }
+  .btn-enter:hover { background: #1e40af; }
+
+  /* 3 Layer Model */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 768px) { .grid-3 { grid-template-columns: 1fr; } }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">COURSE ROADMAP · V4 冻结基线</div>
+    <h1>主管 AI 原型制作训练营 全量课程路线图</h1>
+    <p class="sub">助各部门业务主管跨越从 Prompting 到 Bounded Agent Loop 的成熟度阶梯，用高保真原型与可复核证据链推进业务创新。</p>
+    <div class="meta-tag">✨ V4 权威冻结标准 (2026-08-13) | 10 课全量 HTML 课程指南已就绪</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- SECTION 01: MATURITY MODEL & ENDURING UNDERSTANDINGS -->
+  <section>
+    <h2><span class="num">01</span> 三层能力成熟度模型与持久理解</h2>
+
+    <div class="grid-3">
+      <div class="card" style="background: var(--amber-soft); border-color: #fde68a;">
+        <h3 style="color: var(--amber); font-size: 1rem;">第一层：Prompting</h3>
+        <p style="font-size: .88rem; color: var(--ink);">单次自然语言指令描述任务，理解裸 Prompt 的模糊性与局限。</p>
+      </div>
+      <div class="card" style="background: var(--teal-soft); border-color: #5eead4;">
+        <h3 style="color: var(--teal); font-size: 1rem;">第二层：Harness Engineering</h3>
+        <p style="font-size: .88rem; color: var(--ink);">通过工程规约 (`CLAUDE.md`)、Skills (`grill-me`, `$diagnose`) 建立护栏。</p>
+      </div>
+      <div class="card" style="background: var(--purple-soft); border-color: #d8b4fe;">
+        <h3 style="color: var(--purple); font-size: 1rem;">第三层：Bounded Agent Loop</h3>
+        <p style="font-size: .88rem; color: var(--ink);">受控自主循环，主管在关键关口依据处置框架行使人在回路授权门禁 (HITL)。</p>
+      </div>
+    </div>
+
+    <div class="card tinted" style="margin-top: 1rem;">
+      <b>💡 核心持久理解 (Enduring Understandings)：</b>
+      <ol style="margin-top: .5rem; font-size: .92rem; color: var(--ink-soft);">
+        <li><b>AI 不替主管决定</b>——从选环节到批准，判断权和责任始终在主管身上。</li>
+        <li><b>确定性任务用规则，概率性任务才考虑 AI</b>——最简单足够优先。</li>
+        <li><b>没有可追溯的证据，“看起来没问题”不等于通过。</b></li>
+        <li><b>执行、验证、评审和批准是四种不同角色</b>——不能压成一个自动通过点。</li>
+        <li><b>原型证明的是可行性，不是生产就绪</b>——IT 接收的是决策和边界，不是上线指令。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- SECTION 02: 10 LESSONS ROADMAP -->
+  <section>
+    <h2><span class="num">02</span> 十课全量课程指南路线图 (点击可直接跳转对应 HTML 指南)</h2>
+
+    <div class="roadmap-list">
+
+      <!-- L1 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 01</span>
+          <a href="../lessons/0001-ai-agent-architecture-and-first-prototype.html" class="lc-title">第 1 课 · 从业务问题创建第一个系统页面</a>
+        </div>
+        <div class="lc-desc">区分 LLM、Tools、Agent 概念，建立 A/B/C 三类原型方向，体验受控 Agent 循环，初始化 `docs/PROJECT_STATE.md`。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">LLM</span><span class="tag-c">Tools</span><span class="tag-c">Agent</span><span class="tag-c">业务原型</span>
+          </div>
+          <a href="../lessons/0001-ai-agent-architecture-and-first-prototype.html" class="btn-enter">📖 进入第 1 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L2 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 02</span>
+          <a href="../lessons/0002-visual-refactoring-and-design-harness.html" class="lc-title">第 2 课 · 让原型变得清楚、可信、能用</a>
+        </div>
+        <div class="lc-desc">信息层级与视觉重构，多模态参考提取，设计约束映射 (`DESIGN.md`)，Keep/Omit/Modify 裁决与 Git 视觉基线。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">信息层级</span><span class="tag-c">DESIGN.md</span><span class="tag-c">Keep/Omit</span><span class="tag-c">Git 基线</span>
+          </div>
+          <a href="../lessons/0002-visual-refactoring-and-design-harness.html" class="btn-enter">📖 进入第 2 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L3 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 03</span>
+          <a href="../lessons/0003-requirements-clarification-and-data-contract.html" class="lc-title">第 3 课 · 把模糊业务说成可执行契约</a>
+        </div>
+        <div class="lc-desc">Grill-Me 结构化追问，6 大业务要素，数据分级脱敏，数据契约冻结，Task 3A 只读结构预览门禁。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">Grill-Me</span><span class="tag-c">数据契约</span><span class="tag-c">Given-When-Then</span><span class="tag-c">Task 3A 门禁</span>
+          </div>
+          <a href="../lessons/0003-requirements-clarification-and-data-contract.html" class="btn-enter">📖 进入第 3 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L4 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 04</span>
+          <a href="../lessons/0004-controlled-agent-loop-and-disk-persistence.html" class="lc-title">第 4 课 · 把契约切成一个可实施的薄片</a>
+        </div>
+        <div class="lc-desc">Plan & Execute 增量实施范式，技术状态与业务状态区分，Excel 草稿双签比喻，Commit A/B 两阶段提交。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">薄切片</span><span class="tag-c">Plan & Execute</span><span class="tag-c">技术/业务状态</span><span class="tag-c">双相提交</span>
+          </div>
+          <a href="../lessons/0004-controlled-agent-loop-and-disk-persistence.html" class="btn-enter">📖 进入第 4 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L5 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 05</span>
+          <a href="../lessons/0005-engineering-harness-and-memory-model.html" class="lc-title">第 5 课 · 第一次把 AI/Agent 融入业务</a>
+        </div>
+        <div class="lc-desc">AI 介入 6 级梯度，确定性与概率性切割，Workflow vs Agent，ReAct 范式，HITL 人在回路授权门禁。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">介入层级</span><span class="tag-c">确定性/概率性</span><span class="tag-c">ReAct</span><span class="tag-c">HITL Gate</span>
+          </div>
+          <a href="../lessons/0005-engineering-harness-and-memory-model.html" class="btn-enter">📖 进入第 5 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L6 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 06</span>
+          <a href="../lessons/0006-facts-anchored-debugging-and-bounded-loop.html" class="lc-title">第 6 课 · 用事实找 Bug，在边界内修复</a>
+        </div>
+        <div class="lc-desc">区分事实与假设，激活 `$diagnose` 打印五层诊断卡，限定契约范围，2 轮重试预算硬熔断与干净基线 restore。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">事实锚定</span><span class="tag-c">五层诊断卡</span><span class="tag-c">2轮重试预算</span><span class="tag-c">硬熔断恢复</span>
+          </div>
+          <a href="../lessons/0006-facts-anchored-debugging-and-bounded-loop.html" class="btn-enter">📖 进入第 6 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L7 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 07</span>
+          <a href="../lessons/0007-browser-mcp-and-four-evidence-chains.html" class="lc-title">第 7 课 · 让 Agent 操作页面并留下验收证据</a>
+        </div>
+        <div class="lc-desc">MCP 开放协议扩展插座 (Host/Client/Server/Tool)，Playwright Headed 慢动作视窗，四类物理证据链与 `EVIDENCE_INDEX` 总卡。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">MCP 最小模型</span><span class="tag-c">Playwright 慢动作</span><span class="tag-c">四类证据链</span><span class="tag-c">EVIDENCE_INDEX</span>
+          </div>
+          <a href="../lessons/0007-browser-mcp-and-four-evidence-chains.html" class="btn-enter">📖 进入第 7 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L8 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 08</span>
+          <a href="../lessons/0008-codex-independent-review-and-context-isolation.html" class="lc-title">第 8 课 · Claude Code 开发，Codex 独立审查</a>
+        </div>
+        <div class="lc-desc">只读独立会话上下文隔离，Codex 输出带引证与优先级的独立 Findings，三分原则，主管【accept/fix/stop/defer】处置框架。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">上下文隔离</span><span class="tag-c">独立 Findings</span><span class="tag-c">三分原则</span><span class="tag-c">主管处置框架</span>
+          </div>
+          <a href="../lessons/0008-codex-independent-review-and-context-isolation.html" class="btn-enter">📖 进入第 8 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L9 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 09</span>
+          <a href="../lessons/0009-ai-opportunity-map-and-agent-pattern-selection.html" class="lc-title">第 9 课 · 画出部门 AI 机会与 Agent 范式选型图</a>
+        </div>
+        <div class="lc-desc">部门 AI 机会地图，介入层级迁移，最简单足够原则，三链解耦 (开发/业务/模型)，Fallback 显式降级标记。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">AI 机会地图</span><span class="tag-c">最简单足够</span><span class="tag-c">三链区分</span><span class="tag-c">Fallback 来源</span>
+          </div>
+          <a href="../lessons/0009-ai-opportunity-map-and-agent-pattern-selection.html" class="btn-enter">📖 进入第 9 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+      <!-- L10 -->
+      <div class="lesson-card">
+        <div class="lc-header">
+          <span class="lc-badge">Lesson 10</span>
+          <a href="../lessons/0010-prototype-freeze-and-product-decision-package.html" class="lc-title">第 10 课 · 冻结原型包，形成产品决策与开发启动包</a>
+        </div>
+        <div class="lc-desc">非生产就绪系统边界，风险红线，4 维度 (价值/证据/风险/成本) 产品决策，十课资产四分类盘点与 5 分钟汇报。</div>
+        <div class="lc-footer">
+          <div class="lc-concepts">
+            <span class="tag-c">非生产就绪</span><span class="tag-c">资产四分类</span><span class="tag-c">4维度决策</span><span class="tag-c">开发启动包</span>
+          </div>
+          <a href="../lessons/0010-prototype-freeze-and-product-decision-package.html" class="btn-enter">📖 进入第 10 课 HTML 指南 →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 03: GLOSSARY LINK -->
+  <section>
+    <h2><span class="num">03</span> 全课交互术语词典入口</h2>
+    <div class="card focus" style="background: var(--plum-soft); border-color: #d8b4fe; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h3 style="color: var(--purple); margin: 0 0 .4rem;">📖 交互式全课术语词典 (GLOSSARY.html)</h3>
+        <p style="font-size: .92rem; color: var(--ink-soft); margin: 0;">一站式检索并阅读 1-10 课所有工程架构、双契约、Harness、证据链与主管裁决硬核术语。</p>
+      </div>
+      <a href="../GLOSSARY.html" class="btn-enter" style="background: var(--purple); font-size: .95rem; padding: .6rem 1.4rem;">💡 访问术语词典 →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  主管 AI 原型制作训练营 V4 路线图 · 权威冻结版本 | <a href="../GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</body>
+</html>

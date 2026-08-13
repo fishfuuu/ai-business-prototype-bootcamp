@@ -10,7 +10,7 @@ $scriptRoot = $PSScriptRoot
 $targetDir = (Resolve-Path $TargetStudentProjectDir).Path
 
 Write-Host "========================================"
-Write-Host "Lesson 02 Materials Safe Installer"
+Write-Host "Lesson Materials Safe Installer"
 Write-Host "========================================"
 Write-Host "Target Project: $targetDir"
 Write-Host ""
@@ -79,14 +79,14 @@ foreach ($line in $checksumLines) {
     $expectedHash = $parts[0].Trim().ToLowerInvariant()
     $relPath = $parts[1].Trim().Replace('/', '\')
     $relUnix = $parts[1].Trim().Replace('\', '/')
-    
+
     $checksumFilesDeclared.Add($relUnix)
 
     $localFilePath = Join-Path $packageRoot $relPath
     if (-not (Test-Path $localFilePath)) {
         throw "Package verification failed: File declared in SHA256SUMS.txt is missing: $relPath"
     }
-    
+
     $actualHash = (Get-FileHash -Path $localFilePath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($actualHash -ne $expectedHash) {
         throw "Package integrity failure! Checksum mismatch on '$relPath'. Expected: $expectedHash, Actual: $actualHash"
@@ -112,9 +112,9 @@ foreach ($file in $payloadFiles) {
     $normFullName = [System.IO.Path]::GetFullPath($file.FullName)
     $relPath = $normFullName.Substring($payloadDirNormalized.Length + 1)
     $targetPath = Join-Path $targetDir $relPath
-    
+
     $sourceHash = (Get-FileHash -Path $normFullName -Algorithm SHA256).Hash.ToLowerInvariant()
-    
+
     if (Test-Path $targetPath) {
         $targetHash = (Get-FileHash -Path $targetPath -Algorithm SHA256).Hash.ToLowerInvariant()
         if ($sourceHash -eq $targetHash) {

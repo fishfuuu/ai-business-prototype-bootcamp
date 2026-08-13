@@ -72,32 +72,26 @@ try {
 
     # 5. Extract payload/ files from SourceCommit via git archive
     $gitArchiveZip = Join-Path $tempDir "git-archive.zip"
-    & git archive --format=zip -o $gitArchiveZip $sourceCommit docs .claude/skills .claude/agents scripts
+    & git archive --format=zip -o $gitArchiveZip $sourceCommit lessons .claude/skills .claude/agents scripts
     if ($LASTEXITCODE -ne 0) {
-        throw "git archive for docs, skills, agents & scripts failed on SourceCommit $sourceCommit."
+        throw "git archive for lessons, skills, agents & scripts failed on SourceCommit $sourceCommit."
     }
-    
+
     $archiveExtractDir = Join-Path $tempDir "git-archive-extracted"
     Expand-Archive -Path $gitArchiveZip -DestinationPath $archiveExtractDir -Force
-    
+
     $payloadStagingDir = Join-Path $packageStaging "payload"
     New-Item -ItemType Directory -Path $payloadStagingDir -Force | Out-Null
     Copy-Item -Path "$archiveExtractDir\*" -Destination $payloadStagingDir -Recurse -Force
 
-    # Filter to only keep allowed lesson relevant docs, skills, agents & scripts in payload
+    # Filter to only keep allowed lesson relevant files in payload
     $allowedRelativePaths = @(
-        "docs\LESSON_02_GUIDE.md",
-        "docs\assets\lesson-02\lesson-02-flow.png",
-        "docs\assets\lesson-02\ref-monitor-decision.png",
-        "docs\assets\lesson-02\ref-task-workflow.png",
-        "docs\assets\lesson-02\ref-operation-tool.png",
-        "docs\LESSON_03_GUIDE.md",
+        "lessons\LESSON_02_GUIDE_V4.md",
         ".claude\skills\grill-me\SKILL.md",
-        "docs\LESSON_04_GUIDE.md",
+        "lessons\LESSON_03_GUIDE_V4.md",
         ".claude\skills\incremental-implementation\SKILL.md",
-        ".claude\agents\verifier.md",
-        "scripts\run-lesson-verifier.ps1",
-        "scripts\verify-lesson-04-student.ps1"
+        ".claude\agents\qa-tester.md",
+        "scripts\install-lesson-materials.ps1"
     )
 
     $allExtractedFiles = Get-ChildItem -Path $payloadStagingDir -Recurse -File

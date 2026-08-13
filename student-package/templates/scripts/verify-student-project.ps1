@@ -21,8 +21,6 @@ $requiredFiles = @(
     "DESIGN.md",
     "README.md",
     "START_HERE.md",
-    "docs\PROJECT_STATE.md",
-    "docs\COMPONENT_CATALOG.md",
     "docs\LESSON_01_GUIDE.md",
     "docs\assets\lesson-01\lesson-01-flow.png",
     "src\main.ts",
@@ -54,13 +52,13 @@ Write-Host "[2/5] Checking prohibited teacher-only paths..."
 $prohibitedPaths = @(
     "references",
     "CONTRIBUTING.md",
-    "docs\COURSE_ROADMAP.md",
-    "docs\LESSON_TEMPLATE.md",
+    "lessons\COURSE_ROADMAP_V4.md",
+    "lessons\DESIGN_SPECIFICATION.md",
     "docs\DESIGN_ALIGNMENT_AUDIT.md",
     "docs\DESIGN_ALIGNMENT_DECISIONS.md",
     "docs\DESIGN_ALIGNMENT_FINAL_REPORT.md",
     "docs\主管 AI 原型制作训练营.md",
-    "scripts\verify-project.ps1",
+    "scripts\verify-project.ps1", # legacy
     "scripts\export-student-package.ps1",
     "student-package",
     ".github"

@@ -1,68 +1,128 @@
 ---
 name: teaching-lesson-plan
-description: "Design a Lesson Design Brief (教学推理中间层) using Backward Design (Wiggins & McTighe), Constructive Alignment (Biggs), Bloom's Taxonomy ABCD framework, and WHERETO as diagnostic/coverage lenses. Use when asked to design learning objectives, evidence, or activity logic for a lesson. This skill produces only the Lesson Design Brief; it does not produce final TEACHER_PLAN or GUIDE files."
+description: "Upgrade one lesson from its original version by comparing the original teacher plan and learner guide against the frozen baseline and a reference sample. Produces only the Lesson Design Brief (contract_version 2.0); never renders TEACHER_PLAN or GUIDE."
 ---
 
-# Teaching Lesson Plan Skill (Lesson Design Brief)
+# Teaching Lesson Plan (Inheritance-Based Upgrade)
 
-Produces a **Lesson Design Brief** — the pedagogical reasoning intermediate layer for a single lesson. It does **not** produce final `TEACHER_PLAN` or `GUIDE` files, and it does not modify repository course materials.
+Produce only a **Lesson Design Brief** (contract_version 2.0). Do not render a final teacher plan, learner guide, or repository course artifact.
 
-## Role Boundaries
+This skill does not design a lesson from scratch. It **upgrades an existing lesson** by carrying forward proven teaching content and adjusting it to the frozen baseline boundaries.
 
-- This skill only generates the Lesson Design Brief (教学推理中间层).
-- Final `TEACHER_PLAN` / `GUIDE` rendering is the sole responsibility of `teacher-plan-architect` (TPA), which consumes a HANDOFF_READY Brief.
-- This skill does not own the Brief artifact, lifecycle state, artifact ownership, or approval power. It only provides method and rendering constraints.
-- `HANDOFF_READY` means the Brief is complete per the schema; it is **not** an approval, not DESIGN_REVIEWED/FROZEN, and not user approval.
+## Authority and schema
 
-## Schema Authority
+1. Read `.agents/skills/teaching-lesson-plan/references/lesson-design-brief-template.md` in full. Treat it as the only Brief schema and `contract_version` authority.
+2. The consumed Brief version is `contract_version: 2.0`. Version 1.0 inputs fail closed.
+3. Stop on a missing/stale source, schema mismatch, wrong lesson, or changed objective/non-goal/acceptance meaning.
 
-- The **only** schema authority for the Brief is:
-  `.agents/skills/teaching-lesson-plan/references/lesson-design-brief-template.md`
-- That reference file is the sole owner of `contract_version`. TPA only declares which version it consumes and validates fields against it.
-- If the reference file is missing, unreadable, or its `contract_version` cannot be resolved, fail closed: stop and report; do not proceed with an ad-hoc schema.
+`HANDOFF_READY` means the Brief is complete and internally consistent. It is not approval, lifecycle state, or authorization to write a teacher plan.
 
-## Trigger Boundaries
+## Mandatory inputs (three types)
 
-Use this skill when the request is to design **learning objectives, evidence, or activity logic** for a lesson (Lesson Design Brief only).
+Before writing the Brief, read all three input types. Missing any one is a fail-closed stop:
 
-Do **not** use this skill when the request is to write repository `TEACHER_PLAN` / `GUIDE` files — that is TPA's trigger.
+### 1. Frozen baseline
+The ten-lesson frozen baseline. This defines course direction, per-lesson positioning, core concepts, Tasks, evidence criteria, AI integration boundaries, and the cross-lesson concept distribution. It is the authority on direction and boundaries.
 
-## Required Inputs
+### 2. Original lesson materials
+The original teacher plan and learner guide for the target lesson. These live under ``docs/LESSON_XX_TEACHER_PLAN.md`` and ``docs/LESSON_XX_GUIDE.md`` (or the latest pre-upgrade version). They provide teaching thickness: flow diagrams, detailed prompts, classroom tasks, demonstration steps, teacher explanations, in-class questions, misconceptions and troubleshooting.
 
-Ask the user for these if not provided:
-- **Lesson number and course context** (must reference the locked UIC / frozen design specification / approved roadmap)
-- **Audience** (this project: business department heads, default no code/Git/MCP/terminal background)
-- **Session length** (this project: 90 minutes hard upper bound, adjustable blocks)
-- **Learning goal** (what should participants know or be able to do by the end?)
-- **Prior knowledge** (what can you assume they already know?)
+### 3. Reference sample (frozen)
+The frozen reference sample teacher plan and learner guide. This is the structural and density reference: it shows what a correctly upgraded lesson looks like in the target structure (8 modules and 6 chapters).
 
-## Output Structure
+## Required workflow: compare first, generate second
 
-The Brief must follow the field contract in `references/lesson-design-brief-template.md` exactly, including:
+### Step 1: Read and compare
 
-1. **Lesson metadata**: lesson number, course context, authority chain references (locked UIC → frozen design specification → approved roadmap → approved lesson artifacts → skill defaults).
-2. **Learning objectives**: Bloom ABCD format; recognition-level objectives are allowed, but this course's summative objectives default to Apply and above, with business-observable Degree.
-3. **Evidence design**: what evidence would show the objective is met; distinguish auto-checkable fixed-answer items from teacher-judged reasoning/risk/quality evidence.
-4. **Activity logic**: coverage functions (teacher demo / standard case / personal migration / evidence / closure) that may be merged or reordered; must sum to the upstream time budget (≤ 90 minutes).
-5. **Concept exposure ledger entry**: first-introduced vs revisited; student-facing named label vs plain-language experience vs teacher-only background; independently assessed judgments (composite names must not hide concept load).
-6. **Safety boundary declaration**: Mock/no-key rules, pre-de-identification, teacher real calls outside the repository, no fabricated capabilities.
-7. **Readiness declaration**: `brief_readiness: DRAFT | HANDOFF_READY` — completeness only, not approval.
+Read all three input types. Produce a **content inheritance and adjustment table** before writing any Brief fields:
 
-## Fail-Closed Rules
+| Original content | Frozen baseline requirement | Judgment | Treatment | Rationale |
+| --- | --- | --- | --- | --- |
+| Original core concepts | New concept allocation | retain / rewrite / migrate / delete | specific treatment | correct? is this lesson's focus? |
+| Original flow diagrams | This lesson's integration model | retain and rewrite | place in guide ch.1 | does it aid understanding? |
+| Original Tasks | New classroom results | retain / shrink / reorder | new position | does it serve the main result? |
+| Original prompts | New Task cards | retain verbatim / adjust / migrate | specific treatment | can students use it directly? |
+| Original troubleshooting | New debug/fallback plan | retain / consolidate | new position | is it real and useful? |
+| Original in-class questions | New assessment design | retain / adjust / add | specific treatment | does it verify real understanding? |
+| Original misconceptions | New misconception list | retain / adjust / consolidate | specific treatment | is it still relevant? |
 
-- **Wrong lesson**: if the Brief's lesson number does not match the requested lesson, stop and report.
-- **Stale source**: if the Brief references a source (UIC/design/roadmap) that is not the current locked/frozen/approved version, stop and report.
-- **Invalid readiness**: if `brief_readiness` is not HANDOFF_READY, downstream (TPA) must not consume the Brief.
-- **Spec gap**: if the Brief would change objectives, non-goals, or acceptance meaning, classify it as a specification gap and return to DRAFT; do not silently absorb it.
+### Step 2: Confirm treatment decisions
 
-## Quality Checks & Anti-Patterns
+For each original content item, confirm one of five treatments:
 
-- [ ] Learning objectives use action verbs (ABCD format, avoiding vague "understand")
-- [ ] Constructive Alignment is used as a diagnostic lens; do not claim "100% alignment" as a mechanical guarantee
-- [ ] WHERETO is used as a diagnostic/coverage lens, not a mandatory seven-cell compliance table or the only script
-- [ ] Coverage functions sum to the upstream time budget (≤ 90 minutes); no fixed seven-segment sequence is required
-- [ ] Concept exposure ledger distinguishes named/plain/background and independently assessed judgments
-- [ ] Exit Ticket: 1–2 mandatory prompts; additional questions go to an optional after-class question bank
-- [ ] No fabricated capabilities: do not claim `verify-project.ps1`, `npm run verify`, `doctor`, or `test:ui` as implemented classroom capabilities unless the repository actually provides them
-- [ ] Safety boundary: Mock/no-key, pre-de-identification, teacher real calls outside the repository
-- [ ] `brief_readiness` is set and means completeness only, not approval
+- **Retain**: keep as-is because it is correct and serves the lesson's main line.
+- **Rewrite**: keep the teaching value but adjust expression, depth, or framing to the frozen baseline boundaries.
+- **Migrate**: move to a more appropriate lesson (record which lesson).
+- **Delete**: remove only with an explicit reason from the default-retain list.
+- **Add**: introduce new content required by the frozen baseline that the original did not cover.
+
+### Step 3: Generate the Brief
+
+Only after the inheritance table is complete and treatment decisions are confirmed, generate the Brief following the contract_version 2.0 schema.
+
+## Default-retain principle
+
+Original content does not disappear just because the new template has no matching field. Deletion requires an explicit reason from this list:
+
+1. The concept is wrong or stated too absolutely.
+2. It is unrelated to this lesson's main line.
+3. It is severely redundant.
+4. It exceeds the depth a supervisor needs.
+5. It conflicts with current safety boundaries.
+6. It has migrated to a more appropriate lesson.
+
+Every deletion or downgrade must be recorded in the inheritance table with its reason. The Brief must not silently drop original content.
+
+## Teaching thickness checks
+
+Before setting `HANDOFF_READY`, verify not just chapter counts but real teaching substance:
+
+- Is there sufficient teacher exposition content (not just headings)?
+- Are there directly usable demonstrations and prompts (not placeholders)?
+- Does the learner know how to do each step specifically?
+- Is there a complete core-concept relationship diagram (not a timetable)?
+- Are 90 minutes supported by real teaching activities (not nineteen empty sub-headings)?
+- Are in-class questions, extension questions, misconceptions and troubleshooting preserved from the original or replaced with equal or better content?
+
+If any check fails, the Brief is `DRAFT`, not `HANDOFF_READY`.
+
+## Brief field requirements (contract_version 2.0 summary)
+
+The Brief must include all fields from the schema reference. Key additions:
+
+- `prototype_progress_line` and `supervisor_judgment_line`: two parallel lines, separately assessable, merged into one classroom result.
+- `core_concept_count` (3-5) and `extension_concept_count` (0-2): independently counted; composite names cannot hide independent judgments.
+- `lesson_integrated_model`: one model type (architecture / method_loop / pattern_comparison / capability_evolution / judgment_framework / evidence_chain); must not be a classroom timetable.
+- `tasks`: shared Task semantics with teacher card (demonstration / cue / patrol_judgment / failure_fallback) and learner card (purpose / copy_or_execute / expected_observation / check / mandatory_stop).
+- `required_questions` (1-5) and `extension_questions` (0-2): may be distributed after corresponding Tasks; answers or judgment points required.
+- `misconceptions` (0-5) and `troubleshooting_categories` (0-5): preserved or replaced with equal content from original.
+- `inheritance_table`: the content inheritance and adjustment table from Step 1.
+
+## Per-lesson comparison checks (eight dimensions)
+
+After generating the Brief, verify against these eight dimensions:
+
+1. **Course main line**: has it drifted from the original positioning? (e.g., L6 must still be about debugging, not abstract theory)
+2. **Concept correctness**: are core concepts correct? Check for over-absolute claims, pseudo-engineering ability, and inaccurate analogies.
+3. **Concept placement**: is each concept in the correct lesson? Important but non-focus content should migrate or become extension recognition, not be deleted.
+4. **Teaching thickness**: are flow diagrams, detailed prompts, operation steps, teacher narration, examples and questions all checked item by item against the original?
+5. **Task alignment**: does each Task serve the classroom main result? Avoid extra homework just to fill template slots.
+6. **Dual lines**: are prototype progress and supervisor judgment both advancing, converging into one main result?
+7. **90-minute teachability**: is it real and teachable? Not nineteen sub-headings creating false richness, and not a bare framework with no content.
+8. **Cross-lesson coherence**: does it read from the previous lesson, modify the right things, and leave the right things for the next lesson?
+
+## Fail closed
+
+Stop and report when:
+
+- the lesson number or authority reference is wrong;
+- any of the three mandatory input types is missing;
+- the upstream lesson contract conflicts with requested counts or structure;
+- the request changes a frozen objective, non-goal, or acceptance meaning;
+- a Task has no evidence or stop condition;
+- the integrated model is merely a classroom schedule;
+- the Brief would silently create more than one GUIDE;
+- required capabilities do not exist;
+- original content is deleted without a reason from the default-retain list;
+- the inheritance table is missing or incomplete;
+- teaching thickness checks fail.

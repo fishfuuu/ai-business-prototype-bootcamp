@@ -25,8 +25,6 @@
 ## 📖 学员核心文档导航
 
 * **唯一指南与实操卡**：请阅读 [docs/LESSON_01_GUIDE.md](file:///docs/LESSON_01_GUIDE.md)。
-* **项目状态与演进记录**：请查看与填报 [docs/PROJECT_STATE.md](file:///docs/PROJECT_STATE.md)。
-* **通用组件速查表**：请查阅 [docs/COMPONENT_CATALOG.md](file:///docs/COMPONENT_CATALOG.md)。
 
 ---
 

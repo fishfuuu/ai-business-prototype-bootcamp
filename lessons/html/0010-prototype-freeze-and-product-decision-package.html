@@ -1,0 +1,1103 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 10 课 · 冻结原型包，形成产品决策与开发启动包 | 主管 AI 训练营 V4</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #1e293b;
+    --ink-soft: #475569;
+    --line: #e2e8f0;
+    --teal: #0f766e;
+    --teal-soft: #f0fdfa;
+    --amber: #d97706;
+    --amber-soft: #fffbe6;
+    --plum: #7c3aed;
+    --plum-soft: #f3e8ff;
+    --red: #dc2626;
+    --red-soft: #fef2f2;
+    --green: #16a34a;
+    --green-soft: #f0fdf4;
+    --blue: #2563eb;
+    --blue-soft: #eff6ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #92400e 100%);
+    color: #f8fafc;
+    padding: 3.8rem 1.25rem 3.2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  }
+  .hero .wrap { max-width: 900px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #fde68a; font-weight: 800; display: flex; align-items: center; gap: .5rem; }
+  .hero h1 {
+    font-size: 2.2rem; line-height: 1.35; margin: .8rem 0 1rem;
+    font-weight: 800; color: #ffffff; letter-spacing: -0.01em;
+  }
+  .hero .sub { color: #fef3c7; max-width: 72ch; font-size: 1.05rem; line-height: 1.65; }
+  .hero .goal {
+    margin-top: 1.5rem; background: rgba(255,255,255,.08); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 1.1rem 1.4rem;
+    font-size: .95rem; line-height: 1.65; color: #fff;
+  }
+  .hero .goal b { color: #fde68a; }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 4rem; }
+
+  h2 {
+    font-size: 1.5rem; margin-bottom: 1.2rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem; font-weight: 800;
+    border-bottom: 2px solid #e2e8f0; padding-bottom: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #fff;
+    border-radius: 6px; padding: .25rem .6rem; box-shadow: 0 2px 6px rgba(217,119,6,0.25);
+  }
+
+  h3 { font-size: 1.15rem; margin: 1.5rem 0 .6rem; color: #0f172a; font-weight: 800; }
+  p, li { font-size: .98rem; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 1.5rem 1.75rem; margin-bottom: 1.3rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  .card.tinted { background: var(--amber-soft); border-color: #fde68a; }
+  .card.warn { background: var(--red-soft); border-color: #fca5a5; }
+  .card.focus { background: #ffffff; border-left: 4px solid var(--amber); border-color: #cbd5e1; }
+  .card.blue { background: var(--blue-soft); border-color: #bfdbfe; }
+
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .45rem 0; }
+
+  code {
+    font-family: "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", monospace; font-size: .88em;
+    background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: .15rem .4rem;
+    color: #0f172a; font-weight: 600;
+  }
+
+  .quote {
+    border-left: 4px solid var(--amber); padding: .9rem 1.2rem; margin: 1.4rem 0;
+    background: #fffbe6; border-radius: 0 10px 10px 0; font-size: 1.02rem;
+    border-top: 1px solid #fde68a; border-right: 1px solid #fde68a; border-bottom: 1px solid #fde68a;
+  }
+
+  /* Grid Layouts */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin: 1.2rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 1.4rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* Concept Cards Micro Architecture */
+  .concept-list {
+    display: flex; flex-direction: column; gap: 1.5rem; margin: 1.5rem 0;
+  }
+  .concept-card {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem 1.6rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .concept-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+
+  .concept-head {
+    font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; cursor: pointer;
+    list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .concept-head::-webkit-details-marker { display: none; }
+  .concept-head::after { content: '▼'; font-size: 0.6em; color: #94a3b8; transition: transform 0.2s; }
+
+  details[open] .concept-head {
+    border-bottom: 1px solid #f1f5f9; padding-bottom: .8rem; margin-bottom: .8rem;
+  }
+  details[open] .concept-head::after { transform: rotate(180deg); }
+
+  .concept-body { display: flex; flex-direction: column; gap: 1rem; }
+
+  .concept-pill {
+    padding-left: 1rem; font-size: .98rem; line-height: 1.75; color: #334155;
+  }
+  .concept-pill.iswhat { border-left: 3px solid #f59e0b; }
+  .concept-pill.howworks { border-left: 3px solid #64748b; }
+  .concept-pill.metaphor { border-left: 3px solid #0d9488; }
+  .concept-pill.howsee { border-left: 3px solid #3b82f6; }
+
+  .pill-label { font-weight: 800; display: inline-block; margin-bottom: .2rem; color: #1e293b; }
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--amber); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(180, 83, 9, 0.2);
+  }
+  .btn:hover { background: #92400e; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Simulator */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 24px rgba(0,0,0,0.05);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: 1rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.5rem; }
+
+  .mode-tabs {
+    display: flex; gap: .8rem; margin-bottom: 1.4rem; flex-wrap: wrap;
+  }
+  .mode-btn {
+    flex: 1; min-width: 200px; padding: .85rem 1.1rem; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: .9rem; font-weight: 700; cursor: pointer; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s ease; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .mode-btn:hover { background: #f1f5f9; border-color: #cbd5e1; transform: translateY(-1px); }
+  .mode-btn.active.raw { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+  .mode-btn.active.bounded { background: #fffbe6; border-color: #d97706; color: #92400e; }
+
+  .flow-display-canvas {
+    background: #fafaf9; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.4rem;
+    min-height: 260px; position: relative; transition: all .3s;
+  }
+  .flow-step-node {
+    background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .9rem 1.2rem;
+    margin-bottom: .8rem; font-size: .9rem; opacity: 0; transition: all .4s ease; transform: translateY(12px);
+  }
+  .flow-step-node.active { opacity: 1; transform: translateY(0); box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+  .flow-step-node.error { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
+  .flow-step-node.success { border-color: #22c55e; background: #f0fdf4; color: #166534; }
+  .flow-step-node.working { border-color: #d97706; background: #fffbe6; color: #92400e; }
+
+  .node-title { font-weight: 800; font-size: .95rem; margin-bottom: .2rem; display: flex; align-items: center; justify-content: space-between; }
+  .node-desc { font-size: .85rem; color: var(--ink-soft); line-height: 1.55; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", monospace; font-size: .9rem;
+    padding: 1rem 1.2rem; border-radius: 10px; line-height: 1.75; margin-top: 1.2rem; max-height: 170px; overflow-y: auto;
+    border: 1px solid #1e293b; box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 1rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-space-between; align-items: flex-start; gap: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .prompt-copy-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: .92rem; font-weight: 600; line-height: 1.65; color: #0f172a;
+    white-space: pre-wrap; word-break: break-word; flex: 1;
+  }
+  .btn-copy {
+    background: #0f172a; color: #fff; border: none; border-radius: 8px; padding: .5rem 1rem;
+    font-size: .82rem; font-weight: 700; cursor: pointer; transition: all .2s ease; white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; align-self: flex-start;
+  }
+  .btn-copy:hover { background: #d97706; transform: translateY(-1px); }/* Fill in blanks */
+  .blank-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 1.3rem 1.6rem;
+    margin-bottom: 1.2rem; font-size: .98rem; line-height: 1.85; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+  .blank-select {
+    padding: .3rem .75rem; border-radius: 8px; border: 2px solid var(--amber); font-size: .92rem;
+    font-weight: 700; color: #92400e; background: #fffbe6; cursor: pointer; outline: none;
+    transition: all .2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  }
+  .blank-select:hover { background: #fef3c7; }
+  .blank-select.ok { border-color: #22c55e; background: #f0fdf4; color: #166534; }
+  .blank-select.err { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
+  .blank-feedback { font-size: .88rem; margin-top: .6rem; font-weight: 700; display: none; }
+  .blank-feedback.show { display: block; }
+
+  /* Misconceptions Table */
+  .misc-table-container {
+    overflow-x: auto; margin: 1.4rem 0; border: 1px solid var(--line); border-radius: 14px; background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  .misc-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: .92rem;
+  }
+  .misc-table th {
+    background: #0f172a; color: #fff; font-weight: 700; padding: .95rem 1.2rem; border-bottom: 1px solid var(--line);
+  }
+  .misc-table td {
+    padding: 1rem 1.2rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.65;
+  }
+  .misc-table tr:hover { background: #f8fafc; }
+  .badge-misc { display: inline-block; padding: .2rem .6rem; border-radius: 6px; font-size: .8rem; font-weight: 800; }
+  .badge-misc.red { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  .badge-misc.green { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 1.4rem 1.6rem; margin-bottom: 1.3rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+  .exit-q-title { font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem; }
+  .ans-box {
+    background: #fffbe6; border: 1px solid #fde68a; border-radius: 10px; padding: 1.1rem 1.3rem;
+    margin-top: .9rem; font-size: .94rem; color: #92400e; display: none; line-height: 1.7;
+    animation: fadeInDown .25s ease-out;
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ans-box.show { display: block; }
+
+  /* Quiz Cards */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 1.5rem 1.75rem; margin-bottom: 1.3rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  .quiz-q .q { font-weight: 800; margin-bottom: .9rem; font-size: 1.05rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; width: 100%; gap: .75rem; align-items: flex-start; padding: .7rem 1rem;
+    border-radius: 10px; cursor: pointer; font-size: .95rem; border: 1.5px solid #e2e8f0;
+    background: #fff; transition: all .2s ease; margin-bottom: .4rem;
+  }
+  .quiz-q label:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateX(2px); }
+  .quiz-q label input { margin-top: .35rem; accent-color: var(--amber); }
+  .quiz-q label.sel { background: var(--amber-soft); border-color: #fde68a; }
+  .quiz-q label.correct { background: #f0fdf4; border-color: #4ade80; color: #166534; font-weight: 700; }
+  .quiz-q label.wrong { background: #fef2f2; border-color: #f87171; color: #991b1b; }
+  .feedback { display: none; margin-top: .9rem; font-size: .93rem; padding: .9rem 1.1rem; border-radius: 10px; line-height: 1.65; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  .feedback.no { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  .q-btn { margin-top: .7rem; }
+
+  .score {
+    display: none; margin-top: 1.4rem; margin-bottom: 1.6rem; background: #0f172a; color: #f8fafc;
+    border-radius: 14px; padding: 1.4rem 1.8rem; text-align: center; font-size: 1.15rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  .score.show { display: block; }
+  .score b { color: #4ade80; font-size: 1.5rem; }
+
+  /* Checklist Card */
+  .chk-list { display: flex; flex-direction: column; gap: .7rem; margin-top: .9rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .8rem; background: #fff; border: 1px solid var(--line);
+    padding: .85rem 1.1rem; border-radius: 10px; font-size: .94rem; font-weight: 600; cursor: pointer;
+    transition: background .15s;
+  }
+  .chk-item:hover { background: #f8fafc; }
+  .chk-item input { accent-color: var(--amber); width: 1.15rem; height: 1.15rem; }
+
+  footer { margin-top: 4.5rem; color: var(--ink-soft); font-size: .88rem; text-align: center; padding-top: 1.8rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 10 · 冻结原型包与 IT 启动交接</div>
+    <h1>冻结原型包，形成产品决策与开发启动包</h1>
+    <p class="sub"><b>收口十课主线，不再新增功能；把原型、契约、智能机会、证据、评审、红线、责任和未完成项交给 IT，明确哪些仍不能上线。</b><br>盘点分类十课资产（已证实 / 仅 Mock 模拟 / 未验证 / 未实现），作出<b>【继续/调整/暂缓/停止】</b>产品决策，完成五分钟汇报，将工作流正式移交 IT 团队！</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 盘点十课全部资产并准确分类；② 明确非生产就绪系统边界与风险红线；③ 结合价值/证据/风险/成本作出 4 种产品决策；④ 填报 IT 下一步优先级清单与责任 owner；⑤ 交付 5 分钟业务汇报草案并更新 `docs/PROJECT_STATE.md`。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 00: COURSE CONTEXT -->
+<section>
+  <h2><span class="num">01</span> 做出来了，为什么不等于该上线？</h2>
+  <p>十课走下来，你有了原型、契约、薄切片、智能薄片、诊断证据、浏览器验收、独立评审和部门选型图。但如果直接把这些丢给 IT，他们不知道从哪里开始、哪些已证实、哪些还没做。第十课把这些收口成一份 IT 能读懂、能追溯、能开始正式设计的输入。</p>
+  <div class="card focus">
+    <p><b>记住这句话：</b><br>
+    本课是开发启动点，不是生产终点。冻结当前原型，不临时补新功能；把已确认事实、证据、缺口和下一步交给 IT——不是一键生成的可上线包。</p>
+  </div>
+  <p>作出继续、调整、暂缓或停止的产品决定，并明确哪些内容仍不能上线。主管的责任没有结束，只是从"做原型"进入了"管开发"。</p>
+</section>
+<!-- SECTION 01: INTERACTIVE DEMONSTRATOR -->
+<section>
+  <h2><span class="num">02</span> 核心架构演进：丢散乱代码给 IT vs 结构化开发启动包</h2>
+  <p>通过下方交互演示，直观对比“把未冻结的临时 HTML 乱丢给 IT、责任混淆被打回”与“四类资产盘点 ➔ 确认红线 owner ➔ 四依据产品决策 ➔ IT Handoff 五分钟汇报”的流转差异：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎬 冻结原型包与 IT 开发启动包交付动态演示</span>
+      <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
+    </div>
+    <div class="sim-body">
+
+      <div class="mode-tabs">
+        <button class="mode-btn active raw" id="mBtnRaw" onclick="runMode('raw')">🔴 模式 A：丢散乱 HTML 给 IT (未区分Mock/无红线/伪装生产就绪/交接崩盘)</button>
+        <button class="mode-btn bounded" id="mBtnBounded" onclick="runMode('bounded')">🟢 模式 B：结构化开发启动包 (资产四分类+红线owner+4依据决策+5分钟汇报)</button>
+      </div>
+
+      <div class="flow-display-canvas" id="flowCanvas">
+        <!-- JS rendered steps -->
+      </div>
+
+      <div class="console-output" id="consoleLog">
+        > 点击上方按钮运行模式推演…
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote">
+    💡 <b>一句话口诀</b>：原型是开发起点，不是生产终点；四类资产如实盘，红线 owner 交代清；依据 4 维度作决策，结构化启动包交接给 IT！
+  </div>
+</section>
+
+<!-- SECTION 02: 5 CORE CONCEPTS -->
+<section>
+  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <div class="concept-list">
+    <details class="concept-card">
+      <summary class="concept-head">1. 非生产就绪系统（原型与生产系统）</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>原型验证路径和决策；生产系统还需正式架构、安全、数据、测试、运维与责任治理。原型能跑通不等于能上线，原型的 Mock 数据和模拟智能行为不能冒充生产能力。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>原型回答"这条业务路径值不值得做、该不该用 AI"；生产系统回答"如何在安全、性能、成本和合规下稳定运行"。两者面向不同问题、不同标准和不同团队。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>建筑模型与真实建筑——模型验证户型和动线是否合理，真实建筑还需要结构计算、消防审批、水电工程和施工许可；不能因为模型好看就跳过施工图。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会盘点十课资产，区分已证实和仅 Mock/模拟，这就是原型与生产系统的分界线。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">2. 风险红线与非目标</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>明确不能自动执行、必须人工批准、暂不建设或留给后续工程的事项；不是"所有风险都要在本课解决"，而是"所有风险都要被看见、被记录、有 owner"。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>从 L9 的三链责任和 fallback 中提取红线——不可逆动作（资金、合同）、高敏感数据、责任不清的模糊判断、难以验证的开放任务；把红线写入开发启动包，让 IT 知道哪些不能碰、哪些暂不做。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>交房时的非交付清单——房屋交付时附一份"尚未完成或需要业主自行处理"的清单，不假装一切都好；也不是"有问题就不交房"，而是"交房时说明清楚"。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会对照 L9 选型确认红线和 owner。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">3. 产品决策</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>根据价值、证据、风险和成本选择继续、调整、暂缓或停止，不以"做出来了"自动等于应该建设；不是所有原型都要上线，也不是做出来就白做了。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>把价值（值不值得）、证据（能不能证明成立）、风险（出了问题多大代价）和成本（正式开发需要多少投入）四项放在一起，作出一个有理由的产品决定。决定可以是继续、调整方向、暂缓或停止，四者都是合理选择。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>投资决策——不是每个项目都投，不是每个项目都拒绝；依据预期回报、风险评估、已有证据和资金成本作决定；做出来了不等于应该投，没做也不等于白做。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会作出继续/调整/暂缓/停止的决定并写理由。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">4. 开发启动包</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>把已确认事实、证据、缺口和下一步交给 IT；不是一键生成的可上线包，不是包含源码和数据的交付 ZIP。它是一份结构化的输入文件，让 IT 知道从哪里开始、依据什么、缺什么。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>汇总十课成果——问题与使用者、现有原型、业务/数据/验收契约、AI 机会与范式选型、测试和独立评审证据、风险红线、三链责任、未完成项、主管决策——形成一份 IT 能读懂、能追溯、能开始正式设计的输入。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>项目交接仪式——不是把钥匙丢给对方就走，而是带着建筑模型、竣工证据、红线清单和未完成清单坐下来，逐项说明"这是什么、证明了什么、还差什么、谁负责"。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—4 的汇总就是你的开发启动包。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. 责任交接</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>业务、数据、模型、工具、审批、失败处置和上线门禁都有明确 owner；不是"交给 IT 就完了"，也不是"主管保留所有决定权"。交接是责任转移，不是责任消失。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>对开发启动包中每一项写明——谁是业务 owner、谁是数据 owner、谁是技术 owner、谁负责审批、谁负责失败处置、谁决定能否上线。暂不能确定的 owner 必须标"待定"并写明由谁去落实。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>铁路交接——新铁路开通前，运营权、维护权、安全审批权分别移交不同部门，不是一个人全管，也不是"交了就没人管了"。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 和 Task 4 你会确认 owner 和作出决策。
+        </div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- SECTION 03: INTERACTIVE DEMONSTRATOR / ASSETS AUDIT SIMULATOR -->
+<section>
+  <h2><span class="num">04</span> 演练：十课资产四分类 (已证实 / 仅 Mock / 未验证 / 未实现) 审计</h2>
+  <p>点击下方 4 种资产分类，预览十课成果的物理盘点与状态标注：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>📦 十课资产分类与产品决策模拟终端</span>
+      <span style="font-size: .8rem; opacity: .8;">点击按钮查看资产盘点与 4 依据决策</span>
+    </div>
+    <div class="sim-body">
+      <div class="mode-tabs">
+        <button class="mode-btn active bounded" onclick="runAsset('proven')">✅ 1. 已证实 (有 L7 浏览器/L8 独立审查证据)</button>
+        <button class="mode-btn" style="border-color:var(--amber); color:var(--amber);" onclick="runAsset('mock')">🎭 2. 仅 Mock/模拟 (使用模拟数据或模拟 AI)</button>
+        <button class="mode-btn" style="border-color:var(--blue); color:var(--blue);" onclick="runAsset('unverified')">❓ 3. 未验证 (已设计但未跑通/未取证)</button>
+        <button class="mode-btn raw" onclick="runAsset('unimplemented')">❌ 4. 明确未实现 (规划但未做/属于非目标)</button>
+      </div>
+
+      <div class="console-output" id="assetTerminal" style="min-height: 140px;">
+        > 点击上方按钮查看十课资产盘点分类结果...
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
+<section>
+  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然授权口令卡</h2>
+
+<div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：盘点十课资产，区分已证实、仅 Mock/模拟、未验证和明确未实现</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">请帮我盘点十课训练营的全部资产。
+
+要求：
+1. 列出每一课做的主要成果（原型、契约、薄片、证据、选型图等）
+2. 对每项标注：
+   - 来源课次
+   - 是什么
+   - 当前状态（四选一）：
+     * 已证实：有真实运行证据或验收通过
+     * 仅 Mock/模拟：用模拟数据或模拟智能行为
+     * 未验证：设计了但没跑过或没验证
+     * 未实现：计划了但没做
+3. 不要新增东西，只盘点已有的
+4. 不要把 Mock 标成"已证实"</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一份资产清单，每项有来源课次和四类状态之一，Mock 项标了"模拟"，未实现项标了"未实现"。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：对照 L9 选型，确认保留的智能机会、拒绝项、风险红线与 owner</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">请对照我的 L9 部门 AI 机会与 Agent 范式选型图，逐项确认：
+
+1. 保留的智能机会：哪些继续保留为候选？理由是什么？
+2. 拒绝项：哪些明确不用 AI/Agent？理由是什么？
+3. 风险红线：哪些动作绝对不能自动执行（不可逆/高敏感/责任不清/难验证）？
+4. owner：对每项标注 owner
+   - 业务 owner：负责业务目标和验收（通常是主管自己）
+   - 数据 owner：负责数据质量和脱敏
+   - 技术 owner：负责实现和运维（可能是 IT，待定也要写明）
+   - 审批 owner：谁批准能否上线
+
+拒绝项和红线要写理由。owner 不能全写"自己"或"IT"，要按角色分别标注。</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了保留项、拒绝项、红线项和 owner 标注，每项有理由。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：用 L7/L8 证据说明原型在哪些范围内成立，列出未解决 findings</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">请用 L7 浏览器验收证据和 L8 独立评审记录，说明我的原型在哪些范围内成立。
+
+1. 成立范围：逐项说明"什么被什么证据证明了"
+   - 例：正常路径成立——L7 浏览器验收截图证明了正常路径可操作
+   - 例：独立评审有记录——L8 有 finding 记录和主管处置
+2. 未解决 findings：列出尚有问题的项
+   - 例：失败降级路径未验证——L7 只验收了正常路径
+   - 例：智能行为未接真实模型——L5 只做了模拟
+3. 不要用"应该没问题"代替证据
+4. 不要把 Mock 当真实证据</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了成立范围（有证据引证）和未解决 findings 清单。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：作出继续/调整/暂缓/停止的产品决定，并形成 IT 下一步清单</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p4">请基于以下信息，帮我作出产品决定：
+
+1. 资产盘点结果（Task 1）
+2. 红线和选型确认（Task 2）
+3. 证据覆盖范围和未解决 findings（Task 3）
+
+产品决策要求：
+1. 对每个保留候选作出决定：继续 / 调整 / 暂缓 / 停止
+2. 每个决定写四项依据：
+   - 价值：值不值得做
+   - 证据：能不能证明成立
+   - 风险：出了问题多大代价
+   - 成本：正式开发需要多少投入
+3. 不是所有项都"继续"；该暂缓的暂缓，该停止的停止
+
+然后形成 IT 下一步清单：
+- 每项标优先级（高/中/低）
+- 每项标前置条件（需要什么先完成）
+- 不是"全交 IT 自己看着办"</span>
+      <button class="btn-copy" onclick="copyText('p4')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了每个候选的产品决定（有四项依据）和 IT 下一步清单（有优先级和前置条件）。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：完成五分钟汇报——业务问题、原型证据、AI 选择、风险边界、需要 IT 做什么</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p5">请帮我准备五分钟汇报，覆盖五个要素：
+
+1. 业务问题（30秒）：什么业务问题、谁遇到、为什么重要
+2. 原型证据（60秒）：原型做了什么、有什么证据（引用L7验收和L8评审）
+3. AI 选择（60秒）：哪个环节用AI/Agent、什么范式、哪个明确不用AI
+4. 风险边界（60秒）：哪些是红线、哪些未验证、失败如何降级
+5. 需要 IT 做什么（30秒）：下一步清单的优先项
+
+要求：
+- 每个要素只说结论，结论要能追溯到前四步的资产和证据
+- 不要编造能力或夸大已证实范围
+- 总计五分钟，不超时</span>
+      <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了五分钟汇报草稿，五个要素各有时长控制，结论可追溯。</div>
+  </div>
+
+</section>
+
+<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<section>
+  <h2><span class="num">06</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
+
+  <h3>1. ✍️ 概念互动填空 (Interactive Fill-in-the-Blanks)</h3>
+  <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空：</p>
+
+  <div class="blank-card" id="bCard1">
+    1. <b>原型与生产分界</b>：训练营完成的原型属于
+    <select class="blank-select" id="blank1">
+      <option value="">-- 请选择 --</option>
+      <option value="proto">非生产就绪系统 (验证可行性与决策)</option>
+      <option value="prod">可以直接生产上线的系统</option>
+    </select>；在盘点十课资产时，使用 Mock 数据或模拟智能的环节必须标注为
+    <select class="blank-select" id="blank2">
+      <option value="">-- 请选择 --</option>
+      <option value="mock">仅 Mock/模拟</option>
+      <option value="proven">已证实</option>
+    </select>。
+    <div class="blank-feedback" id="bf1"></div>
+  </div>
+
+  <div class="blank-card" id="bCard2">
+    2. <b>产品决策与交接责任</b>：主管作出【继续 / 调整 / 暂缓 / 停止】产品决策的四个依据是
+    <select class="blank-select" id="blank3">
+      <option value="">-- 请选择 --</option>
+      <option value="four">价值、证据、风险、成本</option>
+      <option value="feel">个人感觉与爱好</option>
+    </select>；向 IT 交付启动包时必须明确记住的是：交接是责任
+    <select class="blank-select" id="blank4">
+      <option value="">-- 请选择 --</option>
+      <option value="shift">转移 (而非责任消失)</option>
+      <option value="disappear">彻底消失与甩锅</option>
+    </select>。
+    <div class="blank-feedback" id="bf2"></div>
+  </div>
+
+  <button class="btn" style="margin-bottom: 2rem;" onclick="checkAllBlanks()">✅ 核对所有填空答案</button>
+
+  <h3>2. 💡 常见概念误区与正确理解 (3 栏对照表)</h3>
+  <div class="misc-table-container">
+    <table class="misc-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">常见误区 (Misconception)</th>
+          <th style="width: 42%;">正确硬核理解 (Correct Engineering Reality)</th>
+          <th style="width: 30%;">如何纠偏与护栏防护 (Remedy & Guardrails)</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+          <td><span class="badge-misc red">误区 1</span><br><b>"做出来了就应该上线"</b></td>
+          <td>做出来只证明路径可走，不证明值得正式开发；产品决策要依据价值/证据/风险/成本</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 2</span><br><b>"Mock 跑通了就算成功"</b></td>
+          <td>Mock 是模拟，不是已证实能力；四类状态必须区分</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 3</span><br><b>"交给 IT 就完了"</b></td>
+          <td>交接是责任转移不是责任消失；每项有 owner，业务和数据 owner 是主管</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 4</span><br><b>"最后一课补点功能更完整"</b></td>
+          <td>最后一课不新增功能，只盘点和冻结；完整度不等于功能数量</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 5</span><br><b>"原型能跑就能上线"</b></td>
+          <td>原型与生产系统是两回事；生产还需安全/数据/集成/监控/合规等门禁</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 06: QUIZ & EXIT TICKET -->
+<section>
+  <h2><span class="num">07</span> 测验 + 🎯 退场测试题 + 课后拓展</h2>
+
+  <!-- 5 Scenario Quiz -->
+  <h3>1. 5 道概念选择测验</h3>
+          <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · 原型系统与生产系统的核心区别是什么？</div>
+    <label><input type="radio" name="q1" value="a"> 二者没有任何区别，原型就能直接给用户生产使用</label>
+    <label><input type="radio" name="q1" value="b"> 原型验证路径可行性与决策；生产系统还需正式架构、安全、数据治理、合规与运维门禁</label>
+    <label><input type="radio" name="q1" value="c"> 原型是用 Python 写的，生产系统是用 Java 写的</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · 在第 10 课资产盘点中，四类状态包含哪些？</div>
+    <label><input type="radio" name="q2" value="a"> 新建、修改、提交、删除</label>
+    <label><input type="radio" name="q2" value="b"> 优秀、良好、及格、不及格</label>
+    <label><input type="radio" name="q2" value="c"> 已证实、仅 Mock/模拟、未验证、明确未实现</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · 主管作出【继续/调整/暂缓/停止】产品决策的四个依据是什么？</div>
+    <label><input type="radio" name="q3" value="a"> 价值 (值不值得)、证据 (能否证明成立)、风险 (代价多大)、成本 (投入多少)</label>
+    <label><input type="radio" name="q3" value="b"> 时间、地点、人物、事件</label>
+    <label><input type="radio" name="q3" value="c"> 提示词长度、模型参数量、Token 消耗、响应时间</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · 五分钟业务汇报草案需要覆盖哪五个核心要素？</div>
+    <label><input type="radio" name="q4" value="a"> 业务问题、原型证据、AI 选择、风险边界、需要 IT 做什么</label>
+    <label><input type="radio" name="q4" value="b"> 自我介绍、项目背景、代码行数、技术选型、总结感言</label>
+    <label><input type="radio" name="q4" value="c"> 公司历史、部门介绍、人员构成、预算申请、未来展望</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="5">
+    <div class="q">Q5 · 关于向 IT 交接启动包与责任归属，正确的硬核理解是什么？</div>
+    <label><input type="radio" name="q5" value="a"> 启动包交给 IT 后，主管就彻底没有任何责任了</label>
+    <label><input type="radio" name="q5" value="b"> 所有技术和业务细节全部留给 IT 团队去猜</label>
+    <label><input type="radio" name="q5" value="c"> 交接是责任转移而非消失；主管始终承担业务目标与数据 owner 责任</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+<div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：原型与生产系统有什么区别？为什么原型能跑通不等于能上线？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      原型验证路径和决策，生产系统还需正式架构、安全、数据、测试、运维和责任治理。原型用 Mock 数据和模拟行为，缺少安全评审和集成测试等门禁，所以能跑通不等于能上线。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：风险红线与非目标包括什么？为什么"所有风险都要被看见"比"所有风险都要被解决"更重要？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      红线包括不可逆动作（资金、合同）、高敏感数据、责任不清的模糊判断和难以验证的开放任务。本课是交接不是解决，让 IT 知道边界比假装解决更重要——看不见的风险比解决不了的风险更危险。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 3：产品决策的四个依据是什么？为什么"做出来了"不等于"应该建设"？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans3')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans3">
+      <b>参考答案解析：</b><br>
+      四个依据是价值、证据、风险和成本。做出来只证明路径可走，不证明值得投入正式开发——可能价值不够、风险太高或成本太大。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 4：开发启动包含什么？为什么不叫"可上线包"？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans4')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans4">
+      <b>参考答案解析：</b><br>
+      包含已确认事实、证据、缺口、下一步和主管决策。叫"启动包"是因为它是 IT 开始正式设计的输入，不是可以直接上线的交付物——缺安全评审、集成测试、监控等生产门禁。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 5：责任交接要求什么？为什么交接是责任转移而不是责任消失？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans5')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans5">
+      <b>参考答案解析：</b><br>
+      要求每项有 owner（业务/数据/技术/审批/失败处置）。交接是责任从主管转移到 IT 和其他角色，不是没人负责也不是主管全管——每项有明确责任人，暂不能确定的标"待定"并写明由谁落实。
+    </div>
+  </div>
+
+  <div class="card tinted" style="margin-top: 1.5rem;">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>冻结原型包，不再新增功能；资产盘点四分类，不把 Mock 当已证实。</b></li>
+      <li><b>依据价值、证据、风险、成本四维度作出产品决策，明确风险红线与 owner。</b></li>
+      <li><b>交接是责任转移而非消失；向 IT 交付诚实结构化的开发启动包与 5 分钟汇报！</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第十课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 已完成十课资产盘点并准确标注【已证实/仅Mock/未验证/未实现】四类状态？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 已依据【价值/证据/风险/成本】作出产品决策，并明确风险红线与 owner？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 已完成 5 分钟业务汇报草案，并在 `docs/PROJECT_STATE.md` 中落盘终局交接单？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--amber);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 非生产就绪系统</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">原型验证路径与决策，生产需安全合规门禁。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--teal); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 四维度产品决策</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">继续 / 调整 / 暂缓 / 停止 + 价值/证据/风险/成本。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ 开发启动包交接</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">结构化 IT Handoff，责任转移而非消失。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🎓 十课完结通关</h4>
+      <p style="font-size: .88rem; color: var(--plum); font-weight:bold;"><a href="COURSE_ROADMAP.html" style="color: var(--plum);">查看十课全量路线图</a>： 查看完整 V4 课程知识图谱与体系！</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--amber); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--amber-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--amber);">🎉 恭喜通关十课！随时与你的 AI 助手复盘。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用建筑模型的比喻，帮我复盘我的开发启动包与 5 分钟汇报”——它会为您详细梳理。</span>
+  </div>
+</section>
+
+<footer>
+  第 10 课 · 主管 AI 原型制作训练营 V4 终局 · 权威路线图：<a href="COURSE_ROADMAP.html">COURSE_ROADMAP.html</a> | 术语：<a href="GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// ---------- Section 01 Demonstrator ----------
+const scenarios = {
+  raw: {
+    steps: [
+      { title: 'Step 1 · 将未整理的代码打包抛给 IT 部门', desc: '无资产分类 ➔ 将包含 Mock 数据与临时代码的打包传给 IT...', cls: 'working' },
+      { title: 'Step 2 · Mock 被误当作生产能力，安全爆发漏洞', desc: '未标明风险红线与未完成项，IT 误以为可直接上线...', cls: 'error' },
+      { title: 'Step 3 · ❌ 线上事故爆发，责任扯皮被全部打回', desc: '【灾难】责任未交接，出事后业务与 IT 互相甩锅卡死！', cls: 'error' }
+    ],
+    logs: [
+      '> [Raw Handoff]: Zip archive sent to IT team without docs...',
+      '> [Production Incident]: Mock API invoked in real env, 0 security check',
+      '❌ [Result]: 缺少结构化启动包与红线说明，交接惨遭打回重做！'
+    ]
+  },
+  bounded: {
+    steps: [
+      { title: 'Step 1 · Task 1/2: 盘点资产四分类，确认红线 owner', desc: '区分已证实与仅 Mock ➔ 对照 L9 选型标注风险红线与角色 owner。', cls: '' },
+      { title: 'Step 2 · Task 3: 引证 L7/L8 证据说明成立范围', desc: '说明哪些路径经自动化/独立盲审验证，列出未解决 findings。', cls: 'working' },
+      { title: 'Step 3 · Task 4: 4 维度产品决策与 IT 优先级清单', desc: '按价值/证据/风险/成本决策 (继续/调整/暂缓/停止)，制定 IT 任务。', cls: 'working' },
+      { title: 'Step 4 · 🎉 Task 5: 五分钟汇报交付，更新 PROJECT_STATE', desc: '生成 5 分钟业务汇报草案 ➔ 落盘 PROJECT_STATE 终局交接单！', cls: 'success' }
+    ],
+    logs: [
+      '> [Task 1/2]: 完成十课资产盘点分类，确认红线与 owner 归属',
+      '> [Task 3]: 引证 L7/L8 证据链，明确原型物理成立边界',
+      '> [Task 4]: 输出 4 维度产品决策矩阵，制定 IT 启动优先级清单',
+      '✅ [Task 5]: 五分钟汇报准备完毕，落盘终局交接单！训练营通关！'
+    ]
+  }
+};
+
+let animationTimers = [];
+
+function clearAnimationTimers() {
+  animationTimers.forEach(id => clearTimeout(id));
+  animationTimers = [];
+}
+
+function runMode(mode) {
+  clearAnimationTimers();
+
+  const btnRaw = document.getElementById('mBtnRaw');
+  const btnBounded = document.getElementById('mBtnBounded');
+  const canvas = document.getElementById('flowCanvas');
+  const consoleLog = document.getElementById('consoleLog');
+
+  btnRaw.className = 'mode-btn raw ' + (mode === 'raw' ? 'active' : '');
+  btnBounded.className = 'mode-btn bounded ' + (mode === 'bounded' ? 'active' : '');
+
+  const data = scenarios[mode];
+  canvas.innerHTML = '';
+  consoleLog.innerHTML = '<span style="color: #94a3b8;">> 正在启动 ' + (mode === 'raw' ? '🔴 散乱代码抛给IT' : '🟢 结构化开发启动包') + ' 动态轨迹推演...</span>';
+
+  data.steps.forEach((s, idx) => {
+    const node = document.createElement('div');
+    node.className = 'flow-step-node ' + (s.cls || '');
+    node.id = 'node_' + idx;
+    node.style.opacity = '0';
+    node.style.transform = 'translateY(12px)';
+    node.style.transition = 'all .4s ease';
+    node.innerHTML = `
+      <div class="node-title">
+        <span>${s.title}</span>
+        <span style="font-size:.75rem; padding: 2px 6px; border-radius:4px; background:rgba(0,0,0,0.05);">Step ${idx + 1}</span>
+      </div>
+      <div class="node-desc">${s.desc}</div>
+    `;
+    canvas.appendChild(node);
+
+    const tId = setTimeout(() => {
+      node.style.opacity = '1';
+      node.style.transform = 'translateY(0)';
+      node.classList.add('active');
+
+      if (data.logs[idx]) {
+        const logLine = document.createElement('div');
+        logLine.style.marginTop = '4px';
+        logLine.innerHTML = data.logs[idx];
+        consoleLog.appendChild(logLine);
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+      }
+    }, (idx + 1) * 500);
+
+    animationTimers.push(tId);
+  });
+}
+runMode('bounded');
+
+// ---------- Assets Audit Terminal Simulator ----------
+function runAsset(act) {
+  const term = document.getElementById('assetTerminal');
+  if (act === 'proven') {
+    term.innerHTML = `
+✅ <b>[1. 已证实 (Proven Assets)]:</b><br>
+包含：L3 契约、L4 可验收薄片、L7 浏览器 Playwright 四类证据链 (screenshot/action/typecheck/diff) 以及 L8 Codex 独立审查 findings 报告。<br>
+说明：物理落盘证据完整，经自动化与独立会话盲审验证。
+    `;
+  } else if (act === 'mock') {
+    term.innerHTML = `
+🎭 <b>[2. 仅 Mock/模拟 (Mock Assets)]:</b><br>
+包含：L1/L2 UI Mock 数据，L5 模拟 AI 智能输出，L7 单一白名单环境；<br>
+说明：未连接真实生产 API，未运行真实大模型生产网关，仅作前端交互演示。
+    `;
+  } else if (act === 'unverified') {
+    term.innerHTML = `
+❓ <b>[3. 未验证 (Unverified Assets)]:</b><br>
+包含：针对异常并发路径的容错逻辑，高吞吐量压力下的响应表现；<br>
+说明：虽然编写了预设规则，但未经过高并发物理抓包验证。
+    `;
+  } else {
+    term.innerHTML = `
+❌ <b>[4. 明确未实现 (Unimplemented Non-Goals)]:</b><br>
+包含：真实资金转账打款、合规身份认证、自动数据库 SQL 执行；<br>
+说明：属于触碰风险红线或超越主管原型的非目标事项，已列入拒绝清单。
+    `;
+  }
+}
+
+// ---------- Robust Clipboard Copy with Fallback ----------
+function copyText(id) {
+  const txtNode = document.getElementById(id);
+  if (!txtNode) return;
+  const txt = txtNode.innerText;
+
+  let btn = txtNode.nextElementSibling;
+  if (!btn || !btn.classList.contains('btn-copy')) {
+    btn = txtNode.parentElement.querySelector('.btn-copy');
+  }
+
+  function showSuccess() {
+    if (btn) {
+      const originalText = btn.innerText;
+      btn.innerText = '✅ 复制成功!';
+      btn.style.background = '#16a34a';
+      btn.style.color = '#ffffff';
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(showSuccess).catch(function() {
+      fallbackCopy(txt, showSuccess);
+    });
+  } else {
+    fallbackCopy(txt, showSuccess);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    cb();
+  } catch (err) {
+    prompt("请手动复制口令：", text);
+  }
+  document.body.removeChild(textArea);
+}
+
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+// ---------- Quiz Logic ----------
+const explain = {
+  q1: '正确答案：B。原型验证路径可行性与决策；生产系统还需正式架构、安全、数据治理、合规与运维门禁，原型能跑通不等于能上线。',
+  q2: '正确答案：C。四类状态包含已证实、仅 Mock/模拟、未验证、明确未实现，不能把 Mock 当已证实。',
+  q3: '正确答案：A。产品决策四个依据是价值 (值不值得)、证据 (能否证明成立)、风险 (代价多大)、成本 (投入多少)。',
+  q4: '正确答案：A。五分钟业务汇报草案需覆盖业务问题、原型证据、AI 选择、风险边界、需要 IT 做什么。',
+  q5: '正确答案：C。交接是责任转移而非消失，主管始终承担业务目标与数据 owner 责任。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 20;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 5) {
+    el.innerHTML = `你已答完 <b>${answered} / 5</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  } else {
+    el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！恭喜通关训练营全量课程！`;
+  }
+}
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--amber)';
+    res.innerHTML = '🎉 恭喜完成第十课全量退场自查！你已成功通关主管 AI 原型制作训练营 V4 全量课程！';
+  } else {
+    res.style.color = 'var(--amber)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+</script>
+
+</body>
+</html>

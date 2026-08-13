@@ -2,13 +2,13 @@
 
 ## 1. 文档定位
 
-本文档是 `D:\AILearning` 培训项目的设计执行规范。
+本文档是培训项目的设计执行规范。
 
 权威来源：
 
 1. `references/original-design/DESIGN.md`
 2. `references/original-styles/core/tailwind.css`
-3. `docs/DESIGN_ALIGNMENT_DECISIONS.md`
+3. `src/assets/styles/tailwind.css`
 
 培训项目允许简化正式财务系统的功能和架构，但不得建立另一套冲突的视觉语言。
 
@@ -274,10 +274,6 @@ border-radius: var(--art-radius-control);
 - `SimpleLineChart`
 - `SimpleBarChart`
 - `SimplePieChart`
-
-完整说明：
-
-`docs/COMPONENT_CATALOG.md`
 
 页面负责业务含义，通用组件负责通用展示和交互。
 

@@ -1,0 +1,986 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 课 · AI Agent 核心架构与首个原型构建 | 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #134e4a 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #7dd3c8; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #cbd5d1; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #7dd3c8; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--teal); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--teal-soft); border-color: #b8ddd8; }
+  .card.warn { background: var(--amber-soft); border-color: #ecd3a8; }
+  .card.focus { background: var(--plum-soft); border-color: #d5c8ef; }
+  .card.blue { background: var(--blue-soft); border-color: #bfdbfe; }
+
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+
+  .quote {
+    border-left: 4px solid var(--teal); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .cite { font-size: .82rem; color: var(--ink-soft); margin-top: .6rem; }
+  .cite a { color: var(--teal); text-decoration: none; font-weight: 600; }
+  .cite a:hover { text-decoration: underline; }
+
+  /* Grid Layouts - Symmetric 2x2 Grid */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* 模拟器 Simulator */
+  .sim {
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    background: var(--card); margin: 1.2rem 0 1.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+  }
+  .sim-bar {
+    background: #0f172a; color: #e2e8f0; padding: .7rem 1.2rem; font-size: .85rem; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+  .req-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .8rem; }
+  .chip {
+    border: 1px solid var(--teal); color: var(--teal); background: #fff;
+    border-radius: 99px; padding: .35rem .9rem; font-size: .85rem; cursor: pointer;
+    font-weight: 600; transition: all .15s;
+  }
+  .chip:hover { background: var(--teal-soft); }
+  .chip.active { background: var(--teal); color: #fff; }
+
+  input[type=text] {
+    width: 100%; padding: .6rem .9rem; border: 1px solid var(--line); border-radius: 8px;
+    font-size: .92rem; font-family: inherit; background: #fcfaf6; color: var(--ink);
+  }
+  input[type=text]:focus { outline: 2px solid var(--teal); outline-offset: 1px; border-color: transparent; }
+
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--teal); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: background .2s;
+  }
+  .btn:hover { background: #0b5f58; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  .loop { margin-top: 1.2rem; display: none; }
+  .loop.show { display: block; }
+  .loop-vis {
+    display: flex; flex-wrap: wrap; align-items: stretch; gap: .5rem; margin-bottom: 1rem;
+  }
+  .step {
+    flex: 1 1 140px; border: 1.5px solid var(--line); border-radius: 10px; padding: .65rem .8rem;
+    font-size: .82rem; opacity: .35; transition: all .3s; position: relative; min-width: 130px;
+    background: #fff;
+  }
+  .step.done { opacity: 1; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+  .step .k { font-weight: 800; display: block; margin-bottom: .2rem; }
+  .step .v { color: var(--ink-soft); font-size: .78rem; line-height: 1.4; }
+
+  .step.think { border-color: var(--amber); }
+  .step.think .k { color: var(--amber); }
+  .step.act { border-color: var(--teal); }
+  .step.act .k { color: var(--teal); }
+  .step.observe { border-color: var(--plum); }
+  .step.observe .k { color: var(--plum); }
+  .step.hitl { border-color: var(--red); }
+  .step.hitl .k { color: var(--red); }
+  .step.reply { border-color: var(--green); }
+  .step.reply .k { color: var(--green); }
+
+  .arrow { align-self: center; color: var(--ink-soft); font-size: 1rem; font-weight: bold; }
+
+  .log-box {
+    background: #0f172a; color: #cbd5e1; border-radius: 10px; padding: 1rem 1.2rem;
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .85rem; line-height: 1.9;
+    max-height: 280px; overflow-y: auto;
+  }
+  .log-box .l { opacity: 0; transition: opacity .3s; margin-bottom: 2px; }
+  .log-box .l.show { opacity: 1; }
+  .log-box .user { color: #7dd3c8; font-weight: bold; }
+  .log-box .model { color: #fbbf24; }
+  .log-box .tool { color: #a78bfa; }
+  .log-box .toolret { color: #f472b6; }
+  .log-box .hitl { color: #f87171; font-weight: bold; }
+  .log-box .final { color: #4ade80; font-weight: bold; }
+
+  /* 原型选型 Matrix */
+  .proto-matrix {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 768px) { .proto-matrix { grid-template-columns: 1fr; } }
+  .proto-item {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 1.2rem;
+    cursor: pointer; transition: all .2s;
+  }
+  .proto-item:hover, .proto-item.selected {
+    border-color: var(--teal); background: var(--teal-soft); transform: translateY(-2px);
+  }
+  .proto-item h4 { font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: .4rem; }
+  .proto-item p { font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+  .proto-detail {
+    margin-top: 1rem; background: #fff; border: 1px solid var(--teal); border-radius: 10px;
+    padding: 1.2rem; display: none; font-size: .9rem;
+  }
+  .proto-detail.show { display: block; }
+
+  /* 测验 Quiz */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem;
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--teal-soft); }
+  .quiz-q label input { margin-top: .3rem; accent-color: var(--teal); }
+  .quiz-q label.sel { background: var(--teal-soft); border-color: #b8ddd8; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+  .q-btn { margin-top: .6rem; }
+
+  .score {
+    display: none; margin-top: 1.2rem; background: #0f172a; color: #f5f1e8;
+    border-radius: 12px; padding: 1.2rem 1.6rem; text-align: center; font-size: 1.1rem;
+  }
+  .score.show { display: block; }
+  .score b { color: #4ade80; font-size: 1.4rem; }
+
+  /* 检查清单 Checklist */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--teal); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+
+  @media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .hero { background: #fff; color: var(--ink); padding: 1rem 0; }
+    .hero .kicker, .hero .goal b { color: var(--teal); }
+    .hero .sub { color: var(--ink-soft); }
+    .card { break-inside: avoid; }
+  }
+  /* Concept Cards Micro Architecture */
+  .concept-list {
+    display: flex; flex-direction: column; gap: 1.5rem; margin: 1.5rem 0;
+  }
+  .concept-card {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem 1.6rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .concept-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+
+  .concept-head {
+    font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; cursor: pointer;
+    list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .concept-head::-webkit-details-marker { display: none; }
+  .concept-head::after { content: '▼'; font-size: 0.6em; color: #94a3b8; transition: transform 0.2s; }
+
+  details[open] .concept-head {
+    border-bottom: 1px solid #f1f5f9; padding-bottom: .8rem; margin-bottom: .8rem;
+  }
+  details[open] .concept-head::after { transform: rotate(180deg); }
+
+  .concept-body { display: flex; flex-direction: column; gap: 1rem; }
+
+  .concept-pill {
+    padding-left: 1rem; font-size: .98rem; line-height: 1.75; color: #334155;
+  }
+  .concept-pill.iswhat { border-left: 3px solid #f59e0b; }
+  .concept-pill.howworks { border-left: 3px solid #64748b; }
+  .concept-pill.metaphor { border-left: 3px solid #0d9488; }
+  .concept-pill.howsee { border-left: 3px solid #3b82f6; }
+
+  .pill-label { font-weight: 800; display: inline-block; margin-bottom: .2rem; color: #1e293b; }
+
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 1rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-space-between; align-items: flex-start; gap: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .prompt-copy-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: .92rem; font-weight: 600; line-height: 1.65; color: #0f172a;
+    white-space: pre-wrap; word-break: break-word; flex: 1;
+  }
+  .btn-copy {
+    background: #0f172a; color: #fff; border: none; border-radius: 8px; padding: .5rem 1rem;
+    font-size: .82rem; font-weight: 700; cursor: pointer; transition: all .2s ease; white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; align-self: flex-start;
+  }
+  .btn-copy:hover { background: #d97706; transform: translateY(-1px); }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem; }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box { background: var(--teal-soft); border: 1px solid #b8ddd8; border-radius: 10px; padding: 1rem 1.2rem; margin-top: .8rem; font-size: .92rem; color: #0f766e; display: none; line-height: 1.6; }
+  .ans-box.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 01 · 从业务问题创建第一个系统页面</div>
+    <h1>从业务问题创建第一个系统页面<br>理解 LLM、Tools、Agent 与三类业务原型</h1>
+    <p class="sub">理解 LLM 大脑、Tools 手脚与 Agent 执行者的关系，用这套协作关系建立第一个受控业务原型。A/B/C 是三种业务启动分支，不是三版指南。</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：学完你能做到 ① 用工程语言向 IT 部门说出 Agent 与普通聊天机器人的物理区别；② 准确画出“思考 ➔ 行动 ➔ 观察 ➔ HITL盖章”循环；③ 在 90 分钟内跑出第一个受控业务原型雏形。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 01 -->
+<section>
+  <h2><span class="num">01</span> 为什么要从这一课开始？</h2>
+  <p>作为业务主管，你掌握 AI Agent 的核心目标是：<b>用自然语言指挥 Agent 帮你快速生成高保真原型，并在无需写底层代码的前提下实现 IT 高效交接。</b></p>
+  <div class="card focus">
+    <p><b>记住这句话：</b><br>
+    Agent 不是更聪明的大语言模型（LLM），而是给大语言模型装上了<b>“手脚和眼睛”</b>（Tools），并嵌入了<b>“工程防错护栏与公章门禁”</b>（Workflow & HITL）。</p>
+  </div>
+  <p>先想清楚这台“自动化机器”的物理构造，你才能在后续课程中放心指挥它干活，而不必担心它出现白屏、死循环或篡改未授权的代码。</p>
+</section>
+
+<!-- SECTION 02 -->
+<section>
+  <h2><span class="num">02</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <div class="concept-list">
+    <details class="concept-card">
+      <summary class="concept-head">1. 大语言模型（LLM）：大脑</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>根据当前信息生成文字、方案或代码内容的概率模型；不是能直接操作电脑的完整 Agent，也不是天然了解部门事实的业务专家。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>根据 Prompt 与当前上下文生成候选内容；内容听起来合理，也可能遗漏或猜错事实。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>总工程师可以理解要求、画图纸；“图纸画好了”不等于“样板间建好了”。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 只让它复述和规划。主管应核对它是否真正理解了业务。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">2. Tools：手脚</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>读取文件、修改项目、运行命令或取得结果的具体能力；不是 LLM 本身，也不代表权限无限或绝对安全。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>Agent 请求调用工具，宿主环境实际执行，再把读取结果、运行输出或错误返回给模型。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>施工机械和测量工具让方案能够落地；“有机械”不等于施工天然安全合规。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 看真实读取结果，Task 3 看实际修改与运行。主管应问清读了什么、改了什么。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">3. 受控执行者（Agent）</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>把 LLM、当前信息和 Tools 组织起来，为一个目标完成多步工作的系统；不是永远正确、能够自行承担业务责任的数字员工。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>接收目标，推演下一步，调用工具，观察结果，再继续、调整、停止或请求人工处理。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>现场执行负责人能够看图纸、调度机械；不能在没有业务边界和验收时自行决定建什么。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—4 组成一次完整制作过程。开发 Agent 负责执行，主管负责目标、范围和验收。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">4. 业务原型：样板间</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>用来验证业务路径、交互和需求表达的可操作模型；不是生产系统，也不代表全部需求已经完成。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>用 Mock/已脱敏数据呈现一个使用者如何完成一件事，再由主管判断路径是否正确。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>样板间可以验证关键布局；不能因为样板间能参观，就说整栋建筑已经交付。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>你最终完成的一条个人业务路径，并能够说明哪些已经验证、哪些仍未实现。
+        </div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- SECTION 03: SIMULATOR -->
+<section class="no-print">
+  <h2><span class="num">03</span> 动手体验：模拟一个真实 Agent 的物理循环</h2>
+  <p>点击下方预设场景（或自定义输入），亲自观察 Agent 内部是如何一步步进行 <b>Thought ➔ Action ➔ Observation ➔ HITL ➔ Output</b> 的：</p>
+
+  <div class="sim">
+    <div class="sim-bar">🖥️ 模拟器 · 业务原型制作 Agent 物理循环</div>
+    <div class="sim-body">
+      <div class="req-chips">
+        <button class="chip" data-req="帮我生成一个商品履约预警看板原型">📊 商品履约预警 (A类: 监控型)</button>
+        <button class="chip" data-req="创建一个退货工单审批流页面">📋 退货审批流 (B类: 流程型)</button>
+        <button class="chip" data-req="你好，请问你是谁？">👋 基础问候</button>
+      </div>
+      <input type="text" id="freeReq" placeholder="或自己输入一段业务需求，观察 Agent 如何发起 Tool Call 与 HITL 盖章…">
+      <button class="btn" id="runBtn">▶ 运行一次 Agent 物理循环</button>
+      <button class="btn secondary" id="resetBtn">重置</button>
+
+      <div class="loop" id="loop">
+        <div class="loop-vis" id="loopVis"></div>
+        <div class="log-box" id="logBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card warn">
+    <b>观察重点：</b>
+    <ol>
+      <li><b>基础问候</b>不需要调用 Tools，直接在内存中生成回复；</li>
+      <li><b>业务原型需求</b>触发了真正的 Tool Call（写文件、创组件），并在写盘前触发了 <b>HITL (主管公章盖章)</b>；</li>
+      <li>最后试衣镜呈现的页面是基于 <b>Observation 真实编译结果</b>渲染的，绝非空口凭空猜测。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- SECTION 04: PROTOTYPE SELECTION -->
+<section>
+  <h2><span class="num">04</span> 三类业务原型选型（选择你的战场）</h2>
+
+<div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：只让 LLM 理解和推演</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">我要创建一个“A类：监控与决策型”业务原型。
+
+我的业务输入：
+- 原型名称：【填写】
+- 主要使用者：【填写】
+- 关注的业务对象：【填写】
+- 使用场景或触发条件：【填写】
+- 需要看到的状态、指标或异常：【填写】
+- 看到异常后要完成的一项动作：【填写】
+- 希望看到的最终结果：【填写】
+- 本轮明确不做：【填写】
+
+请先不要读取项目文件，不要调用修改或运行工具，也不要创建任何文件。
+请只完成以下内容：
+1. 用业务语言复述使用者、场景、核心动作和结果；
+2. 提出一条最小路径：查看状态或指标 → 发现对象 → 查看相关信息
+   → 记录一个判断或后续动作 → 显示结果；
+3. 指出仍不确定、需要我确认的内容；
+4. 列出本轮明确不做的内容。
+
+不要假装已经看过项目结构，也不要自行补充真实业务事实。</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：模型复述了你的业务、提出一条最小路径，并标出不确定信息，但没有声称已经看过项目。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：让 Tools 读取项目事实</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">现在请只读取完成本课原型所需的最小项目资料，不要创建或修改文件。
+
+优先确认并读取：项目根目录说明或约束文件、DESIGN.md、
+docs/COMPONENT_CATALOG.md、实际路由入口、实际布局或页面入口（存在时）。
+
+要求：
+1. 文件不存在就明确报告，不要编造；
+2. 告诉我真实技术栈、可复用组件和页面入口；
+3. 根据读取结果修订最小路径；
+4. 列出拟创建或修改的文件及必要性；
+5. 一个页面能完成就不要拆分；
+6. 本步只读取和汇报，不创建、修改或运行项目。</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：真实读取结果、存在与不存在的文件、可复用内容、修订后的路径和拟修改文件清单。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：主管裁决范围，让 Agent 实施</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">根据你的复述和项目读取结果，我确认本轮范围如下：
+1. 必须完成的一条核心业务路径：【填写】
+2. 必须保留的业务字段、状态或规则：【填写】
+3. 本轮明确不做：【填写】
+4. 允许修改的项目范围：【确认或删减 Agent 的真实文件清单】
+5. 我的点击验收方法：【填写】
+
+请先复述实施范围并指出矛盾或缺失。在我确认复述无误前，不要实施。</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：Agent 只在确认范围内实施；原型可以打开，并至少发生一次可观察的点击、输入输出或状态变化。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：观察结果并只修一个问题</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p4">我在本地预览中发现一个最需要修正的问题：【填写】
+
+请先说明问题原因、准备修改的内容，以及哪些已确认业务内容不会改变。
+等我确认后只修这一项。完成后重新说明预览和验收方法，并如实报告
+实际运行过的工程检查；不要声称不存在或未运行的脚本已经通过。</span>
+      <button class="btn-copy" onclick="copyText('p4')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：Agent 先说明修改边界，只修这一项；重新预览后，问题得到改善且原业务路径仍可操作。这就是 ReAct 的入门体验。</div>
+  </div>
+
+</section>
+
+<!-- SECTION 05: QUIZ -->
+<section>
+  <h2><span class="num">05</span> 测验：检验你的 Agent 心智模型</h2>
+  <p>5 道题，答完立即知道正误与深度解析。暴露误区是掌握工程护栏的最佳方式：</p>
+
+          <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · 一个只能对话、不能调用任何本地工具的 LLM 应用（如普通网页版 ChatGPT），算 AI Agent 吗？</div>
+    <label><input type="radio" name="q1" value="a"> 不算，因为它没有工具（Tools）、没有物理手脚，无法对真实系统产生行动</label>
+    <label><input type="radio" name="q1" value="b"> 算，属于高级 Agent</label>
+    <label><input type="radio" name="q1" value="c"> 算，只要用了大语言模型就算 Agent</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · Agent 物理写盘修改代码前，Workflow 要求人类主管确认，这在工程设计中叫什么？</div>
+    <label><input type="radio" name="q2" value="a"> HITL (Human-in-the-Loop, 人在回路授权盖章门禁)</label>
+    <label><input type="radio" name="q2" value="b"> ReAct 自动反馈</label>
+    <label><input type="radio" name="q2" value="c"> Subagent 熔断</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · 当 Agent 运行 `run_command` 尝试构建页面时，终端返回了错误日志 `Cannot find module 'vue'`，Agent 在 ReAct 循环中接下来会做什么？</div>
+    <label><input type="radio" name="q3" value="a"> 忽略错误，假装页面已经构建成功了</label>
+    <label><input type="radio" name="q3" value="b"> 立即删除项目全量代码</label>
+    <label><input type="radio" name="q3" value="c"> 将 Observation 报错日志送回 LLM，推理得出缺失依赖，自动发起安装或纠错指令</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · 为什么在制作业务原型时，必须恪守“模拟数据红线 (Mock Data Line)”？</div>
+    <label><input type="radio" name="q4" value="a"> 因为 Mock 数据需要付费买</label>
+    <label><input type="radio" name="q4" value="b"> 因为真实数据太好看，Agent 读不懂</label>
+    <label><input type="radio" name="q4" value="c"> 因为使用真实敏感数据上云违背数据安全审计红线，且 Mock Data 足够支撑高保真原型演练</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="5">
+    <div class="q">Q5 · 业务主管在 Agent 协作原型制作中的核心身份定位是什么？</div>
+    <label><input type="radio" name="q5" value="a"> 被动等待 AI 给出答案的旁观者</label>
+    <label><input type="radio" name="q5" value="b"> 掌控需求定义、工程护栏、人在回路盖章与 IT 高效交接的“超级业务 PM / CEO”</label>
+    <label><input type="radio" name="q5" value="c"> 编写底层 Vue/TS 复杂并发代码的全栈程序员</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary no-print" id="scoreBtn" style="margin-top:.4rem">查看我的总得分</button>
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：LLM 根据当前输入和上下文生成候选内容，本质上属于具有不确定性的什么模型？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      概率生成（或概率预测）模型。LLM 生成候选内容不是查表，而是基于上下文做概率预测。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：当 Agent 读取文件或运行命令时，真正执行外部动作的是宿主环境提供的什么？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      Tools / 工具调用接口。宿主环境通过 Tools 让 Agent 读取、修改、运行并取得外部结果。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 3：实施前，主管应确认核心路径、修改范围和什么？这种确认不自动等于运行时硬门禁。</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans3')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans3">
+      <b>参考答案解析：</b><br>
+      本轮明确不做的内容（非目标或停止范围）。主管确认的是范围与边界，不等于自动形成运行时硬门禁。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 4：如果 Agent 声称某项检查 [PASS]，你至少应看到真实的什么和什么？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans4')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans4">
+      <b>参考答案解析：</b><br>
+      实际运行的命令；对应的真实输出或日志。没有真实命令与输出，[PASS] 只是口头宣称。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 5：如果 Agent 在 Task 1 就修改了项目文件，它违反了什么阶段边界？你接下来怎样处理？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans5')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans5">
+      <b>参考答案解析：</b><br>
+      违反 Task 1"只推演、不使用项目工具"的边界。立即停止，要求 Agent 列出真实动作和改动，请教师根据实际状态决定恢复或继续。
+    </div>
+  </div>
+
+</section>
+
+<!-- SECTION 06: SUMMARY, KNOWLEDGE EXPANSION & NEXT STEPS -->
+<section>
+  <h2><span class="num">06</span> 本课小结 + 知识扩充 + 下一步</h2>
+
+  <!-- Key Takeaways Box -->
+  <div class="card tinted">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>AI Agent = 模型（大脑）+ 工具（手脚）+ 循环（流程）+ HITL（公章门禁）。</b></li>
+      <li><b>ReAct 循环 = 思考 ➔ 行动 ➔ 观察 ➔ 盖章</b>，反复迭代直到完成；“观察 Observation”让 Agent 用真实编译与日志数据说话，不凭空捏造。</li>
+      <li><b>能固定的常规任务用自动化脚本，需要灵活决策与原型制作的任务才用 Agent。</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第一课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 我能向团队与 IT 解释：为什么大模型只能在内存中推演文字，而无法凭空直接修改硬盘文件（必须通过受控工具）？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 我已双击 <code>start-project.bat</code> 启动试衣镜，并在浏览器访问了 <code>http://127.0.0.1:8888</code>。</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 我已在 <code>docs/PROJECT_STATE.md</code> 中确认了自己的原型系统名称与原型分类 (A/B/C)。</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--teal);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--teal); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 配套阅读 (10 分钟)</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">微软《AI Agents for Beginners》第 1 课（中文版）：<a href="https://github.com/microsoft/ai-agents-for-beginners/tree/main/translations/zh-CN/01-intro-to-ai-agents" target="_blank" style="color: var(--teal); font-weight: bold;">在线阅读</a>。理清基础概念结构。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 进阶架构阅读 (可选)</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Anthropic《Building Effective Agents》—— 业界最权威 Agent 架构指南：<a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" style="color: var(--plum); font-weight: bold;">building-effective-agents</a>。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🔬 ReAct 学术原著</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Yao et al., 2022《ReAct: Synergizing Reasoning and Acting in Language Models》：<a href="https://arxiv.org/abs/2210.03629" target="_blank" style="color: var(--amber); font-weight: bold;">ArXiv 论文地址</a>。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">▶ 第 2 课预告</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">《用参考图与设计规则做出像样的页面》：引入 <code>DESIGN.md</code> 视觉 Harness，教你用参考图与 Token 规避随机性，生成高颜值界面。</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--teal); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--teal-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--teal);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“这一课的任何一个概念、模拟器里的任何一步、或者'我有个业务想法，用 Agent 怎么做'”——它随时可以展开讲、画图、或者当场给你演示代码。</span>
+  </div>
+</section>
+
+<footer>
+  第 1 课 · 主管 AI 原型制作训练营 · 权威文献引用：ReAct (Yao et al., 2022) · Anthropic《Building Effective Agents》<br>
+  项目权威路线图：<a href="COURSE_ROADMAP.html">COURSE_ROADMAP.html</a> | 术语查阅：<a href="GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// ---------- 模拟器 Simulator Logic ----------
+const simSteps = {
+  monitor: [
+    { k: '用户需求', v: '"生成一个商品履约预警看板原型"' },
+    { k: 'Thought 思考', v: '需要A类监控原型，调用 write_file 创建 Dashboard.vue', cls: 'think' },
+    { k: 'Action 工具调用', v: 'write_file(path: "src/pages/Dashboard.vue")', cls: 'act' },
+    { k: 'HITL 盖章门禁', v: '触发写盘门禁 ➔ 主管口令盖章授权批准', cls: 'hitl' },
+    { k: 'Observation 观察', v: '编译成功，生成 4 项 KPI 卡片与异常表格', cls: 'observe' },
+    { k: '试衣镜渲染', v: '127.0.0.1:8888 高保真页面渲染完成 [PASS]', cls: 'reply' }
+  ],
+  flow: [
+    { k: '用户需求', v: '"创建一个退货工单审批流页面"' },
+    { k: 'Thought 思考', v: '需要B类流程原型，设计待办列表与审批抽屉组件', cls: 'think' },
+    { k: 'Action 工具调用', v: 'write_file(path: "src/pages/ApprovalFlow.vue")', cls: 'act' },
+    { k: 'HITL 盖章门禁', v: '触发写盘门禁 ➔ 主管口令盖章授权批准', cls: 'hitl' },
+    { k: 'Observation 观察', v: '组件渲染成功，连通“同意/驳回”状态流转', cls: 'observe' },
+    { k: '试衣镜渲染', v: '127.0.0.1:8888 审批流组件测试通过', cls: 'reply' }
+  ],
+  hello: [
+    { k: '用户需求', v: '"你好，请问你是谁？"' },
+    { k: 'Thought 思考', v: '普通问候，无需工具，直接在内存中生成回答', cls: 'think' },
+    { k: '生成回答', v: '"你好！我是你的 Coding Agent 助手，专门协助你构建业务原型。"', cls: 'reply' }
+  ]
+};
+
+const logLines = {
+  monitor: [
+    ['user', '用户 ➔ Agent：生成一个商品履约预警看板原型'],
+    ['model', 'Agent (Thought)：识别为 A 类监控决策型需求，准备调用 write_file 工具…'],
+    ['tool', 'Tool Call：write_file(target: "src/pages/Dashboard.vue")'],
+    ['hitl', '🛡️ HITL 门禁触发：等待主管 CEO 口令签字盖章批准… [已授权]'],
+    ['toolret', 'Observation：文件已成功物理写入磁盘。编译校验成功。'],
+    ['final', '→ 最终输出：127.0.0.1:8888 试衣镜已渲染预警看板原型！']
+  ],
+  flow: [
+    ['user', '用户 ➔ Agent：创建一个退货工单审批流页面'],
+    ['model', 'Agent (Thought)：识别为 B 类任务流程型需求，准备创建待办与审批抽屉…'],
+    ['tool', 'Tool Call：write_file(target: "src/pages/ApprovalFlow.vue")'],
+    ['hitl', '🛡️ HITL 门禁触发：等待主管 CEO 口令签字盖章批准… [已授权]'],
+    ['toolret', 'Observation：文件物理写入完成。数据契约匹配成功。'],
+    ['final', '→ 最终输出：127.0.0.1:8888 试衣镜已渲染退货审批流原型！']
+  ],
+  hello: [
+    ['user', '用户 ➔ Agent：你好，请问你是谁？'],
+    ['model', 'Agent (Thought)：普通问候，无需调用 Tools，直接在内存中推演回答。'],
+    ['final', '→ 最终输出：你好！我是你的 Coding Agent 助手，专门协助你构建业务原型。']
+  ]
+};
+
+let timer = [];
+let running = false;
+
+function classify(req) {
+  if (/预警|监控|看板|A类|指标/i.test(req)) return 'monitor';
+  if (/审批|工单|流程|退货|B类/i.test(req)) return 'flow';
+  return 'hello';
+}
+
+function runSim(reqText) {
+  if (running) return;
+  running = true;
+  const type = classify(reqText);
+  const steps = simSteps[type];
+  const logs = logLines[type];
+  const loop = document.getElementById('loop');
+  const vis = document.getElementById('loopVis');
+  const box = document.getElementById('logBox');
+
+  timer.forEach(clearTimeout);
+  timer = [];
+  loop.classList.remove('show');
+  vis.innerHTML = '';
+  box.innerHTML = '';
+
+  steps.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'step ' + (s.cls || '');
+    el.innerHTML = `<span class="k">${i + 1}. ${s.k}</span><span class="v">${s.v}</span>`;
+    vis.appendChild(el);
+    if (i < steps.length - 1) {
+      const ar = document.createElement('div');
+      ar.className = 'arrow';
+      ar.textContent = '➔';
+      vis.appendChild(ar);
+    }
+  });
+
+  loop.classList.add('show');
+  const stepEls = vis.querySelectorAll('.step');
+  let t = 0;
+  stepEls.forEach((el, i) => {
+    timer.push(setTimeout(() => {
+      el.classList.add('done');
+      const linesUntil = Math.ceil((logs.length * (i + 1)) / steps.length);
+      for (let j = 0; j < logs.length; j++) {
+        const line = box.children[j];
+        if (line && j < linesUntil) line.classList.add('show');
+      }
+      if (i === stepEls.length - 1) {
+        timer.push(setTimeout(() => { running = false; }, 500));
+      }
+    }, t));
+    t += 800;
+  });
+
+  logs.forEach(([cls, txt]) => {
+    const line = document.createElement('div');
+    line.className = 'l ' + cls;
+    line.textContent = txt;
+    box.appendChild(line);
+  });
+}
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    document.getElementById('freeReq').value = chip.dataset.req;
+  });
+});
+
+document.getElementById('runBtn').addEventListener('click', () => {
+  const req = document.getElementById('freeReq').value.trim() || '帮我生成一个商品履约预警看板原型';
+  runSim(req);
+});
+document.getElementById('freeReq').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('runBtn').click();
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  timer.forEach(clearTimeout);
+  running = false;
+  document.getElementById('loop').classList.remove('show');
+  document.getElementById('freeReq').value = '';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+});
+
+// ---------- 原型选型 Matrix ----------
+function showProtoDetail(type, el) {
+  document.querySelectorAll('.proto-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  const detail = document.getElementById('protoDetail');
+  detail.className = 'proto-detail show';
+
+  if (type === 'A') {
+    detail.innerHTML = '<h5 style="color: var(--teal); margin-bottom: .4rem; font-weight:800;">A. 监控与决策型落地推荐：</h5><p><strong>核心组件：</strong> 4 项高亮 KPI 卡片（含同环比趋势与红标预警） + 异常明细下钻表格 + 右侧一键发送预警抽屉。<br><strong>适合场景：</strong> 经营分析、履约监控、库存预警。</p>';
+  } else if (type === 'B') {
+    detail.innerHTML = '<h5 style="color: var(--plum); margin-bottom: .4rem; font-weight:800;">B. 任务与流程型落地推荐：</h5><p><strong>核心组件：</strong> 顶部待办统计栏 + 带状态标签（待处理/审批中/已驳回）的单据列表 + 右侧盖章审批流与同意/驳回按钮。<br><strong>适合场景：</strong> 退货审批、预算申请、工单派发。</p>';
+  } else {
+    detail.innerHTML = '<h5 style="color: var(--amber); margin-bottom: .4rem; font-weight:800;">C. 操作工具型落地推荐：</h5><p><strong>核心组件：</strong> 左侧参数设置表单 + 右侧实时渲染的生成结果预览框 + 底部导出 Excel / 复制结果按钮。<br><strong>适合场景：</strong> 营销文案生成、规则计算器、数据转换工具。</p>';
+  }
+}
+
+// ---------- 测验 Quiz ----------
+const explain = {
+  q1: '正确答案：A。Agent 的物理本质是配备了 Tools（手脚）和 Loop（循环），能够对真实文件与外部环境产生行动。普通 LLM 只有内存概率推演，没有手。',
+  q2: '正确答案：A。HITL (Human-in-the-Loop) 是强制人类主管在物理写盘或重要变更前签字授权的物理关卡，保证工程安全。',
+  q3: '正确答案：C。ReAct 的价值在于 Observation（观察报错）会送回大模型，大模型推理后发起自修修正指令，直到编译成功。',
+  q4: '正确答案：C。绝不能将真实的客户手机号或财务敏感数据上传给通用 AI，必须坚持用模拟数据道具（Mock Data）演练。',
+  q5: '正确答案：B。主管不写底层代码，而是作为“超级业务 PM”掌控需求、护栏、HITL 授权关口与 IT 交接包。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+    q.dataset.done = '1';
+  });
+});
+
+document.getElementById('scoreBtn').addEventListener('click', () => {
+  const done = document.querySelectorAll('.quiz-q[data-done="1"]').length;
+  const scoreEl = document.getElementById('score');
+  scoreEl.innerHTML = `测验进度：已完成 <b>${done} / 5</b> 题。` + (done === 5 ? ' 🎉 全部完成！仔细阅读每题的硬核解析，那是领悟工程护栏的核心。' : ' 请完成所有题目后再查看总得分。');
+  scoreEl.classList.add('show');
+});
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--green)';
+    res.innerHTML = '🎉 恭喜！自查全通关 (3 / 3)，准备开启第二课《视觉重构与 DESIGN.md》！';
+  } else {
+    res.style.color = 'var(--teal)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+
+// ---------- Robust Clipboard Copy with Fallback ----------
+function copyText(id) {
+  const txtNode = document.getElementById(id);
+  if (!txtNode) return;
+  const txt = txtNode.innerText;
+
+  let btn = txtNode.nextElementSibling;
+  if (!btn || !btn.classList.contains('btn-copy')) {
+    btn = txtNode.parentElement.querySelector('.btn-copy');
+  }
+
+  function showSuccess() {
+    if (btn) {
+      const originalText = btn.innerText;
+      btn.innerText = '✅ 复制成功!';
+      btn.style.background = '#16a34a';
+      btn.style.color = '#ffffff';
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(showSuccess).catch(function() {
+      fallbackCopy(txt, showSuccess);
+    });
+  } else {
+    fallbackCopy(txt, showSuccess);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    cb();
+  } catch (err) {
+    prompt("请手动复制口令：", text);
+  }
+  document.body.removeChild(textArea);
+}
+
+// ---------- Exit Ticket Expand Answer Logic ----------
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1082 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 课 · Claude Code 开发，Codex 独立审查 | 主管 AI 训练营 V4</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+    --purple: #7c3aed;
+    --purple-soft: #f3e8ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #581c87 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #d8b4fe; font-weight: 700; }
+  .hero h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #e9d5ff; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #d8b4fe; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--purple); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--purple-soft); border-color: #d8b4fe; }
+  .card.warn { background: var(--amber-soft); border-color: #fde68a; }
+  .card.focus { background: var(--teal-soft); border-color: #b8ddd8; }
+  .card.blue { background: var(--blue-soft); border-color: #bfdbfe; }
+
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+
+  code {
+    font-family: "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+
+  .quote {
+    border-left: 4px solid var(--purple); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+
+  /* Grid Layouts */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--purple); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(124, 58, 237, 0.2);
+  }
+  .btn:hover { background: #6d28d9; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Simulator */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: .9rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+
+  .mode-tabs {
+    display: flex; gap: .6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+  }
+  .mode-btn {
+    flex: 1; min-width: 200px; padding: .8rem 1rem; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: .88rem; font-weight: 700; cursor: pointer; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s; text-align: center;
+  }
+  .mode-btn:hover { background: #e2e8f0; }
+  .mode-btn.active.raw { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .mode-btn.active.bounded { background: var(--purple-soft); border-color: var(--purple); color: #7c3aed; }
+
+  .flow-display-canvas {
+    background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.4rem;
+    min-height: 260px; position: relative; transition: all .3s;
+  }
+  .flow-step-node {
+    background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .8rem 1.1rem;
+    margin-bottom: .8rem; font-size: .9rem; opacity: 0; transition: all .4s ease; transform: translateY(12px);
+  }
+  .flow-step-node.active { opacity: 1; transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .flow-step-node.error { border-color: #ef4444; background: #fff5f5; color: #991b1b; }
+  .flow-step-node.success { border-color: #10b981; background: #f0fdf4; color: #065f46; }
+  .flow-step-node.working { border-color: #7c3aed; background: #f3e8ff; color: #6b21a8; }
+
+  .node-title { font-weight: 800; font-size: .95rem; margin-bottom: .2rem; display: flex; align-items: center; justify-content: space-between; }
+  .node-desc { font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", monospace; font-size: .82rem;
+    padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 160px; overflow-y: auto;
+  }
+
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 1rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-space-between; align-items: flex-start; gap: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .prompt-copy-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: .92rem; font-weight: 600; line-height: 1.65; color: #0f172a;
+    white-space: pre-wrap; word-break: break-word; flex: 1;
+  }
+  .btn-copy {
+    background: #0f172a; color: #fff; border: none; border-radius: 8px; padding: .5rem 1rem;
+    font-size: .82rem; font-weight: 700; cursor: pointer; transition: all .2s ease; white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; align-self: flex-start;
+  }
+  .btn-copy:hover { background: #d97706; transform: translateY(-1px); }/* Fill in blanks */
+  .blank-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem; font-size: .95rem; line-height: 1.8;
+  }
+  .blank-select {
+    padding: .25rem .6rem; border-radius: 6px; border: 1.5px solid var(--purple); font-size: .9rem;
+    font-weight: 700; color: var(--purple); background: var(--purple-soft); cursor: pointer; outline: none;
+  }
+  .blank-select.ok { border-color: #10b981; background: #dcfce7; color: #15803d; }
+  .blank-select.err { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+  .blank-feedback { font-size: .85rem; margin-top: .5rem; font-weight: 600; display: none; }
+  .blank-feedback.show { display: block; }
+
+  /* Misconceptions Table */
+  .misc-table-container {
+    overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  }
+  .misc-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem;
+  }
+  .misc-table th {
+    background: #0f172a; color: #fff; font-weight: 700; padding: .85rem 1.1rem; border-bottom: 1px solid var(--line);
+  }
+  .misc-table td {
+    padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6;
+  }
+  .misc-table tr:hover { background: #fafaf9; }
+  .badge-misc { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .78rem; font-weight: 800; }
+  .badge-misc.red { background: #fee2e2; color: #991b1b; }
+  .badge-misc.green { background: #dcfce7; color: #15803d; }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem;
+  }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box {
+    background: var(--purple-soft); border: 1px solid #d8b4fe; border-radius: 10px; padding: 1rem 1.2rem;
+    margin-top: .8rem; font-size: .92rem; color: #6b21a8; display: none; line-height: 1.6;
+  }
+  .ans-box.show { display: block; }
+
+  /* Quiz Cards */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; width: 100%; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--purple-soft); }
+  .quiz-q label input { margin-top: .35rem; accent-color: var(--purple); }
+  .quiz-q label.sel { background: var(--purple-soft); border-color: #d8b4fe; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+  .q-btn { margin-top: .6rem; }
+
+  .score {
+    display: none; margin-top: 1.2rem; margin-bottom: 1.5rem; background: #0f172a; color: #f5f1e8;
+    border-radius: 12px; padding: 1.2rem 1.6rem; text-align: center; font-size: 1.1rem;
+  }
+  .score.show { display: block; }
+  .score b { color: #4ade80; font-size: 1.4rem; }
+
+  /* Checklist Card */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--purple); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  /* Concept Cards Micro Architecture */
+  .concept-list {
+    display: flex; flex-direction: column; gap: 1.5rem; margin: 1.5rem 0;
+  }
+  .concept-card {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem 1.6rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .concept-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+
+  .concept-head {
+    font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; cursor: pointer;
+    list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .concept-head::-webkit-details-marker { display: none; }
+  .concept-head::after { content: '▼'; font-size: 0.6em; color: #94a3b8; transition: transform 0.2s; }
+
+  details[open] .concept-head {
+    border-bottom: 1px solid #f1f5f9; padding-bottom: .8rem; margin-bottom: .8rem;
+  }
+  details[open] .concept-head::after { transform: rotate(180deg); }
+
+  .concept-body { display: flex; flex-direction: column; gap: 1rem; }
+
+  .concept-pill {
+    padding-left: 1rem; font-size: .98rem; line-height: 1.75; color: #334155;
+  }
+  .concept-pill.iswhat { border-left: 3px solid #f59e0b; }
+  .concept-pill.howworks { border-left: 3px solid #64748b; }
+  .concept-pill.metaphor { border-left: 3px solid #0d9488; }
+  .concept-pill.howsee { border-left: 3px solid #3b82f6; }
+
+  .pill-label { font-weight: 800; display: inline-block; margin-bottom: .2rem; color: #1e293b; }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 08 · 上下文隔离与独立审查</div>
+    <h1>Claude 执行，Codex 独立审查，主管裁决</h1>
+    <p class="sub"><b>执行者可验证，独立者评审，主管批准；三者不能压成一个自动通过点。</b><br>建立只读独立上下文会话，由 Codex 输出带有问题、影响、证据与建议的独立 Findings，主管依据【accept/fix/stop/defer】处置框架行使一票裁决！</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 建立上下文隔离的只读评审输入包；② 驱动 Codex 输出包含“问题、影响、证据、建议”与优先级的独立 Findings；③ 理解“验证 (自己做对)、评审 (别人看问题)、批准 (主管拍板)”三分原则；④ 依据主管处置框架（accept / fix / stop / defer）逐项裁决并生成 `docs/LESSON_08_AUDIT_REPORT.md`。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 00: COURSE CONTEXT -->
+<section>
+  <h2><span class="num">01</span> 自己写的代码自己查，为什么不可靠？</h2>
+  <p>同一个 Agent 又写代码又检查自己的代码——就像学生自己批改自己的考卷，天然倾向"看起来没问题"。第八课引入第二双眼睛：Claude 负责执行和形成候选，Codex 在隔离上下文中独立评审，主管读取 finding 并作业务处置。</p>
+  <div class="card focus">
+    <p><b>记住这句话：</b><br>
+    执行者可验证，独立者评审，主管批准或拒绝——三者不能压成一个自动通过点。评审结果仍由主管裁决，不替代主管责任。</p>
+  </div>
+  <p>独立评审不是让 Codex 替主管批准业务，而是给主管增加一双不带实现者偏见的眼睛。</p>
+</section>
+<!-- SECTION 01: INTERACTIVE DEMONSTRATOR -->
+<section>
+  <h2><span class="num">02</span> 核心架构演进：单 AI 自卖自夸 vs 上下文隔离独立审查</h2>
+  <p>通过下方交互演示，直观对比“单个 AI 既写代码又自己说没问题”与“新建只读隔离会话 ➔ Codex 输出 Findings ➔ 主管 4 种处置”的流转过程：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎬 上下文隔离与独立审查动态演示</span>
+      <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
+    </div>
+    <div class="sim-body">
+
+      <div class="mode-tabs">
+        <button class="mode-btn active raw" id="mBtnRaw" onclick="runMode('raw')">🔴 模式 A：单 AI 既写又审 (自卖自夸/遗忘初始规约/隐蔽Bug漏审)</button>
+        <button class="mode-btn bounded" id="mBtnBounded" onclick="runMode('bounded')">🟢 模式 B：上下文隔离独立审查 (隔离会话+独立Findings+主管4种处置)</button>
+      </div>
+
+      <div class="flow-display-canvas" id="flowCanvas">
+        <!-- JS rendered steps -->
+      </div>
+
+      <div class="console-output" id="consoleLog">
+        > 点击上方按钮运行模式推演…
+      </div>
+
+    </div>
+  </div>
+
+  <div class="quote">
+    💡 <b>一句话口诀</b>：执行、评审与批准三权分立！汇总候选不自评，只给 Codex 隔离输入，主管依据处置框架（accept/fix/stop/defer）一票裁决！
+  </div>
+</section>
+
+<!-- SECTION 02: 5 CORE CONCEPTS -->
+<section>
+  <section>
+  <section>
+  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <div class="concept-list">
+    <details class="concept-card">
+      <summary class="concept-head">1. 上下文隔离</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>评审者只接收约定的规格、候选和证据，不继承实现者的全部对话和自我辩护；不是给评审者看所有聊天记录，也不是让评审者和实现者用同一个会话。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>评审者拿到的是一份"隔离输入包"——契约、候选变更和证据索引，而不是开发过程中的全部对话和推演；评审者不知道实现者怎么想的，只看结果和证据。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>第三方审计会计师——只看凭证和账目，不参与做账过程，也不听会计的解释；不是让审计师和会计坐在一起对账。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会建立隔离评审输入，只提供必要材料，不把全部开发对话也传给评审者。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">2. 独立 finding</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>每个评审结论都要指出问题、影响、证据和建议，不是笼统说"看起来没问题"，也不是只说"这里有点问题"不说明影响。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>评审者对每个发现输出四项：问题是什么、对业务有什么影响、证据在哪里、建议怎么处理；finding 有优先级（高/中/低），主管按优先级处置。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>审计发现报告——审计师逐项列出问题、财务影响、凭证证据和整改建议，不能只写"账目有点问题"。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3—4 你会让 Codex 输出独立 findings，然后逐项决定 accept/fix/stop/defer。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">3. 验证、评审与批准三分</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>执行者可验证（自己检查行为是否正常），独立者评审（第三方看证据找问题），主管批准或拒绝；三者不能压成一个自动通过点。验证是"自己做对了吗"，评审是"别人看有没有问题"，批准是"主管决定接不接受"。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>Claude 执行并自验行为，Codex 独立评审找问题，主管读取 findings 后批准、打回或延期；三者由不同角色承担，不能由同一个流程自动完成。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>餐厅出菜流程——厨师试味（验证），质检员尝菜（评审），店长决定能不能上桌（批准）；厨师不能自己说"好了"就上桌，质检员也不能替店长决定。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4—5 你会区分验证、评审和批准，不让 Claude 的修复和 Codex 的评审被同一自动流程冒充为主管批准。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">4. Agent 协作模式选型</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>根据依赖、并行性、独立性和责任选择流水线、调度/执行、并行、对等、评审等模式，不追求 Agent 数量，也不是越多 Agent 越好。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>判断任务之间是否有依赖（有则用流水线）、是否可并行（可则用并行）、是否需要独立（需要则用评审模式）；选择最简单足够的协作方式。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>审计项目分工——小公司一个会计兼做账和自核，大公司必须分会计和独立审计；不是所有项目都需要独立审计，但涉及高风险和外部责任时必须有。审计比喻帮助理解为什么需要分离角色，具体六种模式见扩展认识。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—2 你汇总评审输入并建立隔离评审时，已经在实践"执行者和评审者分离"的协作模式。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. 主管处置框架（accept/fix/stop/defer）</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>主管对 finding 作接受、修复、停止或延期决定，并记录承担理由；不是全部默认 accept，也不是让 AI 自动决定处置方式。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>主管逐项读取 finding，根据业务影响、风险和成本决定：accept（接受现状）、fix（修复问题）、stop（停止该功能）、defer（延期处理）；每个决定都要写理由。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>审计结论处置——审计师出具 findings 后，公司管理层决定接受、整改、搁置或拒绝；不能因为审计师说"问题不大"就忽略，也不能让审计师替管理层做决定。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4—5 你逐项决定处置方式，需要修复的由 Claude 执行，处置结果进入项目状态。
+        </div>
+      </div>
+    </details>
+
+  </div>
+</section></section></section>
+
+<!-- SECTION 03: INTERACTIVE DEMONSTRATOR / ADJUDICATION SIMULATOR -->
+<section>
+  <h2><span class="num">04</span> 演练：主管处置框架 (accept/fix/stop/defer) 模拟终端</h2>
+  <p>点击下方 4 种处置决定，模拟主管对 Codex 审计 Findings 进行一票裁决的过程：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>✒️ 主管处置框架 4 种裁决模拟器</span>
+      <span style="font-size: .8rem; opacity: .8;">点击按钮查看裁决逻辑与业务理由要求</span>
+    </div>
+    <div class="sim-body">
+      <div class="mode-tabs">
+        <button class="mode-btn active bounded" onclick="runAdj('accept')">🟢 accept: 接受现状 (风险可控)</button>
+        <button class="mode-btn" style="border-color:var(--amber); color:var(--amber);" onclick="runAdj('fix')">🛠️ fix: 责令修复 (Claude修代码并重新取证)</button>
+        <button class="mode-btn raw" onclick="runAdj('stop')">🛑 stop: 停止功能 (风险过高一票否决)</button>
+        <button class="mode-btn" style="border-color:var(--blue); color:var(--blue);" onclick="runAdj('defer')">⏳ defer: 延期处理 (留至下一阶段)</button>
+      </div>
+
+      <div class="console-output" id="adjTerminal" style="min-height: 140px;">
+        > 点击上方按钮模拟主管一票裁决物理动作...
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
+<section>
+  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然授权口令卡</h2>
+
+<div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：汇总候选变更、契约和 L7 证据，不自评"已验收"</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">请帮我汇总评审输入包。
+
+从我的项目中收集以下材料：
+1. 候选变更清单：从 L4 到 L7 修改了哪些文件，改了什么
+2. L3 业务功能卡：业务边界、数据契约和验收场景
+3. L7 证据索引：LESSON_07_EVIDENCE_INDEX.md 的内容
+
+汇总为一份评审输入包。
+不要自评"已验收"或"没问题"。只提供事实材料。
+不要包含开发过程中的对话和推演。</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一份评审输入包，包含候选变更、契约和证据三部分，没有自评内容。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：建立隔离评审输入，只提供必要材料和范围</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">请帮我建立隔离评审输入。
+
+把以下材料传给独立评审者（Codex 或隔离新会话）：
+1. 评审输入包：【粘贴 Task 1 的内容】
+
+要求：
+- 评审者只接收契约、候选变更和证据索引
+- 不包含开发过程中的对话和推演
+- 评审者不知道实现者怎么想的，只看结果和证据
+- 评审范围：只评审上述材料范围内的内容
+
+不要让评审者和实现者用同一个会话。</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：评审者只收到了约定的材料，不包含开发对话，范围明确。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：让 Codex 输出带引证、优先级和影响的独立 findings</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">请对评审输入包进行独立评审。
+
+对每个发现输出以下四项：
+1. 问题描述：发现什么问题
+2. 业务影响：这个问题对业务有什么影响
+3. 证据引证：证据在哪里（引用契约、证据索引或候选文件）
+4. 建议：建议怎么处理
+
+每项 finding 标记优先级：高 / 中 / 低
+
+不要笼统说"看起来没问题"。每项都要具体。
+不要修改任何代码。只输出 findings。</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：Codex 输出了独立 findings，每项有四项内容和优先级，引证了具体证据。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：逐项决定 accept/fix/stop/defer，并说明业务理由</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p4">请帮我生成主管处置卡。
+
+对每条 finding 逐项决定处置：
+
+| Finding | 优先级 | 处置决定 | 业务理由 |
+| --- | --- | --- | --- |
+
+处置决定只能是：
+- accept：接受现状（不影响业务或风险可接受）
+- fix：修复问题（需要改代码并重新取证）
+- stop：停止该功能（问题严重到需要停止）
+- defer：延期处理（留到下一阶段处理）
+
+每项必须写业务理由。不要全部默认 accept。每项业务理由至少说明：这个 finding 影响什么业务，修复/不修复的成本权衡是什么。不要只写"问题不大"。</span>
+      <button class="btn-copy" onclick="copyText('p4')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：处置卡有每条 finding 的处置决定和理由，不是全部 accept。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：需要修复的由 Claude 执行，关键项重新取证，处置结果进入项目状态</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p5">请执行以下步骤：
+
+1. 对标记 fix 的 finding，执行修复
+2. 修复后对关键项重新在浏览器中取证（截图和日志）
+3. 把处置结果写入 docs/LESSON_08_AUDIT_REPORT.md：
+   - 每条 finding 的处置决定和理由
+   - 修复后的重新取证结果
+4. 更新 docs/PROJECT_STATE.md 记录独立评审结果和下一课输入说明
+
+注意：修复是执行，批准是主管。Claude 的修复不能冒充为主管批准。</span>
+      <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：修复后有重新取证，处置结果写入审计报告和项目状态，没有把修复冒充为批准。</div>
+  </div>
+
+</section>
+
+<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<section>
+  <h2><span class="num">06</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
+
+  <h3>1. ✍️ 概念互动填空 (Interactive Fill-in-the-Blanks)</h3>
+  <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空：</p>
+
+  <div class="blank-card" id="bCard1">
+    1. <b>上下文隔离与 Findings</b>：为了防止自卖自夸，Codex 审查者必须在
+    <select class="blank-select" id="blank1">
+      <option value="">-- 请选择 --</option>
+      <option value="iso">只读独立上下文会话 (不继承开发对话)</option>
+      <option value="same">与开发 Agent 共享同一个长对话</option>
+    </select> 中运行，且必须输出包含问题、影响、证据、建议四项的
+    <select class="blank-select" id="blank2">
+      <option value="">-- 请选择 --</option>
+      <option value="find">独立 findings (带优先级)</option>
+      <option value="praise">笼统的表扬文字</option>
+    </select>。
+    <div class="blank-feedback" id="bf1"></div>
+  </div>
+
+  <div class="blank-card" id="bCard2">
+    2. <b>主管处置框架</b>：主管对 findings 做出处置决定时，可选的四种动作是
+    <select class="blank-select" id="blank3">
+      <option value="">-- 请选择 --</option>
+      <option value="four">accept / fix / stop / defer</option>
+      <option value="all">全部默认 accept</option>
+    </select>；必须明确记住的是：修复属于执行，最终生产系统的决定与批准始终由
+    <select class="blank-select" id="blank4">
+      <option value="">-- 请选择 --</option>
+      <option value="man">主管 (人在回路)</option>
+      <option value="ai">AI Agent 自动决定</option>
+    </select> 承担。
+    <div class="blank-feedback" id="bf2"></div>
+  </div>
+
+  <button class="btn" style="margin-bottom: 2rem;" onclick="checkAllBlanks()">✅ 核对所有填空答案</button>
+
+  <h3>2. 💡 常见概念误区与正确理解 (3 栏对照表)</h3>
+  <div class="misc-table-container">
+    <table class="misc-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">常见误区 (Misconception)</th>
+          <th style="width: 42%;">正确硬核理解 (Correct Engineering Reality)</th>
+          <th style="width: 30%;">如何纠偏与护栏防护 (Remedy & Guardrails)</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+          <td><span class="badge-misc red">误区 1</span><br><b>"一个 AI 既负责写代码又负责审计，效率最高"</b></td>
+          <td>单个 AI 会自卖自夸，隐蔽 Bug 无法被识别；需要独立评审者</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 2</span><br><b>"Codex 判定 PASS 后就自动合并了"</b></td>
+          <td>最高决策权属于主管，AI 不能替人批准；主管逐项处置后才决定合并</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 3</span><br><b>"评审者看的材料越多越好"</b></td>
+          <td>评审者只看隔离输入，太多材料（尤其开发对话）反而影响独立判断</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 4</span><br><b>"全部 accept 就是通过了"</b></td>
+          <td>全部 accept 说明没有认真评审；每项都要写理由，fix/stop/defer 都是合理处置</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 5</span><br><b>"Claude 修复了就是批准了"</b></td>
+          <td>修复是执行，批准是主管；Claude 的修复不能冒充为主管批准</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 06: QUIZ & EXIT TICKET -->
+<section>
+  <h2><span class="num">07</span> 测验 + 🎯 退场测试题 + 课后拓展</h2>
+
+  <!-- 5 Scenario Quiz -->
+  <h3>1. 5 道概念选择测验</h3>
+          <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · 上下文隔离的核心要求是什么？</div>
+    <label><input type="radio" name="q1" value="a"> 阻止评审者读取项目文件</label>
+    <label><input type="radio" name="q1" value="b"> 评审者只接收约定的规格、候选和证据，不继承实现者的全部对话和自我辩护</label>
+    <label><input type="radio" name="q1" value="c"> 让评审者与开发 Agent 共享同一个长会话</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · 独立 finding 必须包含哪四项内容？</div>
+    <label><input type="radio" name="q2" value="a"> 只有一句“看起来没问题”</label>
+    <label><input type="radio" name="q2" value="b"> 问题描述、业务影响、证据引证、处置建议 (并带有优先级)</label>
+    <label><input type="radio" name="q2" value="c"> 文件名、行号、修改时间、作者</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · “验证、评审与批准三分”原则指的是什么？</div>
+    <label><input type="radio" name="q3" value="a"> 执行者自验行为、独立者看证据找问题、主管拍板接不接受，三者不能压为一个自动点</label>
+    <label><input type="radio" name="q3" value="b"> 让 AI 自动完成验证、评审与批准</label>
+    <label><input type="radio" name="q3" value="c"> 分为前端、后端与数据库三部分</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · 主管处置框架包含哪四种决定？</div>
+    <label><input type="radio" name="q4" value="a"> accept (接受现状)、fix (修复问题)、stop (停止功能)、defer (延期处理)</label>
+    <label><input type="radio" name="q4" value="b"> pass, fail, ignore, retry</label>
+    <label><input type="radio" name="q4" value="c"> add, update, delete, insert</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+          <div class="quiz-q" data-q="5">
+    <div class="q">Q5 · 对标记为 fix 的 finding，正确的处理闭环是什么？</div>
+    <label><input type="radio" name="q5" value="a"> 假装修复了</label>
+    <label><input type="radio" name="q5" value="b"> 改完代码就直接合并，不需要重新取证</label>
+    <label><input type="radio" name="q5" value="c"> 由 Claude 执行修复 ➔ 重新在浏览器中取证 ➔ 主管审阅重新取证结果并签署结论</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+<div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：上下文隔离是什么意思？为什么评审者不能继承实现者的全部对话？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      评审者只接收约定的规格、候选和证据，不继承实现者的全部对话和自我辩护。因为看了开发对话后会产生"既定印象"，影响独立判断。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：独立 finding 的四项是什么？为什么"看起来没问题"不算 finding？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      四项是问题/影响/证据/建议。"看起来没问题"没有具体问题、影响和证据，无法追溯和处置。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 3：验证、评审和批准分别由谁承担？为什么三者不能压成一个自动通过点？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans3')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans3">
+      <b>参考答案解析：</b><br>
+      执行者验证（自己做对了吗），独立者评审（别人看有没有问题），主管批准（决定接不接受）。三者由不同角色承担，压成一个自动通过点就失去了独立性和主管责任。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 4：Agent 协作模式选型的依据是什么？是不是 Agent 越多越好？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans4')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans4">
+      <b>参考答案解析：</b><br>
+      依据是依赖、并行性、独立性和责任。不是 Agent 越多越好，选择最简单足够的协作方式即可。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 5：HITL 处置有哪四种决定？为什么不能全部默认 accept？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans5')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans5">
+      <b>参考答案解析：</b><br>
+      accept/fix/stop/defer 四种。全部 accept 说明没有认真评审——如果每条 finding 都可以接受，可能说明评审不够深入或主管没有思考业务影响。
+    </div>
+  </div>
+
+  <div class="card tinted" style="margin-top: 1.5rem;">
+    <b>三句话带走 (Key Takeaways)：</b>
+    <ol style="margin-top: .5rem;">
+      <li><b>汇总候选不自评，建立只读独立上下文会话，不将开发对话传给评审者。</b></li>
+      <li><b>Codex 输出带引证与优先级的独立 Findings，不接受“看起来没问题”。</b></li>
+      <li><b>主管依据 accept/fix/stop/defer 一票裁决，修复后重新取证，落盘审计报告！</b></li>
+    </ol>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第八课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 已成功建立上下文隔离的只读评审包，并由 Codex 输出独立 Findings？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 已在主管处置卡中对每条 Finding 做出 accept/fix/stop/defer 决定并写明业务理由？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 对 fix 项完成修复与重新取证，落盘 `docs/LESSON_08_AUDIT_REPORT.md` 审计报告？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--purple);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--purple); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 上下文隔离</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">只读独立会话，不继承开发对话与自我辩护。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--teal); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 独立 Findings</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">问题、影响、证据引证、建议与优先级四项标注。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ 主管处置框架</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">accept / fix / stop / defer 四种裁决与业务理由。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🚀 下一阶段预告</h4>
+      <p style="font-size: .88rem; color: var(--blue); font-weight:bold;"><a href="0009-ai-opportunity-map-and-agent-pattern-selection.html" style="color: var(--blue);">第 9 课 · 画出部门 AI 机会与 Agent 范式选型图</a>： 部门 AI 机会地图与三链区分！</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--purple); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--purple-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--purple);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用餐厅出菜的比喻，帮我复习验证、评审与批准三分原则”——它会为您详细拆解。</span>
+  </div>
+</section>
+
+<footer>
+  第 8 课 · 主管 AI 原型制作训练营 V4 · 权威路线图：<a href="COURSE_ROADMAP.html">COURSE_ROADMAP.html</a> | 术语：<a href="GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// ---------- Section 01 Demonstrator ----------
+const scenarios = {
+  raw: {
+    steps: [
+      { title: 'Step 1 · 单个 AI 既负责写代码又做审计', desc: '在同一个长对话中让 Claude 自写自审：“请审计你刚才写的代码”...', cls: 'working' },
+      { title: 'Step 2 · 继承长上下文产生自我辩护与盲区', desc: 'AI 遗忘初始规约，自卖自夸说“代码完美，已通过”，漏审关键 Bug。', cls: 'error' },
+      { title: 'Step 3 · ❌ 隐蔽漏洞带入生产，无主管裁决', desc: '【崩溃】缺乏独立 Findings 与主管 4 种处置，安全漏洞直接带入交接！', cls: 'error' }
+    ],
+    logs: [
+      '> [Same Session Review]: Claude self-reviewing code...',
+      '> [Self Praise]: "Code is perfect, zero errors!"',
+      '❌ [Result]: 上下文污染，缺乏独立盲审，隐蔽 Bug 被漏审带入！'
+    ]
+  },
+  bounded: {
+    steps: [
+      { title: 'Step 1 · Task 1/2: 建立只读上下文隔离会话', desc: '只将契约、候选 commit 和 L7 证据索引传给 Codex 独立只读会话。', cls: '' },
+      { title: 'Step 2 · Task 3: Codex 输出独立 Findings', desc: 'Codex 独立盲审，输出带有问题/影响/证据/建议及优先级的 Findings。', cls: 'working' },
+      { title: 'Step 3 · Task 4: 主管 4 种处置框架一票裁决', desc: '主管逐项裁决 accept/fix/stop/defer，写明业务影响与成本权衡。', cls: 'working' },
+      { title: 'Step 4 · 🎉 Task 5: Claude 修复重新取证，落盘报告', desc: 'Claude 修复 fix 项 ➔ 重新在浏览器中取证 ➔ 落盘 LESSON_08_AUDIT_REPORT.md！', cls: 'success' }
+    ],
+    logs: [
+      '> [Task 1/2]: 上下文隔离包构建完成，发送至 Codex 只读会话',
+      '> [Task 3]: Codex 输出 3 项独立 Findings (含 1 项 High 优先级)',
+      '> [Task 4]: 主管裁决：1 项 accept, 1 项 fix, 1 项 defer (附业务理由)',
+      '✅ [Task 5]: Claude 完成 fix 项修复与重新取证，落盘 LESSON_08_AUDIT_REPORT.md！'
+    ]
+  }
+};
+
+let animationTimers = [];
+
+function clearAnimationTimers() {
+  animationTimers.forEach(id => clearTimeout(id));
+  animationTimers = [];
+}
+
+function runMode(mode) {
+  clearAnimationTimers();
+
+  const btnRaw = document.getElementById('mBtnRaw');
+  const btnBounded = document.getElementById('mBtnBounded');
+  const canvas = document.getElementById('flowCanvas');
+  const consoleLog = document.getElementById('consoleLog');
+
+  btnRaw.className = 'mode-btn raw ' + (mode === 'raw' ? 'active' : '');
+  btnBounded.className = 'mode-btn bounded ' + (mode === 'bounded' ? 'active' : '');
+
+  const data = scenarios[mode];
+  canvas.innerHTML = '';
+  consoleLog.innerHTML = '<span style="color: #94a3b8;">> 正在启动 ' + (mode === 'raw' ? '🔴 单 AI 既写又审' : '🟢 上下文隔离独立审查') + ' 动态轨迹推演...</span>';
+
+  data.steps.forEach((s, idx) => {
+    const node = document.createElement('div');
+    node.className = 'flow-step-node ' + (s.cls || '');
+    node.id = 'node_' + idx;
+    node.style.opacity = '0';
+    node.style.transform = 'translateY(12px)';
+    node.style.transition = 'all .4s ease';
+    node.innerHTML = `
+      <div class="node-title">
+        <span>${s.title}</span>
+        <span style="font-size:.75rem; padding: 2px 6px; border-radius:4px; background:rgba(0,0,0,0.05);">Step ${idx + 1}</span>
+      </div>
+      <div class="node-desc">${s.desc}</div>
+    `;
+    canvas.appendChild(node);
+
+    const tId = setTimeout(() => {
+      node.style.opacity = '1';
+      node.style.transform = 'translateY(0)';
+      node.classList.add('active');
+
+      if (data.logs[idx]) {
+        const logLine = document.createElement('div');
+        logLine.style.marginTop = '4px';
+        logLine.innerHTML = data.logs[idx];
+        consoleLog.appendChild(logLine);
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+      }
+    }, (idx + 1) * 500);
+
+    animationTimers.push(tId);
+  });
+}
+runMode('bounded');
+
+// ---------- Adjudication Terminal Simulator ----------
+function runAdj(act) {
+  const term = document.getElementById('adjTerminal');
+  if (act === 'accept') {
+    term.innerHTML = `
+🟢 <b>[主管裁决 · accept 接受现状]:</b><br>
+适用场景：低优先级样式微调差异或不影响核心业务流程的异常。<br>
+业务理由要求：说明该 Finding 影响的业务极小，修复成本高于潜在收益，风险确认可控。
+    `;
+  } else if (act === 'fix') {
+    term.innerHTML = `
+🛠️ <b>[主管裁决 · fix 责令修复]:</b><br>
+适用场景：高/中优先级业务断言失败或存在显式边界漏洞。<br>
+后置动作：由 Claude 重新修改代码，并在浏览器中重新提取证据链做二次复核！
+    `;
+  } else if (act === 'stop') {
+    term.innerHTML = `
+🛑 <b>[主管裁决 · stop 停止功能]:</b><br>
+适用场景：存在重大越界修改、越权破坏或数据合规风险。<br>
+业务理由要求：主管行使一票否决权，完全剥离或停止该未授权功能。
+    `;
+  } else {
+    term.innerHTML = `
+⏳ <b>[主管裁决 · defer 延期处理]:</b><br>
+适用场景：属于非核心拓展需求，或需要等待后续真实生产接口部署。<br>
+业务理由要求：说明为何暂缓，标注留至第九/十课或未来 IT 团队接管时处理。
+    `;
+  }
+}
+
+// ---------- Robust Clipboard Copy with Fallback ----------
+function copyText(id) {
+  const txtNode = document.getElementById(id);
+  if (!txtNode) return;
+  const txt = txtNode.innerText;
+
+  let btn = txtNode.nextElementSibling;
+  if (!btn || !btn.classList.contains('btn-copy')) {
+    btn = txtNode.parentElement.querySelector('.btn-copy');
+  }
+
+  function showSuccess() {
+    if (btn) {
+      const originalText = btn.innerText;
+      btn.innerText = '✅ 复制成功!';
+      btn.style.background = '#16a34a';
+      btn.style.color = '#ffffff';
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(showSuccess).catch(function() {
+      fallbackCopy(txt, showSuccess);
+    });
+  } else {
+    fallbackCopy(txt, showSuccess);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    cb();
+  } catch (err) {
+    prompt("请手动复制口令：", text);
+  }
+  document.body.removeChild(textArea);
+}
+
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+// ---------- Quiz Logic ----------
+const explain = {
+  q1: '正确答案：B。评审者只接收约定的规格、候选和证据，不继承实现者的全部对话和自我辩护，以保持独立判断。',
+  q2: '正确答案：B。独立 finding 必须包含问题描述、业务影响、证据引证与处置建议，并带有优先级。',
+  q3: '正确答案：A。执行者验证、独立者评审、主管批准三者由不同角色承担，不能压成一个自动通过点。',
+  q4: '正确答案：A。主管处置框架包含 accept (接受现状)、fix (修复问题)、stop (停止功能)、defer (延期处理)；全部 accept 说明没有认真评审。',
+  q5: '正确答案：C。fix 的闭环是 Claude 执行修复 → 重新在浏览器中取证 → 主管审阅重新取证结果并签署结论。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector(`label:has(input[value="${btn.dataset.a}"])`);
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 20;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 5) {
+    el.innerHTML = `你已答完 <b>${answered} / 5</b> 题，当前得分为 <b>${score} / 100</b> 分。请继续完成其余题目！`;
+  } else {
+    el.innerHTML = `🎉 恭喜完成测验！你的最终得分是 <b>${score} / 100</b> 分！`;
+  }
+}
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--purple)';
+    res.innerHTML = '🎉 恭喜完成第八课全量退场自查！你已熟练掌握上下文隔离独立审查与主管一票裁决！';
+  } else {
+    res.style.color = 'var(--purple)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+</script>
+
+</body>
+</html>

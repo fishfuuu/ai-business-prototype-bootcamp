@@ -4,9 +4,9 @@
 
 ## 修改内容
 
-- 
-- 
-- 
+-
+-
+-
 
 ## 教学影响
 
@@ -26,7 +26,6 @@
 
 - [ ] `npm run typecheck`通过
 - [ ] `npm run build`通过
-- [ ] `scripts/verify-project.ps1`通过
 - [ ] 目标页面已实际检查
 - [ ] 移动端基础布局已检查
 

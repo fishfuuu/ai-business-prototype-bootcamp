@@ -25,6 +25,5 @@
 
 * `START_HERE.md`：快速开始指引
 * `docs/LESSON_01_GUIDE.md`：学员唯一指南与 Task 1–4 实操合一卡
-* `docs/COMPONENT_CATALOG.md`：通用组件速查目录
 * `docs/assets/lesson-01/lesson-flow.png`：第一课全景架构图
 * `src/`：Vue 3 + TypeScript 源代码

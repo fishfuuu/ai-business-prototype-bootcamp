@@ -1,87 +1,146 @@
 ---
 name: teacher-plan-architect
-description: "The sole final renderer for the 8-module TEACHER_PLAN (教师教案). Consumes a HANDOFF_READY Lesson Design Brief and renders the repository's 8-module teacher plan structure. Does not self-approve, does not auto-produce GUIDE, and does not modify repository course materials beyond the authorized TEACHER_PLAN write."
+description: "Render either an 8-module repository TEACHER_PLAN from a HANDOFF_READY Lesson Design Brief, or—only after the same lesson's teacher plan has independent review and user/course-owner approval—a single 6-chapter learner GUIDE. Use for final teacher-plan or learner-guide rendering. Never render both in one invocation and never self-approve."
 ---
 
-# Teacher Plan Architect (教师教案终稿渲染器)
+# Teacher Plan Architect
 
-当需要编写或重构《教师备课与控场指南 (TEACHER_PLAN)》时，本 Skill 是**唯一终稿渲染器**。它消费 HANDOFF_READY 的 Lesson Design Brief，按仓库八模块教案结构渲染教师教案。
+Render one final lesson artifact in one of two mutually exclusive modes:
 
-## Role Boundaries
+- ``PLAN``: an 8-module teacher plan;
+- ``GUIDE``: one 6-chapter learner guide derived from the same lesson`s approved teacher plan.
 
-- **唯一职责**：渲染八模块教师教案（TEACHER_PLAN）。
-- **不自我授权**：不自我批准教案；教案需 Independent Review + 用户/课程负责人批准后才进入 GUIDE 阶段。
-- **不自动产 GUIDE**：GUIDE 由后续独立步骤生成，需教案批准后执行。
-- **不拥有生命周期**：本 Skill 不持有 lifecycle、artifact ownership 或审批权，只提供方法与渲染约束。
-- **不修改课程材料**：除授权的 TEACHER_PLAN 写入外，不修改 GUIDE、派生资产或其他仓库文件。
+Never render both modes in one invocation. Do not own lifecycle, artifacts, reviews, or approvals.
 
-## Input Contract
+## Shared authority
 
-本 Skill 只消费 **HANDOFF_READY** 的 Lesson Design Brief：
+- Brief schema authority: `.agents/skills/teaching-lesson-plan/references/lesson-design-brief-template.md`
+- Consumed Brief version: `contract_version: 2.0`
+- Course rules and approved lesson artifacts outrank Skill defaults.
+- Stop on wrong lesson, stale source, schema drift, missing field, changed objective/non-goal/acceptance meaning, or fabricated capability.
 
-- Brief schema 唯一权威：`.agents/skills/teaching-lesson-plan/references/lesson-design-brief-template.md`
-- `contract_version` 由该 reference 文件唯一拥有；本 Skill 只声明消费的版本并做字段校验。
-- `brief_readiness` 必须为 `HANDOFF_READY`（仅表示完整性，不是批准）。
-- Brief 的 authority refs 必须指向当前 locked UIC / frozen design spec / approved roadmap / approved lesson artifacts。
+## Inheritance-based upgrade
 
-## Fail-Closed Rules
+This skill does not render from a blank template. Each lesson is an upgrade of an existing lesson. The Brief must carry a content inheritance table (produced by teaching-lesson-plan). TPA must verify the inheritance table is present and complete before rendering.
 
-- **Wrong lesson**：Brief 的 `lesson_number` 与请求不符 → 停止并报告。
-- **Stale source**：Brief 引用的 UIC/design/roadmap 不是当前锁定/冻结/批准版本 → 停止并报告。
-- **Invalid readiness**：`brief_readiness` 不是 `HANDOFF_READY` → 停止，不消费。
-- **Schema drift**：`contract_version` 不匹配或字段缺失 → 停止并报告。
-- **Spec gap**：Brief 会改变目标、非目标或验收含义 → 分类为规格缺口，返回 DRAFT，不静默吸收。
+If the Brief's inheritance table is missing, incomplete, or contains unsupported deletions (original content deleted without a reason from the default-retain list), fail closed: stop and report.
 
-## 8-Module Teacher Plan Structure
+### Teaching thickness enforcement
 
-教师教案按以下 8 大执教模块渲染（模块可合并/重排，但必须覆盖）：
+When rendering either PLAN or GUIDE, verify against the original lesson materials:
 
-| 模块 | 核心内容 | 关键要求 |
-| :--- | :--- | :--- |
-| **一、课程元数据与定位** | 元数据、定位、背景痛点、版本记录 | 集中定义课程基本属性与演进信息 |
-| **二、逆向目标与四步概念卡** | Bloom ABCD 能力矩阵 + 2–3 个核心概念卡 | 目标与核心概念集中对齐 |
-| **三、教学准备与沙箱隔离** | 准备资源、沙箱规则、环境检查 | 罗列开课前需要检查的环境项 |
-| **四、90 分钟控场主线** | 时间预算表（总 ≤ 90 分钟，可调） | 提问问答嵌入时间表；不设固定暂停点数量与位置 |
-| **五、逐 Task 示范与巡视指导** | 按 Task 聚合：示范、口令、巡视、辅导 | 示范动作、口令、巡视卡点在同一 Task 下 |
-| **六、现场 Debug 预案** | Troubleshooting 表 | 应急排错预案；不虚构未实现的验证命令 |
-| **七、退场测试与课后拓展作业** | Exit Ticket（1–2 个必答提示）+ 巩固作业 | 结束前评估与总结 |
-| **八、教师备课质量自测 Checklist** | 课前检查 Checklist | 确保备课质量闭环 |
+- Flow diagrams from the original are preserved or replaced with an equal or better integrated model.
+- Detailed prompts from the original are preserved verbatim, adjusted, or replaced with equal or better prompts in the Task cards.
+- Classroom tasks and demonstration steps from the original are carried into the Task cards.
+- In-class questions, extension questions, misconceptions and troubleshooting from the original are preserved or replaced with equal content.
+- Teacher narration and explanations have real substance, not just headings.
 
-## 四步概念卡
+If the original had a flow diagram and the upgraded output has none, stop. If the original had usable prompts and the upgraded output has placeholders, stop. If the original had real teacher narration and the upgraded output has only section titles, stop.
 
-每个首次出现的“必须掌握”概念使用四步卡，第四步必须回指学员**刚完成的哪一步实操**：
+## Mode selection
 
-1. **是什么 / 不是什么**：标准定义与边界。
-2. **机制**：底层实际流转逻辑。
-3. **业务类比与反例**：记忆锚点 + 反例澄清。
-4. **交接价值**：对应刚完成的哪一步实操，以及主管为何需要用该词与 IT 沟通或作出判断。
+### PLAN mode
 
-单概念讲解控制在 3–5 分钟。安全/权限/数据前置概念必须在实操前讲。
+Require:
 
-## 双 Commit 与 CEO 决策树边界
+- `HANDOFF_READY` Brief for the requested lesson;
+- Brief contains a complete content inheritance table;
+- current authority references;
+- valid concept, time, dual-line, model, Task, assessment, and safety fields.
 
-- **双 Commit** 仅为两阶段版本记录/主管确权比喻（D18），Git 不理解业务审批；不得把 Git 操作描述为业务审批机制。
-- **CEO 三大决策树**是主管处置框架，不是代码运行时硬控制，也不是行业标准。
-- 教案中不得把文字规则冒充 runtime hard control；控制层按 guidance / workflow gate / runtime hard control 分层描述。
+Output only the teacher plan. Do not output a GUIDE or approval claim.
 
-## 证据链
+### GUIDE mode
 
-教案结尾必须包含明确的证据验收机制，但不得虚构能力：
+Require all of:
 
-1. **视觉证据**：页面/界面对比截图或状态切换。
-2. **行为证据**：交互点击无报错日志，终端网络输出正常。
-3. **工程证据**：以真实运行输出为准；`verify-project.ps1` 是遗留母仓库维护检查，不作为课堂/业务通过证明。
-4. **范围证据**：`git status` 确认未修改超出许可范围的文件；不要求“Working Tree 100% Clean”作为教案通过条件。
+- same-lesson approved teacher plan exact path and content/version identifier;
+- real Independent Review reference;
+- real user/course-owner approval reference;
+- the corresponding Brief or a traceable approved-plan reference to its frozen meaning;
+- requested GUIDE lesson number matching the plan and Brief.
 
-## 教案与指南质量自我审计 Checklist
+Output only one GUIDE. Stop when an approval reference is missing, stale, wrong-lesson, non-resolving, or merely asserted in prose. Do not repair an approved plan from GUIDE mode; return conflicts upstream as a specification gap.
 
-在生成或重构教案后，自我审计是否满足：
+## PLAN rendering contract
 
-- [ ] 教师教案覆盖 8 大执教模块（可合并/重排，不设固定暂停点数量）。
-- [ ] 所有核心概念均包含【是什么/不是什么 + 机制 + 业务类比与反例 + 交接价值】4 步，第四步回指刚完成实操。
-- [ ] 时间预算总长 ≤ 90 分钟，真实时长经逐课试讲校准，不伪造精确时间数据。
-- [ ] 概念暴露台账区分 named/plain/background 与独立考核判断。
-- [ ] 双轨教学（教师统一工作台 / 学员个人原型）与三类成果分离（课堂内可见成果 / 课间微任务 / 每周完整成果）已覆盖。
-- [ ] Mock/无密钥/安全边界已声明；教师真实调用完全在仓库外。
-- [ ] 未虚构 `verify-project.ps1`、`npm run verify`、`doctor`、`test:ui` 等未实现能力。
-- [ ] 教案未自我批准；批准记录引用真实 Independent Review + 用户/课程负责人批准。
+Render exactly 8 H2 modules:
+
+1. course metadata and positioning;
+2. backward-aligned objectives, evidence, and concept cards;
+3. teaching preparation and safety boundaries;
+4. 90-minute control line;
+5. Task demonstration and patrol guidance;
+6. classroom Debug/fallback plan;
+7. assessment, passing criteria, and between-lesson task;
+8. teacher preparation checklist.
+
+Rules:
+
+- Preserve 3-5 core concepts and 0-2 extension concepts from the Brief.
+- Render the integrated lesson model as a relationship/model for learners; keep classroom timing teacher-only.
+- Use 4-6 macro phases, approximately 5 by default; do not create fixed Pause Points.
+- For every Task render: **teacher demonstration / teacher cue / patrol judgment / failure fallback**.
+- Keep Troubleshooting to at most 5 root-cause categories.
+- Keep teacher checklist to at most 8 items unless an upstream contract explicitly requires more.
+- Render the two learning lines and their separate passing evidence.
+- Include 1-5 required questions and 0-2 extension questions with answer/judgment points; distribute them after corresponding Tasks when the Brief says so.
+- Carry forward original prompts, flow diagrams, and teacher narration per the inheritance table. Do not replace usable content with placeholders.
+
+## GUIDE rendering contract
+
+Render exactly 6 H2 chapters serving these functions:
+
+1. understand lesson value, result, integrated model, and core concepts;
+2. prepare the environment and choose the lesson starting point;
+3. complete the Tasks;
+4. preserve safety boundaries and handle misconceptions/problems;
+5. verify results and complete assessment;
+6. prepare the next lesson input or micro-task.
+
+Rules:
+
+- Create one learner guide only. Keep A/B/C or other branches inside the relevant Task and reconverge afterward.
+- Do not expose the teacher timetable as the learner integrated model.
+- For every Task render: **purpose / copy or execute / expected observation / check / mandatory stop**.
+- Preserve approved prompts completely unless the approved plan explicitly authorizes compression.
+- Keep common misconceptions at 5 or fewer and troubleshooting root categories at 5 or fewer.
+- Render 1-5 required questions, 0-2 extension questions, and answers/judgment points.
+- Do not introduce concepts, Tasks, scope, passing criteria, safety claims, or homework absent from the approved teacher plan.
+- Keep the classroom main result achievable in class; do not move core completion to homework.
+- Carry forward original prompts, flow diagrams, and learner-facing explanations per the inheritance table. Do not replace usable content with placeholders.
+
+## Four-step concept card
+
+For each first-introduced core concept render:
+
+1. what it is / is not;
+2. mechanism;
+3. coherent business metaphor and counterexample;
+4. just-completed Task reference and supervisor handoff/judgment value.
+
+Do not promote extension, operational, or teacher-background labels into core cards.
+
+## Evidence and truthfulness
+
+- Visual evidence: visible state, comparison, or result when applicable.
+- Behavioral evidence: an actual interaction/result.
+- Engineering evidence: only commands and outputs actually run; repository maintenance scripts are not classroom/business proof.
+- Scope evidence: actual changed range when available; never require an artificially clean working tree as business proof.
+
+Never claim text guidance is a runtime hard control; never claim automatic repair, compliance, zero error, real API/database/model integration, or a tool/script not supported by evidence.
+
+## Self-audit
+
+Before returning:
+
+- verify the selected mode and output only one artifact;
+- verify lesson number and authority lineage;
+- verify counts and H2 structure;
+- verify Task card completeness;
+- verify dual-line evidence;
+- verify integrated model is not a timetable;
+- verify safety and factual claims;
+- verify the inheritance table is present and all deletions have reasons;
+- verify teaching thickness: original prompts, flow diagrams, teacher narration, questions, misconceptions and troubleshooting are preserved or replaced with equal or better content;
+- for GUIDE, verify exact conformance to the approved same-lesson teacher plan.

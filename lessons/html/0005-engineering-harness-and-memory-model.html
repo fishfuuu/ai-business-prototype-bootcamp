@@ -1,0 +1,1071 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 课 · 第一次把 AI/Agent 融入业务 | 主管 AI 训练营</title>
+<style>
+  :root {
+    --paper: #faf7f2;
+    --card: #ffffff;
+    --ink: #26313b;
+    --ink-soft: #5b6771;
+    --line: #e3dcd2;
+    --teal: #0f766e;
+    --teal-soft: #e6f2f0;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --plum: #6d28d9;
+    --plum-soft: #f1ebfb;
+    --red: #b91c1c;
+    --red-soft: #fdecec;
+    --green: #15803d;
+    --green-soft: #e9f6ee;
+    --blue: #1d4ed8;
+    --blue-soft: #eff6ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding-bottom: 5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero Banner */
+  .hero {
+    background: linear-gradient(160deg, #0f172a 0%, #1e40af 100%);
+    color: #f5f1e8;
+    padding: 3.5rem 1.25rem 3rem;
+  }
+  .hero .wrap { max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #93c5fd; font-weight: 700; }
+  .hero h1 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem;
+    font-weight: 800;
+  }
+  .hero .sub { color: #bfdbfe; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .goal {
+    margin-top: 1.4rem; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.6;
+  }
+  .hero .goal b { color: #93c5fd; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; }
+  section { margin-top: 3rem; }
+
+  h2 {
+    font-family: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: #0f172a;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2 .num {
+    font-family: "Segoe UI", sans-serif; font-size: .85rem; font-weight: 800;
+    background: var(--blue); color: #fff; border-radius: 6px; padding: .2rem .55rem;
+  }
+
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--ink); font-weight: 700; }
+  p, li { font-size: .98rem; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .card.tinted { background: var(--blue-soft); border-color: #bfdbfe; }
+  .card.warn { background: var(--amber-soft); border-color: #ecd3a8; }
+  .card.focus { background: var(--plum-soft); border-color: #d8b4fe; }
+  .card.green { background: var(--green-soft); border-color: #a7d7b4; }
+
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+
+  code {
+    font-family: "Consolas", "Cascadia Mono", monospace; font-size: .88em;
+    background: #f1ede5; border: 1px solid var(--line); border-radius: 4px; padding: .1rem .35rem;
+    color: #0f172a; font-weight: 600;
+  }
+
+  .quote {
+    border-left: 4px solid var(--blue); padding: .75rem 1.1rem; margin: 1.2rem 0;
+    background: #fff; border-radius: 0 8px 8px 0; font-size: 1.02rem; border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+
+  /* Grid Layouts - Symmetric 2x2 Grid */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .next-grid-2x2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.2rem;
+  }
+  @media (max-width: 640px) { .next-grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* Buttons */
+  .btn {
+    display: inline-block; margin-top: .8rem; background: var(--blue); color: #fff;
+    border: none; border-radius: 8px; padding: .6rem 1.4rem; font-size: .92rem;
+    font-family: inherit; font-weight: 700; cursor: pointer; transition: all .2s;
+    box-shadow: 0 2px 5px rgba(29, 78, 216, 0.2);
+  }
+  .btn:hover { background: #1e40af; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35); transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn.secondary { background: #334155; }
+  .btn.secondary:hover { background: #1f2937; }
+
+  /* Interactive Simulator Container */
+  .sim-container {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff;
+    margin: 1.5rem 0; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  .sim-header {
+    background: #0f172a; color: #fff; padding: .9rem 1.4rem; font-weight: 700; font-size: .95rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sim-body { padding: 1.4rem; }
+
+  .mode-tabs {
+    display: flex; gap: .6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+  }
+  .mode-btn {
+    flex: 1; min-width: 200px; padding: .8rem 1rem; border: 1.5px solid var(--line); border-radius: 10px;
+    font-size: .88rem; font-weight: 700; cursor: pointer; background: #f8fafc; color: var(--ink-soft);
+    transition: all .2s; text-align: center;
+  }
+  .mode-btn:hover { background: #e2e8f0; }
+  .mode-btn.active.raw { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .mode-btn.active.harness { background: #dbeafe; border-color: var(--blue); color: #1e40af; }
+
+  .flow-display-canvas {
+    background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.4rem;
+    min-height: 280px; position: relative; transition: all .3s;
+  }
+  .flow-step-node {
+    background: #fff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: .8rem 1.1rem;
+    margin-bottom: .8rem; font-size: .9rem; opacity: .4; transition: all .3s; transform: translateY(5px);
+  }
+  .flow-step-node.active { opacity: 1; transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .flow-step-node.error { border-color: #ef4444; background: #fff5f5; color: #991b1b; }
+  .flow-step-node.success { border-color: #10b981; background: #f0fdf4; color: #065f46; }
+  .flow-step-node.blocked { border-color: #3b82f6; background: #eff6ff; color: #1e40af; }
+
+  .node-title { font-weight: 800; font-size: .95rem; margin-bottom: .2rem; display: flex; align-items: center; justify-content: space-between; }
+  .node-desc { font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .console-output {
+    background: #0f172a; color: #38bdf8; font-family: "Consolas", monospace; font-size: .82rem;
+    padding: .9rem 1.1rem; border-radius: 8px; line-height: 1.7; margin-top: 1rem; max-height: 160px; overflow-y: auto;
+  }
+
+  /* Prompt Copy Cards */
+  .prompt-copy-box {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 1rem 1.2rem;
+    margin: .8rem 0; display: flex; justify-space-between; align-items: flex-start; gap: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .prompt-copy-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: .92rem; font-weight: 600; line-height: 1.65; color: #0f172a;
+    white-space: pre-wrap; word-break: break-word; flex: 1;
+  }
+  .btn-copy {
+    background: #0f172a; color: #fff; border: none; border-radius: 8px; padding: .5rem 1rem;
+    font-size: .82rem; font-weight: 700; cursor: pointer; transition: all .2s ease; white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; align-self: flex-start;
+  }
+  .btn-copy:hover { background: #d97706; transform: translateY(-1px); }/* Interactive Concept Fill-in-the-Blanks */
+  .blank-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem; font-size: .95rem; line-height: 1.8;
+  }
+  .blank-select {
+    padding: .25rem .6rem; border-radius: 6px; border: 1.5px solid var(--blue); font-size: .9rem;
+    font-weight: 700; color: var(--blue); background: var(--blue-soft); cursor: pointer; outline: none;
+  }
+  .blank-select.ok { border-color: #10b981; background: #dcfce7; color: #15803d; }
+  .blank-select.err { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+  .blank-feedback { font-size: .85rem; margin-top: .5rem; font-weight: 600; display: none; }
+  .blank-feedback.show { display: block; }
+
+  /* Misconceptions 3-Column Table Card */
+  .misc-table-container {
+    overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  }
+  .misc-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem;
+  }
+  .misc-table th {
+    background: #0f172a; color: #fff; font-weight: 700; padding: .85rem 1.1rem; border-bottom: 1px solid var(--line);
+  }
+  .misc-table td {
+    padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6;
+  }
+  .misc-table tr:hover { background: #fafaf9; }
+  .badge-misc { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .78rem; font-weight: 800; }
+  .badge-misc.red { background: #fee2e2; color: #991b1b; }
+  .badge-misc.green { background: #dcfce7; color: #15803d; }
+  .badge-misc.blue { background: #dbeafe; color: #1e40af; }
+
+  /* Exit Ticket Expandable Answers */
+  .exit-q-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem;
+  }
+  .exit-q-title { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: .5rem; }
+  .ans-box {
+    background: var(--blue-soft); border: 1px solid #bfdbfe; border-radius: 10px; padding: 1rem 1.2rem;
+    margin-top: .8rem; font-size: .92rem; color: #1e40af; display: none; line-height: 1.6;
+  }
+  .ans-box.show { display: block; }
+
+  /* Quiz Cards & Label Formatting */
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .quiz-q .q { font-weight: 700; margin-bottom: .8rem; font-size: 1.02rem; color: #0f172a; }
+  .quiz-q label {
+    display: flex; width: 100%; gap: .7rem; align-items: flex-start; padding: .55rem .8rem;
+    border-radius: 8px; cursor: pointer; font-size: .95rem; border: 1px solid transparent;
+    transition: background .15s; margin-bottom: .3rem;
+  }
+  .quiz-q label:hover { background: var(--blue-soft); }
+  .quiz-q label input { margin-top: .35rem; accent-color: var(--blue); }
+  .quiz-q label.sel { background: var(--blue-soft); border-color: #bfdbfe; }
+  .quiz-q label.correct { background: var(--green-soft); border-color: #a7d7b4; color: var(--green); font-weight: bold; }
+  .quiz-q label.wrong { background: var(--red-soft); border-color: #f0b9b9; color: var(--red); }
+  .feedback { display: none; margin-top: .8rem; font-size: .92rem; padding: .8rem 1rem; border-radius: 8px; line-height: 1.6; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-soft); color: var(--green); border: 1px solid #a7d7b4; }
+  .feedback.no { background: var(--red-soft); color: var(--red); border: 1px solid #f0b9b9; }
+  .q-btn { margin-top: .6rem; }
+
+  .score {
+    display: none; margin-top: 1.2rem; margin-bottom: 1.5rem; background: #0f172a; color: #f5f1e8;
+    border-radius: 12px; padding: 1.2rem 1.6rem; text-align: center; font-size: 1.1rem;
+  }
+  .score.show { display: block; }
+  .score b { color: #4ade80; font-size: 1.4rem; }
+
+  /* Checklist Card */
+  .chk-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+  .chk-item {
+    display: flex; align-items: center; gap: .75rem; background: #fff; border: 1px solid var(--line);
+    padding: .75rem 1rem; border-radius: 8px; font-size: .92rem; font-weight: 600; cursor: pointer;
+  }
+  .chk-item input { accent-color: var(--blue); width: 1.1rem; height: 1.1rem; }
+
+  footer { margin-top: 4rem; color: var(--ink-soft); font-size: .85rem; text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  /* Concept Cards Micro Architecture */
+  .concept-list {
+    display: flex; flex-direction: column; gap: 1.5rem; margin: 1.5rem 0;
+  }
+  .concept-card {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem 1.6rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .concept-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+
+  .concept-head {
+    font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; cursor: pointer;
+    list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .concept-head::-webkit-details-marker { display: none; }
+  .concept-head::after { content: '▼'; font-size: 0.6em; color: #94a3b8; transition: transform 0.2s; }
+
+  details[open] .concept-head {
+    border-bottom: 1px solid #f1f5f9; padding-bottom: .8rem; margin-bottom: .8rem;
+  }
+  details[open] .concept-head::after { transform: rotate(180deg); }
+
+  .concept-body { display: flex; flex-direction: column; gap: 1rem; }
+
+  .concept-pill {
+    padding-left: 1rem; font-size: .98rem; line-height: 1.75; color: #334155;
+  }
+  .concept-pill.iswhat { border-left: 3px solid #f59e0b; }
+  .concept-pill.howworks { border-left: 3px solid #64748b; }
+  .concept-pill.metaphor { border-left: 3px solid #0d9488; }
+  .concept-pill.howsee { border-left: 3px solid #3b82f6; }
+
+  .pill-label { font-weight: 800; display: inline-block; margin-bottom: .2rem; color: #1e293b; }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Lesson 05 · 第一次把 AI/Agent 融入业务</div>
+    <h1>第一次把 AI/Agent 融入业务</h1>
+    <p class="sub">学员已有原型、业务契约和薄切片，才有资格判断某个业务环节是否值得加入 AI。课堂只选一个低风险、可验证、可降级的智能机会，不要求一开始就画完整部门 AI 蓝图。</p>
+    <div class="goal">
+      🎯 <b>本课目标</b>：① 逐环节判断不用 AI、AI 辅助、固定 Workflow 或受控 Agent，选择最简单足够的方式；② 选择 Workflow、ReAct 或 Plan &amp; Execute，并写出数据、工具、HITL、停止和降级；③ 在原型中模拟智能行为的正常与不确定/失败结果，明确标记"模拟"，由主管验收。
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SECTION 00: COURSE CONTEXT -->
+<section>
+  <h2><span class="num">01</span> 什么时候该用 AI，什么时候不该？</h2>
+  <p>你已经有了原型、业务契约和薄切片——但到目前为止，所有业务逻辑都是确定性程序：点击按钮、筛选数据、显示结果。现在要回答一个新问题：哪些环节值得加入 AI，哪些不应该？</p>
+  <div class="card focus">
+    <p><b>记住这句话：</b><br>
+    这是课程中<b>正式开始教授业务 AI/Agent 融入</b>的节点。课堂只选一个低风险、可验证、可降级的智能机会，不要求一开始就画完整部门 AI 蓝图。</p>
+  </div>
+  <p>先用一个候选点理解"判断要不要 AI"和"选什么范式"，后面六课才在这个候选点上学习排错、验收、评审和部门级扩展。</p>
+</section>
+<!-- SECTION 01: L5 ARCHITECTURE EVOLUTION (AI-INTERVENTION LEVELS) -->
+<section>
+  <h2><span class="num">02</span> 核心架构演进：盲目全上 AI vs 逐环节 AI 介入判断</h2>
+  <p>看看"所有环节都上 AI、追求最高自主、主管最后再看一眼"的痛点反例，与"逐环节判断 AI 介入层级、最简单足够优先"的受控方式之间的差异：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🎬 盲目全自动 vs 逐环节 AI 介入判断 动态演示</span>
+      <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
+    </div>
+    <div class="sim-body">
+      <div class="mode-tabs">
+        <button class="mode-btn active raw" id="mBtnBlind" onclick="runLevelMode('blind')">🔴 模式 A：盲目全上 AI (所有环节最高自主/无法接管)</button>
+        <button class="mode-btn harness" id="mBtnSmart" onclick="runLevelMode('smart')">🟢 模式 B：逐环节 AI 介入判断 (能用规则不用 AI)</button>
+      </div>
+
+      <div class="flow-display-canvas" id="levelCanvas">
+        <!-- JS rendered steps -->
+      </div>
+
+      <div class="console-output" id="levelConsoleLog">
+        > 点击上方按钮运行模式推演…
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">
+    💡 <b>核心思想</b>：先判断任务性质（确定性/概率性）与错误代价，再选择最简单足够的 AI 介入层级；能用规则解决的不上 AI，能用 Workflow 的不上 Agent。
+  </div>
+</section>
+
+
+<!-- SECTION 02: 3 CORE CONCEPTS -->
+<section>
+  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <div class="concept-list">
+    <details class="concept-card">
+      <summary class="concept-head">1. AI 介入层级</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>不用 AI、AI 辅助/建议、单步执行、受控 Agent 多步执行、低风险受控闭环是不同程度；不是只有"用 AI"和"不用 AI"两个选项，也不是程度越高越好。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>逐环节判断任务性质和错误代价，选择最简单足够的程度；能用规则解决的不用 AI，能用 Workflow 的不用 Agent。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>工厂自动化程度选择——全手动操作、机器辅助建议、固定流水线、受控智能设备、全自动闭环是不同档次；不能一上来就要求全自动，也不能什么都全手动。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会对每个业务动作做初筛，判断它属于哪个层级。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">2. 确定性任务与概率性任务</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>规则清晰、结果唯一的工作是确定性任务；开放判断、语言理解等结果是概率性任务；两者不能混为一谈，也不能用概率性方法处理确定性工作。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>确定性任务优先用程序规则处理，比模型更可靠、更可审计；概率性任务才可能需要模型辅助，但必须有人工验证和降级路径。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>工厂里的量具测量 vs 质检判断——称重、量尺寸有固定标准和明确结果（确定性），判断外观瑕疵是否合格需要经验和主观判断（概率性）；不能用称重的方式判断瑕疵，也不能用判断瑕疵的方式称重。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会标注每个动作的当前处理方式，这已经在区分确定性和概率性。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">3. Workflow 与 Agent</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>Workflow 走预先定义的路径，每一步都确定；Agent 会根据观察动态决定下一步；不能把所有自动化都叫 Agent，也不能用 Agent 做规则就能解决的事。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>Workflow 适合步骤固定、路径明确的任务；Agent 适合需要根据中间结果调整路线的任务；选择时先问"路径是否预先确定"，是则用 Workflow，否则才考虑 Agent。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>工厂流水线 vs 质检员——流水线按固定步骤走，每个零件经过相同的工序（Workflow）；质检员发现异常后根据情况决定深入检查哪一处、用哪种工具（Agent）；流水线不会自己决定改路线，质检员不会对每个零件都走不同流程。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会为候选机会选择范式，先判断路径是否预先确定。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">4. ReAct</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>根据当前目标选择动作、调用工具、观察结果再调整的循环；适合调查和动态取证，不适合无边界高风险动作；不是万能循环，也不能替代固定流程。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>Thought（思考下一步）→ Action（调用工具或执行动作）→ Observation（观察结果）→ 回到 Thought 调整或停止；每一步都有明确动作和可观察结果，不是盲目反复修改。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>探险家在未知地形中行进——观察周围环境，决定往哪个方向走，走到后重新观察再决定下一步（ReAct）；但探险家不会在悬崖边盲目试错，也不会在已知路线上不用地图反复探索。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 如果你选了 ReAct 范式，要说明 Thought→Action→Observation 循环如何运作。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. 人在回路授权门禁（HITL）</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>人在指定节点批准、纠正、接管或停止；不是最后看一眼，也不是一句文字承诺就自动形成硬控制。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>在智能行为的关键节点设置人工检查点——批准后才继续、发现偏差时纠正、出错时接管、风险越界时停止；检查点必须指向具体节点，不是"做完后审一下"。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">💡 具象类比与反例：</span>车间主管在关键工序签字——每完成一道关键工序，主管检查后签字才能进入下一步（HITL）；不是等整批产品做完才来看一眼，也不是贴一张"请认真操作"的标语就形成控制。
+        </div>
+        <div class="concept-pill howsee">
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会在智能机会卡中写明 HITL 检查点指向哪个具体节点。
+        </div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- SECTION 03: INTERACTIVE LEVEL-JUDGEMENT DEMO -->
+<section>
+  <h2><span class="num">04</span> 演练：AI 介入层级判断终端</h2>
+  <p>面对下面的业务动作，先自己判断该用哪种 AI 介入层级（不用 AI / AI 辅助 / Workflow / 受控 Agent），再点按钮查看判断与理由：</p>
+
+  <div class="sim-container">
+    <div class="sim-header">
+      <span>🧭 AI 介入层级判断终端模拟器</span>
+      <span style="font-size: .8rem; opacity: .8;">点击按钮查看判断与理由</span>
+    </div>
+    <div class="sim-body">
+      <div style="margin-bottom: 1rem; display:flex; gap:.6rem; flex-wrap:wrap;">
+        <button class="btn" onclick="judgeLevel('stock')">📦 按订单号查询库存数量</button>
+        <button class="btn secondary" onclick="judgeLevel('reason')">💬 根据客户留言判断退款原因</button>
+        <button class="btn secondary" style="background:var(--amber);" onclick="judgeLevel('bill')">🧾 按固定模板生成每日对账单</button>
+        <button class="btn secondary" style="background:var(--plum);" onclick="judgeLevel('anomaly')">🔍 排查异常订单的完整原因链</button>
+      </div>
+
+      <div class="console-output" id="judgeTerminal" style="min-height: 200px;">
+        > 准备就绪，请点击上方按钮查看判断推演...
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
+<section>
+  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然口令卡</h2>
+
+<div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：把第四课薄片拆成具体业务动作</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p1">请读取我的第四课薄切片原型和 docs/PROJECT_STATE.md，
+把这个薄切片拆成 4—6 个具体业务动作。
+
+每个动作写清：
+1. 动作名称
+2. 使用者在做什么
+3. 当前处理方式（人工 / 规则 / 已有程序）
+4. 输入是什么
+5. 输出是什么
+
+先不要建议加 AI，只如实拆解和标注当前处理方式。
+不要修改任何代码。</span>
+      <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了 4—6 个具体业务动作，每个有当前处理方式标注，但没有修改代码。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：对每个动作做 AI 介入初筛</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p2">请对我在 Task 1 中拆解的每个业务动作做 AI 介入初筛。
+
+对每个动作回答：
+1. 有固定规则吗？（是/否）
+2. 结果唯一吗？（是/否）
+3. 错了能恢复吗？（是/否）
+4. 建议层级：不用 AI / AI 辅助 / Workflow / 受控 Agent
+5. 理由
+6. 错误代价（错了会造成什么后果）
+
+原则：能用规则解决的不用 AI，能用 Workflow 的不用 Agent。
+最简单足够优先，不要追求最高自主程度。
+先不要修改代码，只输出初筛表。</span>
+      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一张初筛表，每个动作有层级判断、理由和错误代价，但没有修改代码。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：选一个低风险、可验证、能人工接管的候选</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p3">请从初筛结果中推荐一个最适合的候选机会。
+
+这个候选必须同时满足：
+1. 低风险：错了能恢复，不会造成不可逆后果
+2. 可验证：有明确的标准判断结果对不对
+3. 能人工接管：AI 失效时人能接手处理
+
+只推荐一个，并说明：
+- 候选环节名称
+- 为什么低风险
+- 怎样验证结果
+- 出了问题人能怎么接管</span>
+      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 推荐了一个候选，并写明了低风险、可验证、能人工接管三项说明。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3 收尾：写下你的拒绝理由（2 分钟）</div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0; font-size: .92rem; line-height: 1.7; color: #1e293b;">
+<p style="margin:.4rem 0;"><b>本步目的</b>：把你的判断写下来，变成可存档的证据。用两句话写下为什么你选的这个环节不能只用确定性规则，或者为什么你拒绝的环节不应该用 Agent。写下来贴在你的智能机会卡上。</p>
+<p style="margin:.4rem 0;"><b>你应该做</b>：用两句话写下你的拒绝理由，贴在智能机会卡上。不是口头说——是写下来。</p>
+<p style="margin:.4rem 0;"><b>本步检查</b>：写下了至少一条拒绝理由；理由基于任务性质和错误代价；是写下来而非口头表达。</p>
+<p style="margin:.4rem 0;"><b>必须停止</b>：如果只写了选的理由没写拒绝理由，追问"你没选的那些为什么不用 AI"。</p>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：在试衣镜中观察并验收结果。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：选择范式并写智能机会卡</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p5">请帮我为这个候选机会选择范式并填写智能机会卡。
+
+候选环节：【填写 Task 3 选定的候选】
+
+请回答以下内容：
+
+1. 范式选择：Workflow / ReAct / 增量实施范式（Plan & Execute）
+   - 选择理由（路径是否预先确定？任务是否需要动态调查？）
+   - 如果选 ReAct，说明 Thought → Action → Observation 循环如何运作
+   - 如果选 增量实施范式（Plan & Execute），说明与第四课的 增量实施范式（Plan & Execute） 有什么不同
+
+2. 智能机会卡：
+   - 数据：需要什么输入数据（标明 Mock 来源）
+   - 工具：需要调用什么工具或读取什么信息
+   - HITL 检查点：在哪个具体节点需要人批准、纠正或停止
+   - 停止条件：什么情况下停止智能行为
+   - 降级条件：AI 不可用时降为什么方式
+
+先不要修改代码，只输出范式选择和智能机会卡。</span>
+      <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了范式选择理由和完整的智能机会卡，五项都有明确答案。</div>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：在原型中模拟正常与不确定/失败结果</div>
+    <div class="prompt-copy-box">
+      <span class="prompt-copy-text" id="p6">请在我的原型中模拟一个智能行为。
+
+候选环节：【填写】
+选择的范式：【填写】
+智能机会卡内容：【填写或粘贴 Task 4 的智能机会卡】
+
+要求：
+1. 在原型中添加一个标记为"模拟AI"的智能行为组件
+2. 模拟正常结果（智能行为正常运作时的表现）
+3. 模拟至少一种不确定/失败结果（如输入不完整、数据异常时）
+4. 所有模拟结果必须明确标注"模拟"，不冒充真实 AI 能力
+5. 保持原业务路径仍可操作
+6. 不连接真实模型、业务 API 或生产数据
+
+完成后报告：实际修改文件、模拟了哪些结果、如何验收、来源标签是否清楚。</span>
+      <button class="btn-copy" onclick="copyText('p6')">📋 一键复制口令</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：原型中有一个标记"模拟"的智能行为，正常和至少一种不确定/失败结果可展示，原路径仍可操作。</div>
+  </div>
+
+</section>
+
+<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<section>
+  <h2><span class="num">06</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
+
+  <h3>1. ✍️ 概念互动填空 (Interactive Fill-in-the-Blanks)</h3>
+  <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空，并点击“核对答案”：</p>
+
+  <div class="blank-card" id="bCard1">
+    1. <b>AI 介入层级</b>：规则清晰、结果唯一的工作属于确定性任务，应优先用
+    <select class="blank-select" id="blank1">
+      <option value="">-- 请选择 --</option>
+      <option value="rule">程序规则（不用 AI）</option>
+      <option value="agent">受控 Agent 多步执行</option>
+    </select>
+    处理，而不是直接上 AI。
+    <div class="blank-feedback" id="bf1"></div>
+  </div>
+
+  <div class="blank-card" id="bCard2">
+    2. <b>Workflow 与 Agent</b>：路径预先确定的自动化应选
+    <select class="blank-select" id="blank2">
+      <option value="">-- 请选择 --</option>
+      <option value="wf">Workflow</option>
+      <option value="agent2">Agent</option>
+    </select>
+    ；需要根据中间结果动态调整路线时才考虑
+    <select class="blank-select" id="blank3">
+      <option value="">-- 请选择 --</option>
+      <option value="agent3">Agent</option>
+      <option value="wf2">Workflow</option>
+    </select>
+    。
+    <div class="blank-feedback" id="bf2"></div>
+  </div>
+
+  <div class="blank-card" id="bCard3">
+    3. <b>HITL</b>：人在回路要求主管在
+    <select class="blank-select" id="blank4">
+      <option value="">-- 请选择 --</option>
+      <option value="key">指定关键节点</option>
+      <option value="end">全部完成后</option>
+    </select>
+    批准、纠正、接管或停止，而不是最后看一眼。
+    <div class="blank-feedback" id="bf3"></div>
+  </div>
+
+  <button class="btn" style="margin-bottom: 2rem;" onclick="checkAllBlanks()">✅ 核对所有填空答案</button>
+
+  <h3>2. 💡 常见概念误区与正确理解 (3 栏对照表)</h3>
+  <div class="misc-table-container">
+    <table class="misc-table">
+      <thead>
+        <tr>
+          <th style="width: 28%;">常见误区 (Misconception)</th>
+          <th style="width: 42%;">正确硬核理解 (Correct Engineering Reality)</th>
+          <th style="width: 30%;">如何纠偏与护栏防护 (Remedy & Guardrails)</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+          <td><span class="badge-misc red">误区 1</span><br><b>"所有环节都应该用 AI"</b></td>
+          <td>逐环节判断任务性质，能用规则的不用 AI；最简单足够优先</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 2</span><br><b>"Agent 比自动化的 Workflow 高级"</b></td>
+          <td>Workflow 和 Agent 是不同范式，适合不同任务；不是高低关系</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 3</span><br><b>"模拟结果就是 AI 的真实能力"</b></td>
+          <td>模拟结果必须标记"模拟"，不冒充真实 AI；本课不连接真实模型</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 4</span><br><b>"最后看一眼就是 HITL"</b></td>
+          <td>HITL 是在指定节点批准、纠正、接管或停止，不是做完后审一下</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+        <tr>
+          <td><span class="badge-misc red">误区 5</span><br><b>"选了 AI 就不用写停止和降级"</b></td>
+          <td>停止和降级条件必须写清，否则出错时无法接管</td>
+          <td>树立正确工程意识，严格遵循护栏规范。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<!-- SECTION 06: QUIZ & EXIT TICKET -->
+<section>
+  <h2><span class="num">07</span> 测验 + 🎯 退场测试题 + 课后拓展</h2>
+
+  <!-- 5 Scenario Quiz -->
+  <h3>1. 5 道概念选择测验</h3>
+  <div class="quiz-q" data-q="1">
+    <div class="q">Q1 · AI 介入层级包含哪些程度？为什么不是所有任务都需要最高程度？</div>
+    <label><input type="radio" name="q1" value="a"> 只有"用 AI"和"不用 AI"两种程度，程度越高越好</label>
+    <label><input type="radio" name="q1" value="b"> 不用 AI、AI 辅助/建议、单步执行、受控 Agent、低风险受控闭环是不同程度；能用规则不用 AI，最简单足够优先</label>
+    <label><input type="radio" name="q1" value="c"> 所有任务都应选择最高自主程度，才能体现 AI 的价值</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="2">
+    <div class="q">Q2 · 确定性任务和概率性任务有什么区别？</div>
+    <label><input type="radio" name="q2" value="a"> 确定性任务是 AI 生成的，概率性任务是规则写的</label>
+    <label><input type="radio" name="q2" value="b"> 两者没有区别，都可以用同一种方式处理</label>
+    <label><input type="radio" name="q2" value="c"> 规则清晰、结果唯一的是确定性任务（如查列表、改状态）；开放判断、语言理解等是概率性任务；确定性任务优先用规则</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="3">
+    <div class="q">Q3 · Workflow 和 Agent 的本质区别是什么？</div>
+    <label><input type="radio" name="q3" value="a"> Workflow 走预先定义的路径、每一步确定；Agent 根据观察动态决定下一步；不能把所有自动化都叫 Agent</label>
+    <label><input type="radio" name="q3" value="b"> Agent 一定比 Workflow 高级</label>
+    <label><input type="radio" name="q3" value="c"> Workflow 必须由人手动执行，Agent 完全不需要人</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="a">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="4">
+    <div class="q">Q4 · ReAct 适合什么类型的任务？为什么不适合无边界高风险动作？</div>
+    <label><input type="radio" name="q4" value="a"> 适合所有任务，包括无边界高风险动作</label>
+    <label><input type="radio" name="q4" value="b"> 适合调查和动态取证类任务；不适合无边界高风险动作，因为不确定性可能放大错误且没有固定停止条件</label>
+    <label><input type="radio" name="q4" value="c"> 只适合固定流程任务</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="b">提交答案</button>
+  </div>
+
+  <div class="quiz-q" data-q="5">
+    <div class="q">Q5 · 为什么"最后看一眼"不算真正的 HITL？</div>
+    <label><input type="radio" name="q5" value="a"> 因为 HITL 不需要人在回路</label>
+    <label><input type="radio" name="q5" value="b"> 因为最后看一眼太浪费时间</label>
+    <label><input type="radio" name="q5" value="c"> HITL 要求在指定节点批准、纠正、接管或停止；"最后看一眼"没有在关键节点形成控制</label>
+    <div class="feedback"></div>
+    <button class="btn q-btn" data-a="c">提交答案</button>
+  </div>
+
+  <div class="score" id="score"></div>
+  <button class="btn secondary" id="scoreBtn" onclick="calcScore()" style="margin-top:.4rem; margin-bottom: 1.5rem;">查看我的总得分</button>
+
+  <!-- Exit Ticket Questions -->
+  <h3>2. 🎯 课后退场自测题 (Exit Ticket)</h3>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 1：AI 介入层级有哪几个程度？为什么不是所有任务都需要最高程度的 AI？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans1')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans1">
+      <b>参考答案解析：</b><br>
+      不用 AI、AI 辅助/建议、单步执行、受控 Agent 多步执行、低风险受控闭环是不同程度。不是所有任务都需要最高程度，因为能用规则解决的不用 AI，能用 Workflow 的不用 Agent；最简单足够优先。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 2：确定性任务和概率性任务有什么区别？各举一个你业务中的例子。</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans2')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans2">
+      <b>参考答案解析：</b><br>
+      规则清晰、结果唯一的工作是确定性任务（如查列表、改状态）；开放判断、语言理解等结果是概率性任务（如建议处理方式、判断异常原因）。确定性任务优先用规则，概率性任务才可能需要模型，且必须有人工验证和降级路径。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 3：Workflow 和 Agent 有什么本质区别？为什么不能把所有自动化都叫 Agent？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans3')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans3">
+      <b>参考答案解析：</b><br>
+      Workflow 走预先定义的路径，每一步确定；Agent 根据观察动态决定下一步。不能把所有自动化都叫 Agent，因为有些任务路径固定，用 Workflow 更可靠可审计。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 4：ReAct 适合什么类型的任务？为什么不适合无边界高风险动作？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans4')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans4">
+      <b>参考答案解析：</b><br>
+      ReAct 适合调查和动态取证类任务——需要根据中间结果调整路线的场景。不适合无边界高风险动作，因为每一步的不确定性可能放大错误，且没有固定停止条件。
+    </div>
+  </div>
+
+  <div class="exit-q-card">
+    <div class="exit-q-title">❓ 退出门禁题 5：HITL 的含义是什么？为什么"最后看一眼"不算真正的 HITL？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans5')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans5">
+      <b>参考答案解析：</b><br>
+      HITL 是人在指定节点批准、纠正、接管或停止。"最后看一眼"不算 HITL，因为它没有在关键节点形成控制——没有批准才能继续、没有纠正偏差、没有接管或停止的权力。
+    </div>
+  </div>
+
+  <!-- Exit Checklist Card -->
+  <div class="card focus">
+    <b>第五课退场测试卡 (Exit Ticket Checklist)：</b>
+    <div class="chk-list">
+      <label class="chk-item">
+        <input type="checkbox" id="c1" onchange="chkUpdate()">
+        <span>1. 已把第四课薄片拆成 4—6 个业务动作，并标注每个动作的当前处理方式？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c2" onchange="chkUpdate()">
+        <span>2. 已选出一个低风险、可验证、能人工接管的智能机会，并写下至少一条拒绝理由？</span>
+      </label>
+      <label class="chk-item">
+        <input type="checkbox" id="c3" onchange="chkUpdate()">
+        <span>3. 已写出范式选择与智能机会卡（数据/工具/HITL/停止/降级），并在原型中模拟正常与失败结果且标记"模拟"？</span>
+      </label>
+    </div>
+    <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--blue);">
+      已自查：0 / 3
+    </div>
+  </div>
+
+  <!-- Knowledge Expansion Grid 2x2 Array -->
+  <div class="next-grid-2x2">
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 官方文档阅读</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">Anthropic《Building Effective Agents》：Workflow 与 Agent 的最佳实践。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 范式选型理论</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">ReAct (Yao et al., 2022)：Thought → Action → Observation 推理-行动循环。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ HITL 设计</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">人在回路授权门禁：在指定关键节点批准、纠正、接管或停止，而不是最后看一眼。</p>
+    </div>
+    <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
+      <h4 style="color: var(--green); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🎯 课程关联</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">第 9 课将把"单个智能机会候选"扩展为部门级 AI 机会地图与范式选型。</p>
+    </div>
+  </div>
+
+  <!-- Interactive Ask AI Box -->
+  <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--blue); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--blue-soft); text-align: center;">
+    <b style="font-size: 1.05rem; color: var(--blue);">💡 有疑问？直接问你的 AI 老师。</b><br>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它："用工厂自动化程度的比喻，帮我复习 AI 介入层级和 HITL 检查点"——它会为您详细拆解。</span>
+  </div>
+</section>
+
+
+<footer>
+  第 5 课 · 主管 AI 原型制作训练营 · 权威路线图：<a href="COURSE_ROADMAP.html">COURSE_ROADMAP.html</a> | 术语：<a href="GLOSSARY.html">GLOSSARY.html</a>
+</footer>
+
+</div>
+
+<script>
+// ---------- Section 01 AI-Intervention Level Demonstrator ----------
+const levelScenarios = {
+  blind: {
+    steps: [
+      { title: 'Step 1 · 所有环节都交给 AI，追求最高自主', desc: '连"查库存数量"这种规则清晰的确定性任务也交给 AI 多步执行，主管不设检查点。', cls: 'error' },
+      { title: 'Step 2 · 没有 HITL 检查点，出错无法接管', desc: 'AI 误判异常原因直接执行，主管只能在最后看一眼，无法中途纠正或停止。', cls: 'error' },
+      { title: 'Step 3 · 💥 规则能解决的事被概率模型放大成事故', desc: '【崩溃】确定性任务用概率模型处理，错误被放大，且没有停止/降级条件！', cls: 'error' }
+    ],
+    logs: [
+      '> [All-in AI]: 查库存 → 判断退款原因 → 自动执行，全部交给 AI',
+      '> [No HITL]: 主管只在最后看一眼，无法在关键节点接管或停止',
+      '❌ [Result]: 确定性任务用概率模型处理，错误被放大且无法接管，项目风险失控！'
+    ]
+  },
+  smart: {
+    steps: [
+      { title: 'Step 1 · 逐环节判断任务性质', desc: '查库存 = 确定性 → 程序规则；判断退款原因 = 概率性 → AI 辅助建议。', cls: '' },
+      { title: 'Step 2 · 选择最简单足够的层级', desc: '能用规则不用 AI，能用 Workflow 不用 Agent；只对真正需要判断的环节上 AI。', cls: 'success' },
+      { title: 'Step 3 · 设置 HITL 检查点与降级条件', desc: '在 AI 建议节点由主管批准，AI 不可用时降级为人工处理，并明确停止条件。', cls: 'success' }
+    ],
+    logs: [
+      '> [Task Nature]: 查库存 = 确定性 → 规则；退款原因 = 概率性 → AI 辅助',
+      '> [Level Choice]: 用规则不用 AI，用 Workflow 不用 Agent，最简单足够优先',
+      '🛡️ [HITL]: 在 AI 建议节点主管批准；不可用时降级人工，明确停止条件 → 风险可控！'
+    ]
+  }
+};
+
+function runLevelMode(mode) {
+  const btnBlind = document.getElementById('mBtnBlind');
+  const btnSmart = document.getElementById('mBtnSmart');
+  const canvas = document.getElementById('levelCanvas');
+  const consoleLog = document.getElementById('levelConsoleLog');
+
+  btnBlind.className = 'mode-btn raw ' + (mode === 'blind' ? 'active' : '');
+  btnSmart.className = 'mode-btn harness ' + (mode === 'smart' ? 'active' : '');
+
+  const data = levelScenarios[mode];
+  canvas.innerHTML = '';
+  consoleLog.innerHTML = '';
+
+  data.steps.forEach((s, idx) => {
+    const node = document.createElement('div');
+    node.className = 'flow-step-node ' + (s.cls || '');
+    node.id = 'lnode_' + idx;
+    node.innerHTML = `
+      <div class="node-title">
+        <span>${s.title}</span>
+        <span style="font-size:.75rem; padding: 2px 6px; border-radius:4px; background:rgba(0,0,0,0.05);">Step ${idx + 1}</span>
+      </div>
+      <div class="node-desc">${s.desc}</div>
+    `;
+    canvas.appendChild(node);
+  });
+
+  data.steps.forEach((s, idx) => {
+    setTimeout(() => {
+      const el = document.getElementById('lnode_' + idx);
+      if (el) el.classList.add('active');
+    }, idx * 400);
+  });
+
+  consoleLog.innerHTML = data.logs.join('<br>');
+}
+runLevelMode('smart');
+
+// ---------- Section 03 Level-Judgement Terminal Demo ----------
+function judgeLevel(type) {
+  const term = document.getElementById('judgeTerminal');
+  const map = {
+    stock: { label: '按订单号查询库存数量', level: '不用 AI（程序规则）', reason: '规则清晰、结果唯一：按订单号查库存数量是固定查询逻辑，用规则最可靠、可审计，不需要模型。' },
+    reason: { label: '根据客户留言判断退款原因', level: 'AI 辅助 / 建议', reason: '开放判断、语言理解：判断退款原因没有唯一答案，可让 AI 给建议，但必须由主管确认，属于概率性任务。' },
+    bill: { label: '按固定模板生成每日对账单', level: 'Workflow（固定流程）', reason: '路径预先确定：按固定模板生成对账单，每一步都确定，用 Workflow 比 Agent 更稳定可审计。' },
+    anomaly: { label: '排查异常订单的完整原因链', level: '受控 Agent（ReAct 调查）', reason: '需要动态调查：排查异常订单原因需根据中间结果调整路线，可考虑受控 Agent，但要设 HITL 检查点与停止条件。' }
+  };
+  const m = map[type];
+  term.innerHTML = `> [业务动作] ${m.label}<br>✅ 建议层级：${m.level}<br>📌 理由：${m.reason}`;
+}
+
+// ---------- Copy Text Function ----------
+function copyText(id) {
+  const txt = document.getElementById(id).innerText;
+  const btn = event.target;
+  const originalText = btn.innerText;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(() => {
+      btn.innerText = '✅ 复制成功!';
+      btn.style.background = '#16a34a';
+      btn.style.color = '#ffffff';
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
+    }).catch(() => {
+      prompt('复制失败，请手动复制：', txt);
+    });
+  } else {
+    prompt('复制失败，请手动复制：', txt);
+  }
+}
+
+// ---------- Section 05 Concept Fill-in-the-Blanks Logic ----------
+function checkAllBlanks() {
+  const b1 = document.getElementById('blank1');
+  const b2 = document.getElementById('blank2');
+  const b3 = document.getElementById('blank3');
+  const b4 = document.getElementById('blank4');
+
+  const ok1 = b1.value === 'rule';
+  const ok2 = b2.value === 'wf';
+  const ok3 = b3.value === 'agent3';
+  const ok4 = b4.value === 'key';
+
+  b1.className = 'blank-select ' + (ok1 ? 'ok' : 'err');
+  b2.className = 'blank-select ' + (ok2 ? 'ok' : 'err');
+  b3.className = 'blank-select ' + (ok3 ? 'ok' : 'err');
+  b4.className = 'blank-select ' + (ok4 ? 'ok' : 'err');
+
+  const bf1 = document.getElementById('bf1');
+  const bf2 = document.getElementById('bf2');
+  const bf3 = document.getElementById('bf3');
+
+  bf1.className = 'blank-feedback show';
+  bf1.style.color = ok1 ? 'var(--green)' : 'var(--red)';
+  bf1.innerHTML = ok1 ? '✅ 填空 1 正确！确定性任务应优先用程序规则（不用 AI）处理。' : '❌ 填空 1 错误：确定性任务应优先用程序规则（不用 AI）。';
+
+  bf2.className = 'blank-feedback show';
+  bf2.style.color = (ok2 && ok3) ? 'var(--green)' : 'var(--red)';
+  bf2.innerHTML = (ok2 && ok3) ? '✅ 填空 2 全对！路径确定的用 Workflow，需动态调整才考虑 Agent。' : '❌ 填空 2 存在错误：路径确定的用 Workflow，需动态调整才考虑 Agent。';
+
+  bf3.className = 'blank-feedback show';
+  bf3.style.color = ok4 ? 'var(--green)' : 'var(--red)';
+  bf3.innerHTML = ok4 ? '✅ 填空 3 正确！HITL 要求在指定关键节点批准、纠正、接管或停止。' : '❌ 填空 3 错误：HITL 要求在指定关键节点形成控制，而不是最后看一眼。';
+}
+
+// ---------- Section 06 Exit Ticket Expand Answer Logic ----------
+function toggleAns(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    if (el.className.includes('show')) {
+      el.className = 'ans-box';
+    } else {
+      el.className = 'ans-box show';
+    }
+  }
+}
+
+// ---------- Quiz Logic ----------
+const explain = {
+  q1: '正确答案：B。AI 介入层级有不用 AI、AI 辅助/建议、单步执行、受控 Agent 多步执行、低风险受控闭环等不同程度；不是所有任务都需要最高程度，能用规则解决的不用 AI，能用 Workflow 的不用 Agent。',
+  q2: '正确答案：C。规则清晰、结果唯一的工作是确定性任务，应优先用程序规则处理；开放判断、语言理解等概率性任务才可能需要模型辅助，且必须有人工验证和降级路径。',
+  q3: '正确答案：A。Workflow 走预先定义的路径，每一步确定；Agent 根据观察动态决定下一步。路径固定的任务用 Workflow 更可靠可审计，不能把所有自动化都叫 Agent。',
+  q4: '正确答案：B。ReAct 适合调查和动态取证类任务——需要根据中间结果调整路线的场景；不适合无边界高风险动作，因为每一步的不确定性可能放大错误，且没有固定停止条件。',
+  q5: '正确答案：C。HITL 是人在指定节点批准、纠正、接管或停止；"最后看一眼"没有在关键节点形成控制——没有批准才能继续、没有纠正偏差、没有接管或停止的权力。'
+};
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const btn = q.querySelector('.q-btn');
+  const feedback = q.querySelector('.feedback');
+  btn.addEventListener('click', () => {
+    const name = 'q' + q.dataset.q;
+    const sel = q.querySelector('input:checked');
+    if (!sel) { feedback.textContent = '请先选择一个选项。'; feedback.className = 'feedback show no'; return; }
+    const isRight = sel.value === btn.dataset.a;
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel', 'correct', 'wrong'));
+    sel.closest('label').classList.add(isRight ? 'correct' : 'wrong');
+    if (!isRight) {
+      const right = q.querySelector('label:has(input[value="' + btn.dataset.a + '"])');
+      if (right) right.classList.add('correct');
+    }
+    feedback.textContent = explain[name];
+    feedback.className = 'feedback show ' + (isRight ? 'ok' : 'no');
+    btn.disabled = true;
+  });
+});
+
+function calcScore() {
+  let score = 0;
+  let answered = 0;
+  document.querySelectorAll('.quiz-q').forEach(q => {
+    const btn = q.querySelector('.q-btn');
+    const sel = q.querySelector('input:checked');
+    if (sel) {
+      answered++;
+      if (sel.value === btn.dataset.a) score += 20;
+    }
+  });
+  const el = document.getElementById('score');
+  el.className = 'score show';
+  if (answered < 5) {
+    el.innerHTML = '你已答完 <b>' + answered + ' / 5</b> 题，当前得分为 <b>' + score + ' / 100</b> 分。请继续完成其余题目！';
+  } else {
+    el.innerHTML = '🎉 恭喜完成测验！你的最终得分是 <b>' + score + ' / 100</b> 分！';
+  }
+}
+
+function chkUpdate() {
+  let count = 0;
+  for(let i=1; i<=3; i++) {
+    if(document.getElementById('c' + i).checked) count++;
+  }
+  const res = document.getElementById('chkResult');
+  if(count === 3) {
+    res.style.color = 'var(--blue)';
+    res.innerHTML = '🎉 恭喜完成第五课全量退场自查！你已掌握逐环节 AI 介入判断与智能机会卡！';
+  } else {
+    res.style.color = 'var(--blue)';
+    res.innerHTML = '已自查：' + count + ' / 3';
+  }
+}
+</script>
+</body>
+</html>

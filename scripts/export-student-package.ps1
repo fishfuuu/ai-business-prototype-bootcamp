@@ -8,7 +8,7 @@
   learner templates) is taken from the same Source Commit via git archive.
   Uncommitted working-tree changes never enter the ZIP.
   Does not commit, push, or overwrite existing packages.
-  See docs/STUDENT_PACKAGE_SPEC.md and docs/LESSON_02_MATERIALS_PACKAGE_ADDENDUM.md.
+  See student-package templates and lessons/LESSON_02_GUIDE_V4.md.
 #>
 param(
     [Parameter(Mandatory = $true)]
@@ -119,19 +119,17 @@ function Invoke-PackageSafetyCheck {
         "course-fixtures",
         "fixture-manifest.json",
         "CONTRIBUTING.md",
-        "scripts\verify-project.ps1",
+        "scripts\verify-project.ps1", # legacy, may not exist
         "scripts\export-student-package.ps1",
         "scripts\export-lesson-materials.ps1",
         "scripts\install-lesson-materials.ps1",
-        "docs\COURSE_ROADMAP.md",
-        "docs\LESSON_TEMPLATE.md",
-        "docs\LESSON_01_TEACHER_PLAN.md",
-        "docs\LESSON_02_TEACHER_PLAN.md",
-        "docs\LESSON_02_MATERIALS_PACKAGE_ADDENDUM.md",
-        "docs\主管 AI 原型制作训练营.md",
-        "docs\DESIGN_ALIGNMENT_AUDIT.md",
-        "docs\DESIGN_ALIGNMENT_DECISIONS.md",
-        "docs\DESIGN_ALIGNMENT_FINAL_REPORT.md"
+        "lessons\COURSE_ROADMAP_V4.md",
+        "lessons\LESSON_01_TEACHER_PLAN_V4.md",
+
+        "archive\docs\主管 AI 原型制作训练营.md",
+        "archive\docs\DESIGN_ALIGNMENT_AUDIT.md",
+        "archive\docs\DESIGN_ALIGNMENT_DECISIONS.md",
+        "archive\docs\DESIGN_ALIGNMENT_FINAL_REPORT.md"
     )
 
     foreach ($bad in $prohibitedPaths) {
@@ -300,19 +298,12 @@ $runtimeWhitelist = @(
     "start-project.bat",
     "DESIGN.md",
     "src",
-    "docs/PROJECT_STATE.md",
-    "docs/COMPONENT_CATALOG.md",
-    "docs/LESSON_01_GUIDE.md",
-    "docs/assets/lesson-01/lesson-01-flow.png"
+    "lessons/LESSON_01_GUIDE_V4.md",
 )
 
 if ($PackageProfile -eq "lesson-02-fallback-start") {
     $runtimeWhitelist += @(
-        "docs/LESSON_02_GUIDE.md",
-        "docs/assets/lesson-02/lesson-02-flow.png",
-        "docs/assets/lesson-02/ref-monitor-decision.png",
-        "docs/assets/lesson-02/ref-task-workflow.png",
-        "docs/assets/lesson-02/ref-operation-tool.png"
+        "lessons/LESSON_02_GUIDE_V4.md",
     )
 }
 
@@ -426,10 +417,10 @@ try {
     # Overlay Merging for PackageProfile: lesson-02-fallback-start
     if ($PackageProfile -eq "lesson-02-fallback-start") {
         Write-Step "Merging Lesson 02 Fallback Fixtures Overlay with Strict Scope Verification"
-        
+
         $fixtureSnap = Join-Path $snapshotDir "course-fixtures\lesson-02-fallback"
         $manifestPath = Join-Path $fixtureSnap "fixture-manifest.json"
-        
+
         if (-not (Test-Path -LiteralPath $manifestPath)) {
             throw "Fixture manifest missing: course-fixtures/lesson-02-fallback/fixture-manifest.json"
         }
@@ -515,11 +506,38 @@ try {
             Copy-Item -LiteralPath $ovSrc -Destination $ovDst -Force
             Write-Host " Applied Overlay [$($ov.operation)]: $($ov.target)"
         }
-        
+
         Write-Host "[PASS] All $( $appliedChanges.Length ) Overlay operations applied cleanly."
     }
 
-    Write-Step "Applying student templates from snapshot (same Source Commit)"
+    Write-Step "Renaming V4 lesson guides to student project docs/ paths"
+    # Map lessons/LESSON_XX_GUIDE_V4.md -> docs/LESSON_XX_GUIDE.md in student package
+    $lessonGuideRenames = @(
+        @{ Src = "lessons\LESSON_01_GUIDE_V4.md"; Dst = "docs\LESSON_01_GUIDE.md" },
+        @{ Src = "lessons\LESSON_02_GUIDE_V4.md"; Dst = "docs\LESSON_02_GUIDE.md" }
+    )
+    foreach ($rename in $lessonGuideRenames) {
+        $srcPath = Join-Path $packageRoot $rename.Src
+        $dstPath = Join-Path $packageRoot $rename.Dst
+        if (Test-Path -LiteralPath $srcPath) {
+            $dstParent = Split-Path -Parent $dstPath
+            if (-not (Test-Path -LiteralPath $dstParent)) {
+                New-Item -ItemType Directory -Path $dstParent -Force | Out-Null
+            }
+            Move-Item -LiteralPath $srcPath -Destination $dstPath -Force
+            Write-Host " Renamed: $($rename.Src) -> $($rename.Dst)"
+        }
+    }
+    # Remove empty lessons/ directory if it exists in package
+    $lessonsDirInPackage = Join-Path $packageRoot "lessons"
+    if (Test-Path -LiteralPath $lessonsDirInPackage) {
+        $remaining = Get-ChildItem -LiteralPath $lessonsDirInPackage -Recurse -File
+        if ($remaining.Count -eq 0) {
+            Remove-Item -LiteralPath $lessonsDirInPackage -Recurse -Force
+        }
+    }
+
+    Write-Step "Applying student templates from snapshot) (same Source Commit)"
     $templateSnap = Join-Path $snapshotDir "student-package\templates"
     $templateMap = @(
         @{ Src = "START_HERE.md"; Dst = "START_HERE.md" },
