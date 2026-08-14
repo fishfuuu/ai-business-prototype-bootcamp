@@ -176,6 +176,9 @@ $whitelist = @(
     "start-project.bat",
     "src",
     ".gitignore",
+    "LICENSE",
+    "LICENSE-COURSE-CC-BY-NC-ND.md",
+    "SECURITY.md",
     ".mcp.json"
 )
 

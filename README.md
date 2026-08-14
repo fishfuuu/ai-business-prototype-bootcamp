@@ -203,6 +203,13 @@ npm run preview     # 预览构建产物
 
 > 注：`curriculum-knowledge-architecture-designer` 的上游为 **CC BY-SA 4.0**（与本仓库 MIT 不同），属原样收录并按上游许可再分发；后续若对其改编并公开，需同样以 CC BY-SA 4.0 发布。
 
+
 ## 许可
 
-本项目以 [MIT License](LICENSE) 授权。课程文档与示例原型可在此基础上使用与再分发；应用到真实业务场景前，请确保遵守所在企业的数据合规要求。
+本仓库采用**分层许可**：
+
+- **代码 / 工程基座**（`src/`、`package.json`、`vite.config.ts` 等）：[MIT License](LICENSE)。
+- **课程与教学材料**（`lessons/`、`README`、`GLOSSARY.md`、`DESIGN.md`、`lessons/html/`、`course-fixtures/` 教学材料等）：[CC BY-NC-ND 4.0](LICENSE-COURSE-CC-BY-NC-ND.md) —— 可看、可学、可署名分享；**禁止商业使用**，**不得公开分发修改版**。
+- **例外**：`.agents/skills/curriculum-knowledge-architecture-designer/` 按上游 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 授权（见该目录 `NOTICE.md`）。
+
+说明：早期版本（v1.0.0 及更早）按当时发布的 MIT License 提供；分层许可适用于后续版本与新增内容。应用到真实业务场景前，请确保遵守所在企业的数据合规要求。

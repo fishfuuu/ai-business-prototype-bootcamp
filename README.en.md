@@ -203,6 +203,13 @@ Each skill file also retains its source and copyright notice. `teacher-plan-arch
 
 > Note: `curriculum-knowledge-architecture-designer`'s upstream is **CC BY-SA 4.0** (different from this repo's MIT). It is included verbatim and redistributed under its upstream license; if you adapt and publicly redistribute it, you must license the adaptation under CC BY-SA 4.0 as well.
 
+
 ## License
 
-Licensed under the [MIT License](LICENSE). Course materials and sample prototypes may be used and redistributed under it. When applying to real business scenarios, ensure compliance with your organization's data policies.
+This repository uses a **layered license**:
+
+- **Code / engineering base** (`src/`, `package.json`, `vite.config.ts`, etc.): [MIT License](LICENSE).
+- **Course and teaching materials** (`lessons/`, `README`, `GLOSSARY.md`, `DESIGN.md`, `lessons/html/`, teaching materials under `course-fixtures/`, etc.): [CC BY-NC-ND 4.0](LICENSE-COURSE-CC-BY-NC-ND.md) — view, learn and share with attribution; **no commercial use**, **no distribution of modified versions**.
+- **Exception**: `.agents/skills/curriculum-knowledge-architecture-designer/` follows the upstream [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license (see `NOTICE.md` in that directory).
+
+Note: earlier releases (v1.0.0 and before) remain available under the MIT License as published at that time; the layered license applies to later versions and new content. When applying to real business scenarios, ensure compliance with your organization's data policies.
