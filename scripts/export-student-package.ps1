@@ -322,7 +322,8 @@ $runtimeWhitelist = @(
     "lessons/html",
     ".claude/skills",
     ".claude/agents",
-    "course-fixtures/lesson-06-buggy-fixture"
+    "course-fixtures/lesson-06-buggy-fixture",
+    ".mcp.json"
 )
 
 if ($PackageProfile -eq "lesson-02-fallback-start") {

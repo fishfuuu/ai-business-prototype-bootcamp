@@ -77,7 +77,6 @@ function Invoke-PackageSafetyCheck {
     $prohibitedPaths = @(
         ".git",
         ".github",
-        ".mcp.json",
         ".agents",
         "references",
         "node_modules",
@@ -176,7 +175,8 @@ $whitelist = @(
     "index.html",
     "start-project.bat",
     "src",
-    ".gitignore"
+    ".gitignore",
+    ".mcp.json"
 )
 
 foreach ($p in $whitelist) {

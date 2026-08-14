@@ -16,6 +16,7 @@ $requiredFiles = @(
     "vite.config.ts",
     "tsconfig.json",
     "index.html",
+    ".mcp.json",
     "CLAUDE.md",
     "DESIGN.md",
     "README.md",

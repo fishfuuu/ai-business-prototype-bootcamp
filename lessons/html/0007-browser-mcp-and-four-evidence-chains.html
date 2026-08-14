@@ -742,7 +742,7 @@
           <div class="quiz-q" data-q="4">
     <div class="q">Q4 · 当 IT 部门质疑非技术主管制作的 AI 原型“未经测试、缺乏质量保障”时，你应该如何汇报？</div>
     <label><input type="radio" name="q4" value="a"> “AI 告诉我页面已经做好了，应该没问题。”</label>
-    <label><input type="radio" name="q4" value="b"> “我们调度了 QA Subagent 挂载双 MCP 运行了剧本，物理落盘了照片、DevTools 脚印、typecheck 体检与 diff 存根及 EVIDENCE_INDEX 总卡，100% PASS 随时可复核。”</label>
+    <label><input type="radio" name="q4" value="b"> “我们调度了 QA Subagent 挂载双 MCP 运行了剧本，物理落盘了照片、DevTools 脚印、typecheck 体检与 diff 存根及 EVIDENCE_INDEX 总卡，逐项通过/失败/未证明，证据可复核。”</label>
     <label><input type="radio" name="q4" value="c"> “我自己用手点了几下，感觉挺顺畅。”</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="b">提交答案</button>
@@ -893,7 +893,7 @@ const testScenarios = {
       { title: 'Step 1 · 唤醒 QA Subagent ➔ Headed 慢动作视窗演示', desc: '调出 Chrome 视窗，以 500ms slowMo 慢动作肉眼观摩 Playwright 自动点击。', cls: '' },
       { title: 'Step 2 · 挂载 Chrome DevTools MCP 静默抓取日志', desc: '切入 Headless 模式 ➔ 审计 Console 0 报错 ➔ 锁定 127.0.0.1 网络白名单。', cls: 'working' },
       { title: 'Step 3 · 物理落盘四类证据与 LESSON_07_EVIDENCE_INDEX', desc: '抓取照片 `screenshot.png` + 脚印 `action.log` + 体检 `typecheck.log` + 存根 `diff.patch` + 总卡！', cls: 'success' },
-      { title: 'Step 4 · 🎉 主管 HITL 盖章 ➔ 自动销毁 QA Subagent 沙箱', desc: '复核 100% PASS ➔ 更新 PROJECT_STATE ➔ 自动 Kill 测试沙箱，保持主 Context 干净！', cls: 'success' }
+      { title: 'Step 4 · 🎉 主管 HITL 盖章 ➔ 自动销毁 QA Subagent 沙箱', desc: '复核逐项 PASS ➔ 更新 PROJECT_STATE ➔ 自动 Kill 测试沙箱，保持主 Context 干净！', cls: 'success' }
     ],
     logs: [
       '> [QA Subagent]: Process spawned in read-only sandbox mode',
