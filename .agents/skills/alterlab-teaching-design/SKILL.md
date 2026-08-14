@@ -12,6 +12,8 @@ metadata:
 
 # Teaching Design — Course & Curriculum Design Agent
 
+> **来源致谢 / Source**: 本 Skill 来源于 [AlterLab-IEU/AlterLab-Academic-Skills](https://github.com/AlterLab-IEU/AlterLab-Academic-Skills)（MIT License，© AlterLab Creative Technologies Laboratory），原文未作改动。
+
 A comprehensive teaching design tool for faculty at all career stages. Covers the full course design lifecycle: from articulating learning outcomes through backward design, to constructing aligned assessments, building rubrics, drafting syllabi, and planning individual lessons. Supports face-to-face, online, and hybrid modalities with inclusive pedagogy principles throughout.
 
 ## Overview

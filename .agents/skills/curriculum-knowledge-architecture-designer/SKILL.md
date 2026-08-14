@@ -81,6 +81,8 @@ tags: ["knowledge-structure", "curriculum-architecture", "Bernstein", "epistemic
 
 # Curriculum Knowledge Architecture Designer
 
+> **来源致谢 / Source**: 本 Skill 来源于 [GarethManning/education-agent-skills](https://github.com/GarethManning/education-agent-skills)（CC BY-SA 4.0，© Gareth Manning），原文未作改动。
+
 ## What This Skill Does
 
 Takes a curriculum input — a single course, a subject scope and sequence, or a real-world project brief — and diagnoses the epistemic architecture of the knowledge domain. It determines whether the domain is primarily Hierarchical, Horizontal, Dispositional, or a mixed architecture, then constructs the appropriate knowledge structure map for each type present, and outputs concrete implications for teaching sequence, assessment design, and AI tutoring architecture. Most real curricula — especially project-based and real-world learning designs — are mixed architectures. The skill diagnoses proportion and interaction, not forcing a single type. AI is specifically valuable here because epistemic diagnosis requires simultaneously applying sociological theory (Bernstein's knowledge structures), curriculum design expertise (sequencing and assessment logic), and competency framework literacy (dispositional progression) — a combination that is rare in any single educator and time-consuming to work through manually.

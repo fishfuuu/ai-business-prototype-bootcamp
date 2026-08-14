@@ -8,7 +8,7 @@
   learner templates) is taken from the same Source Commit via git archive.
   Uncommitted working-tree changes never enter the ZIP.
   Does not commit, push, or overwrite existing packages.
-  See student-package templates and lessons/LESSON_02_GUIDE_V4.md.
+  See student-package templates and lessons/LESSON_02_GUIDE.md.
 #>
 param(
     [Parameter(Mandatory = $true)]
@@ -116,6 +116,7 @@ function Invoke-PackageSafetyCheck {
         ".vite",
         "artifacts",
         "student-package",
+        ".agents",
         "course-fixtures",
         "fixture-manifest.json",
         "CONTRIBUTING.md",
@@ -123,8 +124,18 @@ function Invoke-PackageSafetyCheck {
         "scripts\export-student-package.ps1",
         "scripts\export-lesson-materials.ps1",
         "scripts\install-lesson-materials.ps1",
-        "lessons\COURSE_ROADMAP_V4.md",
-        "lessons\LESSON_01_TEACHER_PLAN_V4.md",
+        "lessons\COURSE_ROADMAP.md",
+        "lessons\LESSON_01_TEACHER_PLAN.md",
+        "lessons\LESSON_02_TEACHER_PLAN.md",
+        "lessons\LESSON_03_TEACHER_PLAN.md",
+        "lessons\LESSON_04_TEACHER_PLAN.md",
+        "lessons\LESSON_05_TEACHER_PLAN.md",
+        "lessons\LESSON_06_TEACHER_PLAN.md",
+        "lessons\LESSON_07_TEACHER_PLAN.md",
+        "lessons\LESSON_08_TEACHER_PLAN.md",
+        "lessons\LESSON_09_TEACHER_PLAN.md",
+        "lessons\LESSON_10_TEACHER_PLAN.md",
+        "lessons\TEN_LESSON_FROZEN_BASELINE.md",
 
         "archive\docs\主管 AI 原型制作训练营.md",
         "archive\docs\DESIGN_ALIGNMENT_AUDIT.md",
@@ -298,12 +309,25 @@ $runtimeWhitelist = @(
     "start-project.bat",
     "DESIGN.md",
     "src",
-    "lessons/LESSON_01_GUIDE_V4.md",
+    "lessons/LESSON_01_GUIDE.md",
+    "lessons/LESSON_02_GUIDE.md",
+    "lessons/LESSON_03_GUIDE.md",
+    "lessons/LESSON_04_GUIDE.md",
+    "lessons/LESSON_05_GUIDE.md",
+    "lessons/LESSON_06_GUIDE.md",
+    "lessons/LESSON_07_GUIDE.md",
+    "lessons/LESSON_08_GUIDE.md",
+    "lessons/LESSON_09_GUIDE.md",
+    "lessons/LESSON_10_GUIDE.md",
+    "lessons/COURSE_ROADMAP_STUDENT.md",
+    "lessons/html",
+    ".claude/skills",
+    ".claude/agents"
 )
 
 if ($PackageProfile -eq "lesson-02-fallback-start") {
     $runtimeWhitelist += @(
-        "lessons/LESSON_02_GUIDE_V4.md",
+        "lessons/LESSON_02_GUIDE.md"
     )
 }
 
@@ -510,11 +534,20 @@ try {
         Write-Host "[PASS] All $( $appliedChanges.Length ) Overlay operations applied cleanly."
     }
 
-    Write-Step "Renaming V4 lesson guides to student project docs/ paths"
-    # Map lessons/LESSON_XX_GUIDE_V4.md -> docs/LESSON_XX_GUIDE.md in student package
+    Write-Step "Copying lesson guides to student project docs/ paths"
+    # Map lessons/LESSON_XX_GUIDE.md -> docs/LESSON_XX_GUIDE.md in student package
     $lessonGuideRenames = @(
-        @{ Src = "lessons\LESSON_01_GUIDE_V4.md"; Dst = "docs\LESSON_01_GUIDE.md" },
-        @{ Src = "lessons\LESSON_02_GUIDE_V4.md"; Dst = "docs\LESSON_02_GUIDE.md" }
+        @{ Src = "lessons\LESSON_01_GUIDE.md"; Dst = "docs\LESSON_01_GUIDE.md" },
+        @{ Src = "lessons\LESSON_02_GUIDE.md"; Dst = "docs\LESSON_02_GUIDE.md" },
+        @{ Src = "lessons\LESSON_03_GUIDE.md"; Dst = "docs\LESSON_03_GUIDE.md" },
+        @{ Src = "lessons\LESSON_04_GUIDE.md"; Dst = "docs\LESSON_04_GUIDE.md" },
+        @{ Src = "lessons\LESSON_05_GUIDE.md"; Dst = "docs\LESSON_05_GUIDE.md" },
+        @{ Src = "lessons\LESSON_06_GUIDE.md"; Dst = "docs\LESSON_06_GUIDE.md" },
+        @{ Src = "lessons\LESSON_07_GUIDE.md"; Dst = "docs\LESSON_07_GUIDE.md" },
+        @{ Src = "lessons\LESSON_08_GUIDE.md"; Dst = "docs\LESSON_08_GUIDE.md" },
+        @{ Src = "lessons\LESSON_09_GUIDE.md"; Dst = "docs\LESSON_09_GUIDE.md" },
+        @{ Src = "lessons\LESSON_10_GUIDE.md"; Dst = "docs\LESSON_10_GUIDE.md" },
+        @{ Src = "lessons\COURSE_ROADMAP_STUDENT.md"; Dst = "docs\COURSE_ROADMAP.md" }
     )
     foreach ($rename in $lessonGuideRenames) {
         $srcPath = Join-Path $packageRoot $rename.Src
@@ -531,7 +564,7 @@ try {
     # Remove empty lessons/ directory if it exists in package
     $lessonsDirInPackage = Join-Path $packageRoot "lessons"
     if (Test-Path -LiteralPath $lessonsDirInPackage) {
-        $remaining = Get-ChildItem -LiteralPath $lessonsDirInPackage -Recurse -File
+        $remaining = @(Get-ChildItem -LiteralPath $lessonsDirInPackage -Recurse -File)
         if ($remaining.Count -eq 0) {
             Remove-Item -LiteralPath $lessonsDirInPackage -Recurse -Force
         }

@@ -86,9 +86,9 @@ try {
 
     # Filter to only keep allowed lesson relevant files in payload
     $allowedRelativePaths = @(
-        "lessons\LESSON_02_GUIDE_V4.md",
+        "lessons\LESSON_02_GUIDE.md",
         ".claude\skills\grill-me\SKILL.md",
-        "lessons\LESSON_03_GUIDE_V4.md",
+        "lessons\LESSON_03_GUIDE.md",
         ".claude\skills\incremental-implementation\SKILL.md",
         ".claude\agents\qa-tester.md",
         "scripts\install-lesson-materials.ps1"

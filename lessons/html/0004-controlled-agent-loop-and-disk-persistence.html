@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -530,7 +530,7 @@
   <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：实施一个可见变化，至少展示两种必要状态</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p4">确认完成 Step 1
+      <span class="prompt-copy-text" id="p4">授权执行 Step 1
 
 请按计划实施 Step 1，只修改授权范围内的文件。
 实施后报告：实际修改文件、验收方法、展示的状态。</span>
@@ -834,14 +834,14 @@ const scenarios = {
   slice: {
     steps: [
       { title: 'Step 1 · Pre-Plan 校验 & 落盘实施计划', desc: '校验数据契约 ➔ 唤醒 /incremental-implementation ➔ 下发口令 `同意保存实施计划`。', cls: '' },
-      { title: 'Step 2 · 授权执行 Step 1 薄切片编码', desc: '下发口令 `确认完成 Step 1` ➔ 引入 prototypeState 调试器 (Loading/Empty/Error/Success)。', cls: 'working' },
-      { title: 'Step 3 · 🏠 双 Commit 归档 (买房交房 + 房管局过户)', desc: 'Verifier 自测 PASS ➔ 提交 Commit A (源码交房) ➔ 提交 Commit B (状态确权) ➔ 恢复 Clean 干净砧板。', cls: 'success' },
+      { title: 'Step 2 · 授权执行 Step 1 薄切片编码', desc: '下发口令 `授权执行 Step 1` ➔ 引入 prototypeState 调试器 (Loading/Empty/Error/Success)。', cls: 'working' },
+      { title: 'Step 3 · 🏠 双 Commit 归档 (买房交房 + 房管局过户)', desc: '人工页面观察与主管验收 PASS ➔ 提交 Commit A (源码交房) ➔ 提交 Commit B (状态确权) ➔ 恢复 Clean 干净砧板。', cls: 'success' },
       { title: 'Step 4 · 🎉 小步快跑，全流程受控无损推进', desc: '每一个 Step 独立验证落盘，随时可以无损撤销与切片升级！', cls: 'success' }
     ],
     logs: [
       '> [User Command]: 同意保存实施计划 -> Created LESSON_04_IMPLEMENTATION_PLAN.md',
-      '> [User Command]: 确认完成 Step 1 -> Created prototypeState Debugger Component',
-      '✅ [Verifier Check]: Static Compilation PASS',
+      '> [User Command]: 授权执行 Step 1 -> Created prototypeState Debugger Component',
+      '✅ [Typecheck]: npm run typecheck PASS',
       '🏠 [Dual Commit]: Commit A (code: feat(board)...) PASS + Commit B (plan: step 1 completed) PASS',
       '🎉 [Result]: Working Tree 恢复 100% Clean 干净状态，切片推进圆满成功！'
     ]

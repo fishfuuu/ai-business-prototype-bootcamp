@@ -1,6 +1,6 @@
 # 主管 AI 原型制作训练营 术语词典（GLOSSARY）
 
-本词典收录本教学工作区统一遵循的工程与业务概念，与已冻结的 `lessons/COURSE_ROADMAP_V4.md` 与 `lessons/DESIGN_SPECIFICATION.md` 保持同一术语口径。每个词条包含两要素：是什么、不是什么（_Avoid_）。
+本词典收录本教学工作区统一遵循的工程与业务概念，与已冻结的 `lessons/COURSE_ROADMAP.md` 保持同一术语口径。每个词条包含两要素：是什么、不是什么（_Avoid_）。
 
 ## 一、架构与工程概念（Architecture & Engineering）
 

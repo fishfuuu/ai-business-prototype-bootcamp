@@ -5,6 +5,9 @@ description: Interview the user relentlessly about a plan or business requiremen
 
 # Grill-Me Skill (需求澄清与契约护栏)
 
+> **来源致谢 / Source**: 本 Skill 改编自 [mattpocock/skills](https://github.com/mattpocock/skills)（MIT License，© Matt Pocock），并按本课程“业务主管制作原型”场景做教学化改造。
+
+
 唤醒需求澄清护栏，以逐题追问的方式帮助主管锁定业务原型的 6 大核心要素，完成数据契约与 TypeScript 类型字典收扣。
 
 对于每个追问问题：
@@ -23,7 +26,7 @@ description: Interview the user relentlessly about a plan or business requiremen
   1. **使用者与问题定义 (User & Problem)**：目标角色、当前人工痛点、事实证据 (`[事实]`)、业务决定 (`[决定]`)、推测假设 (`[假设]`) 与待确认事项 (`[待确认]`)。
   2. **业务目标 (Goal)**：核心目标、预期动作与成功衡量指标。
   3. **边界线 (Boundary)**：包含范围 (In Scope) 与明确不做的范围 (Out of Scope)。
-  4. **风险与数据敏感度 (Risk)**：数据安全等级 (公开 Public / 内部 Internal / 绝密 Secret) 与隐私边界。
+  4. **风险与数据敏感度 (Risk)**：数据安全等级 (公开 Public / 内部 Internal / 严禁发送 AI) 与隐私边界。
   5. **业务验收场景 (Acceptance Criteria)**：确定性逻辑验收用例（格式：假如 [上下文] / 当 [操作] / 则 [预期结果]）。
   6. **请示主管门禁 / 触发暂停条件 (Stop Conditions)**：Agent 在遇到未决字段来源、规则冲突、超界要求或达到追问轮数上限时，必须熔断暂停并呈报主管裁决的触发点。
 

@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第 6 课 · 学会定位和修复问题：五层诊断卡、diagnosing-bugs Skill 与有界排错 Loop | 主管 AI 训练营</title>
+<title>第 6 课 · 学会定位和修复问题：五层诊断卡、$diagnose Skill 与有界排错 Loop | 主管 AI 训练营</title>
 <style>
   :root {
     --paper: #faf7f2;
@@ -320,7 +320,7 @@
     <h1>学会定位和修复问题</h1>
     <p class="sub"><b>排错前先存档，不盲猜、先断言；日志脱敏写报告，两轮不通安全熔断。</b><br>掌握 <b>五层诊断卡口语化拓扑 (汽车诊断仪 🚗)</b>、<b>日志脱敏与 DEBUG_REPORT 落盘 (病例归档 🩺)</b> 与 <b>【无痛存档 Checkpoint + 2 轮硬熔断 (游戏 Save Point & 保鲜开关 🎮⚡)】</b>！</p>
     <div class="goal">
-      🎯 <b>本课目标</b>：① 掌握排错前下发 Checkpoint 无痛存档并唤醒 `diagnosing-bugs` 构建物理 PASS/FAIL 反馈闭环；② 掌握五层诊断卡口语化排查与落盘 `docs/LESSON_06_DEBUG_REPORT.md`；③ 掌握“2 轮硬熔断机制”，在自修 2 轮未 PASS 时一键执行 `git restore .` 无损恢复 Clean 状态。
+      🎯 <b>本课目标</b>：① 掌握排错前下发 Checkpoint 无痛存档并唤醒 `$diagnose` 构建物理 PASS/FAIL 反馈闭环；② 掌握五层诊断卡口语化排查与落盘 `docs/LESSON_06_DEBUG_REPORT.md`；③ 掌握“2 轮硬熔断机制”，在自修 2 轮未 PASS 时一键执行 `git restore .` 无损恢复 Clean 状态。
     </div>
   </div>
 </div>
@@ -723,7 +723,7 @@
           <div class="quiz-q" data-q="3">
     <div class="q">Q3 · 看到 DevTools 控制台密密麻麻的红字报错时，非技术主管最正确的做法是什么？</div>
     <label><input type="radio" name="q3" value="a"> 慌张关闭浏览器并重装操作系统</label>
-    <label><input type="radio" name="q3" value="b"> 记住解焦虑口诀：只提取第一行 Error Message，长堆栈留给 diagnosing-bugs Skill 自动排查</label>
+    <label><input type="radio" name="q3" value="b"> 记住解焦虑口诀：只提取第一行 Error Message，长堆栈留给 $diagnose Skill 自动排查</label>
     <label><input type="radio" name="q3" value="c"> 逐行阅读几十行底层堆栈并手写修补代码</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="b">提交答案</button>
@@ -733,7 +733,7 @@
     <div class="q">Q4 · 当 IT 部门质疑你的 AI 原型在排错过程中可能外泄 Token 或改崩系统时，你应该如何向他们解释？</div>
     <label><input type="radio" name="q4" value="a"> “AI 很聪明，绝对不可能写错代码。”</label>
     <label><input type="radio" name="q4" value="b"> “我也不清楚 AI 怎么改的，坏了就刷新页面。”</label>
-    <label><input type="radio" name="q4" value="c"> “我们引入了 diagnosing-bugs 范式，日志脱敏 &lt;REDACTED&gt;，排错前 Checkpoint 存档，落盘 DEBUG_REPORT，且 2 轮未 PASS 自动 safe restore 回滚。”</label>
+    <label><input type="radio" name="q4" value="c"> “我们引入了 $diagnose 范式，日志脱敏 &lt;REDACTED&gt;，排错前 Checkpoint 存档，落盘 DEBUG_REPORT，且 2 轮未 PASS 自动 safe restore 回滚。”</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="c">提交答案</button>
   </div>
@@ -833,7 +833,7 @@
   <div class="next-grid-2x2">
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--red); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 Matt Pocock 排错范式</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);">diagnosing-bugs 4 阶段排错法：Understand, Reproduce, Diagnose, Fix。</p>
+      <p style="font-size: .88rem; color: var(--ink-soft);">$diagnose 6 阶段事实锚定排错法，改编自 <a href="https://github.com/mattpocock/skills" target="_blank" style="color: var(--red); font-weight:bold;">mattpocock/skills</a>（MIT）。</p>
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 前端 DevTools 基础</h4>
@@ -841,7 +841,7 @@
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--amber); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ Slash 命令快捷指南</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);">唤醒 <code>diagnosing-bugs</code> 技能一键启动受控排错自动化流程。</p>
+      <p style="font-size: .88rem; color: var(--ink-soft);">唤醒 <code>$diagnose</code> 技能一键启动受控排错自动化流程。</p>
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🚀 下一阶段预告</h4>
@@ -881,13 +881,13 @@ const debugScenarios = {
   bounded: {
     steps: [
       { title: 'Step 1 · 执行 Checkpoint 无痛存档 (Save Point)', desc: '运行 `git commit -m "checkpoint: before lesson 6 debug"`，锁定历史装备安全。', cls: '' },
-      { title: 'Step 2 · 唤醒 diagnosing-bugs ➔ 脱敏落盘 DEBUG_REPORT', desc: '日志敏感 Key 脱敏为 `<REDACTED>` ➔ 口语化五层定位 ➔ 落盘 `LESSON_06_DEBUG_REPORT.md`。', cls: 'working' },
+      { title: 'Step 2 · 唤醒 $diagnose ➔ 脱敏落盘 DEBUG_REPORT', desc: '日志敏感 Key 脱敏为 `<REDACTED>` ➔ 口语化五层定位 ➔ 落盘 `LESSON_06_DEBUG_REPORT.md`。', cls: 'working' },
       { title: 'Step 3 · 契约层修补 ➔ 2 轮硬熔断安全保护', desc: '仅修补契约层 ➔ 若自修 2 轮仍未 PASS，自动运行 `git restore .` 恢复 Clean，导出 `.patch`！', cls: 'success' },
       { title: 'Step 4 · 🎉 历史装备毫风无损，有界排错圆满收官', desc: '验证 PASS 提交归档；即便熔断，Checkpoint 上的历史成果 100% 稳如泰山！', cls: 'success' }
     ],
     logs: [
       '> [User Command]: Checkpoint Commit SHA: c6f1a8e (Save Point Saved)',
-      '> [diagnosing-bugs]: Anonymized log -> Authorization: <REDACTED>',
+      '> [$diagnose]: Anonymized log -> Authorization: <REDACTED>',
       '> [Report Created]: docs/LESSON_06_DEBUG_REPORT.md generated with 5-layer diagnostic map',
       '✅ [Validation]: Static test PASS (Layer 5 contract match: status -> status_name)',
       '🎉 [Result]: 排错完成，Working Tree 恢复 100% Clean 干净状态！'

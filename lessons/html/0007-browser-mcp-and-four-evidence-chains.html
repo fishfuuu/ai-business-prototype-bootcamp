@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -318,7 +318,7 @@
   <div class="wrap">
     <div class="kicker">Lesson 07 · 让 Agent 操作页面并留下验收证据</div>
     <h1>让 Agent 实际操作页面完成验收</h1>
-    <p class="sub"><b>口说无凭，证据落盘；双 MCP 齐发力，四证总卡放心交接。</b><br>掌握 <b>QA Subagent 只读沙箱 🕵️‍♂️</b>、<b>Playwright + DevTools 双 MCP 工具链 🛠️</b> 与 <b>【四类证据链 + LESSON_07_EVIDENCE_INDEX 验收总卡 ⚖️】</b>！</p>
+    <p class="sub"><b>口明无凭，证据落盘；双 MCP 齐发力，四证总卡放心交接。</b><br>掌握 <b>QA Subagent 只读沙箱 🕵️‍♂️</b>、<b>Playwright + DevTools 双 MCP 工具链 🛠️</b> 与 <b>【四类证据链 + LESSON_07_EVIDENCE_INDEX 验收总卡 ⚖️】</b>！</p>
     <div class="goal">
       🎯 <b>本课目标</b>：① 掌握调度 QA Subagent (`.claude/agents/qa-tester.md`) 运行 Playwright MCP 慢动作测试演示；② 掌握 Chrome DevTools MCP 审计 Console 0 报错与 127.0.0.1 网络白名单；③ 物理提取并落盘“视觉照片、行为脚印、工程体检、范围存根”四类证据及 `docs/LESSON_07_EVIDENCE_INDEX.md` 验收总卡，完成 HITL 签署归档。
     </div>
@@ -329,7 +329,7 @@
 
 <!-- SECTION 00: COURSE CONTEXT -->
 <section>
-  <h2><span class="num">01</span> 口说无凭，为什么要让 Agent 操作页面留证据？</h2>
+  <h2><span class="num">01</span> 口明无凭，为什么要让 Agent 操作页面留证据？</h2>
   <p>问"页面做好了吗"，AI 回答"做好了"——但你只看到一张静态截图，不知道点击能不能走通，也没有可追溯证据交给 IT。第七课解决的就是"让 Agent 用浏览器实际操作页面，把验收标准翻译成浏览器步骤，逐项举证并落盘证据"。</p>
   <div class="card focus">
     <p><b>记住这句话：</b><br>
@@ -366,7 +366,7 @@
   </div>
 
   <div class="quote">
-    💡 <b>一句话口诀</b>：“口说无凭，证据落盘；双 MCP 齐发力，四证总卡放心交接。”
+    💡 <b>一句话口诀</b>：“口明无凭，证据落盘；双 MCP 齐发力，四证总卡放心交接。”
   </div>
 </section>
 
@@ -403,7 +403,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>Agent 接收验收场景（给定条件、动作、可见结果），用浏览器工具按步骤操作页面，每一步保存截图和日志，最终形成可追溯的证据链。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>验房师带仪器实地检测——不是看图纸说"应该没问题"，而是用仪器逐项检测、拍照留证、出具报告；也不是业主自己随便看一眼就签字。
+          <span class="pill-label">💡 具象类比与反例：</span>验房师带仪器实地检测——不是看图纸明"应该没问题"，而是用仪器逐项检测、拍照留证、出具报告；也不是业主自己随便看一眼就签字。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 2—3 你会让 Agent 用浏览器操作页面并保存证据，然后把观察与验收标准逐项对照。
@@ -460,7 +460,7 @@
           <span class="pill-label">💡 具象类比与反例：</span>医院检验科与主治医生——检验科出报告（验证），主治医生结合报告和病历做诊断判断（验收），最终治疗方案由主治医生签字（批准）；检验科不能替主治医生下诊断。
         </div>
         <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会说明工具验证了什么、主管验收了什么、为什么测试通过不等于可以上线。
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会明明工具验证了什么、主管验收了什么、为什么测试通过不等于可以上线。
         </div>
       </div>
     </details>
@@ -603,7 +603,7 @@
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：主管签署验收卡，说明自动化验证证据与业务验收责任的区别</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：主管签署验收卡，明明自动化验证证据与业务验收责任的区别</div>
     <div class="prompt-copy-box">
       <span class="prompt-copy-text" id="p5">请帮我生成本课的浏览器验收卡。
 
@@ -613,15 +613,15 @@
 3. 失败/降级路径结论（通过/失败/未证明）
 4. 证据索引路径
 5. 主管签署栏（姓名 + 日期）
-6. 主管说明栏：
+6. 主管明明栏：
    - 工具验证了什么：（页面行为是否正常）
    - 主管验收了什么：（业务场景是否正确）
    - 为什么测试通过不等于可以上线：（测试只证明行为正常，不证明业务正确）
 
-更新 docs/PROJECT_STATE.md 记录浏览器验收结果和下一课输入说明。</span>
+更新 docs/PROJECT_STATE.md 记录浏览器验收结果和下一课输入明明。</span>
       <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：验收卡有主管签署，主管说明了验证和验收的区别，以及测试通过不等于上线的理由。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：验收卡有主管签署，主管明明了验证和验收的区别，以及测试通过不等于上线的理由。</div>
   </div>
 
 </section>
@@ -677,7 +677,7 @@
       </thead>
       <tbody>
 <tr>
-          <td><span class="badge-misc red">误区 1</span><br><b>"AI 说做好了就是做好了"</b></td>
+          <td><span class="badge-misc red">误区 1</span><br><b>"AI 明做好了就是做好了"</b></td>
           <td>必须用浏览器实际操作页面，看实际观察而非 AI 自称</td>
           <td>树立正确工程意识，严格遵循护栏规范。</td>
         </tr>
@@ -715,7 +715,7 @@
           <div class="quiz-q" data-q="1">
     <div class="q">Q1 · 专门用于为第 8 课 Codex 独立审查提供结构化文本输入的汇总证据卡文件是什么？</div>
     <label><input type="radio" name="q1" value="a"> docs/LESSON_07_EVIDENCE_INDEX.md (带 YAML Header 的四类证据总卡)</label>
-    <label><input type="radio" name="q1" value="b"> 聊天框里的临时文字说明</label>
+    <label><input type="radio" name="q1" value="b"> 聊天框里的临时文字明明</label>
     <label><input type="radio" name="q1" value="c"> package.json 依赖配置文件</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="a">提交答案</button>
@@ -731,7 +731,7 @@
   </div>
 
           <div class="quiz-q" data-q="3">
-    <div class="q">Q3 · 为什么说“测试 Subagent 完成任务后必须即刻销毁沙箱”是保持主会话高效的关键？</div>
+    <div class="q">Q3 · 为什么明“测试 Subagent 完成任务后必须即刻销毁沙箱”是保持主会话高效的关键？</div>
     <label><input type="radio" name="q3" value="a"> 因为测试脚本运行完会自动损坏代码</label>
     <label><input type="radio" name="q3" value="b"> 因为计算机内存不允许保存文件</label>
     <label><input type="radio" name="q3" value="c"> 及时销毁沙箱可释放 Context 空间，防止测试过程产生的海量 DOM 和 DevTools 日志污染主开发环境</label>
@@ -795,7 +795,7 @@
     <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans4')">💡 点击展开 / 折叠 参考答案</button>
     <div class="ans-box" id="ans4">
       <b>参考答案解析：</b><br>
-      场景→操作→观察→原始证据→结论五环可追溯。只存截图不看内容缺了"观察"和"结论"两环，无法判断截图说明了什么。
+      场景→操作→观察→原始证据→结论五环可追溯。只存截图不看内容缺了"观察"和"结论"两环，无法判断截图明明了什么。
     </div>
   </div>
 
@@ -811,7 +811,7 @@
   <div class="card tinted" style="margin-top: 1.5rem;">
     <b>三句话带走 (Key Takeaways)：</b>
     <ol style="margin-top: .5rem;">
-      <li><b>口说无凭，证据落盘；拒绝无证据交接，四证合一才算终点。</b></li>
+      <li><b>口明无凭，证据落盘；拒绝无证据交接，四证合一才算终点。</b></li>
       <li><b>双 MCP 配合好：Playwright 点 DOM 抓照片，DevTools 审日志测白名单。</b></li>
       <li><b>沙箱隔离不混淆，测试完即刻销毁子进程，落盘 EVIDENCE_INDEX 供 Codex 独立审查。</b></li>
     </ol>
@@ -969,25 +969,25 @@ function testEv(n) {
     term.innerHTML = `
 📷 <b>[Ev 1 视觉证据 · 照片]:</b><br>
 物理文件：\`docs/assets/lesson-07/screenshot.png\`<br>
-说明：Playwright MCP 抓取的高分辨率 1080p 界面渲染全页快照，校验 UI 布局与文字无错位。
+明明：Playwright MCP 抓取的高分辨率 1080p 界面渲染全页快照，校验 UI 布局与文字无错位。
     `;
   } else if (n === 2) {
     term.innerHTML = `
 👣 <b>[Ev 2 行为证据 · 脚印日志]:</b><br>
 物理文件：\`docs/assets/lesson-07/action.log\`<br>
-说明：Chrome DevTools MCP 审计结果：Console Uncaught Error: 0，网络请求仅限 127.0.0.1 域名，Auth Key 已打码 &lt;REDACTED&gt;。
+明明：Chrome DevTools MCP 审计结果：Console Uncaught Error: 0，网络请求仅限 127.0.0.1 域名，Auth Key 已打码 &lt;REDACTED&gt;。
     `;
   } else if (n === 3) {
     term.innerHTML = `
 🩺 <b>[Ev 3 工程证据 · 体检报告]:</b><br>
 物理文件：\`docs/assets/lesson-07/typecheck.log\`<br>
-说明：运行 \`powershell verify-project.ps1\`，TypeScript 类型检测与规范静态扫描 100% PASS 0 警告。
+说明：运行 \`npm run typecheck\`，TypeScript 类型检测通过，0 错误。
     `;
   } else if (n === 4) {
     term.innerHTML = `
 📜 <b>[Ev 4 范围证据 · 存根 diff]:</b><br>
 物理文件：\`docs/assets/lesson-07/diff.patch\`<br>
-说明：Git 变更范围审计，确认只修改了许可文件，包含 0 危险超界文件修改。
+明明：Git 变更范围审计，确认只修改了许可文件，包含 0 危险超界文件修改。
     `;
   } else {
     term.innerHTML = `

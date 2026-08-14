@@ -1,15 +1,12 @@
-# 主管 AI 原型制作训练营课程路线图（V4）
+# 主管 AI 原型制作训练营课程路线图
 
-状态：V4_FROZEN（2026-08-13 根据 V4 冻结基线和十课教案实际内容同步更新）
 更新时间：2026-08-13
 
 内容来源与权威说明：
-- 本文件是 V4 版路线图，根据 `v4新标准/V4_10_LESSON_FROZEN_BASELINE.md` 和十课 V4 教案/指南的实际内容同步生成。
-- `docs/COURSE_ROADMAP.md`：原 DRAFT 候选稿，保留为历史参考，不作为 V4 执行版。
 - `docs/主管 AI 原型制作训练营.md`：保留为历史课程设计来源与背景文案原稿（Historical Design Manuscript），只读保护，不删除、不合并、不批量同步。
 
 历史资料保护与单向修改顺序：
-- 历史 V2/V3 文件与既有课程材料一律只读保护：不删除、不合并、不批量同步。
+- 历史文件与既有课程材料一律只读保护：不删除、不合并、不批量同步。
 - 后续课程材料修改必须按单向顺序执行：教师教案 → 独立复核与用户/课程负责人批准 → 学员指南 → 派生资产；下游冲突不得反向覆盖上游，必须停止并分类为规格缺口。
 
 ---
@@ -108,7 +105,7 @@
 > 每课设置 1—5 道必答题和 0—2 道拓展题。题目可分散在相应 Task 后完成，结束阶段只负责检查、提交与收束；时间预算必须覆盖真实作答方式，不得把 5 道题全部塞入两分钟。
 | 三类成果分离 | 每课必须有**课堂内可见成果**；两课之间安排 **10–15 分钟微任务**；每周第二节课后只提交一个 **30–45 分钟完整成果**，三者不混称 |
 
-### 每课共同结构（V4 契约）
+### 每课共同结构
 
 - 原型推进线与主管判断线分别设置最低证据，不能相互抵分。
 - 每课提供一张整课融合心智模型；课堂节奏表只给教师。
@@ -238,7 +235,7 @@
   2. 选择“A. 监控与决策型 / B. 任务与流程型 / C. 操作工具型”原型方向并输入业务上下文。
   3. **初始化 `docs/PROJECT_STATE.md`**：记录系统名称、使用者、原型类型、核心业务问题及敏感级别。
   4. 遵照模拟数据红线，以“模型提出下一步—工具执行—主管确认”的 plain-language 体验完成首个包含侧栏菜单与 Mock 数据信息的系统雏形。
-* **执行文档**：[LESSON_01_GUIDE_V4.md](LESSON_01_GUIDE_V4.md) 与 [LESSON_01_TEACHER_PLAN_V4.md](LESSON_01_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_01_GUIDE.md](LESSON_01_GUIDE.md) 与 [LESSON_01_TEACHER_PLAN.md](LESSON_01_TEACHER_PLAN.md)。
 
 ---
 
@@ -249,7 +246,7 @@
   2. **Task 2：规范映射 (15 分钟)**：**按规程点开 `DESIGN.md` 查看字典**，映射 Token 与组件，事实锚定到规范。
   3. **Task 3：视觉裁决与重构 (10 分钟)**：**提交节点 1 存档 `baseline: before visual refactor`**；主管下达 Keep / Omit / Remove / Modify 裁决，发送授权口令重构页面；监视差异视图（Git Diff）红绿视图，需要还原时由教师或助教按确认范围执行有界恢复。
   4. **Task 4：对比验证与成果存档 (10 分钟)**：试衣镜对比与 1 次人在回路授权门禁（HITL）微调；按本课规定的学员验证方式完成检查；**提交节点 2 存档 `style: complete lesson 2 visual refactor`**。
-* **执行文档**：[LESSON_02_GUIDE_V4.md](LESSON_02_GUIDE_V4.md) 与 [LESSON_02_TEACHER_PLAN_V4.md](LESSON_02_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_02_GUIDE.md](LESSON_02_GUIDE.md) 与 [LESSON_02_TEACHER_PLAN.md](LESSON_02_TEACHER_PLAN.md)。
 
 ---
 
@@ -260,7 +257,7 @@
   2. **数据分级与脱敏**：在 Mock 表格中标注"公开 / 内部 / 严禁发送 AI"，作为写给未来 IT 部门的生产网关脱敏规约。
   3. **数据契约收扣与契约冻结规则**：在 `docs/BUSINESS_FEATURE_CARD.md` 中嵌入完整数据契约表，Agent 静默生成 TS 类型 (`src/types/prototype-contract.d.ts`) 与 Mock 数据。主管仅核对可视化《数据契约卡》PASS 后宣布契约冻结。
   4. **Task 3A 只读结构预览门禁**：在生成最终代码前，必须进行 Task 3A 只读结构预览，未经主管授权不得修改任何现有源码（严禁使用路径切换命令 `cd`）。
-* **执行文档**：[LESSON_03_GUIDE_V4.md](LESSON_03_GUIDE_V4.md) 与 [LESSON_03_TEACHER_PLAN_V4.md](LESSON_03_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_03_GUIDE.md](LESSON_03_GUIDE.md) 与 [LESSON_03_TEACHER_PLAN.md](LESSON_03_TEACHER_PLAN.md)。
 
 ---
 
@@ -271,7 +268,7 @@
   2. **精准区分 2D 状态与 Excel 草稿双签比喻**：区分页面技术呈现状态与业务流程状态。使用“Excel 草稿录入与主管盖章确权比喻”（Commit A 源码修改草稿 vs Commit B 业务确权归档）降维认知。
   3. **落地 Step 1 调试切片**：结合三类原型方向落地首个切片，植入页面技术状态调试器，完成 4 种界面点击验证。
   4. **三层验收与干净项目工作区恢复**：结合人工页面点击与主管业务验收完成一次完整版本归档 (Commit A 源码草稿 + Commit B 业务确权)；自测失败时，超过两轮后停止自动修改，保留诊断证据，并由教师或助教恢复到已确认基线，仅提交 Commit B 状态并将步骤标记为 `BLOCKED`。
-* **执行文档**：[LESSON_04_GUIDE_V4.md](LESSON_04_GUIDE_V4.md) 与 [LESSON_04_TEACHER_PLAN_V4.md](LESSON_04_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_04_GUIDE.md](LESSON_04_GUIDE.md) 与 [LESSON_04_TEACHER_PLAN.md](LESSON_04_TEACHER_PLAN.md)。
 
 ---
 
@@ -282,7 +279,7 @@
   2. **逐项初筛**：判断每个动作是否需要 AI——查看和列表不用 AI、规则判断不用 AI、提取关键信息可用 AI 辅助、生成建议可用 AI 但需人确认。
   3. **选候选与范式**：选一个低风险候选环节，选择 Workflow、ReAct 或增量实施范式（Plan & Execute），填写智能机会卡（数据、工具、HITL 检查点、停止条件、降级条件）。
   4. **原型模拟**：在原型中加入明确标记为 Mock/模拟的智能行为，展示正常和至少一种不确定/失败结果，保持原路径可操作。
-* **执行文档**：[LESSON_05_GUIDE_V4.md](LESSON_05_GUIDE_V4.md) 与 [LESSON_05_TEACHER_PLAN_V4.md](LESSON_05_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_05_GUIDE.md](LESSON_05_GUIDE.md) 与 [LESSON_05_TEACHER_PLAN.md](LESSON_05_TEACHER_PLAN.md)。
 
 ---
 
@@ -292,7 +289,7 @@
   1. **五层诊断卡 (Five-Layer Diagnostic Map)**：按运行环境 ➔ 数据源 ➔ 组件状态 ➔ 日志 ➔ 契约断言五层排查，控制台直接打印自然语言诊断卡。
   2. **排错范围严格限定**：只排“界面呈现与业务契约不一致”的 Bug，严禁深入底层复杂代码。
   3. **重试预算/熔断与有界排错**：同一 Bug 最多由 Agent 自修 2 轮；超过两轮后停止自动修改，保留诊断证据，并由教师或助教恢复到已确认基线，规避主管直接手敲 Git/Patch 命令的操作瓶颈。
-* **执行文档**：[LESSON_06_GUIDE_V4.md](LESSON_06_GUIDE_V4.md) 与 [LESSON_06_TEACHER_PLAN_V4.md](LESSON_06_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_06_GUIDE.md](LESSON_06_GUIDE.md) 与 [LESSON_06_TEACHER_PLAN.md](LESSON_06_TEACHER_PLAN.md)。
 
 ---
 
@@ -304,7 +301,7 @@
   3. **Task 3 证据对照**：把观察与验收标准逐项对照，标记已证明、未证明和证据盲区，不只看结论。
   4. **Task 4 失败路径补证**：对一个失败/降级路径补证，形成 `docs/LESSON_07_EVIDENCE_INDEX.md` 证据索引（场景→操作→观察→原始证据→结论）。
   5. **Task 5 主管验收签署**：主管签署验收卡，说明工具验证了什么、主管验收了什么、为什么测试通过不等于可以上线。
-* **执行文档**：[LESSON_07_GUIDE_V4.md](LESSON_07_GUIDE_V4.md) 与 [LESSON_07_TEACHER_PLAN_V4.md](LESSON_07_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_07_GUIDE.md](LESSON_07_GUIDE.md) 与 [LESSON_07_TEACHER_PLAN.md](LESSON_07_TEACHER_PLAN.md)。
 
 ---
 
@@ -316,7 +313,7 @@
   3. **Task 3 独立评审**：让 Codex 输出带引证、优先级和影响的独立 findings（问题、影响、证据、建议），不是笼统说"看起来没问题"。
   4. **Task 4 主管处置**：逐项决定 accept/fix/stop/defer，并说明业务理由，不是全部默认 accept。
   5. **Task 5 修复与归档**：需要修复的由 Claude 执行，关键项重新取证，处置结果更新到 `docs/PROJECT_STATE.md`。
-* **执行文档**：[LESSON_08_GUIDE_V4.md](LESSON_08_GUIDE_V4.md) 与 [LESSON_08_TEACHER_PLAN_V4.md](LESSON_08_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_08_GUIDE.md](LESSON_08_GUIDE.md) 与 [LESSON_08_TEACHER_PLAN.md](LESSON_08_TEACHER_PLAN.md)。
 
 ---
 
@@ -328,7 +325,7 @@
   3. **Task 3 层级选择**：选择 AI 介入层级，明确拒绝 AI/Agent 的环节及理由，至少有一个"不使用 AI/Agent"的有理由决定。
   4. **Task 4 范式选型**：对保留候选选择范式（Workflow、ReAct、增量实施范式（Plan & Execute）等），补数据、工具、HITL 和停止条件。
   5. **Task 5 三链与决策**：画三链责任与 fallback（开发工具链、产品业务 API 链、模型 API 链），选出一个优先候选和一个明确不做项；降级结果不能伪装成真实成功。
-* **执行文档**：[LESSON_09_GUIDE_V4.md](LESSON_09_GUIDE_V4.md) 与 [LESSON_09_TEACHER_PLAN_V4.md](LESSON_09_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_09_GUIDE.md](LESSON_09_GUIDE.md) 与 [LESSON_09_TEACHER_PLAN.md](LESSON_09_TEACHER_PLAN.md)。
 
 ---
 
@@ -340,4 +337,4 @@
   3. **Task 3 证据覆盖范围**：用 L7/L8 证据说明原型在哪些范围内成立，列出未解决 findings。
   4. **Task 4 产品决策**：作出继续/调整/暂缓/停止的产品决定，并形成 IT 下一步清单（有优先级和前置）。
   5. **Task 5 五分钟汇报**：完成五分钟汇报——业务问题、原型证据、AI 选择、风险边界、需要 IT 做什么。
-* **执行文档**：[LESSON_10_GUIDE_V4.md](LESSON_10_GUIDE_V4.md) 与 [LESSON_10_TEACHER_PLAN_V4.md](LESSON_10_TEACHER_PLAN_V4.md)。
+* **执行文档**：[LESSON_10_GUIDE.md](LESSON_10_GUIDE.md) 与 [LESSON_10_TEACHER_PLAN.md](LESSON_10_TEACHER_PLAN.md)。

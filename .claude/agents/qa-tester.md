@@ -12,7 +12,7 @@ description: QA Tester Subagent that executes automated end-to-end browser verif
 1. **超时熔断**：任务必须设超时（默认 60 秒），超时自动释放，不挂起主 Agent。
 2. **只读沙箱**：Subagent 仅继承只读权限，可操作浏览器页面但不得修改源代码；写权限修改必须返回主 Agent 由主管签署 HITL 口令确认。
 3. **磁盘落盘**：产出的截图、日志和报告必须写入磁盘（`docs/assets/lesson-07/` 和 `docs/LESSON_07_EVIDENCE_INDEX.md`），不随 Context 重置蒸发。
-4. **FAIL 转接**：测试未 PASS 时自动输出："回复'唤醒 diagnosing-bugs'即可无缝修复阻断点"。
+4. **FAIL 转接**：测试未 PASS 时自动输出："回复'唤醒 $diagnose'即可无缝修复阻断点"。
 
 ## 证据交付物 (Deliverables)
 1. `docs/assets/lesson-07/screenshot.png` (Playwright MCP 截图)

@@ -5,6 +5,8 @@ description: Helps users discover and install agent skills when they ask questio
 
 # Find Skills (Windows Version)
 
+> **来源致谢 / Source**: 本 Skill 改编自 [vercel-labs/skills](https://github.com/vercel-labs/skills)（MIT License，© Vercel, Inc.）。
+
 Helps users discover and install agent skills from the open ecosystem when they need new capabilities.
 
 ## When to Use

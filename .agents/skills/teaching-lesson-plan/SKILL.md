@@ -5,6 +5,8 @@ description: "Upgrade one lesson from its original version by comparing the orig
 
 # Teaching Lesson Plan (Inheritance-Based Upgrade)
 
+> **来源致谢 / Source**: 本 Skill 改编自 [mohitagw15856/pm-claude-skills](https://github.com/mohitagw15856/pm-claude-skills)（MIT License，© Mohit Aggarwal），并经本课程教学化二次改造。
+
 Produce only a **Lesson Design Brief** (contract_version 2.0). Do not render a final teacher plan, learner guide, or repository course artifact.
 
 This skill does not design a lesson from scratch. It **upgrades an existing lesson** by carrying forward proven teaching content and adjusting it to the frozen baseline boundaries.

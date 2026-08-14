@@ -8,9 +8,9 @@
 
 | 角色 | 推荐阅读路径 | 说明 |
 | --- | --- | --- |
-| **人类学员** | [lessons/LESSON_01_GUIDE_V4.md](lessons/LESSON_01_GUIDE_V4.md) | **学员端唯一合一卡**，融合基础概念与 Task 1–4 实操指引。 |
-| **教师 / 助教** | [lessons/LESSON_01_TEACHER_PLAN_V4.md](lessons/LESSON_01_TEACHER_PLAN_V4.md) | **教师端唯一教案**，课程参数（班型、时长、助教接管、教案结构）以已锁定的 UIC / 冻结设计 / 已批准路线图与模板为权威，本文件不硬编码旧默认。 |
-| **工程维护者** | [lessons/COURSE_ROADMAP_V4.md](lessons/COURSE_ROADMAP_V4.md) | 课程路线图与工程双轨交付规范。 |
+| **人类学员** | [lessons/LESSON_01_GUIDE.md](lessons/LESSON_01_GUIDE.md) | **学员端唯一合一卡**，融合基础概念与 Task 1–4 实操指引。 |
+| **教师 / 助教** | [lessons/LESSON_01_TEACHER_PLAN.md](lessons/LESSON_01_TEACHER_PLAN.md) | **教师端唯一教案**，课程参数（班型、时长、助教接管、教案结构）以已锁定的 UIC / 冻结设计 / 已批准路线图与模板为权威，本文件不硬编码旧默认。 |
+| **工程维护者** | [lessons/COURSE_ROADMAP.md](lessons/COURSE_ROADMAP.md) | 课程路线图与工程双轨交付规范。 |
 
 ---
 

@@ -52,7 +52,7 @@ Write-Host "[2/5] Checking prohibited teacher-only paths..."
 $prohibitedPaths = @(
     "references",
     "CONTRIBUTING.md",
-    "lessons\COURSE_ROADMAP_V4.md",
+    "lessons\COURSE_ROADMAP.md",
     "lessons\DESIGN_SPECIFICATION.md",
     "docs\DESIGN_ALIGNMENT_AUDIT.md",
     "docs\DESIGN_ALIGNMENT_DECISIONS.md",
