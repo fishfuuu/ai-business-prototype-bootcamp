@@ -323,6 +323,9 @@ $runtimeWhitelist = @(
     ".claude/skills",
     ".claude/agents",
     "course-fixtures/lesson-06-buggy-fixture",
+    "LICENSE",
+    "LICENSE-COURSE-CC-BY-NC-ND.md",
+    "SECURITY.md",
     ".mcp.json"
 )
 
