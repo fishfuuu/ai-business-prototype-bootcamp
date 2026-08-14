@@ -117,7 +117,6 @@ function Invoke-PackageSafetyCheck {
         "artifacts",
         "student-package",
         ".agents",
-        "course-fixtures",
         "fixture-manifest.json",
         "CONTRIBUTING.md",
         "scripts\verify-project.ps1", # legacy, may not exist
@@ -322,7 +321,8 @@ $runtimeWhitelist = @(
     "lessons/COURSE_ROADMAP_STUDENT.md",
     "lessons/html",
     ".claude/skills",
-    ".claude/agents"
+    ".claude/agents",
+    "course-fixtures/lesson-06-buggy-fixture"
 )
 
 if ($PackageProfile -eq "lesson-02-fallback-start") {

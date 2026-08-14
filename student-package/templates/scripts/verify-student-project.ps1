@@ -47,6 +47,8 @@ $requiredFiles = @(
     ".claude\skills\grill-me\SKILL.md",
     ".claude\skills\incremental-implementation\SKILL.md",
     ".claude\agents\qa-tester.md",
+    "course-fixtures\lesson-06-buggy-fixture\README.md",
+    "course-fixtures\lesson-06-buggy-fixture\buggy-sample-component.vue",
     "src\main.ts",
     "src\App.vue",
     "src\router\index.ts",

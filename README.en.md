@@ -160,11 +160,12 @@ npm run preview     # preview the production build
 
 ## Scripts (Teachers / Maintainers)
 
-The repository ships 2 PowerShell scripts for building and verifying student distribution packages:
+The repository ships 3 PowerShell scripts for building and verifying student distribution packages:
 
 | Script | Purpose | Key parameters |
 | --- | --- | --- |
 | `scripts/export-student-package.ps1` | **Build a full student package**: exports a whitelisted set of runtime files + learner templates + all 10 lesson guides + interactive courseware (12 HTML pages) + teaching skills + student roadmap from a Git commit (default `HEAD`), generates `VERSION.txt` / `PACKAGE_MANIFEST.txt` / `SHA256SUMS.txt`, runs safety checks, and compresses everything into a ZIP plus SHA256. **Uncommitted working-tree changes never enter the package.** | `-CourseState` (e.g. `lesson-01-start`), `-Version` (e.g. `v0.1.0`), `-SourceRef`, `-OutputDirectory`, `-PackageProfile` |
+| `scripts/export-teacher-package.ps1` | **Build a teacher classroom-delivery bundle**: packages the 10 teacher plans + 10 learner guides + interactive courseware + course roadmap + course fixtures + teaching skills + prototype base from a Git commit (default `HEAD`), generates `VERSION.txt` / `PACKAGE_MANIFEST.txt` / `SHA256SUMS.txt`, and compresses into a ZIP plus SHA256. **Uncommitted working-tree changes never enter the package.** | `-Version` (e.g. `v0.1.0`), `-SourceRef`, `-OutputDirectory` |
 | `student-package/templates/scripts/verify-student-project.ps1` | **Verify a student package**: inside the student project, checks required files, forbidden teacher-only paths, `npm run typecheck`, `npm run build`, and scans for environment/credential files. | none (run from the project root) |
 
 > Teacher/maintainer only: the student package is exported from a Git commit snapshot, so **uncommitted changes never enter a distribution package**; commit the relevant content before distributing.
