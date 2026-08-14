@@ -10,7 +10,6 @@ Write-Host ""
 Set-Location $projectRoot
 
 Write-Host "[1/5] Checking required files..."
-
 $requiredFiles = @(
     "package.json",
     "package-lock.json",
@@ -22,7 +21,32 @@ $requiredFiles = @(
     "README.md",
     "START_HERE.md",
     "docs\LESSON_01_GUIDE.md",
-    "docs\assets\lesson-01\lesson-01-flow.png",
+    "docs\LESSON_02_GUIDE.md",
+    "docs\LESSON_03_GUIDE.md",
+    "docs\LESSON_04_GUIDE.md",
+    "docs\LESSON_05_GUIDE.md",
+    "docs\LESSON_06_GUIDE.md",
+    "docs\LESSON_07_GUIDE.md",
+    "docs\LESSON_08_GUIDE.md",
+    "docs\LESSON_09_GUIDE.md",
+    "docs\LESSON_10_GUIDE.md",
+    "docs\COURSE_ROADMAP.md",
+    "lessons\html\0001-ai-agent-architecture-and-first-prototype.html",
+    "lessons\html\0002-visual-refactoring-and-design-harness.html",
+    "lessons\html\0003-requirements-clarification-and-data-contract.html",
+    "lessons\html\0004-controlled-agent-loop-and-disk-persistence.html",
+    "lessons\html\0005-engineering-harness-and-memory-model.html",
+    "lessons\html\0006-facts-anchored-debugging-and-bounded-loop.html",
+    "lessons\html\0007-browser-mcp-and-four-evidence-chains.html",
+    "lessons\html\0008-codex-independent-review-and-context-isolation.html",
+    "lessons\html\0009-ai-opportunity-map-and-agent-pattern-selection.html",
+    "lessons\html\0010-prototype-freeze-and-product-decision-package.html",
+    "lessons\html\COURSE_ROADMAP.html",
+    "lessons\html\GLOSSARY.html",
+    ".claude\skills\diagnose\SKILL.md",
+    ".claude\skills\grill-me\SKILL.md",
+    ".claude\skills\incremental-implementation\SKILL.md",
+    ".claude\agents\qa-tester.md",
     "src\main.ts",
     "src\App.vue",
     "src\router\index.ts",
@@ -31,6 +55,8 @@ $requiredFiles = @(
     "PACKAGE_MANIFEST.txt",
     "SHA256SUMS.txt"
 )
+
+
 
 foreach ($file in $requiredFiles) {
     if (-not (Test-Path $file)) {
@@ -53,6 +79,17 @@ $prohibitedPaths = @(
     "references",
     "CONTRIBUTING.md",
     "lessons\COURSE_ROADMAP.md",
+    "lessons\TEN_LESSON_FROZEN_BASELINE.md",
+    "lessons\LESSON_01_TEACHER_PLAN.md",
+    "lessons\LESSON_02_TEACHER_PLAN.md",
+    "lessons\LESSON_03_TEACHER_PLAN.md",
+    "lessons\LESSON_04_TEACHER_PLAN.md",
+    "lessons\LESSON_05_TEACHER_PLAN.md",
+    "lessons\LESSON_06_TEACHER_PLAN.md",
+    "lessons\LESSON_07_TEACHER_PLAN.md",
+    "lessons\LESSON_08_TEACHER_PLAN.md",
+    "lessons\LESSON_09_TEACHER_PLAN.md",
+    "lessons\LESSON_10_TEACHER_PLAN.md",
     "lessons\DESIGN_SPECIFICATION.md",
     "docs\DESIGN_ALIGNMENT_AUDIT.md",
     "docs\DESIGN_ALIGNMENT_DECISIONS.md",
@@ -60,7 +97,10 @@ $prohibitedPaths = @(
     "docs\主管 AI 原型制作训练营.md",
     "scripts\verify-project.ps1", # legacy
     "scripts\export-student-package.ps1",
+    "scripts\export-lesson-materials.ps1",
+    "scripts\install-lesson-materials.ps1",
     "student-package",
+    ".agents",
     ".github"
 )
 

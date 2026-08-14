@@ -160,16 +160,14 @@ npm run preview     # 预览构建产物
 
 ## 脚本工具（教师 / 维护者）
 
-仓库提供 4 个 PowerShell 脚本，用于生成与校验学生分发包：
+仓库提供 2 个 PowerShell 脚本，用于生成与校验学生分发包：
 
 | 脚本 | 作用 | 主要参数 |
 | --- | --- | --- |
-| `scripts/export-student-package.ps1` | **生成学生包**：从指定 Git 提交（默认 `HEAD`）按白名单打包运行文件 + 学员模板 + 课程指南，自动生成 `VERSION.txt` / `PACKAGE_MANIFEST.txt` / `SHA256SUMS.txt`，通过安全校验后压缩为 ZIP 与 SHA256。**未提交的改动不会进包**。 | `-CourseState`（如 `lesson-01-start`）、`-Version`（如 `v0.1.0`）、`-SourceRef`、`-OutputDirectory`、`-PackageProfile` |
-| `scripts/export-lesson-materials.ps1` | **导出课件材料包**：打包指定课程的学员指南、Skill 与安装脚本，供老师课前分发给学员做增量安装。 | `-Version`、`-SourceRef`、`-OutputDir` |
-| `scripts/install-lesson-materials.ps1` | **安装课件材料**：把材料包 `payload/` 增量装入目标学员工程（校验清单与校验和、无冲突、保证 `src/` 零改动，生成安装回执）。 | `-TargetStudentProjectDir` |
+| `scripts/export-student-package.ps1` | **生成学生包（十课全量）**：从指定 Git 提交（默认 `HEAD`）按白名单打包运行文件 + 学员模板 + 十课指南 + 交互课件（12 份 HTML）+ 教学 Skill + 学员版路线图，自动生成 `VERSION.txt` / `PACKAGE_MANIFEST.txt` / `SHA256SUMS.txt`，通过安全校验后压缩为 ZIP 与 SHA256。**未提交的改动不会进包**。 | `-CourseState`（如 `lesson-01-start`）、`-Version`（如 `v0.1.0`）、`-SourceRef`、`-OutputDirectory`、`-PackageProfile` |
 | `student-package/templates/scripts/verify-student-project.ps1` | **学生包校验**：在学员工程内检查必需文件、禁用教师专属路径、`npm run typecheck`、`npm run build` 与环境/凭据文件扫描。 | 无（在工程根目录运行） |
 
-> 教师/维护者专属：学生包与课件材料包均从 Git 提交快照导出，**未提交的改动不会进入分发包**；正式分发前请先提交对应内容。
+> 教师/维护者专属：学生包从 Git 提交快照导出，**未提交的改动不会进入分发包**；正式分发前请先提交对应内容。
 
 ## 安全与合规红线
 

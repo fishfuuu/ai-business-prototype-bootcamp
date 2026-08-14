@@ -160,16 +160,14 @@ npm run preview     # preview the production build
 
 ## Scripts (Teachers / Maintainers)
 
-The repository ships 4 PowerShell scripts for building and verifying student distribution packages:
+The repository ships 2 PowerShell scripts for building and verifying student distribution packages:
 
 | Script | Purpose | Key parameters |
 | --- | --- | --- |
-| `scripts/export-student-package.ps1` | **Build a student package**: exports a whitelisted set of runtime files + learner templates + lesson guides from a Git commit (default `HEAD`), generates `VERSION.txt` / `PACKAGE_MANIFEST.txt` / `SHA256SUMS.txt`, runs safety checks, and compresses everything into a ZIP plus SHA256. **Uncommitted working-tree changes never enter the package.** | `-CourseState` (e.g. `lesson-01-start`), `-Version` (e.g. `v0.1.0`), `-SourceRef`, `-OutputDirectory`, `-PackageProfile` |
-| `scripts/export-lesson-materials.ps1` | **Export a lesson-materials package**: packages the selected lesson guides, skills, and the installer script for teachers to distribute as an incremental overlay before class. | `-Version`, `-SourceRef`, `-OutputDir` |
-| `scripts/install-lesson-materials.ps1` | **Install lesson materials**: incrementally copies the package `payload/` into a target student project (verifies manifest + checksums, no-clobber conflicts, guarantees zero `src/` modification, writes an install receipt). | `-TargetStudentProjectDir` |
+| `scripts/export-student-package.ps1` | **Build a full student package**: exports a whitelisted set of runtime files + learner templates + all 10 lesson guides + interactive courseware (12 HTML pages) + teaching skills + student roadmap from a Git commit (default `HEAD`), generates `VERSION.txt` / `PACKAGE_MANIFEST.txt` / `SHA256SUMS.txt`, runs safety checks, and compresses everything into a ZIP plus SHA256. **Uncommitted working-tree changes never enter the package.** | `-CourseState` (e.g. `lesson-01-start`), `-Version` (e.g. `v0.1.0`), `-SourceRef`, `-OutputDirectory`, `-PackageProfile` |
 | `student-package/templates/scripts/verify-student-project.ps1` | **Verify a student package**: inside the student project, checks required files, forbidden teacher-only paths, `npm run typecheck`, `npm run build`, and scans for environment/credential files. | none (run from the project root) |
 
-> Teacher/maintainer only: both packages are exported from Git commit snapshots, so **uncommitted changes never enter a distribution package**; commit the relevant content before distributing.
+> Teacher/maintainer only: the student package is exported from a Git commit snapshot, so **uncommitted changes never enter a distribution package**; commit the relevant content before distributing.
 
 ## Safety & Compliance
 
