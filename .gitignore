@@ -31,3 +31,4 @@ Desktop.ini
 
 # Student package export artifacts (never commit ZIPs or checksums)
 artifacts/student-packages/
+artifacts/teacher-packages/
