@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -343,8 +343,8 @@
 
 <!-- SECTION 02 -->
 <section>
-  <h2><span class="num">02</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
-  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <h2><span class="num">02</span> 核心概念卡：本课必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">本课必须掌握的核心概念 (点击展开详情)：</p>
   <div class="concept-list">
     <details class="concept-card">
       <summary class="concept-head">1. 大语言模型（LLM）：大脑</summary>
@@ -383,7 +383,7 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 受控执行者（Agent）</summary>
+      <summary class="concept-head">3. AI Agent（Agent）</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
           <span class="pill-label">📌 是什么 / 不是什么：</span>把 LLM、当前信息和 Tools 组织起来，为一个目标完成多步工作的系统；不是永远正确、能够自行承担业务责任的数字员工。
@@ -450,7 +450,7 @@
     <ol>
       <li><b>基础问候</b>不需要调用 Tools，直接在内存中生成回复；</li>
       <li><b>业务原型需求</b>触发了真正的 Tool Call（写文件、创组件），并在写盘前触发了 <b>HITL (主管公章盖章)</b>；</li>
-      <li>最后试衣镜呈现的页面是基于 <b>Observation 真实编译结果</b>渲染的，绝非空口凭空猜测。</li>
+      <li>最后本地预览呈现的页面是基于 <b>Observation 真实编译结果</b>渲染的，绝非空口凭空猜测。</li>
     </ol>
   </div>
 </section>
@@ -665,7 +665,7 @@ docs/COMPONENT_CATALOG.md、实际路由入口、实际布局或页面入口（�
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c2" onchange="chkUpdate()">
-        <span>2. 我已双击 <code>start-project.bat</code> 启动试衣镜，并在浏览器访问了 <code>http://127.0.0.1:8888</code>。</span>
+        <span>2. 我已双击 <code>start-project.bat</code> 启动本地预览，并在浏览器访问了 <code>http://127.0.0.1:8888</code>。</span>
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c3" onchange="chkUpdate()">
@@ -720,7 +720,7 @@ const simSteps = {
     { k: 'Action 工具调用', v: 'write_file(path: "src/pages/Dashboard.vue")', cls: 'act' },
     { k: 'HITL 盖章门禁', v: '触发写盘门禁 ➔ 主管口令盖章授权批准', cls: 'hitl' },
     { k: 'Observation 观察', v: '编译成功，生成 4 项 KPI 卡片与异常表格', cls: 'observe' },
-    { k: '试衣镜渲染', v: '127.0.0.1:8888 高保真页面渲染完成 [PASS]', cls: 'reply' }
+    { k: '本地预览渲染', v: '127.0.0.1:8888 高保真页面渲染完成 [PASS]', cls: 'reply' }
   ],
   flow: [
     { k: '用户需求', v: '"创建一个退货工单审批流页面"' },
@@ -728,7 +728,7 @@ const simSteps = {
     { k: 'Action 工具调用', v: 'write_file(path: "src/pages/ApprovalFlow.vue")', cls: 'act' },
     { k: 'HITL 盖章门禁', v: '触发写盘门禁 ➔ 主管口令盖章授权批准', cls: 'hitl' },
     { k: 'Observation 观察', v: '组件渲染成功，连通“同意/驳回”状态流转', cls: 'observe' },
-    { k: '试衣镜渲染', v: '127.0.0.1:8888 审批流组件测试通过', cls: 'reply' }
+    { k: '本地预览渲染', v: '127.0.0.1:8888 审批流组件测试通过', cls: 'reply' }
   ],
   hello: [
     { k: '用户需求', v: '"你好，请问你是谁？"' },
@@ -744,7 +744,7 @@ const logLines = {
     ['tool', 'Tool Call：write_file(target: "src/pages/Dashboard.vue")'],
     ['hitl', '🛡️ HITL 门禁触发：等待主管 CEO 口令签字盖章批准… [已授权]'],
     ['toolret', 'Observation：文件已成功物理写入磁盘。编译校验成功。'],
-    ['final', '→ 最终输出：127.0.0.1:8888 试衣镜已渲染预警看板原型！']
+    ['final', '→ 最终输出：127.0.0.1:8888 本地预览已渲染预警看板原型！']
   ],
   flow: [
     ['user', '用户 ➔ Agent：创建一个退货工单审批流页面'],
@@ -752,7 +752,7 @@ const logLines = {
     ['tool', 'Tool Call：write_file(target: "src/pages/ApprovalFlow.vue")'],
     ['hitl', '🛡️ HITL 门禁触发：等待主管 CEO 口令签字盖章批准… [已授权]'],
     ['toolret', 'Observation：文件物理写入完成。数据契约匹配成功。'],
-    ['final', '→ 最终输出：127.0.0.1:8888 试衣镜已渲染退货审批流原型！']
+    ['final', '→ 最终输出：127.0.0.1:8888 本地预览已渲染退货审批流原型！']
   ],
   hello: [
     ['user', '用户 ➔ Agent：你好，请问你是谁？'],

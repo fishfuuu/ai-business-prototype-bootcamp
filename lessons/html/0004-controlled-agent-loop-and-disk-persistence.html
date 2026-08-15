@@ -322,7 +322,7 @@
   <div class="wrap">
     <div class="kicker">Lesson 04 · 把契约切成一个可实施的薄片</div>
     <h1>把大需求拆成连续的小成功</h1>
-    <p class="sub">不要让 Agent 一口气完成整个功能！通过 <b>Plan & Execute 增量薄切片</b>、<b>Working Tree 砧板状态机</b> 与 <b>【房产过户双节点比喻 (Commit A 源码交房 + Commit B 状态确权)】</b>，掌控节奏，打造无损无痛可回滚的受控 Agent 研发流。</p>
+    <p class="sub">不要让 Agent 一口气完成整个功能！通过 <b>Plan & Execute 增量薄切片</b>、<b>Working Tree 版本证据</b> 与 <b>可追溯验收</b>，掌控节奏并保留有界恢复路径。</p>
     <div class="goal">
       🎯 <b>本课目标</b>：① 从第三课冻结契约中选择一个纵向薄片，完成可见实施并保留必要状态证据；② 先形成经主管确认的实施计划，再按计划执行和调整；③ 区分技术状态与业务状态，在实施前后分别确权；④ 主管按契约验收，记录候选版本与处置结果，不自动宣称通过。
     </div>
@@ -344,7 +344,7 @@
 <!-- SECTION 01: INTERACTIVE SLICE DEMONSTRATOR -->
 <section>
   <h2><span class="num">02</span> 核心架构演进：一次性巨石盲开 vs 受控薄切片 + 物理状态机</h2>
-  <p>通过下方交互演示，直观对比“抬手修改 1000 行代码导致白屏崩溃”与“受控薄切片 + 双 Commit 归档”的运行差异：</p>
+  <p>通过下方交互演示，直观对比“抬手修改 1000 行代码导致白屏崩溃”与“受控薄切片 + 版本证据核对”的运行差异：</p>
 
   <div class="sim-container">
     <div class="sim-header">
@@ -355,7 +355,7 @@
 
       <div class="mode-tabs">
         <button class="mode-btn active raw" id="mBtnRaw" onclick="runMode('raw')">🔴 模式 A：一次性巨石盲开 (无步骤约束/白屏崩溃)</button>
-        <button class="mode-btn slice" id="mBtnSlice" onclick="runMode('slice')">🟢 模式 B：受控薄切片 + 双 Commit 归档 (本课范式)</button>
+        <button class="mode-btn slice" id="mBtnSlice" onclick="runMode('slice')">🟢 模式 B：受控薄切片 + 可追溯验收 (本课范式)</button>
       </div>
 
       <div class="flow-display-canvas" id="flowCanvas">
@@ -376,8 +376,9 @@
 
 <!-- SECTION 02: 4 CORE CONCEPTS -->
 <section>
-  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
-  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <h2><span class="num">03</span> 核心概念卡：本课必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">本课必须掌握的核心概念 (点击展开详情)：</p>
+  <p class="note">操作方法：Plan & Execute、两阶段版本记录、有界恢复；提交数量不固定。HITL 授权点属于扩展认识。</p>
   <div class="concept-list">
     <details class="concept-card">
       <summary class="concept-head">1. 薄切片</summary>
@@ -398,19 +399,19 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 增量实施范式（Plan & Execute）</summary>
+      <summary class="concept-head">2. 版本控制基础</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>先形成经主管确认的实施计划，再按计划执行和调整；不是让 Agent 抬手就写代码，也不是一次性生成全部功能。
+          <span class="pill-label">📌 是什么 / 不是什么：</span>用 Working Tree、Diff、Commit 记录变更、比较差异和保存版本证据；不是业务审批系统、固定提交数量或要求主管执行危险命令。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>激活 incremental-implementation Skill 后，Skill 读取契约文件自动把需求切成 3—5 个独立步骤并落盘计划；主管核对每步的字段、状态、修改范围和验收路径后才授权 Execute；适合目标明确但步骤较多的任务。
+          <span class="pill-label">⚙️ 怎样运作：</span>识别当前改动，查看 Diff，按项目约定保存版本证据，并让版本记录能够定位恢复；提交数量由项目需要决定。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>装修施工图——先出图纸确认每步做什么、改哪里，再按图施工；不能没图纸就让工人直接开砸。
+          <span class="pill-label">💡 具象类比与反例：</span>装修施工记录：记录改了什么、差异在哪里和当前版本，不等于业主验收盖章。
         </div>
         <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3 你会激活 Skill，它会自动出计划，你核对后才授权执行。
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 将业务验收关联到具体版本，说明版本证据如何支持复核和定位恢复。
         </div>
       </div>
     </details>
@@ -428,25 +429,25 @@
           <span class="pill-label">💡 具象类比与反例：</span>新车风洞测试——在不点火上路前，静态测试车门、灯光在暴风雪中的容错表现（技术状态）；车门能不能开和这辆车有没有上牌（业务状态）是两件事。
         </div>
         <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会在试衣镜中切换技术状态，同时指明业务状态标签。
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会在本地预览中切换技术状态，同时指明业务状态标签。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. 两阶段版本记录</summary>
+      <summary class="concept-head">4. 可追溯验收</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
           <span class="pill-label">📌 是什么 / 不是什么：</span>分别记录 Agent 完成的候选变化和主管的验收/处置；Git 本身不理解业务确权，它只是记录工具。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>Commit A 记录源码变动（Agent 完成的候选），Commit B 记录计划状态更新和主管处置（验收通过或打回）；两次提交物理隔离，互不污染。
+          <span class="pill-label">⚙️ 怎样运作：</span>用 Working Tree、Diff 或 Commit 记录实际变更，把主管处置关联到版本；提交数量由项目需要决定。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>买房交房 vs 房管局过户——拿到钥匙入住新房（Commit A 源码交房）和去房管局做过户登记（Commit B 状态确权）是两步；只有验房无误后才去盖章落盘。
+          <span class="pill-label">💡 具象类比与反例：</span>施工记录与交房验收：版本记录呈现实际变化，业务验收由主管作出，不由 Git 自动完成。
         </div>
         <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会在验收通过后执行双 Commit，确认 Working Tree 恢复 Clean。
+          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会在验收通过后执行版本记录，确认 Working Tree 恢复 Clean。
         </div>
       </div>
     </details>
@@ -545,14 +546,12 @@
       <span class="prompt-copy-text" id="p5">请按以下步骤完成验收与归档：
 
 1. 逐项对照第三课验收场景，报告每条验收的通过或失败。
-2. 如果全部通过，执行双 Commit 归档：
-   - Commit A：git add src/ 后提交 feat(code): implement thin slice step 1
-   - Commit B：git add docs/LESSON_04_IMPLEMENTATION_PLAN.md 后提交 docs(plan): mark step 1 completed
+2. 如果通过，按项目约定保存实际版本证据，并记录主管处置；不固定提交数量。
 3. 运行 git status 确认 working tree clean。
 4. 如实报告实际运行过的工程检查和结果。未运行的不要声称通过。</span>
       <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：验收追溯到契约；候选实现与主管处置分别留痕（双 Commit）；Working Tree 恢复 Clean；没有自动宣称通过。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：验收追溯到契约；候选实现与主管处置分别留痕（版本记录）；Working Tree 恢复 Clean；没有自动宣称通过。</div>
   </div>
 
 </section>
@@ -571,7 +570,7 @@
       <option value="dirty">Dirty 状态 (如同砧板有脏菜)</option>
       <option value="clean">Clean 干净状态</option>
     </select>
-    ；执行 `git commit` 或 `git restore` 后恢复
+    ；按项目约定保存版本证据；必要时由有权限人员按确认范围恢复
     <select class="blank-select" id="blank2">
       <option value="">-- 请选择 --</option>
       <option value="clean">Clean 干净状态 (如同清洗好砧板)</option>
@@ -581,13 +580,13 @@
   </div>
 
   <div class="blank-card" id="bCard2">
-    2. <b>房产过户双节点比喻</b>：在双 Commit 归档中，Commit A 仅提交源码变动，相当于
+    2. <b>版本证据与业务验收</b>：版本记录呈现实际变化，业务验收由主管基于证据作出。
     <select class="blank-select" id="blank3">
       <option value="">-- 请选择 --</option>
       <option value="handover">拿到钥匙入住新房 (交房验房)</option>
       <option value="deed">去房管局做过户登记 (落盘确权)</option>
     </select>
-    ；而 Commit B 仅提交实施计划状态修改，相当于
+    ；候选实现与主管处置分别留痕，但提交数量不固定。
     <select class="blank-select" id="blank4">
       <option value="">-- 请选择 --</option>
       <option value="deed">去房管局做过户登记 (落盘确权)</option>
@@ -635,8 +634,8 @@
           <td>树立正确工程意识，严格遵循护栏规范。</td>
         </tr>
         <tr>
-          <td><span class="badge-misc red">误区 4</span><br><b>"一次 Commit 可以同时包办源码与状态"</b></td>
-          <td>源码修改和管理进度是两个维度的资产。用双 Commit 隔离提交，先验房交房再过户确权。</td>
+          <td><span class="badge-misc red">误区 4</span><br><b>"Git 版本记录自动等于业务审批"</b></td>
+          <td>源码修改和管理进度是两个维度的资产。用版本记录 隔离提交，先验房交房再过户确权。</td>
           <td>树立正确工程意识，严格遵循护栏规范。</td>
         </tr>
         <tr>
@@ -656,10 +655,10 @@
   <!-- 5 Scenario Quiz -->
   <h3>1. 5 道概念选择测验</h3>
           <div class="quiz-q" data-q="1">
-    <div class="q">Q1 · 在双 Commit 物理归档机制中，Commit A 与 Commit B 分别代表什么？</div>
-    <label><input type="radio" name="q1" value="a"> Commit A 是临时缓存，Commit B 是正式代码</label>
-    <label><input type="radio" name="q1" value="b"> 没有任何区别，只是随便分两次提交</label>
-    <label><input type="radio" name="q1" value="c"> Commit A 代表买房交房入住 (源码落盘)；Commit B 代表去房管局过户登记 (状态落盘确权)</label>
+    <div class="q">Q1 · 版本控制能提供什么证据？为什么版本记录不等于业务审批？</div>
+    <label><input type="radio" name="q1" value="a"> 版本控制记录变更、差异和版本证据；业务审批仍由主管依据验收证据作出</label>
+    <label><input type="radio" name="q1" value="b"> 只要有 Commit 就自动代表业务通过</label>
+    <label><input type="radio" name="q1" value="c"> 版本控制只记录文件数量，不能定位实际变化</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="c">提交答案</button>
   </div>
@@ -734,11 +733,11 @@
   </div>
 
   <div class="exit-q-card">
-    <div class="exit-q-title">❓ 退出门禁题 4：两阶段版本记录中，Commit A 和 Commit B 分别记录什么？为什么不能合并成一次提交？</div>
+    <div class="exit-q-title">❓ 退出门禁题 4：如何把验收场景、观察、证据、结论、责任和版本关联起来？</div>
     <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans4')">💡 点击展开 / 折叠 参考答案</button>
     <div class="ans-box" id="ans4">
       <b>参考答案解析：</b><br>
-      Commit A 记录源码变动（Agent 完成的候选），Commit B 记录计划状态更新和主管处置。Git 不理解业务确权，合并提交会让源码和管理进度互相污染。
+      从验收场景链接操作、观察、原始证据、结论、责任和具体版本；候选实现与主管处置分别留痕，但提交数量不固定，Git 不等于业务审批。
     </div>
   </div>
 
@@ -755,7 +754,7 @@
     <b>三句话带走 (Key Takeaways)：</b>
     <ol style="margin-top: .5rem;">
       <li><b>不要巨石盲开，用 `IMPLEMENTATION_PLAN.md` 把大需求切成连续薄切片。</b></li>
-      <li><b>记住房产过户双节点比喻：先验房交房 (Commit A) 再过户确权 (Commit B)。</b></li>
+      <li><b>记住版本控制与业务验收分工：版本记录事实，主管依据证据作业务处置。</b></li>
       <li><b>代码改坏不慌张，下发救援口令备份 `.patch` 快照，秒级还原干净砧板 Clean。</b></li>
     </ol>
   </div>
@@ -770,11 +769,11 @@
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c2" onchange="chkUpdate()">
-        <span>2. 已成功在试衣镜中体验 `prototypeState` 4 种技术呈现形态按钮？</span>
+        <span>2. 已成功在本地预览中体验 `prototypeState` 4 种技术呈现形态按钮？</span>
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c3" onchange="chkUpdate()">
-        <span>3. 已理解买房交房 Commit A 与房管局过户 Commit B，并完成干净归档 (Working Tree Clean)？</span>
+        <span>3. 已能把验收证据关联到具体版本，并记录主管处置（提交数量不固定）？</span>
       </label>
     </div>
     <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--teal);">
@@ -805,7 +804,7 @@
   <!-- Interactive Ask AI Box -->
   <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--teal); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--teal-soft); text-align: center;">
     <b style="font-size: 1.05rem; color: var(--teal);">💡 有疑问？直接问你的 AI 老师。</b><br>
-    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用买房交房和去房管局过户的比喻，再帮我复习一遍双 Commit 的原理”——它会为您详细拆解。</span>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用买房交房和去房管局过户的比喻，再帮我复习一遍版本记录 的原理”——它会为您详细拆解。</span>
   </div>
 </section>
 
@@ -835,14 +834,14 @@ const scenarios = {
     steps: [
       { title: 'Step 1 · Pre-Plan 校验 & 落盘实施计划', desc: '校验数据契约 ➔ 唤醒 /incremental-implementation ➔ 下发口令 `同意保存实施计划`。', cls: '' },
       { title: 'Step 2 · 授权执行 Step 1 薄切片编码', desc: '下发口令 `授权执行 Step 1` ➔ 引入 prototypeState 调试器 (Loading/Empty/Error/Success)。', cls: 'working' },
-      { title: 'Step 3 · 🏠 双 Commit 归档 (买房交房 + 房管局过户)', desc: '人工页面观察与主管验收 PASS ➔ 提交 Commit A (源码交房) ➔ 提交 Commit B (状态确权) ➔ 恢复 Clean 干净砧板。', cls: 'success' },
+      { title: 'Step 3 · 版本证据与可追溯验收', desc: '人工页面观察与主管验收后，保存实际版本证据，关联验收场景、观察、结论与处置；提交数量不固定。', cls: 'success' },
       { title: 'Step 4 · 🎉 小步快跑，全流程受控无损推进', desc: '每一个 Step 独立验证落盘，随时可以无损撤销与切片升级！', cls: 'success' }
     ],
     logs: [
       '> [User Command]: 同意保存实施计划 -> Created LESSON_04_IMPLEMENTATION_PLAN.md',
       '> [User Command]: 授权执行 Step 1 -> Created prototypeState Debugger Component',
       '✅ [Typecheck]: npm run typecheck PASS',
-      '🏠 [Dual Commit]: Commit A (code: feat(board)...) PASS + Commit B (plan: step 1 completed) PASS',
+      '[Version Evidence]: candidate change linked to acceptance evidence and supervisor decision',
       '🎉 [Result]: Working Tree 恢复 100% Clean 干净状态，切片推进圆满成功！'
     ]
   }
@@ -981,7 +980,7 @@ function checkAllBlanks() {
 
   bf2.className = 'blank-feedback show';
   bf2.style.color = (ok3 && ok4) ? 'var(--green)' : 'var(--red)';
-  bf2.innerHTML = (ok3 && ok4) ? '✅ 填空 2 全对！Commit A 为买房交房入住，Commit B 为去房管局过户登记。' : '❌ 填空 2 存在错误：Commit A 为买房交房，Commit B 为房管局过户登记。';
+  bf2.innerHTML = (ok3 && ok4) ? '✅ 填空 2 全对！版本证据应关联验收场景与主管处置，提交数量不固定。' : '❌ 请回到版本控制、验收证据和主管业务判断的关系。';
 
   bf3.className = 'blank-feedback show';
   bf3.style.color = ok5 ? 'var(--green)' : 'var(--red)';
@@ -1002,7 +1001,7 @@ function toggleAns(id) {
 
 // ---------- Quiz Logic ----------
 const explain = {
-  q1: '正确答案：C。Commit A 代表买房验房拿到钥匙入住 (源码落盘)；Commit B 代表去房管局做过户登记 (状态落盘确权)。',
+  q1: '正确答案：A。版本控制提供变更、差异和版本证据；业务审批仍由主管根据验收证据作出。',
   q2: '正确答案：A。有脏菜代表修改未提交的 Dirty 状态；装盘提交 (Commit) 或冲洗砧板 (Restore) 恢复 100% Clean 干净状态。',
   q3: '正确答案：A。prototypeState 在真实 API 未连接前实现界面技术呈现容错 (Loading/Empty/Error) 与业务状态物理解耦。',
   q4: '正确答案：B。下发救援口令后，AI 会导出 .patch 快照存入 local-backups/，清扫 Working Tree 恢复干净 Clean。',
@@ -1057,7 +1056,7 @@ function chkUpdate() {
   const res = document.getElementById('chkResult');
   if(count === 3) {
     res.style.color = 'var(--teal)';
-    res.innerHTML = '🎉 恭喜完成第四课全量退场自查！你已熟练掌握受控薄切片与双 Commit 物理归档！';
+    res.innerHTML = '🎉 恭喜完成第四课全量退场自查！你已熟练掌握受控薄切片与版本记录 物理归档！';
   } else {
     res.style.color = 'var(--teal)';
     res.innerHTML = '已自查：' + count + ' / 3';

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -359,62 +359,18 @@
 <section>
   <section>
   <section>
-  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
-  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <h2><span class="num">03</span> 核心概念卡：本课必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">本课必须掌握的核心概念 (点击展开详情)：</p>
+  <p class="note">操作方法：AI 机会地图、介入层级迁移、Agent 范式选型；核心概念是机会、介入层级、范式、三链和 Fallback 责任。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. AI 机会地图</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>以真实业务流程节点为单位判断 AI 机会，不以"部门想用 AI"为单位；不是从"AI 能做什么"出发，而是从"这个环节需要什么"出发。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>画出部门一条真实业务流程，拆成具体动作，逐个判断任务性质、可验证性、错误代价和数据风险；只有满足条件的动作才进入 AI 候选，不满足的明确拒绝。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>城市交通规划——不是先买公交车再找路线，而是先看每条路的客流需求，再决定哪条线适合公交、哪条适合地铁、哪条走路就行；不能每条路都配公交。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—2 你会画出部门业务流程并逐环节评估，这就是 AI 机会地图的基础。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">1. AI 机会</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>业务流程中值得评估是否引入 AI 的具体环节，不是机会地图这张方法图。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>同时看任务性质、价值、证据、风险和责任，决定验证或拒绝 AI。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>先找真正的业务瓶颈，再考虑工具。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>指出一个环节及其价值、风险和不使用 AI 的理由。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. AI 介入层级迁移</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>不用 AI、辅助、建议、单步执行、受控 Agent 和受控闭环必须按风险与价值选择；不是从 L5 的单点初筛直接跳到部门全面 AI 化，而是把 L5 的方法迁移到每个环节。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>对每个环节判断——能用规则的不用 AI，需要建议但不自动执行用辅助，需要生成但不直接修改用建议，需要单步执行用单步，需要多步调查用受控 Agent，需要闭环但低风险用受控闭环。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>工厂自动化程度迁移——L5 是在一个工序上试自动化，L9 是把所有工序排开逐个判断自动化程度；不是所有工序都配最高自动化，有些工序人工更好。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3 你会对每个环节选择 AI 介入层级，明确拒绝 AI/Agent 的环节及理由。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">2. AI 介入层级</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>从不使用 AI、辅助生成、受控 Workflow 到受控 Agent 的自治度梯度，不是成熟度排行榜。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>选择最低足够自治度，并保留人工接管、降级和停止路径。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像驾驶辅助等级，按道路和风险选择而非越高越好。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>为候选环节选择层级并说明边界。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. Agent 范式选型</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>在 Prompt、Skill、Workflow、ReAct、增量实施范式（Plan & Execute）、Routing、Evaluator-Optimizer、多 Agent 等方式中选择最简单足够者；不是越多范式越好，也不是多 Agent 就是高级。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>判断路径是否预先确定（是则用 Workflow），是否需要动态调查（是则用 ReAct），是否需要先规划再执行（是则用 增量实施范式（Plan & Execute）），是否需要评估优化（是则用 Evaluator-Optimizer）；单 Agent 足够时不拆多 Agent。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>工具箱选工具——锤子适合钉钉子，螺丝刀适合拧螺丝，不是每件工具都要用上，也不是越复杂的工具越好；选最简单足够的。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会对保留候选选择范式，补数据、工具、HITL 和停止条件。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">3. Agent 范式</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>围绕任务选择 Workflow、受控 Agent 或人工处理方式及责任边界，不是范式选型方法本身。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>根据变化性、错误代价、可验证性和责任匹配自治度。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>重复工序用流水线，变化多且可控才考虑灵活班组。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明范式、失败责任和降级条件。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">4. 三链区分</summary>

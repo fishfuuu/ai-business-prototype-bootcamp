@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -383,8 +383,9 @@
 
 <!-- SECTION 02 -->
 <section>
-  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
-  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <h2><span class="num">03</span> 核心概念卡：四个必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">四个必须掌握的核心概念 (点击展开详情)：</p>
+  <p class="note">操作方法：结构化追问（Grill-Me），用于把业务问题、契约和验收条件追问清楚，不占核心概念卡。</p>
   <div class="concept-list">
     <details class="concept-card">
       <summary class="concept-head">1. 业务问题边界</summary>
@@ -405,25 +406,7 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 追问范式（Grill-Me）</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>沿未决分支逐题澄清并得到主管确认的追问方法；不是让 Agent 无限提问，也不是一次性抛出所有问题。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>每次只问一个最关键的问题，主管确认后再进入下一题；追问覆盖使用者与问题、目标、边界、风险、验收和停止/升级。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>装修开工前的主材确认清单——工长拿着清单逐项确认瓷砖品牌、开关插座数量，每项签字后才敲墙；不是一次把所有问题倒给业主。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会激活 grill-me，体验一次只问一个问题的追问流程。
-        </div>
-      </div>
-    </details>
-
-    <details class="concept-card">
-      <summary class="concept-head">3. 业务契约</summary>
+      <summary class="concept-head">2. 业务契约</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
           <span class="pill-label">📌 是什么 / 不是什么：</span>把 User & Problem、Goal、Boundary、Risk、Acceptance、Stop/Escalation 固定为可执行约定；不是口头共识，也不是大而全 PRD。
@@ -441,7 +424,7 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. 数据契约</summary>
+      <summary class="concept-head">3. 数据契约</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
           <span class="pill-label">📌 是什么 / 不是什么：</span>固定字段、含义、类型、枚举、来源状态和 Mock 规则，避免前后口径漂移；不是 TypeScript 工程任务，主管只需核对业务含义。
@@ -459,7 +442,7 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 验收场景</summary>
+      <summary class="concept-head">4. 验收场景</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
           <span class="pill-label">📌 是什么 / 不是什么：</span>用给定条件、动作和可观察结果说明怎样算通过；不只列功能名称，也不依赖主观判断。
@@ -915,14 +898,14 @@ const tierScenarios = {
     steps: [
       { title: 'Step 1 · 读取第 3 课冻结的契约基线', desc: '读取 BUSINESS_FEATURE_CARD.md，锁死 In-Scope 与类型草稿，绝不超出范围推演。', cls: '' },
       { title: 'Step 2 · Plan 规划与增量写代码', desc: '按照实施计划，基于 src/types/prototype-contract.d.ts 的接口契约，增量编写 Vue/Vite 视图组件。', cls: '' },
-      { title: 'Step 3 · 🧪 运行 verify 命令行断言与 127.0.0.1 试衣镜', desc: '执行 npm run typecheck & build，如果失败则在 Stop 条件保护下熔断呈报主管，成功则打上 [PASS] 标签。', cls: 'success' }
+      { title: 'Step 3 · 🧪 运行 verify 命令行断言与 127.0.0.1 本地预览', desc: '执行 npm run typecheck & build，如果失败则在 Stop 条件保护下熔断呈报主管，成功则打上 [PASS] 标签。', cls: 'success' }
     ],
     logs: [
       '> [Input Goal]: 基于 docs/BUSINESS_FEATURE_CARD.md 增量开发看板前端',
       '> [Agent Loop Step 1]: Plan 制定增量步骤...',
       '> [Agent Loop Step 2]: Code Edition with Contract Assertion...',
       '> [Agent Loop Step 3]: verify-student-project.ps1 -> PASS',
-      '🎉 [Result]: 契约受控自主循环完成！127.0.0.1 试衣镜高保真呈现，IT 可无损接入后端 API。'
+      '🎉 [Result]: 契约受控自主循环完成！127.0.0.1 本地预览高保真呈现，IT 可无损接入后端 API。'
     ]
   }
 };
