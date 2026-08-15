@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -361,8 +361,9 @@
 <section>
   <section>
   <section>
-  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
-  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <h2><span class="num">03</span> 核心概念卡：本课必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">本课必须掌握的核心概念 (点击展开详情)：</p>
+  <p class="note">操作方法：Agent 协作模式选型与 accept/fix/stop/defer；核心概念仍是隔离、Finding、职责分离、独立评审和主管裁决。</p>
   <div class="concept-list">
     <details class="concept-card">
       <summary class="concept-head">1. 上下文隔离</summary>
@@ -419,40 +420,10 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. Agent 协作模式选型</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>根据依赖、并行性、独立性和责任选择流水线、调度/执行、并行、对等、评审等模式，不追求 Agent 数量，也不是越多 Agent 越好。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>判断任务之间是否有依赖（有则用流水线）、是否可并行（可则用并行）、是否需要独立（需要则用评审模式）；选择最简单足够的协作方式。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>审计项目分工——小公司一个会计兼做账和自核，大公司必须分会计和独立审计；不是所有项目都需要独立审计，但涉及高风险和外部责任时必须有。审计比喻帮助理解为什么需要分离角色，具体六种模式见扩展认识。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—2 你汇总评审输入并建立隔离评审时，已经在实践"执行者和评审者分离"的协作模式。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">4. 独立评审</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>由未参与实现的评审者在隔离上下文中检查规格、证据和变更，不是协作模式选型。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>评审者只接收必要输入，独立记录 Finding，主管再作处置。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像独立审计，审计员检查账目但不替会计改账。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>展示评审输入范围、证据和一条可定位 Finding。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 主管处置框架（accept/fix/stop/defer）</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>主管对 finding 作接受、修复、停止或延期决定，并记录承担理由；不是全部默认 accept，也不是让 AI 自动决定处置方式。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>主管逐项读取 finding，根据业务影响、风险和成本决定：accept（接受现状）、fix（修复问题）、stop（停止该功能）、defer（延期处理）；每个决定都要写理由。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>审计结论处置——审计师出具 findings 后，公司管理层决定接受、整改、搁置或拒绝；不能因为审计师说"问题不大"就忽略，也不能让审计师替管理层做决定。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4—5 你逐项决定处置方式，需要修复的由 Claude 执行，处置结果进入项目状态。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">5. 主管裁决</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>主管基于 Finding、证据和业务影响作最终处置判断，不是 accept/fix/stop/defer 方法本身。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>逐项读取证据和影响，作出接受、修复、停止或延期并记录理由。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>报告提供事实，项目负责人承担取舍。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>给出一条处置结论及业务理由。</div></div></details>
 
   </div>
 </section></section></section>

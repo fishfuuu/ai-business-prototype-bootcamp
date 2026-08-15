@@ -372,62 +372,33 @@
 
 <!-- SECTION 02: 3 CORE CONCEPTS -->
 <section>
-  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
-  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <h2><span class="num">03</span> 核心概念卡：本课必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">本课必须掌握的核心概念 (点击展开详情)：</p>
+  <p class="note">操作方法：浏览器自动化验收、验收场景迁移、Subagent 课程安全规程；Playwright/DOM/Console/Network 仅为背景词。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. MCP 最小模型</summary>
+      <summary class="concept-head">1. MCP 最小模型</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>Host 通过 Client 连接 MCP Server，Server 暴露 Tool；Tool 是 Server 能力，不是第四同级组件。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Host 发起请求，Client 传递调用，Server 执行并返回 Tool 结果；MCP 不是业务 API。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像遥控器、信号线和电器，工具是电器提供的功能。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明浏览器调用中 Host、Client、Server 和 Tool 各自承担什么。</div></div></details>
+
+    <details class="concept-card">
+      <summary class="concept-head">2. Subagent</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>Host 代表用户发起能力调用，Client 连接 Server，Server 暴露 Tools；MCP 不是产品业务 API，也不是 Agent 本身。Host 是用户运行的主程序（如 Claude），Client 是连接层，Server 是工具提供方（如 Playwright）。
+          <span class="pill-label">📌 是什么 / 不是什么：</span>Subagent 是由主 Agent 调度、在限定任务和上下文中执行子任务的 Agent；不天然只读、隔离或安全。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>主管在 Host 中发起请求，Client 把请求传给 Server，Server 执行工具（如打开浏览器、点击按钮、截图）并返回结果；MCP 只是把"工具调用"标准化，不改变谁来负责。
+          <span class="pill-label">⚙️ 怎样运作：</span>主 Agent 定义任务、输入、权限、停止条件和产物；只读、隔离、超时和落盘属于本课程安全规程，不是 Subagent 本体特征。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>遥控器、信号线和电器的最小关系——主管按遥控器（Host），信号线（Client）把指令传给电器（Server），电器执行并返回结果；遥控器不是电器本身，信号线也不是业务审批。
+          <span class="pill-label">💡 具象类比与反例：</span>主管派出的专项小组：任务边界由主管定义，安全规程另行配置；不能因为叫 Subagent 就默认可信。
         </div>
         <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会在预配置入口发起 Agent 浏览器验收，知道 Host/Client/Server 的最小关系，并知道 MCP 不是业务 API。
+          <span class="pill-label">👁️ 今天怎样看见：</span>课堂调度浏览器验收子任务，检查它按限定输入执行并回传截图、日志和报告。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. Subagent 与浏览器自动化验收</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>Agent 按场景操作真实预览页面并观察结果，不是只读代码后自行宣布通过，也不是人工手动点一遍截图交差。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>Agent 接收验收场景（给定条件、动作、可见结果），用浏览器工具按步骤操作页面，每一步保存截图和日志，最终形成可追溯的证据链。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>验房师带仪器实地检测——不是看图纸明"应该没问题"，而是用仪器逐项检测、拍照留证、出具报告；也不是业主自己随便看一眼就签字。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2—3 你会让 Agent 用浏览器操作页面并保存证据，然后把观察与验收标准逐项对照。
-        </div>
-      </div>
-    </details>
-
-    <details class="concept-card">
-      <summary class="concept-head">3. 验收场景迁移</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>把 L3 的给定条件、动作和可见结果转成浏览器可执行步骤，不是重新发明验收标准，也不是把业务场景变成技术测试脚本。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>取 L3/L4 的验收场景，保持业务含义不变，把"给定条件"翻译为页面初始状态，把"动作"翻译为浏览器操作步骤，把"可见结果"翻译为可观察的页面表现。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>菜谱翻译——中文菜谱翻译成英文菜谱，菜还是那道菜，只是换了操作语言；不是重新设计菜单，也不是把菜谱变成化学实验。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会从 L3/L4 选一个验收场景，明确正常与失败/降级预期，再翻译成浏览器步骤。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">3. 自动化验证与业务验收</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>自动化验证检查技术事实，业务验收由主管判断场景和结果是否满足要求。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Agent 采集证据，主管对照契约批准、打回或标记未证明。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像检验科报告与医生诊断，报告支持判断但不能替医生签字。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>分别说出工具证明了什么、主管验收了什么。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">4. 证据链</summary>
@@ -448,22 +419,7 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 验证、验收与责任</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>工具验证行为（页面能打开、按钮能点、控制台无报错），主管验收业务（场景是否正确、结果是否符合业务要求）；测试通过不等于业务正确或可以上线。验证是技术层面，验收是业务层面，批准是主管层面。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>Agent 用浏览器验证页面行为是否正常，主管对照业务验收标准判断是否通过；Agent 可以收集证据但不能批准，主管基于证据批准或打回。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>医院检验科与主治医生——检验科出报告（验证），主治医生结合报告和病历做诊断判断（验收），最终治疗方案由主治医生签字（批准）；检验科不能替主治医生下诊断。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会明明工具验证了什么、主管验收了什么、为什么测试通过不等于可以上线。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">5. 不可信输入与提示注入</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>外部页面、消息或工具返回可能夹带误导指令，不能自动当作主管授权。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>把外部文本当作待验证数据，回到约束和授权核对，拒绝越权动作。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>公告栏上的删除指令文字本身不构成授权。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>识别提示注入并说明隔离、上报和停止方式。</div></div></details>
 
   </div>
 </section>
@@ -541,7 +497,7 @@
 验收场景：【粘贴 Task 1 的场景】
 
 执行要求：
-1. 打开试衣镜预览页面
+1. 打开本地预览预览页面
 2. 按场景步骤操作页面（如：打开工单详情、点击处理按钮）
 3. 每步保存截图和日志
 4. 记录实际观察结果（不是推测，是看到什么）

@@ -372,8 +372,9 @@
 
 <!-- SECTION 02: 3 CORE CONCEPTS -->
 <section>
-  <h2><span class="num">03</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
-  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <h2><span class="num">03</span> 核心概念卡：本课必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">本课必须掌握的核心概念 (点击展开详情)：</p>
+  <p class="note">操作方法：事实锚定排错与五层诊断；它们支持核心概念落地，不替代事实、根因、边界、预算和处置概念。</p>
   <div class="concept-list">
     <details class="concept-card">
       <summary class="concept-head">1. 事实、假设与生成错误</summary>
@@ -394,40 +395,10 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 事实锚定排错</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>从复现、输入、契约、日志和实际状态缩小原因，不先猜修复方案；不是看到报错就改代码，也不是让 Agent 天马行空地试。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>先复现故障并记录可观察事实，再用五层诊断卡逐层排查缩小范围，最后提出一个可证伪的主假设——如果能推翻就换，不能推翻就按假设修复。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>医生开处方前的验血报告与病历归档——没拿到验血和 CT 证据并填写病历前，绝不盲目开药开刀；不能看一眼病人就说"先吃点抗生素试试"。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—3 你会先审查 Agent 的事实卡，再审查五层定位报告，再审查 Agent 的修复方案后才授权；诊断结论落盘到 <code>LESSON_06_DEBUG_REPORT.md</code>。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">2. 根因与表象</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>表象是可见症状，根因是造成症状的更深层原因；修掉错误文字不代表问题解决。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>对照业务规则、数据来源和组件行为验证根因。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>擦干漏水地面是表象，修复破裂接头才是根因。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明一个报错的表象、候选根因及验证证据。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 五层诊断</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>按环境/入口、数据、业务逻辑、界面交互、智能/外部依赖等层次定位问题，而不是到处乱改；不是从底层框架开始猜，也不是一次看所有层。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>口语化五层标签——Layer 1 环境"网页跑不起来"、Layer 2 数据"没数据或拿到 null"、Layer 3 状态"数据变了界面没动"、Layer 4 日志"控制台第一行红字"、Layer 5 契约"名字写错了配不上契约"。从上到下逐层排除，定位到最可能的一层。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>汽车故障五级诊断仪——从轮胎电压（环境）、汽油品质（数据）、仪表盘显示（状态）、故障码（日志）到行驶安全标准（契约）逐级检查；不能一上来就拆发动机。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会审查 Agent 的五层标签定位报告，选定一个可证伪主假设，而不是自己逐层排查或同时排查多层。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">3. 重试预算 / 熔断</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>为自动重试设定次数、时间和风险上限，达到阈值就停止，不是固定两轮。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>每轮记录动作、观察和成本，达到预算后停止、升级或恢复。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像客服升级时限，超过约定次数就交给人工。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>指出当前故障的预算、熔断条件和责任人。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">4. 有界排错</summary>
@@ -582,7 +553,7 @@
     <div class="prompt-copy-box">
       <span class="prompt-copy-text" id="p4">请验证修复结果。
 
-1. 刷新试衣镜，观察故障是否消失
+1. 刷新本地预览，观察故障是否消失
 2. 基于实际观察（不是 AI 自称"已修复"）判断：
    - 通过：故障现象消失，进入 Task 5 记录
    - 不通过：调整假设，进行第二轮修复（仍限定范围）
@@ -683,7 +654,7 @@
         </tr>
         <tr>
           <td><span class="badge-misc red">误区 4</span><br><b>"AI 说已修复就是修好了"</b></td>
-          <td>必须实际刷新试衣镜看效果，不看 AI 自称结果</td>
+          <td>必须实际刷新本地预览看效果，不看 AI 自称结果</td>
           <td>树立正确工程意识，严格遵循护栏规范。</td>
         </tr>
         <tr>

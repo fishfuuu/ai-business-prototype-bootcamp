@@ -283,98 +283,24 @@
 
 <!-- SECTION 02 -->
 <section>
-  <h2><span class="num">02</span> 核心概念卡：四步公式拆解必须掌握的概念</h2>
-  <p style="margin: 0.8rem 0 1.2rem;">四步公式拆解必须掌握的核心概念 (点击展开详情)：</p>
+  <h2><span class="num">02</span> 核心概念卡：本课必须掌握的概念</h2>
+  <p style="margin: 0.8rem 0 1.2rem;">本课必须掌握的核心概念 (点击展开详情)：</p>
+  <p class="note">操作方法：多模态参考提取、设计约束映射、Keep / Omit / Modify、视觉证据对比；AGENTS.md、CLAUDE.md、DESIGN.md 和视觉证据是产物。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. 信息优先级与视觉层级</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>重要信息应先被看到，层级服务业务判断；不是装饰美化，也不是把所有信息一样大。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>通过位置、大小、对比度和间距控制信息被看到的顺序；用户第一眼看到的内容决定他能否快速做判断。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>超市货架的视线层——最需要顾客看到的商品放在与眼睛平齐的高度；如果把所有商品都放同一层，顾客反而找不到重点。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 从参考图提取结构时，第一个要问的是"这张图里什么最先被看到"。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">1. 信息优先级与视觉层级</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>按业务重要性安排内容、状态、操作和视觉强调，不是单纯配色偏好。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>先确认用户判断顺序，再用位置、大小、对比度和间距表达主次。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像机场指引，先看出目的地和下一步，而不是所有标牌同样醒目。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>在本地预览指出首屏第一视觉焦点及业务理由。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 多模态参考提取</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>从参考图提取结构、密度、颜色和交互意图；不是像素级照抄，也不是直接复制参考图的业务字段和数据。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>AI 联合分析文本与图像，将视觉布局转化为结构化描述；提取的是"为什么这样排"的意图，而非"长什么样"的表象。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>建筑设计师的现场测绘拍照——看到一套优质精装房，拍照后在图纸上按比例复刻其硬装结构，但不会搬走房主家的家具。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会看到 AI 如何从参考图提取布局结构，而不是照搬颜色和字体。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">2. 项目级 Agent 约束 / Agent Harness</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>项目为 AI Agent 规定目标、范围、行为和设计规则的约束机制，不是单次提示词或运行时硬控制。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Agent 读取项目约束后在授权范围内行动，主管核对作用域、优先级和红线。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像施工现场总规程，规定能做什么和成品要达到什么。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>检查 AGENTS.md、CLAUDE.md、DESIGN.md 是否分别承载行为与设计约束。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 设计约束映射</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>把参考意图写成可核对规则，并指出规则落在哪个页面元素；同时确认 Agent 在改代码前读取行为约束文件。不是写 CSS 代码，也不是直接改页面；也不是手写 CLAUDE.md 全文。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>有两类约束文件 Agent 在生成前必须读取——视觉约束（<code>DESIGN.md</code>：间距、圆角、颜色层级）和行为约束（<code>CLAUDE.md</code> 或 <code>AGENTS.md</code>：包管理器、文件边界、错误处理）。视觉约束用参考图映射后由主管核对；行为约束用 <code>start-project.bat</code> 生成基础版后由主管核对。规则必须指向具体页面元素或具体行为红线。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>乐高积木的标准规格颗粒与品牌字典——视觉约束像统一规格颗粒（改一处 Token 全站变色），行为约束像施工安全守则（不许动承重墙、只用指定工具）；两类规则都贴在工地入口，工人进场前必须看。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会把提取的结构映射到 <code>DESIGN.md</code> 的 <code>--art-*</code> 变量，并确认每条约束指向具体页面元素；同时核对 <code>CLAUDE.md</code>（或 <code>AGENTS.md</code>）的行为约束是否覆盖三条关键红线。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">3. 约束作用域与优先级</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>约束适用的项目、目录、文件或任务范围，以及冲突时采用的上级规则。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>先判断行动落在哪个作用域，再按优先级处理冲突。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像公司制度、部门规程和工位提示，适用范围不同且上级优先。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>给页面修改任务标出适用文件和优先级。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. Keep / Omit / Modify</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>主管对参考内容作保留、舍弃和改造裁决；不把决定交给 Agent 猜，也不是全部照搬或全部重做。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>逐项审视参考图中的每个元素，判断"保留并冻结现有业务内容""参考图忽略项""现有页面清理项"和"明确进行的视觉改进"。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>装修方案的取舍——保留承重墙（Keep）、去掉不适合自己家庭的装饰（Omit）、把书房改成儿童房（Modify）；不能把整套方案照搬回家。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3 你会逐项作 Keep/Omit/Modify 裁决，并说明每项的业务理由。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">4. 行为约束与设计约束</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>行为约束规定 AI Agent 如何工作，设计约束规定产物应满足的视觉、交互和信息层级。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>分别检查过程红线和结果质量，不能用设计好看证明行为合规。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像施工安全守则与验收图纸，一个管怎么施工，一个管建成什么样。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>分别从 CLAUDE.md 或 AGENTS.md 与 DESIGN.md 找出约束并核对落点。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 视觉证据基线</summary>
-      <div class="concept-body">
-        <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>用前后对照和理由证明改变；不只说"更好看了"，也不依赖主观感受。
-        </div>
-        <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>重构前截图作为基线，重构后截图作为对照，每处改变附理由；业务路径在视觉修改后仍可操作。
-        </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>装修前后的对比照片——每面墙的变化都有原因，不是为了变而变；如果装修后水管不通了，再好看也失败。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4—5 你会在试衣镜中做前后对比，确认业务路径仍可操作，并保存视觉证据。
-        </div>
-      </div>
-    </details>
+      <summary class="concept-head">5. 约束一致性验证</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>检查实现是否满足项目约束、设计约束和验收场景，并留下可复核对比证据。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>逐条记录通过、未证明和偏差，再由主管裁决。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像交房验收清单，逐项核对而不是凭感觉说像。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>用前后对比、约束清单和业务路径证据说明一致性。</div></div></details>
 
   </div>
 </section>
@@ -387,7 +313,7 @@
   <div class="comp-box">
     <div class="comp-bar">
       <span>🖥️ A. 监控与决策型原型（商品履约预警看板）视觉渲染对比</span>
-      <span style="font-size: .8rem; opacity: .8;">127.0.0.1:8888 试衣镜</span>
+      <span style="font-size: .8rem; opacity: .8;">127.0.0.1:8888 本地预览</span>
     </div>
     <div class="comp-body">
       <div class="toggle-btn-group">
@@ -478,7 +404,7 @@
   <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：Agent 受控视觉重构与前后对比</div>
     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0; font-size: .92rem; line-height: 1.7; color: #1e293b;">
-<p style="margin:.4rem 0;"><b>本步目的</b>：Agent 在授权范围内执行一次受控视觉重构，你在试衣镜中做前后对比。</p>
+<p style="margin:.4rem 0;"><b>本步目的</b>：Agent 在授权范围内执行一次受控视觉重构，你在本地预览中做前后对比。</p>
 <p style="margin:.4rem 0;"><b>监视与一键读档救急 (Diff & Discard)</b></p>
 <ul style="padding-left:1.2rem; margin:.4rem 0;">
   <li style="margin:.3rem 0;">在 VS Code 左侧第 3 个 Git 分支视图中监视红绿修改，确保未误删代码。</li>
@@ -498,7 +424,7 @@
     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0; font-size: .92rem; line-height: 1.7; color: #1e293b;">
 <p style="margin:.4rem 0;"><b>本步目的</b>：只做必要微调，保存视觉证据与本次裁决记录，然后停止扩展。</p>
 <ol style="padding-left:1.2rem; margin:.4rem 0;">
-  <li style="margin:.3rem 0;">刷新 <code style="background:#f1f5f9; border:1px solid #cbd5e1; padding:2px 5px; border-radius:4px; font-size:.88em; color:#0f172a;">http://127.0.0.1:8888/</code> 试衣镜，对比重构前后效果。</li>
+  <li style="margin:.3rem 0;">刷新 <code style="background:#f1f5f9; border:1px solid #cbd5e1; padding:2px 5px; border-radius:4px; font-size:.88em; color:#0f172a;">http://127.0.0.1:8888/</code> 本地预览，对比重构前后效果。</li>
   <li style="margin:.3rem 0;">只修一个最影响理解或操作的问题，然后停止扩展。</li>
   <li style="margin:.3rem 0;"><b>节点 2 完结存档动作</b>：在终端运行完结存档与快照指令：</li>
 </ol>
@@ -538,7 +464,7 @@
   </div>
 
           <div class="quiz-q" data-q="3">
-    <div class="q">Q3 · 主管在审查 127.0.0.1 试衣镜时，下达的“4 种视觉裁决”指的是哪 4 个动作？</div>
+    <div class="q">Q3 · 主管在审查 127.0.0.1 本地预览时，下达的“4 种视觉裁决”指的是哪 4 个动作？</div>
     <label><input type="radio" name="q3" value="a"> 同意、拒绝、转发、暂存</label>
     <label><input type="radio" name="q3" value="b"> 复制、粘贴、剪切、删除</label>
     <label><input type="radio" name="q3" value="c"> Keep (保留) / Omit (省去) / Remove (移除) / Modify (修改)</label>
@@ -623,7 +549,7 @@
     <ol style="margin-top: .5rem;">
       <li><b>视觉 Harness (`DESIGN.md`) 是制衡 AI Token 随机性的物理铁轨。</b></li>
       <li><b>修改前存 Node 1 Git Baseline，修改后存 Node 2 视觉重构 Commitment。</b></li>
-      <li><b>主管行使 Keep / Omit / Remove / Modify 裁决权，操控视觉试衣镜。</b></li>
+      <li><b>主管行使 Keep / Omit / Remove / Modify 裁决权，操控视觉本地预览。</b></li>
     </ol>
   </div>
 
