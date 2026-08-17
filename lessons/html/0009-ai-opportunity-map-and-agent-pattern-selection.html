@@ -364,13 +364,13 @@
   <p class="note">操作方法：AI 机会地图、介入层级迁移、Agent 范式选型；核心概念是机会、介入层级、范式、三链和 Fallback 责任。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. AI 机会</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>业务流程中值得评估是否引入 AI 的具体环节，不是机会地图这张方法图。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>同时看任务性质、价值、证据、风险和责任，决定验证或拒绝 AI。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>先找真正的业务瓶颈，再考虑工具。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>指出一个环节及其价值、风险和不使用 AI 的理由。</div></div></details>
+      <summary class="concept-head">1. AI 机会</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>业务流程中值得评估是否引入 AI 的具体环节，不是机会地图这张方法图。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>同时看任务性质、价值、证据、风险和责任，决定验证或拒绝 AI。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—2 从真实流程节点出发，先写任务性质、价值、证据、风险和责任，再决定是否进入 AI 候选；不是先选工具再找场景。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>指出一个环节及其价值、风险和不使用 AI 的理由。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. AI 介入层级</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>从不使用 AI、辅助生成、受控 Workflow 到受控 Agent 的自治度梯度，不是成熟度排行榜。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>选择最低足够自治度，并保留人工接管、降级和停止路径。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像驾驶辅助等级，按道路和风险选择而非越高越好。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>为候选环节选择层级并说明边界。</div></div></details>
+      <summary class="concept-head">2. AI 介入层级</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>从不使用 AI、辅助生成、受控 Workflow 到受控 Agent 的自治度梯度，不是成熟度排行榜。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>选择最低足够自治度，并保留人工接管、降级和停止路径。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 3 把单点判断迁移到整条流程，逐环节选择最低足够层级；明确拒绝 AI 的环节也要写理由。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>为候选环节选择层级并说明边界。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. Agent 范式</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>围绕任务选择 Workflow、受控 Agent 或人工处理方式及责任边界，不是范式选型方法本身。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>根据变化性、错误代价、可验证性和责任匹配自治度。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>重复工序用流水线，变化多且可控才考虑灵活班组。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明范式、失败责任和降级条件。</div></div></details>
+      <summary class="concept-head">3. Agent 范式</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>围绕任务选择 Workflow、受控 Agent 或人工处理方式及责任边界，不是范式选型方法本身。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>根据变化性、错误代价、可验证性和责任匹配自治度。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 先判断路径是否固定、是否要动态调查或评估优化，再选择最简单足够的方式；不因名称多就拆多 Agent。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明范式、失败责任和降级条件。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">4. 三链区分</summary>
@@ -382,7 +382,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>开发工具链是 Claude/Codex/Playwright 等帮助开发的工具；产品业务 API 链是产品运行时调用的业务接口；模型 API 链是产品运行时调用的 AI 模型接口。三链中的对象、凭证、数据和责任分别归属不同 owner。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>建筑工地三条供应链——施工设备链（开发工具）、建材供应链（业务 API）、设计咨询链（模型 API）；三种链的供应商、合同和责任完全不同，不能混在一起管。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 分别列出开发工具、产品业务 API 和模型 API 的对象、凭证、数据与 owner；MCP 不等于业务 API，三链不能混管。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会画三链责任与 fallback，明确每条链的 owner。
@@ -400,7 +400,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>对每个 AI 候选环节写明降级方式（人工接管、规则降级、缓存回退）、降级来源标签（模拟/缓存/人工）、降级原因类型和失败责任人；降级结果不能冒充正常结果。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>航空公司备降——航班因天气备降其他机场时，必须告知旅客"备降原因、预计延误、替代方案"，不能假装"已到达目的地"；也不是"天气不好所以没人负责"。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 为每个候选写降级方式、来源标签、原因和失败责任人；Mock、缓存或人工结果不能伪装成正常成功。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会画三链责任与 fallback，选出一个优先候选和一个明确不做项。
@@ -786,7 +786,7 @@ AI 介入层级：
   <!-- Interactive Ask AI Box -->
   <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--teal); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--teal-soft); text-align: center;">
     <b style="font-size: 1.05rem; color: var(--teal);">💡 有疑问？直接问你的 AI 老师。</b><br>
-    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用城市交通规划的比喻，帮我复习 AI 机会地图和介入层级”——它会为您详细拆解。</span>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用 Task 1—5 的流程节点、责任和 fallback，帮我复习 AI 机会地图和介入层级”——它会按本课产物逐项拆解。</span>
   </div>
 </section>
 

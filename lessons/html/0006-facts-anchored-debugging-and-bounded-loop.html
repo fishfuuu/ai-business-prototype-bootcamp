@@ -318,9 +318,9 @@
   <div class="wrap">
     <div class="kicker">Lesson 06 · 用事实找 Bug，在边界内修复</div>
     <h1>学会定位和修复问题</h1>
-    <p class="sub"><b>排错前先存档，不盲猜、先断言；日志脱敏写报告，两轮不通安全熔断。</b><br>掌握 <b>五层诊断卡口语化拓扑 (汽车诊断仪 🚗)</b>、<b>日志脱敏与 DEBUG_REPORT 落盘 (病例归档 🩺)</b> 与 <b>【无痛存档 Checkpoint + 2 轮硬熔断 (游戏 Save Point & 保鲜开关 🎮⚡)】</b>！</p>
+    <p class="sub"><b>排错前先存档，不盲猜、先断言；日志脱敏写报告，两轮不通安全熔断。</b><br>掌握 <b>事实卡与五层诊断</b>、<b>日志脱敏与 DEBUG_REPORT 落盘</b> 与 <b>Checkpoint 和本课两轮上限</b>！</p>
     <div class="goal">
-      🎯 <b>本课目标</b>：① 掌握排错前下发 Checkpoint 无痛存档并唤醒 `$diagnose` 构建物理 PASS/FAIL 反馈闭环；② 掌握五层诊断卡口语化排查与落盘 `docs/LESSON_06_DEBUG_REPORT.md`；③ 掌握“2 轮硬熔断机制”，在自修 2 轮未 PASS 时一键执行 `git restore .` 无损恢复 Clean 状态。
+      🎯 <b>本课目标</b>：① 掌握排错前保存 Checkpoint 并唤醒 `$diagnose`，构建可核对的 PASS/FAIL 反馈闭环；② 掌握五层诊断卡口语化排查与落盘 `docs/LESSON_06_DEBUG_REPORT.md`；③ 掌握“2 轮硬熔断机制”，在自修 2 轮未 PASS 时停止自动修改，由指定人员按确认范围恢复 Checkpoint。
     </div>
   </div>
 </div>
@@ -366,7 +366,7 @@
   </div>
 
   <div class="quote">
-    💡 <b>一句话口诀</b>：“进战场前存 Save Point (Checkpoint Commit)，打不过时只清扫本场坏试错 (git restore)，历史装备毫发无损。”
+    💡 <b>一句话口诀</b>：“排错前保存 Checkpoint；未通过时只按确认范围恢复本轮改动，已确认基线不变。”
   </div>
 </section>
 
@@ -386,7 +386,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>遇到故障时先记录可观察事实（页面报什么、数据是什么），再提出待验证假设（可能是 X 层的问题），最后警惕生成错误（AI 声称"已修复"但实际没改或改错了）。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>医院急诊分诊——体温 38.5 度是事实，"可能是感冒"是假设，"我觉得是绝症"是编造；三种信息在病历上分开记录，不能混在一起。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—2 的事实卡只记录页面、数据和日志中实际看到的内容；诊断报告中的原因仍标为假设，Agent 自称“已修复”但没有证据时要当作生成错误。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—2 你会审查 Agent 生成的事实卡（只记现象）和五层诊断报告（标明假设），验收时核对 AI 没有编造结果。
@@ -395,10 +395,10 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 根因与表象</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>表象是可见症状，根因是造成症状的更深层原因；修掉错误文字不代表问题解决。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>对照业务规则、数据来源和组件行为验证根因。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>擦干漏水地面是表象，修复破裂接头才是根因。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明一个报错的表象、候选根因及验证证据。</div></div></details>
+      <summary class="concept-head">2. 根因与表象</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>表象是可见症状，根因是造成症状的更深层原因；修掉错误文字不代表问题解决。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>对照业务规则、数据来源和组件行为验证根因。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—3 先复现并记录事实，再用五层报告缩小范围；没有能证伪的主假设和证据，不授权修改。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明一个报错的表象、候选根因及验证证据。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 重试预算 / 熔断</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>为自动重试设定次数、时间和风险上限，达到阈值就停止，不是固定两轮。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>每轮记录动作、观察和成本，达到预算后停止、升级或恢复。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像客服升级时限，超过约定次数就交给人工。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>指出当前故障的预算、熔断条件和责任人。</div></div></details>
+      <summary class="concept-head">3. 重试预算 / 熔断</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>为自动重试设定次数、时间或风险上限，达到阈值就停止；不是固定数字，也不是定位问题的五层标签。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>每轮记录动作、观察和成本，达到预算后停止、升级或恢复。本课为保证证据和安全，Agent 诊断/修复最多进行两轮。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 先定位主假设，Task 3—4 记录每轮实际修改和验证结果；超过两轮或触发风险条件就进入 Task 5。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>指出当前故障的预算、熔断条件和责任人。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">4. 有界排错</summary>
@@ -410,7 +410,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>排错前先存 Checkpoint 存档，限定修改范围，设置最多两轮修复上限；第一轮按主假设修复，验证不通过则调整假设进行第二轮，仍未通过则停止。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>单机游戏 Boss 战前的 Save Point——进战场前先存个档，打不过时只清扫本场坏试错（git restore），历史装备毫发无损；不能无限复活硬打。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3—4 先保存 Checkpoint，再按主假设修改；第一轮验证不通过才调整假设做第二轮，仍不通过就停止，不继续扩大范围。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 3—4 你会先存档再修复，每轮修改在范围内，两轮不通就停止而非继续盲目试。
@@ -428,7 +428,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>停止时记录原因（证据不足/风险越界/两轮无进展）、新证据需求、恢复责任人；恢复时从 Checkpoint 存档回退，导出 .patch 快照备份，不无差别清空。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>工厂异常停机与交接班——发现设备异常时拉绳停机，记录异常现象和初步判断，交给下一班的技术人员处理；不是一直让机器跑着等它自己好。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 记录停止原因、新证据需求和恢复责任人；恢复只能按确认范围进行，不能用无差别清空代替交接。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会停止时记录停止原因、新证据需求和恢复责任人，不是只说"修不好"就结束。
@@ -482,7 +482,7 @@
 
 <!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
 <section>
-  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 3 自然授权口令卡</h2>
+  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然授权口令卡</h2>
 
 <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：激活 $diagnose，确认故障现象，审查 Agent 的事实报告</div>
@@ -595,10 +595,10 @@
   <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空，并点击“核对答案”：</p>
 
   <div class="blank-card" id="bCard1">
-    1. <b>无痛存档机制</b>：为防止 2 轮硬熔断回滚抹杀历史代码，在动手排错前必须先执行
+    1. <b>Checkpoint 机制</b>：为防止 2 轮硬熔断回滚影响已确认基线，在动手排错前必须先执行
     <select class="blank-select" id="blank1">
       <option value="">-- 请选择 --</option>
-      <option value="checkpoint">Checkpoint 存档 (git commit留存 Save Point)</option>
+      <option value="checkpoint">Checkpoint（git commit 保存基线）</option>
       <option value="delete">直接强行删除所有历史提交</option>
     </select>。
     <div class="blank-feedback" id="bf1"></div>
@@ -618,7 +618,7 @@
     3. <b>2 轮硬熔断保护</b>：当 Agent 自动排错达到 2 轮上限仍未 PASS 时，系统会自动运行
     <select class="blank-select" id="blank3">
       <option value="">-- 请选择 --</option>
-      <option value="restore">git restore . (安全清扫本场坏试错，历史装备毫发无损)</option>
+      <option value="restore">由指定人员按确认范围恢复 Checkpoint</option>
       <option value="retry">疯狂死循环尝试 100 轮</option>
     </select>。
     <div class="blank-feedback" id="bf3"></div>
@@ -675,7 +675,7 @@
   <h3>1. 4 道概念选择测验</h3>
           <div class="quiz-q" data-q="1">
     <div class="q">Q1 · 为防范 2 轮硬熔断回滚抹杀历史代码，在动手排错前必须先执行什么操作？</div>
-    <label><input type="radio" name="q1" value="a"> 下发 `git commit` Checkpoint 无痛存档 (留存 Save Point)</label>
+    <label><input type="radio" name="q1" value="a"> 下发 `git commit` 保存 Checkpoint 基线</label>
     <label><input type="radio" name="q1" value="b"> 强行删除 package-lock.json 文件</label>
     <label><input type="radio" name="q1" value="c"> 直接把带有 Auth Token 的全套抓包贴给 AI</label>
     <div class="feedback"></div>
@@ -772,9 +772,9 @@
   <div class="card tinted" style="margin-top: 1.5rem;">
     <b>三句话带走 (Key Takeaways)：</b>
     <ol style="margin-top: .5rem;">
-      <li><b>进战场前存 Save Point (Checkpoint Commit)，坏试错随便撤，历史装备毫发无损。</b></li>
+      <li><b>排错前保存 Checkpoint；未通过的本轮改动按确认范围恢复，已确认基线保留。</b></li>
       <li><b>控制台报错不慌张，只提取第一行 Error 事实，日志脱敏 `<REDACTED>` 落盘 DEBUG_REPORT。</b></li>
-      <li><b>修不过去不硬撑，2 轮未 PASS 自动触发硬熔断，安全 restore 恢复 Clean 干净砧板。</b></li>
+      <li><b>修不过去不硬撑，2 轮未 PASS 自动触发硬熔断；指定人员按确认范围恢复 Checkpoint。</b></li>
     </ol>
   </div>
 
@@ -784,7 +784,7 @@
     <div class="chk-list">
       <label class="chk-item">
         <input type="checkbox" id="c1" onchange="chkUpdate()">
-        <span>1. 已在排错前下发 `git commit` 完成 Checkpoint 无痛存档？</span>
+        <span>1. 已在排错前下发 `git commit` 保存 Checkpoint 基线？</span>
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c2" onchange="chkUpdate()">
@@ -792,7 +792,7 @@
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c3" onchange="chkUpdate()">
-        <span>3. 已体验自修 2 轮未 PASS 时，运行 `git restore .` 安全恢复 Checkpoint 干净状态？</span>
+        <span>3. 已体验自修 2 轮未 PASS 时停止自动修改，并由指定人员按确认范围恢复 Checkpoint？</span>
       </label>
     </div>
     <div id="chkResult" style="margin-top: .8rem; font-weight: bold; color: var(--red);">
@@ -816,14 +816,14 @@
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🚀 下一阶段预告</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);"><a href="#" style="color: var(--blue); font-weight:bold;">第 7 课 · 让 Agent 实际操作页面完成验收</a>： Playwright 浏览器自动化与四类证据链！</p>
+      <p style="font-size: .88rem; color: var(--ink-soft);"><a href="#" style="color: var(--blue); font-weight:bold;">第 7 课 · 让 Agent 实际操作页面完成验收</a>：浏览器自动化与五环证据链（场景→操作→观察→原始证据→结论）！</p>
     </div>
   </div>
 
   <!-- Interactive Ask AI Box -->
   <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--red); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--red-soft); text-align: center;">
     <b style="font-size: 1.05rem; color: var(--red);">💡 有疑问？直接问你的 AI 老师。</b><br>
-    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用汽车五级诊断仪的比喻，帮我再复习一遍五层诊断卡的各层口语标签”——它会为您详细拆解。</span>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用本课实际故障、诊断报告和 Checkpoint，帮我复习五层诊断卡的各层口语标签”——它会为您详细拆解。</span>
   </div>
 </section>
 
@@ -853,7 +853,7 @@ const debugScenarios = {
     steps: [
       { title: 'Step 1 · 执行 Checkpoint 无痛存档 (Save Point)', desc: '运行 `git commit -m "checkpoint: before lesson 6 debug"`，锁定历史装备安全。', cls: '' },
       { title: 'Step 2 · 唤醒 $diagnose ➔ 脱敏落盘 DEBUG_REPORT', desc: '日志敏感 Key 脱敏为 `<REDACTED>` ➔ 口语化五层定位 ➔ 落盘 `LESSON_06_DEBUG_REPORT.md`。', cls: 'working' },
-      { title: 'Step 3 · 契约层修补 ➔ 2 轮硬熔断安全保护', desc: '仅修补契约层 ➔ 若自修 2 轮仍未 PASS，自动运行 `git restore .` 恢复 Clean，导出 `.patch`！', cls: 'success' },
+      { title: 'Step 3 · 契约层修补 ➔ 2 轮硬熔断安全保护', desc: '仅修补契约层 ➔ 若自修 2 轮仍未 PASS，停止自动修改并记录恢复责任；由指定人员按确认范围恢复 Checkpoint，导出 `.patch`！', cls: 'success' },
       { title: 'Step 4 · 🎉 历史装备毫风无损，有界排错圆满收官', desc: '验证 PASS 提交归档；即便熔断，Checkpoint 上的历史成果 100% 稳如泰山！', cls: 'success' }
     ],
     logs: [
@@ -1015,7 +1015,7 @@ function checkAllBlanks() {
 
   bf3.className = 'blank-feedback show';
   bf3.style.color = ok3 ? 'var(--green)' : 'var(--red)';
-  bf3.innerHTML = ok3 ? '✅ 填空 3 正确！2 轮硬熔断运行 git restore . 安全清扫坏试错，历史装备毫发无损。' : '❌ 填空 3 错误：应选择 git restore . 安全回滚。';
+  bf3.innerHTML = ok3 ? '✅ 填空 3 正确！两轮未通过后停止自动修改，由指定人员按确认范围恢复 Checkpoint。' : '❌ 填空 3 错误：应选择由指定人员按确认范围恢复 Checkpoint。';
 }
 
 // ---------- Section 06 Exit Ticket Expand Answer Logic ----------

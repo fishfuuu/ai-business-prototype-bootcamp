@@ -160,7 +160,7 @@ const terms = [
   { name: '多模态参考提取 / 设计约束映射 / Keep-Omit-Modify / 视觉证据对比', category: 'L2-L2', lesson: 'Lesson 02', def: '将参考意图转为约束、裁决和前后证据的操作方法。', tag: '操作方法' },
 
   // L3
-  { name: '业务问题边界', category: 'L3-L4', lesson: 'Lesson 03', def: '明确问题、目标、非目标、风险和停止条件的范围声明。', tag: '主管核心概念' },
+  { name: '业务问题边界', category: 'L3-L4', lesson: 'Lesson 03', def: '使用者、触发、问题、目标和明确非目标共同限定本次业务范围。', tag: '主管核心概念' },
   { name: 'Grill-Me 结构化追问', category: 'L3-L4', lesson: 'Lesson 03', def: '按问题、目标、边界、风险、通过和停止条件追问并固化业务契约。', tag: '操作方法' },
   { name: '业务契约', category: 'L3-L4', lesson: 'Lesson 03', def: '把业务目标、角色、流程、规则、边界和通过条件写成可核对的约定。', tag: '主管核心概念' },
   { name: '数据契约', category: 'L3-L4', lesson: 'Lesson 03', def: '固定字段、类型、枚举、来源和缺失行为等数据结构约定。', tag: '主管核心概念' },
@@ -170,7 +170,7 @@ const terms = [
   { name: '薄切片', category: 'L4-L4', lesson: 'Lesson 04', def: '足够小而能独立验证、同时贯穿一条完整业务价值路径的增量范围。', tag: '主管核心概念' },
   { name: '版本控制基础', category: 'L4-L4', lesson: 'Lesson 04', def: '用 Working Tree、Diff、Commit 记录变更、比较差异和保存版本证据。', tag: '主管核心概念' },
   { name: '技术状态与业务状态', category: 'L4-L4', lesson: 'Lesson 04', def: '区分系统呈现状态与业务对象状态，不能把页面打开当业务通过。', tag: '主管核心概念' },
-  { name: '可追溯验收', category: 'L4-L4', lesson: 'Lesson 04', def: '把验收场景、观察、原始证据、结论、责任和版本关联起来。', tag: '主管核心概念' },
+  { name: '可追溯验收', category: 'L4-L4', lesson: 'Lesson 04', def: '把验收场景、操作、观察、原始证据、结论和责任关联到具体版本。', tag: '主管核心概念' },
   { name: 'Plan & Execute / 两阶段版本记录 / 有界恢复', category: 'L4-L4', lesson: 'Lesson 04', def: '先计划再执行、分别留痕候选与处置、按确认范围恢复的操作方法；提交数量不固定。', tag: '操作方法' },
 
   // L5
@@ -184,7 +184,7 @@ const terms = [
   { name: '事实、假设与生成错误', category: 'L6-L6', lesson: 'Lesson 06', def: '事实有可核对证据，假设是待验证判断，生成错误是不实模型产出。', tag: '主管核心概念' },
   { name: '根因与表象', category: 'L6-L6', lesson: 'Lesson 06', def: '表象是可见症状，根因是造成症状的更深层原因。', tag: '主管核心概念' },
   { name: '有界排错', category: 'L6-L6', lesson: 'Lesson 06', def: '限定主假设、修改范围和重试预算，失败时保留证据并停止或升级。', tag: '主管核心概念' },
-  { name: '重试预算/熔断', category: 'L6-L6', lesson: 'Lesson 06', def: '为自动重试设定次数、时间和风险上限，达到阈值就停止。', tag: '主管核心概念' },
+  { name: '重试预算/熔断', category: 'L6-L6', lesson: 'Lesson 06', def: '为自动重试设定次数、时间或风险上限，达到阈值就停止；不是固定数字。', tag: '主管核心概念' },
   { name: '停止/升级/恢复', category: 'L6-L6', lesson: 'Lesson 06', def: '停止自动化、交给更高责任层或按确认范围恢复到已知版本。', tag: '主管核心概念' },
   { name: '事实锚定排错与五层诊断', category: 'L6-L6', lesson: 'Lesson 06', def: '先锚定事实，再按环境、数据、状态、日志和契约逐层定位的操作方法。', tag: '操作方法' },
 
@@ -216,10 +216,10 @@ const terms = [
   // L10
   { name: '原型与生产系统', category: 'L10-L10', lesson: 'Lesson 10', def: '原型验证路径和决策；生产系统还需正式架构、安全、数据、测试、运维和责任治理。', tag: '主管核心概念' },
   { name: '风险红线与非目标', category: 'L10-L10', lesson: 'Lesson 10', def: '明确不可自动执行、必须人工批准、暂不建设或留给后续工程的事项。', tag: '主管核心概念' },
-  { name: '产品决策', category: 'L10-L10', lesson: 'Lesson 10', def: '根据价值、证据、风险和成本选择继续、调整、暂缓或停止。', tag: '主管核心概念' },
+  { name: '产品决策', category: 'L10-L10', lesson: 'Lesson 10', def: '基于业务价值、证据、风险和成本，并明确责任，选择继续、调整、暂缓或停止。', tag: '主管核心概念' },
   { name: '责任交接', category: 'L10-L10', lesson: 'Lesson 10', def: '把范围、契约、证据、红线、未决项和责任 owner 明确交给 IT 或后续团队。', tag: '主管核心概念' },
   { name: '产品决策记录', category: 'L10-L10', lesson: 'Lesson 10', def: '记录继续、调整、暂缓或停止及其证据、风险和责任的交付材料，不是产品决策概念本身。', tag: '交付产物' },
-  { name: '生产就绪缺口', category: 'L10-L10', lesson: 'Lesson 10', def: '原型到生产之间仍需补齐的安全、真实数据、集成、监控、成本和合规事项。', tag: '主管核心概念' },
+  { name: '生产就绪缺口', category: 'L10-L10', lesson: 'Lesson 10', def: '原型到生产之间仍需补齐的安全、真实数据、集成、测试、监控、回滚、成本和合规事项；不是生产批准。', tag: '主管核心概念' },
   { name: '原型交付就绪度检查', category: 'L10-L10', lesson: 'Lesson 10', def: '检查证据、红线、缺口和责任交接，判断是否适合交给 IT；属于操作方法。', tag: '操作方法' },
   { name: '开发启动包', category: 'L10-L10', lesson: 'Lesson 10', def: '汇总问题、原型、契约、证据、红线、缺口、责任和产品决策，供 IT 正式设计开发；不是可上线包。', tag: '交付产物' }
 ];

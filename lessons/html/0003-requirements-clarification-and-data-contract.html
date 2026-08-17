@@ -344,7 +344,7 @@
     <p><b>记住这句话：</b><br>
     第三课只完成"定义正确"，不同时承担大规模实施。用 <code>grill-me</code> 把主管的口语想法追问成可核对的业务、数据与验收约定，为第四课薄切片实施提供冻结输入。</p>
   </div>
-  <p>先定义清楚，后面每一课的切片、智能行为和验收才有锚点。跳过定义直接实施，等于在没有户型图的情况下开工装修。</p>
+  <p>先定义清楚，后面每一课的切片、智能行为和验收才有锚点。跳过定义直接实施，就会失去可核对的范围和通过条件。</p>
 </section>
 <!-- SECTION 01: INTERACTIVE TIER SIMULATOR -->
 <section>
@@ -397,7 +397,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>回答谁遇到什么问题、为什么要做、目标是什么、边界在哪里；缺少任何一项都会让后续实施失去锚点。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>装修前的户型确认图——在敲墙前必须确认哪些房间在范围内、哪些不在；不能只说"装修一下"就开工。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1 只选一条业务路径，Task 2 前两轮追问补齐使用者、问题、目标和范围；多个主要目标要先拆开。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会选定一条路径并写下使用者、动作和结果；Task 2 的前两轮追问进一步固定边界。
@@ -409,13 +409,13 @@
       <summary class="concept-head">2. 业务契约</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>把 User & Problem、Goal、Boundary、Risk、Acceptance、Stop/Escalation 固定为可执行约定；不是口头共识，也不是大而全 PRD。
+          <span class="pill-label">📌 是什么 / 不是什么：</span>把业务目标、角色、流程、规则、边界和通过条件写成可核对的约定；不是口头共识，也不是大而全 PRD。
         </div>
         <div class="concept-pill howworks">
           <span class="pill-label">⚙️ 怎样运作：</span>已确认的追问结果收敛为一份业务功能卡，未确认项显式保留；契约一旦冻结，后续实施只能在其范围内选择薄片。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>装修合同——口头意图变成书面条款，每条都有明确约定和违约处理；不能只靠"我们说好了"。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3 的业务功能卡是本课业务契约的落点；没有主管确认的内容仍是待确认项，不能直接进入第四课实施。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 3 你会把追问结果收敛为业务功能卡，并通过只读预览门禁后授权落盘。
@@ -427,13 +427,13 @@
       <summary class="concept-head">3. 数据契约</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>固定字段、含义、类型、枚举、来源状态和 Mock 规则，避免前后口径漂移；不是 TypeScript 工程任务，主管只需核对业务含义。
+          <span class="pill-label">📌 是什么 / 不是什么：</span>固定字段、类型、枚举、来源和缺失行为等数据结构约定；不是 TypeScript 工程任务，也不是业务目标本身。
         </div>
         <div class="concept-pill howworks">
           <span class="pill-label">⚙️ 怎样运作：</span>为每条业务路径列出字段字典，标注含义、类型、是否必填、Mock 样例和敏感等级；工程师可据此写类型或 Schema。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>海关进口商品的标准报关单——商品名称、编码、数量和来源必须统一申报；不能前端叫"工单号"、后端叫"订单号"。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 的字段字典和 Mock 样例必须与 Task 3 的业务功能卡一致；字段名、类型或敏感等级不一致时先回到契约修正。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会填写字段字典并标注敏感等级，确认 Mock 样例与字段类型匹配。
@@ -445,13 +445,13 @@
       <summary class="concept-head">4. 验收场景</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>用给定条件、动作和可观察结果说明怎样算通过；不只列功能名称，也不依赖主观判断。
+          <span class="pill-label">📌 是什么 / 不是什么：</span>包含前置条件、操作、预期观察、通过标准和失败处置的可重复业务情境；不是功能名称列表，也不是主观感觉。
         </div>
         <div class="concept-pill howworks">
           <span class="pill-label">⚙️ 怎样运作：</span>描述前置条件存在时，执行什么动作，应观察到什么结果；遇到数据缺失或规则冲突时触发停止并升级。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>工厂流水线的紧急拉绳熔断阀——组装顺畅时按流程运转，发现零部件开裂时拉绳停机并升阶给车间主任。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 的 1—2 条场景必须写清给定条件、动作、可观察结果和失败处置；没有可观察结果就不能作为验收场景。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会写出 1—2 条可观察的验收场景，并由主管做最终确认。

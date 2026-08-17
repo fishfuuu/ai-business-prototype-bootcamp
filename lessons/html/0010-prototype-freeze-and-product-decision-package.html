@@ -387,7 +387,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>原型回答"这条业务路径值不值得做、该不该用 AI"；生产系统回答"如何在安全、性能、成本和合规下稳定运行"。两者面向不同问题、不同标准和不同团队。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>建筑模型与真实建筑——模型验证户型和动线是否合理，真实建筑还需要结构计算、消防审批、水电工程和施工许可；不能因为模型好看就跳过施工图。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1 盘点十课资产时，把可操作原型、Mock/模拟能力、未验证项和未实现项分开记录；这一步只划定证据状态，不代表已经满足生产上线门禁。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会盘点十课资产，区分已证实和仅 Mock/模拟，这就是原型与生产系统的分界线。
@@ -405,7 +405,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>从 L9 的三链责任和 fallback 中提取红线——不可逆动作（资金、合同）、高敏感数据、责任不清的模糊判断、难以验证的开放任务；把红线写入开发启动包，让 IT 知道哪些不能碰、哪些暂不做。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>交房时的非交付清单——房屋交付时附一份"尚未完成或需要业主自行处理"的清单，不假装一切都好；也不是"有问题就不交房"，而是"交房时说明清楚"。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 对照 L9 选型，把不可逆动作、高敏感数据、责任不清和难验证任务写成红线，给每项标 owner；红线记录边界和责任，不要求本课立即解决全部风险。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会对照 L9 选型确认红线和 owner。
@@ -417,13 +417,13 @@
       <summary class="concept-head">3. 产品决策</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>根据价值、证据、风险和成本选择继续、调整、暂缓或停止，不以"做出来了"自动等于应该建设；不是所有原型都要上线，也不是做出来就白做了。
+          <span class="pill-label">📌 是什么 / 不是什么：</span>基于业务价值、证据、风险和成本，并明确责任，选择继续、调整、暂缓或停止；不以"做出来了"自动等于应该建设，也不是生产上线批准。
         </div>
         <div class="concept-pill howworks">
           <span class="pill-label">⚙️ 怎样运作：</span>把价值（值不值得）、证据（能不能证明成立）、风险（出了问题多大代价）和成本（正式开发需要多少投入）四项放在一起，作出一个有理由的产品决定。决定可以是继续、调整方向、暂缓或停止，四者都是合理选择。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>投资决策——不是每个项目都投，不是每个项目都拒绝；依据预期回报、风险评估、已有证据和资金成本作决定；做出来了不等于应该投，没做也不等于白做。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 把价值、证据、风险和成本填入同一张决策记录，选择继续、调整、暂缓或停止并写理由；这是当前阶段的建设判断，不是生产上线批准。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会作出继续/调整/暂缓/停止的决定并写理由。
@@ -432,7 +432,7 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. 生产就绪缺口</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>原型到生产之间仍需补齐的安全、真实数据、集成、测试、监控、回滚、成本和合规事项，不是开发启动包。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>把未完成项和责任 owner 列成 IT 下一阶段门禁，不能因原型跑通宣称生产就绪。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>建筑模型到正式建筑仍需结构计算、消防和施工许可。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>列出一个缺口、owner 和进入生产前的验证条件。</div></div></details>
+      <summary class="concept-head">4. 生产就绪缺口</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>原型到生产之间仍需补齐的安全、真实数据、集成、测试、监控、回滚、成本和合规事项；不是原型 Bug 清单或生产批准。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>从十课成果识别已证实能力、仅 Mock 的部分、未验证项和责任 owner，把缺口写入开发启动包，供 IT 进入正式设计。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—4 汇总已证实、仅 Mock/模拟、未验证和未实现项，逐项补上缺口、owner 和进入下一阶段的条件；缺口清单供 IT 开始正式设计，不等于生产批准或 Bug 清单。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>列出一个缺口、owner 和进入生产前的验证条件。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">5. 责任交接</summary>
@@ -444,7 +444,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>对开发启动包中每一项写明——谁是业务 owner、谁是数据 owner、谁是技术 owner、谁负责审批、谁负责失败处置、谁决定能否上线。暂不能确定的 owner 必须标"待定"并写明由谁去落实。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>铁路交接——新铁路开通前，运营权、维护权、安全审批权分别移交不同部门，不是一个人全管，也不是"交了就没人管了"。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 和 Task 4 在启动包中分别填写业务、数据、技术、审批、失败处置和上线门禁 owner；暂不能确定的责任标为待定并写落实人，不得用"交给 IT"代替责任分配。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 和 Task 4 你会确认 owner 和作出决策。
@@ -829,7 +829,7 @@
   <!-- Interactive Ask AI Box -->
   <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--amber); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--amber-soft); text-align: center;">
     <b style="font-size: 1.05rem; color: var(--amber);">🎉 恭喜通关十课！随时与你的 AI 助手复盘。</b><br>
-    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用建筑模型的比喻，帮我复盘我的开发启动包与 5 分钟汇报”——它会为您详细梳理。</span>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用 Task 1—5 的资产、证据和决策记录，帮我复盘我的开发启动包与 5 分钟汇报”——它会为您详细梳理。</span>
   </div>
 </section>
 
@@ -933,7 +933,7 @@ function runAsset(act) {
   if (act === 'proven') {
     term.innerHTML = `
 ✅ <b>[1. 已证实 (Proven Assets)]:</b><br>
-包含：L3 契约、L4 可验收薄片、L7 浏览器 Playwright 四类证据链 (screenshot/action/typecheck/diff) 以及 L8 Codex 独立审查 findings 报告。<br>
+包含：L3 契约、L4 可验收薄片、L7 浏览器五环证据索引（场景/操作/观察/原始证据/结论）以及 L8 Codex 独立审查 findings 报告。<br>
 说明：物理落盘证据完整，经自动化与独立会话盲审验证。
     `;
   } else if (act === 'mock') {

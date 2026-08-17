@@ -317,7 +317,7 @@
 <!-- SECTION 00: COURSE CONTEXT -->
 <section>
   <h2><span class="num">01</span> 自己写的代码自己查，为什么不可靠？</h2>
-  <p>同一个 Agent 又写代码又检查自己的代码——就像学生自己批改自己的考卷，天然倾向"看起来没问题"。第八课引入第二双眼睛：Claude 负责执行和形成候选，Codex 在隔离上下文中独立评审，主管读取 finding 并作业务处置。</p>
+  <p>同一个 Agent 又写代码又检查自己的代码时，执行上下文、判断标准和证据都来自同一方，容易把候选结果当成已验证结论。第八课引入独立评审：Claude 负责执行和形成候选，Codex 在隔离上下文中独立评审，主管读取 finding 并作业务处置。</p>
   <div class="card focus">
     <p><b>记住这句话：</b><br>
     执行者可验证，独立者评审，主管批准或拒绝——三者不能压成一个自动通过点。评审结果仍由主管裁决，不替代主管责任。</p>
@@ -375,7 +375,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>评审者拿到的是一份"隔离输入包"——契约、候选变更和证据索引，而不是开发过程中的全部对话和推演；评审者不知道实现者怎么想的，只看结果和证据。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>第三方审计会计师——只看凭证和账目，不参与做账过程，也不听会计的解释；不是让审计师和会计坐在一起对账。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 只给评审者契约、候选变更和证据索引，不传开发对话和自我辩护；材料超出约定范围时先删减。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会建立隔离评审输入，只提供必要材料，不把全部开发对话也传给评审者。
@@ -393,7 +393,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>评审者对每个发现输出四项：问题是什么、对业务有什么影响、证据在哪里、建议怎么处理；finding 有优先级（高/中/低），主管按优先级处置。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>审计发现报告——审计师逐项列出问题、财务影响、凭证证据和整改建议，不能只写"账目有点问题"。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3 的每条 finding 都写清问题、业务影响、证据引证和建议，并标注优先级；没有引证的判断不能直接进入 Task 4。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 3—4 你会让 Codex 输出独立 findings，然后逐项决定 accept/fix/stop/defer。
@@ -411,7 +411,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>Claude 执行并自验行为，Codex 独立评审找问题，主管读取 findings 后批准、打回或延期；三者由不同角色承担，不能由同一个流程自动完成。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>餐厅出菜流程——厨师试味（验证），质检员尝菜（评审），店长决定能不能上桌（批准）；厨师不能自己说"好了"就上桌，质检员也不能替店长决定。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4—5 中，Claude 执行和自验，Codex 独立评审，主管读取 findings 后批准、打回或延期；任何一步都不能冒充另一种职责。
         </div>
         <div class="concept-pill howsee">
           <span class="pill-label">👁️ 今天怎样看见：</span>Task 4—5 你会区分验证、评审和批准，不让 Claude 的修复和 Codex 的评审被同一自动流程冒充为主管批准。
@@ -420,10 +420,10 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. 独立评审</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>由未参与实现的评审者在隔离上下文中检查规格、证据和变更，不是协作模式选型。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>评审者只接收必要输入，独立记录 Finding，主管再作处置。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像独立审计，审计员检查账目但不替会计改账。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>展示评审输入范围、证据和一条可定位 Finding。</div></div></details>
+      <summary class="concept-head">4. 独立评审</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>由未参与实现的评审者在隔离上下文中检查规格、证据和变更，不是协作模式选型。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>评审者只接收必要输入，独立记录 Finding，主管再作处置。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—2 汇总评审输入并建立隔离评审时，已经实践“执行者和评审者分离”；第七课的 Subagent 调度不能替代本课独立评审。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>展示评审输入范围、证据和一条可定位 Finding。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 主管裁决</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>主管基于 Finding、证据和业务影响作最终处置判断，不是 accept/fix/stop/defer 方法本身。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>逐项读取证据和影响，作出接受、修复、停止或延期并记录理由。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>报告提供事实，项目负责人承担取舍。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>给出一条处置结论及业务理由。</div></div></details>
+      <summary class="concept-head">5. 主管裁决</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>主管基于 Finding、证据和业务影响作最终处置判断，不是 accept/fix/stop/defer 方法本身。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>逐项读取证据和影响，作出接受、修复、停止或延期并记录理由。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 4—5 逐项读取 finding、证据和业务影响，决定 accept/fix/stop/defer 并写理由；评审者不能替主管作出决定。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>给出一条处置结论及业务理由。</div></div></details>
 
   </div>
 </section></section></section>
@@ -793,7 +793,7 @@
   <!-- Interactive Ask AI Box -->
   <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--purple); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--purple-soft); text-align: center;">
     <b style="font-size: 1.05rem; color: var(--purple);">💡 有疑问？直接问你的 AI 老师。</b><br>
-    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用餐厅出菜的比喻，帮我复习验证、评审与批准三分原则”——它会为您详细拆解。</span>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用本课 Task 4—5 的角色、证据和决定记录，帮我复习验证、评审与批准三分原则”——它会为您详细拆解。</span>
   </div>
 </section>
 
