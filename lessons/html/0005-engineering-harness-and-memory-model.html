@@ -371,10 +371,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>逐环节判断任务性质和错误代价，选择最简单足够的程度；能用规则解决的不用 AI，能用 Workflow 的不用 Agent。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 对每个业务动作选择最低足够的介入层级；能用规则解决的不用 AI，风险和证据不足时保留人工接管。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 2 你会对每个业务动作做初筛，判断它属于哪个层级。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 对每个业务动作选择最低足够的介入层级；能用规则解决的不用 AI，风险和证据不足时保留人工接管。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像车间自动化程度：手工、工具辅助、单机自动、产线自动、无人闭环——程度越高越要卡质检和停机权限。不是程度越高越好。
         </div>
       </div>
     </details>
@@ -391,9 +388,6 @@
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1 给每个动作标注当前处理方式；规则清晰且结果唯一的动作不交给概率性模型，开放判断才考虑模型辅助。
         </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会标注每个动作的当前处理方式，这已经在区分确定性和概率性。
-        </div>
       </div>
     </details>
 
@@ -407,10 +401,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>Workflow 适合步骤固定、路径明确的任务；Agent 适合需要根据中间结果调整路线的任务；选择时先问"路径是否预先确定"，是则用 Workflow，否则才考虑 Agent。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 先问路径是否预先确定；固定步骤用 Workflow，需要根据中间结果调整才考虑 Agent，二者都不能替代责任边界。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会为候选机会选择范式，先判断路径是否预先确定。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 先问路径是否预先确定；固定步骤用 Workflow，需要根据中间结果调整才考虑 Agent，二者都不能替代责任边界。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像固定流水线（每步确定）和质检巡检（看异常决定下一步）：固定步骤走流水线，要看情况才用巡检。不能用巡检做规则就能解决的事。
         </div>
       </div>
     </details>
@@ -425,10 +416,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>Thought（思考下一步）→ Action（调用工具或执行动作）→ Observation（观察结果）→ 回到 Thought 调整或停止；每一步都有明确动作和可观察结果，不是盲目反复修改。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 若选择 ReAct，要写清 Thought→Action→Observation 的每一步、停止条件和可观察结果；不能把它当作无边界试错循环。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 如果你选了 ReAct 范式，要说明 Thought→Action→Observation 循环如何运作。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 若选择 ReAct，要写清 Thought→Action→Observation 的每一步、停止条件和可观察结果；不能把它当作无边界试错循环。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像医生问诊：先看症状（观察）→思考可能病因（思考）→开验血检查（调用工具）→看化验单（新观察）→确诊开药。每一步依据上一步反馈动态决定，不是给所有病人按同一套固定处方。
         </div>
       </div>
     </details>
@@ -443,10 +431,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>在智能行为的关键节点设置人工检查点——批准后才继续、发现偏差时纠正、出错时接管、风险越界时停止；检查点必须指向具体节点，不是"做完后审一下"。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 在候选机会卡中写明具体 HITL 检查点：谁在什么节点批准、纠正、接管或停止；一句“人工审核”不算检查点。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会在智能机会卡中写明 HITL 检查点指向哪个具体节点。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 在候选机会卡中写明具体 HITL 检查点：谁在什么节点批准、纠正、接管或停止；一句“人工审核”不算检查点。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像关键工序必须质检员签字才能放行，不是最后扫一眼。一句“人工审核”不算签字点。
         </div>
       </div>
     </details>

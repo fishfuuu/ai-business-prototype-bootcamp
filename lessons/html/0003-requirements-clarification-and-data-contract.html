@@ -399,9 +399,6 @@
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1 只选一条业务路径，Task 2 前两轮追问补齐使用者、问题、目标和范围；多个主要目标要先拆开。
         </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会选定一条路径并写下使用者、动作和结果；Task 2 的前两轮追问进一步固定边界。
-        </div>
       </div>
     </details>
 
@@ -417,9 +414,6 @@
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3 的业务功能卡是本课业务契约的落点；没有主管确认的内容仍是待确认项，不能直接进入第四课实施。
         </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3 你会把追问结果收敛为业务功能卡，并通过只读预览门禁后授权落盘。
-        </div>
       </div>
     </details>
 
@@ -433,10 +427,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>为每条业务路径列出字段字典，标注含义、类型、是否必填、Mock 样例和敏感等级；工程师可据此写类型或 Schema。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 的字段字典和 Mock 样例必须与 Task 3 的业务功能卡一致；字段名、类型或敏感等级不一致时先回到契约修正。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会填写字段字典并标注敏感等级，确认 Mock 样例与字段类型匹配。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 的字段字典和 Mock 样例必须与 Task 3 的业务功能卡一致；字段名、类型或敏感等级不一致时先回到契约修正。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像海关进口的标准报关单：品名、商品编码、计量单位、申报单价必须逐字统一，不能前端叫"订单号"后端叫"工单号"，数量栏也不能填"少量"。任何字段对不上，货物（数据流）就在关口被拦下。
         </div>
       </div>
     </details>
@@ -453,8 +444,20 @@
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 的 1—2 条场景必须写清给定条件、动作、可观察结果和失败处置；没有可观察结果就不能作为验收场景。
         </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会写出 1—2 条可观察的验收场景，并由主管做最终确认。
+      </div>
+    </details>
+    <details class="concept-card">
+      <summary class="concept-head">5. Skill</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 是什么 / 不是什么：</span>Skill 是一份可复用的打包指令（SKILL.md），Agent 装载后按它执行某种固定方法；不是一次性 Prompt，也不是 Agent 本身或某个工具。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 怎样运作：</span>需要某类方法时激活对应 Skill，Skill 把方法步骤固化、可跨项目重用；Agent 按步骤执行并在边界内停，主管仍核对结果。
+        </div>
+        <div class="concept-pill metaphor">
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 激活 grill-me Skill 做逐题追问；Skill 固定的是“怎么问”，不替代主管对业务答案的确认；第四课的 incremental-implementation 是“先出计划再执行”的 Skill。
+          <br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像岗位 SOP 和临时口头交代的区别——SOP 把一套做法写成手册、人人按同一套执行，口头交代是一次性的；grill-me 就是“逐题追问”的 SOP。
         </div>
       </div>
     </details>
@@ -791,6 +794,12 @@
     <div class="ans-box" id="ans5">
       <b>参考答案解析：</b><br>
       验收场景用给定条件、动作和可观察结果说明怎样算通过；功能名称列表只列名称，无法判断是否通过。三个部分：Given（给定条件）、When（动作）、Then（可观察结果）。
+    </div>
+    <div class="exit-q-title">❓ 退出门禁题 6：Skill 和一次性 Prompt 有什么区别？为什么 grill-me 是 Skill？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans6')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans6">
+      <b>参考答案解析：</b><br>
+      Skill 是可复用的打包指令（SKILL.md），把一套方法固化、跨项目重用；一次性 Prompt 是临时写的单次指令。grill-me 把“逐题追问”这套方法固化下来重复使用，所以是 Skill。
     </div>
   </div>
 

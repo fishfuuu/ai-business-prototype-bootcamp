@@ -387,18 +387,16 @@
         </div>
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—2 的事实卡只记录页面、数据和日志中实际看到的内容；诊断报告中的原因仍标为假设，Agent 自称“已修复”但没有证据时要当作生成错误。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—2 你会审查 Agent 生成的事实卡（只记现象）和五层诊断报告（标明假设），验收时核对 AI 没有编造结果。
+          <br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像业务事故快报把“已发生的事实”“待核实的原因”和“未经证实的说法”分栏记录，三栏不能互相冒充。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 根因与表象</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>表象是可见症状，根因是造成症状的更深层原因；修掉错误文字不代表问题解决。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>对照业务规则、数据来源和组件行为验证根因。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—3 先复现并记录事实，再用五层报告缩小范围；没有能证伪的主假设和证据，不授权修改。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明一个报错的表象、候选根因及验证证据。</div></div></details>
+      <summary class="concept-head">2. 根因与表象</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>表象是可见症状，根因是造成症状的更深层原因；修掉错误文字不代表问题解决。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>对照业务规则、数据来源和组件行为验证根因。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—3 先复现并记录事实，再用五层报告缩小范围；没有能证伪的主假设和证据，不授权修改。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像事故调查：先封锁现场、取证据、定因，再决定怎么修；不是看一眼报错就动手改。</div></div></details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 重试预算 / 熔断</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>为自动重试设定次数、时间或风险上限，达到阈值就停止；不是固定数字，也不是定位问题的五层标签。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>每轮记录动作、观察和成本，达到预算后停止、升级或恢复。本课为保证证据和安全，Agent 诊断/修复最多进行两轮。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 先定位主假设，Task 3—4 记录每轮实际修改和验证结果；超过两轮或触发风险条件就进入 Task 5。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>指出当前故障的预算、熔断条件和责任人。</div></div></details>
+      <summary class="concept-head">3. 重试预算 / 熔断</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>为自动重试设定次数、时间或风险上限，达到阈值就停止；不是固定数字，也不是定位问题的五层标签。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>每轮记录动作、观察和成本，达到预算后停止、升级或恢复。本课为保证证据和安全，Agent 诊断/修复最多进行两轮。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 先定位主假设，Task 3—4 记录每轮实际修改和验证结果；超过两轮或触发风险条件就进入 Task 5。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像客服升级：同一问题自动重试有次数上限，超过就停并转给指定人；不是让机器一直试到好为止。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">4. 有界排错</summary>
@@ -410,10 +408,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>排错前先存 Checkpoint 存档，限定修改范围，设置最多两轮修复上限；第一轮按主假设修复，验证不通过则调整假设进行第二轮，仍未通过则停止。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3—4 先保存 Checkpoint，再按主假设修改；第一轮验证不通过才调整假设做第二轮，仍不通过就停止，不继续扩大范围。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3—4 你会先存档再修复，每轮修改在范围内，两轮不通就停止而非继续盲目试。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3—4 先保存 Checkpoint，再按主假设修改；第一轮验证不通过才调整假设做第二轮，仍不通过就停止，不继续扩大范围。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像动手修前先拍照存档、限定只改这一处、最多试两轮，不行就停并交出证据；不是无限试到修好。
         </div>
       </div>
     </details>
@@ -429,9 +424,7 @@
         </div>
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 记录停止原因、新证据需求和恢复责任人；恢复只能按确认范围进行，不能用无差别清空代替交接。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会停止时记录停止原因、新证据需求和恢复责任人，不是只说"修不好"就结束。
+          <br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像设备异常后的停机交接：达到停止条件就保留现场、记录原因和所需证据，再交给明确责任人处理。它不是继续碰运气，也不是把问题一键清空。
         </div>
       </div>
     </details>

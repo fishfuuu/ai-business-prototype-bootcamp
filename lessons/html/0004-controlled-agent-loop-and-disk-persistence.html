@@ -390,16 +390,13 @@
           <span class="pill-label">⚙️ 怎样运作：</span>从业务定义包中选择一个可独立验收的纵向变化，只实施这一条；切片虽小但从输入到结果完整。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—2 只选择一条可独立验收的纵向变化；没有完整输入到结果的路径，就不是薄切片。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1—2 你会从第三课契约中确认可验收路径，并写清本轮边界；切片由 Skill 在 Task 3 自动切分。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—2 只选择一条可独立验收的纵向变化；没有完整输入到结果的路径，就不是薄切片。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像餐厅开业前的试菜：先选一道招牌菜完整做出来（从洗菜、炒菜到端盘试吃闭环检验味道），而不是把整桌满汉全席的所有蔬菜都洗好切好（横向半成品），却一口熟菜都没吃到。薄切片必须是一条纵向贯通、能尝到味道的最小业务闭环。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 版本控制基础</summary>
+      <summary class="concept-head">2. 版本证据与回退</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
           <span class="pill-label">📌 是什么 / 不是什么：</span>用 Working Tree、Diff、Commit 记录变更、比较差异和保存版本证据；不是业务审批系统、固定提交数量或要求主管执行危险命令。
@@ -409,9 +406,7 @@
         </div>
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3 核对实施计划，Task 5 才把实际变化关联到版本证据；计划本身不是版本记录，版本记录也不是业务批准。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 将业务验收关联到具体版本，说明版本证据如何支持复核和定位恢复。
+          <br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像办公文档的草稿、修订痕迹和归档版本：Working Tree 是正在编辑的草稿，Diff 显示改了什么，Commit 保存可回看的版本节点。归档版本仍不等于业务审批。
         </div>
       </div>
     </details>
@@ -426,10 +421,7 @@
           <span class="pill-label">⚙️ 怎样运作：</span>技术状态描述界面在加载、空数据、报错或成功时的呈现；业务状态描述业务对象的生命周期（如草稿→待处理→已完成）；两者物理隔离，互不替代。
         </div>
         <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 分别展示加载、空数据、报错等技术状态和草稿、待处理、已完成等业务状态；页面能打开不代表业务已通过。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会在本地预览中切换技术状态，同时指明业务状态标签。
+          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 分别展示加载、空数据、报错等技术状态和草稿、待处理、已完成等业务状态；页面能打开不代表业务已通过。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像网购的"物流状态"和"商品交易状态"：包裹装车/派送中是物流流转（技术状态），订单已付款/已退款是买卖履约（业务状态）。快递按时送达（技术成功）不等于商品无瑕疵（业务通过）。
         </div>
       </div>
     </details>
@@ -445,9 +437,6 @@
         </div>
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 同时保存实际变化和主管处置；两者都要可追溯，但不要求两个 Commit。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会在验收通过后执行版本记录，确认 Working Tree 恢复 Clean。
         </div>
       </div>
     </details>

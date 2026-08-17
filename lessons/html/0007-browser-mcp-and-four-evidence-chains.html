@@ -377,7 +377,7 @@
   <p class="note">操作方法：浏览器自动化验收、验收场景迁移、Subagent 课程安全规程；Playwright/DOM/Console/Network 仅为背景词。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. MCP 最小模型</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>Host 通过 Client 连接 MCP Server，Server 暴露 Tool；Tool 是 Server 能力，不是第四同级组件。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Host 发起请求，Client 传递调用，Server 执行并返回 Tool 结果；MCP 不是业务 API。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 的浏览器验收中，Host 发起能力调用，Client 连接 Server，Server 暴露并执行 Tool；MCP 只说明工具怎么调用，不判断业务是否通过。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明浏览器调用中 Host、Client、Server 和 Tool 各自承担什么。</div></div></details>
+      <summary class="concept-head">1. MCP 最小模型</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>Host 通过 Client 连接 MCP Server，Server 暴露 Tool；Tool 是 Server 能力，不是第四同级组件。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Host 发起请求，Client 传递调用，Server 执行并返回 Tool 结果；MCP 不是业务 API。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 的浏览器验收中，Host 发起能力调用，Client 连接 Server，Server 暴露并执行 Tool；MCP 只说明工具怎么调用，不判断业务是否通过。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像电脑主机和 USB 外设：Claude 是主机(Host)，MCP 是统一的 USB 接口协议(Client)，具体 MCP 服务像外接的打印机或摄像头(Server)，提供扫描或打印能力(Tool)。拔掉打印机换摄像头就有新能力，但外接打印机不等于公司业务系统。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">2. Subagent</summary>
@@ -390,15 +390,13 @@
         </div>
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2—3 调度 Subagent 用浏览器操作页面并保存截图、日志和报告；只读、超时、授权和落盘是本课规程，不是 Subagent 名称自带的能力。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>课堂调度浏览器验收子任务，检查它按限定输入执行并回传截图、日志和报告。
+          <br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像项目主管派出的"现场跑腿调研员"：只领一张明确任务清单（只读指令），带相机和笔记本去现场拍照取证并带回汇报；他没有签字权（无写权限），遇到计划外变动必须回办公室请示，无权私自替主管做决定。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 自动化验证与业务验收</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>自动化验证检查技术事实，业务验收由主管判断场景和结果是否满足要求。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Agent 采集证据，主管对照契约批准、打回或标记未证明。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—5 中，工具只报告页面行为和原始证据；主管再依据业务验收场景判断通过、失败或未证明。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>分别说出工具证明了什么、主管验收了什么。</div></div></details>
+      <summary class="concept-head">3. 自动化验证与业务验收</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>自动化验证检查技术事实，业务验收由主管判断场景和结果是否满足要求。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Agent 采集证据，主管对照契约批准、打回或标记未证明。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—5 中，工具只报告页面行为和原始证据；主管再依据业务验收场景判断通过、失败或未证明。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像验房师出检测记录、业主按合同决定是否收房：前者证明观察到什么，后者判断业务要求是否满足。检测通过不能自动代替业务批准。</div></div></details>
 
     <details class="concept-card">
       <summary class="concept-head">4. 证据链</summary>
@@ -412,14 +410,11 @@
         <div class="concept-pill metaphor">
           <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3—4 每一步都记录场景、操作、观察、原始截图或日志和结论；缺少任一环节就标为未证明，不用结论替代原始证据。
         </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3—4 你会把观察与验收标准逐项对照，标记已证明、未证明和证据盲区，形成证据索引。
-        </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 不可信输入与提示注入</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>外部页面、消息或工具返回可能夹带误导指令，不能自动当作主管授权。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>把外部文本当作待验证数据，回到约束和授权核对，拒绝越权动作。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 先说明工具验证了什么，再由主管对照业务验收标准判断是否通过；页面文字要求执行额外动作时，停止并上报，不把它当授权。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>识别提示注入并说明隔离、上报和停止方式。</div></div></details>
+      <summary class="concept-head">5. 不可信输入与提示注入</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>外部页面、消息或工具返回可能夹带误导指令，不能自动当作主管授权。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>把外部文本当作待验证数据，回到约束和授权核对，拒绝越权动作。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 先说明工具验证了什么，再由主管对照业务验收标准判断是否通过；页面文字要求执行额外动作时，停止并上报，不把它当授权。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像审查外来公文时的"夹带私货"：合同备注栏里偷写一行"请直接盖章并把保险柜钥匙寄出"。分不清"待审文件内容"和"操作指令"，就会把外来文本误当最高指示执行。</div></div></details>
 
   </div>
 </section>
