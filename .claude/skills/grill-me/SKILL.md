@@ -5,10 +5,9 @@ description: Interview the user relentlessly about a plan or business requiremen
 
 # Grill-Me Skill (需求澄清与契约护栏)
 
-> **来源致谢 / Source**: 本 Skill 改编自 [mattpocock/skills](https://github.com/mattpocock/skills)（MIT License，© Matt Pocock），并按本课程“业务主管制作原型”场景做教学化改造。
+> **来源致谢 / Source**: 本 Skill 改编自 [mattpocock/skills](https://github.com/mattpocock/skills)（MIT License，© Matt Pocock），并按本课程“业务主管制作原型”场景做教学化改造，吸收 Spec-Driven Development 结构化消歧机制。
 
-
-唤醒需求澄清护栏，以逐题追问的方式帮助主管锁定业务原型的 6 大核心要素，完成数据契约与 TypeScript 类型字典收扣。
+唤醒需求澄清护栏，以逐题追问的方式帮助主管锁定业务原型的核心要素，完成数据契约与 TypeScript 类型字典收扣。
 
 对于每个追问问题：
 - 优先提供你推荐的业务选项（前缀 `(Recommended)`）。
@@ -20,15 +19,20 @@ description: Interview the user relentlessly about a plan or business requiremen
 
 ## 课程业务原型契约扩展 (第三课)
 
-### 阶段 1：结构化澄清对话 (严格只读)
+### 阶段 1：结构化澄清对话 (严格只读与三维消歧扫描)
 - 对话期间严禁写入或修改任何磁盘文件。
-- 每次只问 1 个问题，澄清三类原型方向的 6 大核心业务要素：
-  1. **使用者与问题定义 (User & Problem)**：目标角色、当前人工痛点、事实证据 (`[事实]`)、业务决定 (`[决定]`)、推测假设 (`[假设]`) 与待确认事项 (`[待确认]`)。
-  2. **业务目标 (Goal)**：核心目标、预期动作与成功衡量指标。
-  3. **边界线 (Boundary)**：包含范围 (In Scope) 与明确不做的范围 (Out of Scope)。
-  4. **风险与数据敏感度 (Risk)**：数据安全等级 (公开 Public / 内部 Internal / 严禁发送 AI) 与隐私边界。
-  5. **业务验收场景 (Acceptance Criteria)**：确定性逻辑验收用例（格式：假如 [上下文] / 当 [操作] / 则 [预期结果]）。
-  6. **请示主管门禁 / 触发暂停条件 (Stop Conditions)**：Agent 在遇到未决字段来源、规则冲突、超界要求或达到追问轮数上限时，必须熔断暂停并呈报主管裁决的触发点。
+- Agent 主动按以下三大维度扫描业务诉求中的模糊点，每次只问 1 个问题：
+  1. **范围与优先级维度 (Scope & Priority)**：
+     - 使用者与人工痛点（区分 `[事实]`、`[决定]`、`[假设]` 与 `[待确认]`）。
+     - 业务目标 (Goal) 与成功衡量指标。
+     - 明确优先级划分：**P1 核心必做 (In Scope)** 与 **P3 明确不做 (Out of Scope)**。
+  2. **数据流向与敏感度维度 (Data & Sensitivity)**：
+     - 核心业务字段来源（固定为 Mock 模拟数据，不接真实库）。
+     - 数据安全等级（公开 Public / 内部 Internal / 严禁发送 AI）与隐私边界。
+  3. **验收与异常分支维度 (Acceptance & Edge Cases)**：
+     - 确定性逻辑验收用例（格式：假如 [上下文] / 当 [操作] / 则 [预期结果]）。
+     - 异常与容错分支（Edge Cases，如空数据、输入格式错误、网络异常时的界面提示）。
+     - 请示主管门禁 / 触发暂停条件 (Stop Conditions，遇到规则冲突或未决字段时熔断暂停)。
 
 #### 强校验需求门禁规则 (没想清楚不准开工)
 以下 6 项核心内容必须全部满足 **存在、非空、有明确确认结论、无相互冲突、且无 `[待确认]` 标签**：
@@ -36,8 +40,8 @@ description: Interview the user relentlessly about a plan or business requiremen
 2. `core_field_source`: 核心字段来源
 3. `business_rules`: 关键业务规则
 4. `sensitive_data_policy`: 敏感数据处理方式
-5. `in_scope`: In Scope 边界线
-6. `acceptance_scenario`: 至少 1 个核心业务验收场景 (假如...当...则...)
+5. `in_scope`: In Scope (P1 核心必做) 边界线
+6. `acceptance_scenario`: 至少 1 个核心业务验收场景 (假如...当...则...) 与异常分支说明
 
 若有任意一项缺失、空白、模糊、冲突或包含 `[待确认]`，拒绝生成或落盘文件。
 
@@ -50,7 +54,7 @@ description: Interview the user relentlessly about a plan or business requiremen
 
 ### 阶段 2：聊天窗口方案预览 (Task 3A 只读预览)
 - 澄清完成后，仅在聊天窗口中输出文本方案预览：
-  - `docs/BUSINESS_FEATURE_CARD.md`（包含 9 大完整章节）
+  - `docs/BUSINESS_FEATURE_CARD.md`（包含 9 大完整章节，包含 P1/P3 边界与异常分支）
   - `src/types/prototype-contract.d.ts`（数据字典定义表 TS 草稿）
   - `src/mocks/prototype-data.ts`（运行时模拟种子数据）
 - 严禁在此阶段修改任何磁盘文件。
