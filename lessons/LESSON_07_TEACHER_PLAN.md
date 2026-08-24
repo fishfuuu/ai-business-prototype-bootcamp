@@ -39,7 +39,7 @@
 
 你在第六课五层诊断中排查过状态层——数据变了但界面没动。现在用 MCP 模型理解组件之间怎么通信。
 
-1. **是什么 / 不是什么**：Host 代表用户发起能力调用，Client 连接 Server，Server 暴露 Tools；MCP 不是产品业务 API，也不是 Agent 本身。Host 是用户运行的主程序（如 Claude），Client 是连接层，Server 是工具提供方（如 Playwright）。
+1. **是什么 / 不是什么**：MCP 协议（标准化工具接口）：把 AI 想象成电脑主机（Host），MCP 是标准的 USB 连接层，外接的浏览器或测试服务就是打印机（Server）。它只负责连接工具，不负责替你做业务判断。Host 是用户运行的主程序（如 Claude），Client 是连接层，Server 是工具提供方（如 Playwright）。
 2. **机制**：主管在 Host 中发起请求，Client 把请求传给 Server，Server 执行工具（如打开浏览器、点击按钮、截图）并返回结果；MCP 只是把"工具调用"标准化，不改变谁来负责。
 3. **当课操作例子与边界**：Task 2 的浏览器验收中，Host 发起能力调用，Client 连接 Server，Server 暴露并执行 Tool；MCP 只说明工具怎么调用，不判断业务是否通过。
 - **帮助理解的类比（可选）**：像电脑主机和 USB 外设：Claude 是主机(Host)，MCP 是统一的 USB 接口协议(Client)，具体 MCP 服务像外接的打印机或摄像头(Server)，提供扫描或打印能力(Tool)。拔掉打印机换摄像头就有新能力，但外接打印机不等于公司业务系统。
