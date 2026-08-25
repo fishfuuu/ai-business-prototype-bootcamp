@@ -381,32 +381,31 @@
   <p class="note">操作方法：Plan & Execute、两阶段版本记录、有界恢复；提交数量不固定。HITL 授权点属于扩展认识。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. 薄切片</summary>
+      <summary class="concept-head">1. 薄切片 (纵向业务切片)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>一次完成一条从输入到结果的纵向变化；不是把任务拆成没有业务结果的技术碎片，也不是一口气完成全部功能。
+          <span class="pill-label">📌 【是什么】</span>一次只做一条“从输入到看到结果”贯穿前台到后台的最小业务闭环。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>从业务定义包中选择一个可独立验收的纵向变化，只实施这一条；切片虽小但从输入到结果完整。
+          <span class="pill-label">⚙️ 【怎么用】</span>按 3 条黄金标准把控：①业务贯通（1条完整线）；②时间可控（5-15分钟内完成）；③即时可验（能在本地点击走通，改错可一键回退）。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—2 只选择一条可独立验收的纵向变化；没有完整输入到结果的路径，就不是薄切片。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像餐厅开业前的试菜：先选一道招牌菜完整做出来（从洗菜、炒菜到端盘试吃闭环检验味道），而不是把整桌满汉全席的所有蔬菜都洗好切好（横向半成品），却一口熟菜都没吃到。薄切片必须是一条纵向贯通、能尝到味道的最小业务闭环。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁搞“只做了一半界面但点不动”的技术半成品，也严禁把几个页面的大功能打包成一个切片一口气做完。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 版本证据与回退</summary>
+      <summary class="concept-head">2. 版本证据与回退快照 (Diff & Commit)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>用 Working Tree、Diff、Commit 记录变更、比较差异和保存版本证据；不是业务审批系统、固定提交数量或要求主管执行危险命令。
+          <span class="pill-label">📌 【是什么】</span>Diff（修改痕迹）就像 Word 审阅红绿划线；Commit（存档快照）就像单机游戏的存档点。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>识别当前改动，查看 Diff，按项目约定保存版本证据，并让版本记录能够定位恢复；提交数量由项目需要决定。
+          <span class="pill-label">⚙️ 【怎么用】</span>改动前存盘，改动后看 Diff 核对痕迹，验证通过后再做阶段性确认；一旦跑偏立刻一键回退到上个存档点。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3 核对实施计划，Task 5 才把实际变化关联到版本证据；计划本身不是版本记录，版本记录也不是业务批准。
-          <br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像办公文档的草稿、修订痕迹和归档版本：Working Tree 是正在编辑的草稿，Diff 显示改了什么，Commit 保存可回看的版本节点。归档版本仍不等于业务审批。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁连续让 AI 修改却不存盘；改错了严禁让 AI 在错误代码上打补丁，必须坚决回退重来。
         </div>
       </div>
     </details>
@@ -415,13 +414,13 @@
       <summary class="concept-head">3. 技术状态与业务状态</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>加载、错误等系统状态和待处理、已升级等业务含义是两件事；不能混为一谈，也不能用技术状态冒充业务状态。
+          <span class="pill-label">📌 【是什么】</span>技术状态指程序维度的表现（页面崩没崩、控制台报不报错）；业务状态指商业逻辑的真相（算得对不对、流程走没走通）。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>技术状态描述界面在加载、空数据、报错或成功时的呈现；业务状态描述业务对象的生命周期（如草稿→待处理→已完成）；两者物理隔离，互不替代。
+          <span class="pill-label">⚙️ 【怎么用】</span>验收时必须双重视角核对：先看技术状态（页面能正常操作），再重点穿透核对业务状态（数据增删改查是否符合商业规则）。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 分别展示加载、空数据、报错等技术状态和草稿、待处理、已完成等业务状态；页面能打开不代表业务已通过。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像网购的"物流状态"和"商品交易状态"：包裹装车/派送中是物流流转（技术状态），订单已付款/已退款是买卖履约（业务状态）。快递按时送达（技术成功）不等于商品无瑕疵（业务通过）。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>技术状态正常（无红字报错）绝不等于业务状态正确！界面能点通可能只是展示了静态假数据，必须亲手走通真实逻辑。
         </div>
       </div>
     </details>
@@ -430,13 +429,28 @@
       <summary class="concept-head">4. 可追溯验收</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>把验收场景、操作、观察、原始证据、结论和责任关联到具体版本；不是口头验收、只存截图或把测试通过当业务批准。
+          <span class="pill-label">📌 【是什么】</span>把验收场景、操作、观察、原始证据、结论和责任关联到具体版本，让 IT 能复核主管批准了什么。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>用 Working Tree、Diff 或 Commit 记录实际变更，把候选实现、验收证据和主管处置关联；提交数量由项目需要决定。
+          <span class="pill-label">⚙️ 【怎么用】</span>每通过一个切片，在 PROJECT_STATE.md 中记录对应的 Commit 哈希、验收截图与主管签字。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 同时保存实际变化和主管处置；两者都要可追溯，但不要求两个 Commit。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁口头验收或把简单的测试跑通误当业务验收；没有版本证据关联的修改一律无效。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. 两阶段版本记录与有界恢复</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>第一阶段记录候选改动与修改痕迹（未确认）；第二阶段记录主管核验后的验收结论与处置记录。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>两阶段严格分离，验证通过存第二阶段，验证失败导出 .patch 补丁并一键恢复 Clean 工作区。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁把未经验收的候选改动直接作为最终版本；改错时绝不放任脏工作区累积。
         </div>
       </div>
     </details>

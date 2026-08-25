@@ -288,19 +288,79 @@
   <p class="note">操作方法：多模态参考提取、设计约束映射、Keep / Omit / Modify、视觉证据对比；AGENTS.md、CLAUDE.md、DESIGN.md 和视觉证据是产物。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. 信息优先级与视觉层级</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>按业务重要性安排内容、状态、操作和视觉强调，不是单纯配色偏好。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>先确认用户判断顺序，再用位置、大小、对比度和间距表达主次。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1 从参考图提取首屏判断顺序，Task 3 再核对视觉重点是否服务业务判断；没有业务理由的强调不保留。</div></div></details>
+      <summary class="concept-head">1. 项目级行为护栏 (Agent Harness)</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>放在项目根目录的“AI 员工入职守则（物理规则文件）”，任何 AI 工具都会自动读取它。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>在 CLAUDE.md 或 AGENTS.md 中写明项目结构、受保护目录、设计规范及自检流程，实现规则全局常驻。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>警惕注意力漂移！规则文件不是硬编译器，会话过长时大模型会遗忘规则；任务完成后及时开新会话，主管必须亲自对照护栏核对 Diff。
+        </div>
+      </div>
+    </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 项目级 Agent 约束 / 行为护栏 (Agent Harness)</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>项目为 AI Agent 规定目标、范围、行为和设计规则的约束机制，不是单次提示词或运行时硬控制。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Agent 读取项目约束后在授权范围内行动，主管核对作用域、优先级和红线。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 检查并使用项目约束文件；约束能指导 Agent，但不等于运行时自动拦截，授权和验收仍由主管负责。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像给外协团队的项目章程：写明目标、范围和红线，但不替他们每步盯办；授权和验收仍由主管。章程不等于运行时自动拦截。</div></div></details>
+      <summary class="concept-head">2. 约束作用域与优先级</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>规则按“项目级 > 目录级 > 单文件级”逐级生效的分层机制。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>全局安全底线写在项目级，局部特殊要求写在单文件级，确保规则条理清晰。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>局部规则绝不能与全局红线冲突，遇有争议一律以上级安全规则为准。
+        </div>
+      </div>
+    </details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 约束作用域与优先级</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>规则按 项目级、目录级、文件级 分层适用，冲突时上一级压下一级；局部文件不能覆盖项目红线，也不是所有规则同层。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>先判断行动落在哪个作用域，再按优先级处理冲突。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 先判断修改落在哪个项目、目录或文件，再按上级规则处理冲突；局部文件不能覆盖项目红线。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像公司规章、部门细则、单据模板的层级：局部细则不能覆盖公司红线。不是所有规则同层。</div></div></details>
+      <summary class="concept-head">3. 行为约束与设计约束</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>行为约束管“AI 怎么干活”（如先计划后动手），设计约束管“界面长什么样”（如排版与配色规范）。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>双管齐下，既保证开发过程可控不乱改，又保证产出的界面符合专业规范。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁只管代码不管外观，没有设计约束会导致 AI 自由发挥拼凑出难以阅读的界面。
+        </div>
+      </div>
+    </details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. 行为约束与设计约束</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>行为约束 = CLAUDE.md/AGENTS.md，规定 Agent 怎么工作（包管理器、文件边界、错误处理）；设计约束 = DESIGN.md，规定产物长什么样（间距、圆角、颜色层级）；两者都是项目级约定，不是代码级强制。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Agent 生成前必须读取这两类约束：设计约束用参考图映射后由主管核对，行为约束用 /init 生成基础版后由主管核对；规则必须指向具体页面元素或具体行为红线。 行为约束文件按工具分：Claude Code 读 CLAUDE.md、Codex 读 AGENTS.md；两个工具都用时，行为红线两边都要有（或在 CLAUDE.md 里用 @AGENTS.md 互引做单一真相源），否则一边静默看不到。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 分别核对 DESIGN.md 的页面元素约束和 CLAUDE.md/AGENTS.md 的行为红线；一类文件不能替代另一类。</div></div></details>
+      <summary class="concept-head">4. 信息优先级与视觉层级</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>按业务重要性安排内容、状态、操作和视觉强调，把视觉选择映射回业务目标。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>核心 KPI 放大置顶，操作按钮主次分明，状态标签颜色与含义严密对应。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁把页面塞满同等权重的杂乱信息，缺乏视觉层级会导致使用者找不到操作焦点。
+        </div>
+      </div>
+    </details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 约束一致性验证</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>检查实现是否满足项目约束、设计约束和验收场景，并留下可复核对比证据。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>逐条记录通过、未证明和偏差，再由主管裁决。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 4—5 对照重构前后截图、约束清单和业务路径；视觉变化没有理由，或页面路径不可操作，都标为未通过。</div></div></details>
+      <summary class="concept-head">5. 约束一致性验证</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>对照设计规范与业务契约，逐项核对实现结果是否违规的检查机制。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>在功能修改前后截图比对，检查字体、间距、按钮状态及操作反馈是否符合标准。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁凭主观感觉“差不多就行”，必须有明确的前后对比证据。
+        </div>
+      </div>
+    </details>
 
   </div>
 </section>

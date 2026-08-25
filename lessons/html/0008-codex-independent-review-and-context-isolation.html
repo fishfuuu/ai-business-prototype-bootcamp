@@ -366,55 +366,79 @@
   <p class="note">操作方法：Agent 协作模式选型与 accept/fix/stop/defer；核心概念仍是隔离、Finding、职责分离、独立评审和主管裁决。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. 上下文隔离</summary>
+      <summary class="concept-head">1. 上下文隔离 (双盲独立评审)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>评审者只接收约定的规格、候选和证据，不继承实现者的全部对话和自我辩护；不是给评审者看所有聊天记录，也不是让评审者和实现者用同一个会话。
+          <span class="pill-label">📌 【是什么】</span>让第三方评审模型只接收最终产物与运行证据，坚决不给它看开发过程的聊天记录。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>评审者拿到的是一份"隔离输入包"——契约、候选变更和证据索引，而不是开发过程中的全部对话和推演；评审者不知道实现者怎么想的，只看结果和证据。
+          <span class="pill-label">⚙️ 【怎么用】</span>像“盲审”论文一样组织独立审查，彻底杜绝 AI 为了自己刚才说的话自圆其说、掩盖缺陷。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 只给评审者契约、候选变更和证据索引，不传开发对话和自我辩护；材料超出约定范围时先删减。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁在同一个开发会话里让 AI“自写自审”；把冗长的聊天记录传给评审者会导致审查严重失真。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">2. 独立 finding</summary>
+      <summary class="concept-head">2. 独立 Finding (审查发现项)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>每个评审结论都要指出问题、影响、证据和建议，不是笼统说"看起来没问题"，也不是只说"这里有点问题"不说明影响。
+          <span class="pill-label">📌 【是什么】</span>独立评审模型基于物证提出的具体缺陷清单（包含问题、影响、证据出处与修复建议）。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>评审者对每个发现输出四项：问题是什么、对业务有什么影响、证据在哪里、建议怎么处理；finding 有优先级（高/中/低），主管按优先级处置。
+          <span class="pill-label">⚙️ 【怎么用】</span>作为主管做决断的依据，主管逐条阅读并判断是修、是留、是停还是延期。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3 的每条 finding 都写清问题、业务影响、证据引证和建议，并标注优先级；没有引证的判断不能直接进入 Task 4。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁接受没有证据支撑的模糊指责，没有引证出处的发现项不能作为打回依据。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 验证、评审与批准三分</summary>
+      <summary class="concept-head">3. 自验、评审与拍板三权分立</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>执行者可验证（自己检查行为是否正常），独立者评审（第三方看证据找问题），主管批准或拒绝；三者不能压成一个自动通过点。验证是"自己做对了吗"，评审是"别人看有没有问题"，批准是"主管决定接不接受"。
+          <span class="pill-label">📌 【是什么】</span>执行者负责“自验”（检查自己做对没有）、独立模型负责“挑刺”（从第三方找漏洞）、主管负责“拍板”（决定接不接受）。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>Claude 执行并自验行为，Codex 独立评审找问题，主管读取 findings 后批准、打回或延期；三者由不同角色承担，不能由同一个流程自动完成。
+          <span class="pill-label">⚙️ 【怎么用】</span>明确三方职责界限，构建健康的制衡体系，确保交付质量。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4—5 中，Claude 执行和自验，Codex 独立评审，主管读取 findings 后批准、打回或延期；任何一步都不能冒充另一种职责。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像工程建设的三方制衡：施工队砌完墙自己拉线靠尺（执行者验证），监理公司对照规范出质检报告（独立评审），业主拿合同决定是否签字收楼（主管批准）。施工队不能自宣布合规，监理也不能替业主签字。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁三权合一，绝不能由 AI 自导自演宣布通过。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. 独立评审</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>由未参与实现的评审者在隔离上下文中检查规格、证据和变更，不是协作模式选型。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>评审者只接收必要输入，独立记录 Finding，主管再作处置。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—2 汇总评审输入并建立隔离评审时，已经实践“执行者和评审者分离”；第七课的 Subagent 调度不能替代本课独立评审。</div></div></details>
+      <summary class="concept-head">4. 独立评审机制</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>由未参与实现的独立评审模型在隔离上下文中对照契约检查规格与证据的完整机制。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>在交付前引入独立模型进行无偏见审查，提前拦截潜在缺陷与伪造证据。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>独立评审只出具审查意见与证据，绝不能越权代替主管做出接受或驳回决定。
+        </div>
+      </div>
+    </details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 主管裁决</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>主管基于 Finding、证据和业务影响作最终处置判断，不是 accept/fix/stop/defer 方法本身。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>逐项读取证据和影响，作出接受、修复、停止或延期并记录理由。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 4—5 逐项读取 finding、证据和业务影响，决定 accept/fix/stop/defer 并写理由；评审者不能替主管作出决定。</div></div></details>
+      <summary class="concept-head">5. 主管裁决 (accept / fix / stop / defer)</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>主管对每项审查缺陷作出的四选一决断（接受现状 / 立即修复 / 停止该功能 / 延后处理）并记录理由。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>根据业务紧急度与风险承受力做取舍，白纸黑字写明决断理由与签字。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁默认全部接受或交由 AI 自动决定，每个选项背后都对应着明确的业务责任。
+        </div>
+      </div>
+    </details>
 
   </div>
 </section></section></section>

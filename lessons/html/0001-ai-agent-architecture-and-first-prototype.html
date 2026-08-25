@@ -350,13 +350,13 @@
       <summary class="concept-head">1. 大语言模型（LLM）：大脑</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>根据当前信息生成文字、方案或代码内容的概率模型；不是能直接操作电脑的完整 Agent，也不是天然了解部门事实的业务专家。
+          <span class="pill-label">📌 【是什么】</span>根据当前上下文推演并生成文字、方案或代码雏形的“概率大脑”。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>根据 Prompt 与当前上下文生成候选内容；内容听起来合理，也可能遗漏或猜错事实。
+          <span class="pill-label">⚙️ 【怎么用】</span>作为智囊参谋，用于快速头脑风暴、生成初版方案与辅助梳理思路；由主管负责审阅与裁决。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1 只让模型复述和规划；输出听起来合理不等于业务事实已核对，更不等于页面已经生成。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像总工程师能理解要求、画图纸，但"图纸画好了"不等于"样板间建好了"——生成内容合理不等于事实已核对。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁直接赋予其真实系统的修改权限，绝不能把模型推演出的内容不经核验直接当作事实。
         </div>
       </div>
     </details>
@@ -365,28 +365,28 @@
       <summary class="concept-head">2. Tools：手脚</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>读取文件、修改项目、运行命令或取得结果的具体能力；不是 LLM 本身，也不代表权限无限或绝对安全。
+          <span class="pill-label">📌 【是什么】</span>系统向 AI 开放的受控操作通道（如读取指定文件、运行测试命令、操作浏览器截图等）。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>Agent 请求调用工具，宿主环境实际执行，再把读取结果、运行输出或错误返回给模型。
+          <span class="pill-label">⚙️ 【怎么用】</span>按需授权 AI 查阅代码、修改草稿或采集测试证据，让“思考”转化为具体操作。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 看真实读取结果，Task 3 看实际修改与运行；工具能做什么取决于授权范围，调用成功也不等于业务正确。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁开放无限制的系统最高权限；工具调用成功仅代表技术执行完成，不等于业务正确。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. AI Agent（Agent）</summary>
+      <summary class="concept-head">3. AI Agent</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>把 LLM、当前信息和 Tools 组织起来，为一个目标完成多步工作的系统；不是永远正确、能够自行承担业务责任的数字员工。
+          <span class="pill-label">📌 【是什么】</span>以 LLM 为控制器、以规则为约束、以 Tools 为通道，围绕既定目标自主组织多步行动的执行系统。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>接收目标，推演下一步，调用工具，观察结果，再继续、调整、停止或请求人工处理。
+          <span class="pill-label">⚙️ 【怎么用】</span>下达结构化目标与约束条件，让其自主完成“拆解步骤 → 调用工具 → 观察结果 → 迭代调整”的完整流程。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—4 组成一次完整制作过程；Agent 负责执行和反馈，主管仍负责目标、范围、授权和验收。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁当甩手掌柜；Agent 无法独立承担管理责任，关键节点必须保留人工确认。
         </div>
       </div>
     </details>
@@ -395,13 +395,13 @@
       <summary class="concept-head">4. 业务原型：样板间</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>用来验证业务路径、交互和需求表达的可操作模型；不是生产系统，也不代表全部需求已经完成。
+          <span class="pill-label">📌 【是什么】</span>用可操作界面、模拟数据和有限路径表达假设的“样板间”，不是生产系统。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>用 Mock/已脱敏数据呈现一个使用者如何完成一件事，再由主管判断路径是否正确。
+          <span class="pill-label">⚙️ 【怎么用】</span>以极低成本让团队和 IT 提前看见未来软件的交互与逻辑，加速需求对齐与产品决策。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 4 的本地页面只证明一条个人业务路径在 Mock/脱敏数据下可操作；未实现和未验证部分要明确列出。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁把原型直接当成上线系统，原型能跑通不代表具备高并发、数据安全与容灾能力。
         </div>
       </div>
     </details>

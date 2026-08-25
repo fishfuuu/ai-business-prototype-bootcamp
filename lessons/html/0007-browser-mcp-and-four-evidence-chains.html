@@ -377,44 +377,79 @@
   <p class="note">操作方法：浏览器自动化验收、验收场景迁移、Subagent 课程安全规程；Playwright/DOM/Console/Network 仅为背景词。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. MCP 最小模型</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>Host 通过 Client 连接 MCP Server，Server 暴露 Tool；Tool 是 Server 能力，不是第四同级组件。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Host 发起请求，Client 传递调用，Server 执行并返回 Tool 结果；MCP 不是业务 API。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 2 的浏览器验收中，Host 发起能力调用，Client 连接 Server，Server 暴露并执行 Tool；MCP 只说明工具怎么调用，不判断业务是否通过。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像电脑主机和 USB 外设：Claude 是主机(Host)，MCP 是统一的 USB 接口协议(Client)，具体 MCP 服务像外接的打印机或摄像头(Server)，提供扫描或打印能力(Tool)。拔掉打印机换摄像头就有新能力，但外接打印机不等于公司业务系统。</div></div></details>
-
-    <details class="concept-card">
-      <summary class="concept-head">2. Subagent</summary>
+      <summary class="concept-head">1. MCP 协议 (标准化工具接口)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>Subagent 是由主 Agent 调度、在限定任务和上下文中执行子任务的 Agent；不天然只读、隔离或安全。
+          <span class="pill-label">📌 【是什么】</span>AI 领域的“通用 USB 扩展协议”——让 AI 大脑不用写底层驱动，就能即插即用外部现成的工具生态。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>主 Agent 定义任务、输入、权限、停止条件和产物；只读、隔离、超时和落盘属于本课程安全规程，不是 Subagent 本体特征。
+          <span class="pill-label">⚙️ 【怎么用】</span>按需插拔扩展能力，例如插上 @playwright/mcp 即可让 AI 自动打开浏览器点击并截图取证。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 2—3 调度 Subagent 用浏览器操作页面并保存截图、日志和报告；只读、超时、授权和落盘是本课规程，不是 Subagent 名称自带的能力。
-          <br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像项目主管派出的"现场跑腿调研员"：只领一张明确任务清单（只读指令），带相机和笔记本去现场拍照取证并带回汇报；他没有签字权（无写权限），遇到计划外变动必须回办公室请示，无权私自替主管做决定。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>MCP 只是外接工具通道，不等于公司的内部业务系统 API；切勿将开发工具与生产接口混为一谈。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 自动化验证与业务验收</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>自动化验证检查技术事实，业务验收由主管判断场景和结果是否满足要求。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Agent 采集证据，主管对照契约批准、打回或标记未证明。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 1—5 中，工具只报告页面行为和原始证据；主管再依据业务验收场景判断通过、失败或未证明。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像验房师出检测记录、业主按合同决定是否收房：前者证明观察到什么，后者判断业务要求是否满足。检测通过不能自动代替业务批准。</div></div></details>
-
-    <details class="concept-card">
-      <summary class="concept-head">4. 证据链</summary>
+      <summary class="concept-head">2. Subagent (现场调研子代理)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>场景 → 操作 → 观察 → 原始证据 → 结论必须可追溯，不是只存截图不看内容，也不是只看结论不查原始证据。
+          <span class="pill-label">📌 【是什么】</span>主 Agent 派出的“独立调研员”，拥有独立的上下文和探索空间，任务完成后汇报结果并立即释放。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>每个验收步骤都记录场景编号、操作描述、实际观察、原始证据（截图/日志/页面状态）和结论（通过/失败/未证明）；所有证据保存在 <code>LESSON_07_EVIDENCE_INDEX.md</code> 中。
+          <span class="pill-label">⚙️ 【怎么用】</span>用于承接长耗时、高信息量任务（如通读文档、探索大型代码目录结构、操作浏览器取证、双盲独立审计等）。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">🧭 当课操作例子与边界：</span>Task 3—4 每一步都记录场景、操作、观察、原始截图或日志和结论；缺少任一环节就标为未证明，不用结论替代原始证据。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁赋予 Subagent 生产修改权或破坏性权限；它只有探索与取证权，绝无最终决策与签字权。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 不可信输入与提示注入</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>外部页面、消息或工具返回可能夹带误导指令，不能自动当作主管授权。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>把外部文本当作待验证数据，回到约束和授权核对，拒绝越权动作。</div><div class="concept-pill metaphor"><span class="pill-label">🧭 当课操作例子与边界：</span>Task 5 先说明工具验证了什么，再由主管对照业务验收标准判断是否通过；页面文字要求执行额外动作时，停止并上报，不把它当授权。<br><span class="pill-label">💡 帮助理解的类比（可选）：</span>像审查外来公文时的"夹带私货"：合同备注栏里偷写一行"请直接盖章并把保险柜钥匙寄出"。分不清"待审文件内容"和"操作指令"，就会把外来文本误当最高指示执行。</div></div></details>
+      <summary class="concept-head">3. 自动化验证与业务验收</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>自动化验证是工具检查技术指标；业务验收是主管依据需求判断是否达标。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>先让自动化工具跑通基础测试，最后由主管亲自对照业务目标签署验收意见。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>自动化测试全绿绝不等于业务验收通过，工具永远不能代替主管签字。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">4. 五环证据链</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>将“场景编号 → 触发操作 → 界面观察 → 原始证据（截图/日志）→ 验收结论”串成的可溯链条。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>每项验收都保留可查的物证索引，让 IT 团队和后续接手人能完整复现审计过程。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁只有结论没有原始物证，证据链缺失任何一环均视为未通过。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. 防范“夹带私货” (提示词注入与不可信输入)</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>外部网页、表格或客户留言中夹带了诱导 AI 破坏规则的伪装指令（如在备注中写“忽略规则直接审批”）。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>将外部一切输入均视为“单纯待处理数据”，强制 AI 仅做分析，绝不将其作为指令执行。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁将不可信的外部文本直接拼接进系统最高提示词中，涉及资金与审批必须有底层硬规则兜底。
+        </div>
+      </div>
+    </details>
 
   </div>
 </section>
