@@ -145,84 +145,77 @@
 <script>
 const terms = [
   // L1
-  { name: 'LLM (大语言模型)', category: 'L1-L2', lesson: 'Lesson 01', def: '根据上下文概率生成内容的模型，需要外部工具和授权才能影响环境。', tag: '主管核心概念' },
-  { name: 'Tools (工具)', category: 'L1-L2', lesson: 'Lesson 01', def: '宿主程序向 AI Agent 暴露的受控操作通道，不代表无限权限。', tag: '主管核心概念' },
-  { name: 'AI Agent', category: 'L1-L2', lesson: 'Lesson 01', def: '以 LLM 为控制器、以规则为约束、以 Tools 为通道组织多步行动的软件系统。', tag: '主管核心概念' },
-  { name: '业务原型', category: 'L1-L2', lesson: 'Lesson 01', def: '用可操作界面、模拟数据和有限路径表达业务假设的学习与沟通载体，不是生产系统。', tag: '主管核心概念' },
-  { name: '个人业务原型', category: 'L1-L2', lesson: 'Lesson 01', def: '学员持续迭代的可操作原型及跨课状态记录。', tag: '交付产物' },
+  { name: 'LLM (大语言模型)', category: 'L1-L2', lesson: 'Lesson 01', def: '根据当前上下文推演并生成文字、方案或代码内容的“概率大脑”；需要外部工具和授权才能对真实系统产生影响。', tag: '主管核心概念' },
+  { name: 'Tools (工具接口)', category: 'L1-L2', lesson: 'Lesson 01', def: '系统向 AI Agent 开放的受控操作通道（如读写文件、运行命令、操作浏览器等）。', tag: '主管核心概念' },
+  { name: 'AI Agent', category: 'L1-L2', lesson: 'Lesson 01', def: '以 LLM 为控制器、以规则为约束、以 Tools 为通道，围绕目标组织多步行动的软件系统。', tag: '主管核心概念' },
+  { name: '业务原型 (样板间)', category: 'L1-L2', lesson: 'Lesson 01', def: '用可操作界面、模拟数据和有限路径表达业务假设的学习与沟通载体，不是生产系统。', tag: '主管核心概念' },
+  { name: '个人业务原型 V1', category: 'L1-L2', lesson: 'Lesson 01', def: '学员持续迭代的可操作原型及跨课状态记录。', tag: '交付产物' },
 
   // L2
-  { name: '信息优先级与视觉层级', category: 'L2-L2', lesson: 'Lesson 02', def: '按业务重要性安排内容、状态、操作和视觉强调。', tag: '主管核心概念' },
-  { name: '项目级 Agent 约束 / 行为护栏 (Agent Harness)', category: 'L2-L2', lesson: 'Lesson 02', def: '项目为 AI Agent 规定目标、范围、行为和设计规则的约束机制；不是运行时硬控制。', tag: '主管核心概念' },
-  { name: '约束作用域与优先级', category: 'L2-L2', lesson: 'Lesson 02', def: '明确约束适用范围及冲突时的优先顺序；不是所有规则同层。', tag: '主管核心概念' },
-  { name: '行为约束与设计约束', category: 'L2-L2', lesson: 'Lesson 02', def: '分别约束 AI Agent 如何工作以及产物应满足的视觉、交互和信息层级。', tag: '主管核心概念' },
-  { name: '约束一致性验证', category: 'L2-L2', lesson: 'Lesson 02', def: '检查实现是否满足项目约束、设计约束和验收场景并留下证据。', tag: '主管核心概念' },
-  { name: '多模态参考提取 / 设计约束映射 / Keep-Omit-Modify / 视觉证据对比', category: 'L2-L2', lesson: 'Lesson 02', def: '将参考意图转为约束、裁决和前后证据的操作方法。', tag: '操作方法' },
+  { name: '信息优先级与视觉层级', category: 'L1-L2', lesson: 'Lesson 02', def: '按业务重要性安排内容、状态、操作和视觉强调，把视觉选择映射回业务目标。', tag: '主管核心概念' },
+  { name: '项目级行为护栏 (Agent Harness)', category: 'L1-L2', lesson: 'Lesson 02', def: '项目给 AI 提前立好的规矩与底线（包括工作方式与界面设计规范），防止 AI 越界或随意发挥。', tag: '主管核心概念' },
+  { name: '约束作用域与优先级', category: 'L1-L2', lesson: 'Lesson 02', def: '规则按“项目级 > 目录级 > 单文件级”逐级生效；全局红线高于局部规则，任何单个文件都不能擅自突破项目底线。', tag: '主管核心概念' },
+  { name: '行为约束与设计约束', category: 'L1-L2', lesson: 'Lesson 02', def: '行为约束 (CLAUDE.md/AGENTS.md) 规定怎么工作，设计约束 (DESIGN.md) 规定界面长什么样；两者都是项目级约定。', tag: '主管核心概念' },
+  { name: '约束一致性验证', category: 'L1-L2', lesson: 'Lesson 02', def: '检查实现是否同时满足项目约束、设计约束和验收场景，并留下前后对比证据。', tag: '主管核心概念' },
+  { name: '多模态参考提取 / Keep-Omit-Modify / 视觉证据对比', category: 'L1-L2', lesson: 'Lesson 02', def: '将参考意图转为设计约束、做保留/舍弃/修改裁决并留下前后证据的操作方法。', tag: '操作方法' },
 
   // L3
-  { name: '业务问题边界', category: 'L3-L4', lesson: 'Lesson 03', def: '使用者、触发、问题、目标和明确非目标共同限定本次业务范围。', tag: '主管核心概念' },
-  { name: 'Grill-Me 结构化追问', category: 'L3-L4', lesson: 'Lesson 03', def: '按问题、目标、边界、风险、通过和停止条件追问并固化业务契约。', tag: '操作方法' },
-  { name: '业务契约', category: 'L3-L4', lesson: 'Lesson 03', def: '把业务目标、角色、流程、规则、边界和通过条件写成可核对的约定。', tag: '主管核心概念' },
-  { name: '数据契约', category: 'L3-L4', lesson: 'Lesson 03', def: '固定字段、类型、枚举、来源和缺失行为等数据结构约定。', tag: '主管核心概念' },
-  { name: '验收场景', category: 'L3-L4', lesson: 'Lesson 03', def: '包含前置条件、操作、预期观察、通过标准和失败处置的可重复业务情境。', tag: '主管核心概念' },
-  { name: 'Skill', category: 'L3-L3', lesson: 'Lesson 03', def: '可复用的打包指令（SKILL.md），Agent 装载后按它执行某种固定方法，区别于一次性 Prompt。', tag: '主管核心概念' },
+  { name: '业务问题边界', category: 'L3-L4', lesson: 'Lesson 03', def: '使用者、触发条件、业务痛点、目标和明确不做项共同限定本次业务范围。', tag: '主管核心概念' },
+  { name: 'Grill-Me 结构化追问 (三维消歧)', category: 'L3-L4', lesson: 'Lesson 03', def: '主动按范围边界 (P1必做/P3不做)、数据流向和异常分支逐题追问并固化业务契约。', tag: '操作方法' },
+  { name: '业务契约', category: 'L3-L4', lesson: 'Lesson 03', def: '把业务目标、涉及角色、处理规则与验收标准白纸黑字写成确定性协议，不让 AI 凭空瞎猜。', tag: '主管核心概念' },
+  { name: '数据契约', category: 'L3-L4', lesson: 'Lesson 03', def: '固定字段名称、类型、枚举、来源和缺失行为等数据结构约定，建立界面与未来 API 之间的可追溯边界。', tag: '主管核心概念' },
+  { name: '验收场景 (Given-When-Then)', category: 'L3-L4', lesson: 'Lesson 03', def: '包含前置条件、操作、预期观察、通过标准和失败处置的可重复业务情境。', tag: '主管核心概念' },
+  { name: 'Skill (打包技能指令)', category: 'L3-L4', lesson: 'Lesson 03', def: '可复用的打包指令（SKILL.md），Agent 装载后按它执行某种固定方法，区别于临时写的一次性 Prompt。', tag: '主管核心概念' },
 
   // L4
-  { name: '薄切片', category: 'L4-L4', lesson: 'Lesson 04', def: '足够小而能独立验证、同时贯穿一条完整业务价值路径的增量范围。', tag: '主管核心概念' },
-  { name: '版本证据与回退', category: 'L4-L4', lesson: 'Lesson 04', def: '用 Working Tree、Diff、Commit 记录变更、比较差异和保存版本证据。', tag: '主管核心概念' },
-  { name: '技术状态与业务状态', category: 'L4-L4', lesson: 'Lesson 04', def: '区分系统呈现状态与业务对象状态，不能把页面打开当业务通过。', tag: '主管核心概念' },
-  { name: '可追溯验收', category: 'L4-L4', lesson: 'Lesson 04', def: '把验收场景、操作、观察、原始证据、结论和责任关联到具体版本。', tag: '主管核心概念' },
-  { name: 'Plan & Execute / 两阶段版本记录 / 有界恢复', category: 'L4-L4', lesson: 'Lesson 04', def: '先计划再执行、分别留痕候选与处置、按确认范围恢复的操作方法；提交数量不固定。', tag: '操作方法' },
+  { name: '薄切片 (纵向业务切片)', category: 'L3-L4', lesson: 'Lesson 04', def: '足够小而能独立验证、同时从输入到结果完整跑通一条业务路径的“纵向最小闭环”。', tag: '主管核心概念' },
+  { name: '版本证据与回退', category: 'L3-L4', lesson: 'Lesson 04', def: '利用修改记录 (Diff) 与历史快照 (Commit) 留存证据，确保改错了随时能回退，改对了有据可查。', tag: '主管核心概念' },
+  { name: '技术状态与业务状态', category: 'L3-L4', lesson: 'Lesson 04', def: '技术状态（页面卡不卡、报不报错）与业务状态（审批中、已驳回、已完成）是两码事。页面能打开绝不等于业务通过。', tag: '主管核心概念' },
+  { name: '可追溯验收', category: 'L3-L4', lesson: 'Lesson 04', def: '把验收场景、操作、观察、原始证据、结论和责任关联到具体版本，让 IT 能复核主管批准了什么。', tag: '主管核心概念' },
+  { name: 'Plan & Execute / 两阶段版本记录 / 有界恢复', category: 'L3-L4', lesson: 'Lesson 04', def: '先形成计划再授权执行、分别留痕候选与处置、失败时导出 .patch 补丁并恢复 Clean 工作区的操作方法。', tag: '操作方法' },
 
   // L5
-  { name: 'AI 介入层级', category: 'L5-L6', lesson: 'Lesson 05', def: '从不使用 AI、辅助生成、受控 Workflow 到受控 Agent 的介入强度梯度。', tag: '主管核心概念' },
-  { name: '确定性任务与概率性任务', category: 'L5-L6', lesson: 'Lesson 05', def: '区分按规则稳定可预测的任务与依赖模型判断、结果可能变化的任务。', tag: '主管核心概念' },
-  { name: 'Workflow 与 Agent', category: 'L5-L6', lesson: 'Lesson 05', def: 'Workflow 按预定步骤执行，Agent 可根据目标和观察结果选择下一步。', tag: '主管核心概念' },
-  { name: 'ReAct', category: 'L5-L6', lesson: 'Lesson 05', def: '在推理、行动、观察之间循环，把工具结果带回下一步决策。', tag: '主管核心概念' },
-  { name: 'HITL', category: 'L5-L6', lesson: 'Lesson 05', def: '在人与 AI 协作关键节点确认、纠正、接管或停止自动化的责任机制。', tag: '主管核心概念' },
+  { name: 'AI 介入层级', category: 'L5-L6', lesson: 'Lesson 05', def: 'AI 介入是有梯度的（不用 AI、辅助建议、固定流程、受控决策）；不是非黑即白，更不是越自主越好。', tag: '主管核心概念' },
+  { name: '确定性任务与概率性任务', category: 'L5-L6', lesson: 'Lesson 05', def: '规则清晰结果唯一的是确定性任务（优先用规则）；开放判断语言理解的是概率性任务（模型辅助+人工兜底）。', tag: '主管核心概念' },
+  { name: 'Workflow 与 Agent (判定黄金法则)', category: 'L5-L6', lesson: 'Lesson 05', def: '凡是步骤固定、规则明确的坚决走固定流程 (Workflow)；只有需要根据中间结果动态调整下一步的才考虑 Agent。', tag: '主管核心概念' },
+  { name: 'ReAct 循环', category: 'L5-L6', lesson: 'Lesson 05', def: 'Thought(思考) → Action(行动) → Observation(观察) 的循环，根据工具反馈动态决定下一步。', tag: '主管核心概念' },
+  { name: '人在回路授权门禁 (HITL)', category: 'L5-L6', lesson: 'Lesson 05', def: '在智能行为的关键节点设置人工检查点——批准后才继续、发现偏差时纠正、出错时接管、风险越界时停止。', tag: '主管核心概念' },
 
   // L6
-  { name: '事实、假设与生成错误', category: 'L6-L6', lesson: 'Lesson 06', def: '事实有可核对证据，假设是待验证判断，生成错误是不实模型产出。', tag: '主管核心概念' },
-  { name: '根因与表象', category: 'L6-L6', lesson: 'Lesson 06', def: '表象是可见症状，根因是造成症状的更深层原因。', tag: '主管核心概念' },
-  { name: '有界排错', category: 'L6-L6', lesson: 'Lesson 06', def: '限定主假设、修改范围和重试预算，失败时保留证据并停止或升级。', tag: '主管核心概念' },
-  { name: '重试预算/熔断', category: 'L6-L6', lesson: 'Lesson 06', def: '为自动重试设定次数、时间或风险上限，达到阈值就停止；不是固定数字。', tag: '主管核心概念' },
-  { name: '停止/升级/恢复', category: 'L6-L6', lesson: 'Lesson 06', def: '停止自动化、交给更高责任层或按确认范围恢复到已知版本。', tag: '主管核心概念' },
-  { name: '事实锚定排错与五层诊断', category: 'L6-L6', lesson: 'Lesson 06', def: '先锚定事实，再按环境、数据、状态、日志和契约逐层定位的操作方法。', tag: '操作方法' },
+  { name: '事实、假设与生成错误', category: 'L6-L6', lesson: 'Lesson 06', def: '事实是看到的现象，假设是对原因的解释，生成错误是 AI 编造的不存在信息；三者严禁混为一谈。', tag: '主管核心概念' },
+  { name: '根因定位与五层诊断', category: 'L6-L6', lesson: 'Lesson 06', def: '从环境、数据、状态、日志、契约逐层排查，提出有明确验证依据的推断，被事实推翻立刻换方向，绝不盲目试错。', tag: '主管核心概念' },
+  { name: '有界排错 (限时限范围)', category: 'L6-L6', lesson: 'Lesson 06', def: '锁定单个问题、限定修改范围、最多只试两轮；修不好立即停下，保留现场快照并交由人工接管。', tag: '主管核心概念' },
+  { name: '重试预算 / 熔断', category: 'L6-L6', lesson: 'Lesson 06', def: '为自动重试设定次数、时间或风险上限，达到阈值就停止熔断，防止 Agent 陷入死循环。', tag: '主管核心概念' },
+  { name: '停止 / 升级 / 恢复', category: 'L6-L6', lesson: 'Lesson 06', def: '停止自动化、交给明确责任人接管、从 Checkpoint 存档安全回退到已知版本。', tag: '主管核心概念' },
 
   // L7
-  { name: 'MCP 最小模型 (Host/Client/Server/Tool)', category: 'L7-L8', lesson: 'Lesson 07', def: 'Host 通过 Client 连接 Server，Server 暴露 Tool；Tool 是 Server 能力，不是第四同级组件。', tag: '主管核心概念' },
-  { name: 'Subagent', category: 'L7-L8', lesson: 'Lesson 07', def: '由主 Agent 调度、在限定任务和上下文中执行子任务的 Agent；只读、隔离、超时和落盘是本课程安全规程。', tag: '主管核心概念' },
-  { name: '自动化验证与业务验收', category: 'L7-L8', lesson: 'Lesson 07', def: '自动化验证检查技术事实，业务验收由主管判断目标是否满足。', tag: '主管核心概念' },
-  { name: '证据链', category: 'L7-L8', lesson: 'Lesson 07', def: '把场景、操作、观察、原始证据和结论串成可复核记录。', tag: '主管核心概念' },
-  { name: '不可信输入与提示注入', category: 'L7-L8', lesson: 'Lesson 07', def: '外部文本可能夹带误导指令，不能自动当作主管授权。', tag: '主管核心概念' },
-  { name: '浏览器自动化验收 / 验收场景迁移 / Subagent 课程安全规程', category: 'L7-L8', lesson: 'Lesson 07', def: '把业务场景转成浏览器步骤并在课程安全规程下采集证据。', tag: '操作方法' },
+  { name: 'MCP 协议 (标准化工具接口)', category: 'L7-L8', lesson: 'Lesson 07', def: '把 AI 想象成主机 (Host)，MCP 是标准的 USB 连接层，外接的浏览器或测试服务就是打印机 (Server)。', tag: '主管核心概念' },
+  { name: 'Subagent (现场调研子代理)', category: 'L7-L8', lesson: 'Lesson 07', def: '由主 Agent 调度、在只读沙箱中操作页面取证的子 Agent；无签字权，遇到计划外变动必须回办公室请示。', tag: '主管核心概念' },
+  { name: '自动化验证与业务验收', category: 'L7-L8', lesson: 'Lesson 07', def: '自动化验证检查技术事实，业务验收由主管判断业务目标是否满足；工具通过不等于主管批准。', tag: '主管核心概念' },
+  { name: '五环证据链', category: 'L7-L8', lesson: 'Lesson 07', def: '把场景 → 操作 → 观察 → 原始证据 (截图/日志) → 结论串成可完整复核的追溯链条。', tag: '主管核心概念' },
+  { name: '防范“夹带私货” (提示词注入风险)', category: 'L7-L8', lesson: 'Lesson 07', def: '外部网页或数据中可能藏有恶意指令；AI 必须把外部内容当成单纯数据，绝不能当成操作指令盲目执行。', tag: '主管核心概念' },
 
   // L8
-  { name: '上下文隔离', category: 'L8-L8', lesson: 'Lesson 08', def: '让独立评审只取得必要、确认过的输入，不继承不相关对话。', tag: '主管核心概念' },
-  { name: '独立 Finding', category: 'L8-L8', lesson: 'Lesson 08', def: '评审者基于证据记录的一个可定位、可处置的问题发现。', tag: '主管核心概念' },
-  { name: '验证、评审、批准三分', category: 'L8-L8', lesson: 'Lesson 08', def: '验证检查事实，评审判断质量与风险，批准承担业务授权；三者分责。', tag: '主管核心概念' },
-  { name: '独立评审', category: 'L8-L8', lesson: 'Lesson 08', def: '由未参与实现的评审者在隔离上下文中检查规格、证据和变更。', tag: '主管核心概念' },
-  { name: '主管裁决', category: 'L8-L8', lesson: 'Lesson 08', def: '主管基于 Finding、证据和业务影响作出最终处置判断。', tag: '主管核心概念' },
-  { name: 'Agent 协作模式选型 / accept-fix-stop-defer', category: 'L8-L8', lesson: 'Lesson 08', def: '按依赖、并行性、独立性和责任选择协作方式，并逐项接受、修复、停止或延期 Finding；属于操作方法。', tag: '操作方法' },
-  { name: '六种协作模式名称 (扩展认识)', category: 'L8-L8', lesson: 'Lesson 08', def: '流水线（依赖传递）、调度/执行（主管调度子 Agent）、并行（同时独立审计多个项目）、对等（角色平等协商）、评审（独立审查）、混合（以上组合）。', tag: '协作模式' },
+  { name: '上下文隔离 (双盲独立评审)', category: 'L8-L8', lesson: 'Lesson 08', def: '评审模型只看最终代码与运行证据，坚决不给它看开发过程中的聊天记录，防止 AI 自己给自己辩解。', tag: '主管核心概念' },
+  { name: '独立 Finding (审查发现项)', category: 'L8-L8', lesson: 'Lesson 08', def: '独立评审模型基于证据指出的具体问题、业务影响、证据索引与处置建议。', tag: '主管核心概念' },
+  { name: '自验、评审与拍板三权分立', category: 'L8-L8', lesson: 'Lesson 08', def: '执行者负责自验（自己做对了吗），独立模型负责挑刺（第三方看有没有问题），业务主管负责拍板（决定接不接受现状）。', tag: '主管核心概念' },
+  { name: '独立评审机制', category: 'L8-L8', lesson: 'Lesson 08', def: '由未参与实现的独立评审模型在隔离上下文中对照契约检查规格与证据。', tag: '主管核心概念' },
+  { name: '主管裁决 (accept / fix / stop / defer)', category: 'L8-L8', lesson: 'Lesson 08', def: '主管基于 Finding、证据和业务影响，逐项作出接受现状、修复、停止或延期处理决定并写明理由。', tag: '主管核心概念' },
 
   // L9
-  { name: 'AI 机会', category: 'L9-L10', lesson: 'Lesson 09', def: '业务流程中值得评估是否引入 AI 的具体环节；不是已经批准实施的需求。', tag: '主管核心概念' },
-  { name: 'AI 介入层级', category: 'L9-L10', lesson: 'Lesson 09', def: '从不使用 AI、辅助生成、Workflow 到受控 Agent 的自治度梯度。', tag: '主管核心概念' },
-  { name: 'Agent 范式', category: 'L9-L10', lesson: 'Lesson 09', def: '围绕任务选择 Workflow、受控 Agent 或人工处理方式及其责任边界。', tag: '主管核心概念' },
-  { name: 'AI 机会地图 / 介入层级迁移 / Agent 范式选型', category: 'L9-L10', lesson: 'Lesson 09', def: '按业务环节迁移判断并形成部门级选型图的操作方法。', tag: '操作方法' },
-  { name: '三链区分', category: 'L9-L10', lesson: 'Lesson 09', def: '区分开发工具链、业务 API 链和模型 API 链中的对象、凭证、数据、失败和 owner。', tag: '主管核心概念' },
-  { name: 'Fallback 来源与失败责任', category: 'L9-L10', lesson: 'Lesson 09', def: '降级结果标明来源、原因、限制和责任 owner。', tag: '主管核心概念' },
+  { name: '业务流程 AI 机会', category: 'L9-L10', lesson: 'Lesson 09', def: '以真实业务流程节点为单位评估 AI 价值、可验证性、错误代价与责任，不搞大而化之的全面 AI 化。', tag: '主管核心概念' },
+  { name: '全流程 AI 介入层级选型', category: 'L9-L10', lesson: 'Lesson 09', def: '将 L5 单点判断迁移至整个部门业务链，逐环节选择最低足够介入层级，明确拒绝不该用的环节。', tag: '主管核心概念' },
+  { name: 'Agent 范式选型图', category: 'L9-L10', lesson: 'Lesson 09', def: '在 Prompt、Workflow、ReAct、Plan & Execute、Routing、Evaluator-Optimizer 中选择最简单足够者。', tag: '主管核心概念' },
+  { name: '三条通道各归其位 (三链隔离)', category: 'L9-L10', lesson: 'Lesson 09', def: '把写代码的开发工具链、业务系统的数据接口链和调用大模型的智能接口链彻底分开，凭证与责任绝不混用。', tag: '主管核心概念' },
+  { name: '兜底降级与责任归属 (Fallback)', category: 'L9-L10', lesson: 'Lesson 09', def: '当 AI 接口超时或算不出时，界面必须明确打上“缓存/人工兜底”标签，绝不能用假数据冒充真实成功，并明确标出第一责任人。', tag: '主管核心概念' },
 
   // L10
-  { name: '原型与生产系统', category: 'L10-L10', lesson: 'Lesson 10', def: '原型验证路径和决策；生产系统还需正式架构、安全、数据、测试、运维和责任治理。', tag: '主管核心概念' },
-  { name: '风险红线与非目标', category: 'L10-L10', lesson: 'Lesson 10', def: '明确不可自动执行、必须人工批准、暂不建设或留给后续工程的事项。', tag: '主管核心概念' },
-  { name: '产品决策', category: 'L10-L10', lesson: 'Lesson 10', def: '基于业务价值、证据、风险和成本，并明确责任，选择继续、调整、暂缓或停止。', tag: '主管核心概念' },
-  { name: '责任交接', category: 'L10-L10', lesson: 'Lesson 10', def: '把范围、契约、证据、红线、未决项和责任 owner 明确交给 IT 或后续团队。', tag: '主管核心概念' },
-  { name: '产品决策记录', category: 'L10-L10', lesson: 'Lesson 10', def: '记录继续、调整、暂缓或停止及其证据、风险和责任的交付材料，不是产品决策概念本身。', tag: '交付产物' },
-  { name: '生产就绪缺口 (工程落地差距清单)', category: 'L10-L10', lesson: 'Lesson 10', def: '原型到生产之间仍需补齐的安全、真实数据、集成、测试、监控、回滚、成本和合规事项；不是生产批准。', tag: '主管核心概念' },
-  { name: '原型交付就绪度检查', category: 'L10-L10', lesson: 'Lesson 10', def: '检查证据、红线、缺口和责任交接，判断是否适合交给 IT；属于操作方法。', tag: '操作方法' },
-  { name: '开发启动包', category: 'L10-L10', lesson: 'Lesson 10', def: '汇总问题、原型、契约、证据、红线、缺口、责任和产品决策，供 IT 正式设计开发；不是可上线包。', tag: '交付产物' }
+  { name: '原型 ≠ 生产系统 (样板间不是交付住房)', category: 'L10-L10', lesson: 'Lesson 10', def: '原型只为了向 IT 证明“业务逻辑跑得通、这个场景值得做”；正式上线还必须经过 IT 的安全审计与数据权限门禁。', tag: '主管核心概念' },
+  { name: '风险红线与非目标', category: 'L10-L10', lesson: 'Lesson 10', def: '明确不可自动执行的高风险动作（资金/合同）、高敏感数据及本次不做的非目标，让 IT 清楚安全边界。', tag: '主管核心概念' },
+  { name: '产品决策 (继续 / 调整 / 暂缓 / 停止)', category: 'L10-L10', lesson: 'Lesson 10', def: '综合业务价值、证据充分度、错误代价和工程成本，作出有理有据的建设判断，不是做出来就必须上线。', tag: '主管核心概念' },
+  { name: '工程落地差距清单 (生产就绪缺口)', category: 'L10-L10', lesson: 'Lesson 10', def: '诚实列出原型与真实生产系统之间的差距（如差哪些真实接口、哪些安全漏洞待修、哪些并发压力未测），作为交给 IT 的开发启动清单。', tag: '主管核心概念' },
+  { name: '责任交接 (业务/数据/模型/审批/门禁)', category: 'L10-L10', lesson: 'Lesson 10', def: '把范围、契约、证据、红线、缺口与责任 owner 完整移交给 IT，交接是责任转移，不是“交给 IT 就完了”。', tag: '主管核心概念' },
+  { name: '开发启动包 (Development Kick-off Pack)', category: 'L10-L10', lesson: 'Lesson 10', def: '汇总业务问题、原型证据、数据契约、AI选型、风险红线、落地缺口与产品决策的完整交付资产包。', tag: '交付产物' }
 ];
 
 let currentCat = 'all';
