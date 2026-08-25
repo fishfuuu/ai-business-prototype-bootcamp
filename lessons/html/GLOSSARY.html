@@ -41,15 +41,14 @@
     color: #f5f1e8;
     padding: 3.5rem 1.25rem 3rem;
   }
-  .hero .wrap { max-width: 900px; margin: 0 auto; }
+  .hero .wrap { max-width: 960px; margin: 0 auto; }
   .kicker { font-size: .85rem; letter-spacing: .15em; text-transform: uppercase; color: #94a3b8; font-weight: 700; }
   .hero h1 {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
     font-size: 2.2rem; line-height: 1.3; margin: .8rem 0 1rem; font-weight: 800;
   }
-  .hero .sub { color: #cbd5e1; max-width: 68ch; font-size: 1.05rem; line-height: 1.6; }
+  .hero .sub { color: #cbd5e1; max-width: 72ch; font-size: 1.05rem; line-height: 1.6; }
 
-  .wrap { max-width: 900px; margin: 0 auto; padding: 0 1.25rem; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
 
   /* Filter Controls */
   .filter-box {
@@ -85,21 +84,25 @@
   .term-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
 
   .term-header {
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .6rem;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .8rem;
   }
   .term-title {
-    font-size: 1.15rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: .6rem;
+    font-size: 1.18rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: .6rem;
   }
   .term-lesson-badge {
     font-size: .75rem; font-weight: 800; padding: .15rem .5rem; border-radius: 6px;
     background: #f1ede5; color: #475569; border: 1px solid var(--line); white-space: nowrap;
   }
 
-  .term-def { font-size: .95rem; line-height: 1.7; color: var(--ink); margin-bottom: .8rem; }
+  .term-section { margin-bottom: .6rem; font-size: .95rem; line-height: 1.65; }
+  .term-label { font-weight: 800; display: inline-block; width: 85px; color: #334155; }
+  .term-label.what { color: #0f766e; }
+  .term-label.how { color: #1d4ed8; }
+  .term-label.redline { color: #b91c1c; }
 
   .term-meta {
     display: flex; gap: .6rem; font-size: .85rem; flex-wrap: wrap; border-top: 1px dashed var(--line);
-    padding-top: .75rem; margin-top: .5rem; color: var(--ink-soft);
+    padding-top: .75rem; margin-top: .8rem; color: var(--ink-soft);
   }
   .term-tag {
     background: var(--paper); border: 1px solid var(--line); padding: 2px 8px; border-radius: 4px; font-weight: 600;
@@ -112,9 +115,9 @@
 
 <div class="hero">
   <div class="wrap">
-    <div class="kicker">GLOSSARY · 权威概念总览</div>
+    <div class="kicker">GLOSSARY · 权威概念实战总览</div>
     <h1>主管 AI 原型制作训练营 交互式术语词典</h1>
-    <p class="sub">按三种知识角色组织：主管必须掌握并调用的概念、操作方法、交付产物。每个词条用于说明是什么、不是什么以及用意。</p>
+    <p class="sub">统一采用「是什么 / 怎么用 / 避坑红线」实战三段论：快速建立本质认知、掌握业务管理抓手、严密防范实战翻车。</p>
   </div>
 </div>
 
@@ -124,11 +127,11 @@
     <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索术语名称、定义或关键词..." oninput="filterTerms()">
     <div class="cat-tabs">
       <button class="cat-btn active" onclick="setCategory('all', this)">全部分类 (<span id="cntAll">0</span>)</button>
-      <button class="cat-btn" onclick="setCategory('L1-L2', this)">主管核心概念 (L1-L2)</button>
-      <button class="cat-btn" onclick="setCategory('L3-L4', this)">主管核心概念 (L3-L4)</button>
-      <button class="cat-btn" onclick="setCategory('L5-L6',  this)">核心与操作方法 (L5-L6)</button>
-      <button class="cat-btn" onclick="setCategory('L7-L8', this)">核心与操作方法 (L7-L8)</button>
-      <button class="cat-btn" onclick="setCategory('L9-L10', this)">核心与交付产物 (L9-L10)</button>
+      <button class="cat-btn" onclick="setCategory('L1-L2', this)">AI认知与设计护栏 (L1-L2)</button>
+      <button class="cat-btn" onclick="setCategory('L3-L4', this)">业务契约与薄切片 (L3-L4)</button>
+      <button class="cat-btn" onclick="setCategory('L5-L6', this)">智能机会与有界排错 (L5-L6)</button>
+      <button class="cat-btn" onclick="setCategory('L7-L8', this)">自动化验收与独立评审 (L7-L8)</button>
+      <button class="cat-btn" onclick="setCategory('L9-L10', this)">部门选型与产品交接 (L9-L10)</button>
     </div>
   </div>
 
@@ -139,89 +142,489 @@
 </div>
 
 <footer>
-  主管 AI 原型制作训练营 · 权威路线图：<a href="COURSE_ROADMAP.html">COURSE_ROADMAP.html</a> | 主索引
+  主管 AI 原型制作训练营 · 权威路线图：<a href="COURSE_ROADMAP.html">COURSE_ROADMAP.html</a> | 术语字典
 </footer>
 
 <script>
 const terms = [
   // L1
-  { name: 'LLM (大语言模型)', category: 'L1-L2', lesson: 'Lesson 01', def: '根据上下文概率生成内容的模型，需要外部工具和授权才能影响环境。', tag: '主管核心概念' },
-  { name: 'Tools (工具)', category: 'L1-L2', lesson: 'Lesson 01', def: '宿主程序向 AI Agent 暴露的受控操作通道，不代表无限权限。', tag: '主管核心概念' },
-  { name: 'AI Agent', category: 'L1-L2', lesson: 'Lesson 01', def: '以 LLM 为控制器、以规则为约束、以 Tools 为通道组织多步行动的软件系统。', tag: '主管核心概念' },
-  { name: '业务原型', category: 'L1-L2', lesson: 'Lesson 01', def: '用可操作界面、模拟数据和有限路径表达业务假设的学习与沟通载体，不是生产系统。', tag: '主管核心概念' },
-  { name: '个人业务原型', category: 'L1-L2', lesson: 'Lesson 01', def: '学员持续迭代的可操作原型及跨课状态记录。', tag: '交付产物' },
+  {
+    name: '大语言模型 (LLM)',
+    category: 'L1-L2',
+    lesson: 'Lesson 01',
+    what: '根据当前上下文推演并生成文字、方案或代码雏形的“概率大脑”。',
+    how: '作为智囊参谋，用于快速头脑风暴、生成初版方案与辅助梳理思路；由主管负责审阅与裁决。',
+    redline: '严禁直接赋予其真实系统的修改权限，绝不能把模型推演出的内容不经核验直接当作事实。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '工具接口 (Tools)',
+    category: 'L1-L2',
+    lesson: 'Lesson 01',
+    what: '系统向 AI 开放的受控操作通道（如读取指定文件、运行测试命令、操作浏览器截图等）。',
+    how: '按需授权 AI 查阅代码、修改草稿或采集测试证据，让“思考”转化为具体操作。',
+    redline: '严禁开放无限制的系统最高权限；工具调用成功仅代表技术执行完成，不等于业务正确。',
+    tag: '主管核心概念'
+  },
+  {
+    name: 'AI Agent',
+    category: 'L1-L2',
+    lesson: 'Lesson 01',
+    what: '以 LLM 为控制器、以规则为约束、以 Tools 为通道，围绕既定目标自主组织多步行动的执行系统。',
+    how: '下达结构化目标与约束条件，让其自主完成“拆解步骤 → 调用工具 → 观察结果 → 迭代调整”的完整流程。',
+    redline: '严禁当甩手掌柜；Agent 无法独立承担管理责任，关键节点必须保留人工确认。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '业务原型 (样板间)',
+    category: 'L1-L2',
+    lesson: 'Lesson 01',
+    what: '用可操作界面、模拟数据和有限路径表达假设的“样板间”，不是生产系统。',
+    how: '以极低成本让团队和 IT 提前看见未来软件的交互与逻辑，加速需求对齐与产品决策。',
+    redline: '严禁把原型直接当成上线系统，原型能跑通不代表具备高并发、数据安全与容灾能力。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '个人业务原型 V1',
+    category: 'L1-L2',
+    lesson: 'Lesson 01',
+    what: '学员基于业务起点分支构建并持续迭代的可操作原型基线及项目状态记录。',
+    how: '作为贯穿十课的核心业务主线，逐步融入设计护栏、契约、智能薄片与自动化验收。',
+    redline: '严禁脱离个人业务盲目照抄演示代码，每一步改动必须与自己的业务痛点挂钩。',
+    tag: '交付产物'
+  },
 
   // L2
-  { name: '信息优先级与视觉层级', category: 'L2-L2', lesson: 'Lesson 02', def: '按业务重要性安排内容、状态、操作和视觉强调。', tag: '主管核心概念' },
-  { name: '项目级 Agent 约束 / Agent Harness', category: 'L2-L2', lesson: 'Lesson 02', def: '项目为 AI Agent 规定目标、范围、行为和设计规则的约束机制；不是运行时硬控制。', tag: '主管核心概念' },
-  { name: '约束作用域与优先级', category: 'L2-L2', lesson: 'Lesson 02', def: '明确约束适用范围及冲突时的优先顺序；不是所有规则同层。', tag: '主管核心概念' },
-  { name: '行为约束与设计约束', category: 'L2-L2', lesson: 'Lesson 02', def: '分别约束 AI Agent 如何工作以及产物应满足的视觉、交互和信息层级。', tag: '主管核心概念' },
-  { name: '约束一致性验证', category: 'L2-L2', lesson: 'Lesson 02', def: '检查实现是否满足项目约束、设计约束和验收场景并留下证据。', tag: '主管核心概念' },
-  { name: '多模态参考提取 / 设计约束映射 / Keep-Omit-Modify / 视觉证据对比', category: 'L2-L2', lesson: 'Lesson 02', def: '将参考意图转为约束、裁决和前后证据的操作方法。', tag: '操作方法' },
+  {
+    name: '项目级行为护栏 (Agent Harness)',
+    category: 'L1-L2',
+    lesson: 'Lesson 02',
+    what: '放在项目根目录的“AI 员工入职守则（物理规则文件）”，任何 AI 工具都会自动读取它。',
+    how: '在 CLAUDE.md 或 AGENTS.md 中写明项目结构、受保护目录、设计规范及自检流程，实现规则全局常驻。',
+    redline: '警惕注意力漂移！规则文件不是硬编译器，会话过长时大模型会遗忘规则；任务完成后及时开新会话，主管必须亲自对照护栏核对 Diff。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '约束作用域与优先级',
+    category: 'L1-L2',
+    lesson: 'Lesson 02',
+    what: '规则按“项目级 > 目录级 > 单文件级”逐级生效的分层机制。',
+    how: '全局安全底线写在项目级，局部特殊要求写在单文件级，确保规则条理清晰。',
+    redline: '局部规则绝不能与全局红线冲突，遇有争议一律以上级安全规则为准。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '行为约束与设计约束',
+    category: 'L1-L2',
+    lesson: 'Lesson 02',
+    what: '行为约束管“AI 怎么干活”（如先计划后动手），设计约束管“界面长什么样”（如排版与配色规范）。',
+    how: '双管齐下，既保证开发过程可控不乱改，又保证产出的界面符合专业规范。',
+    redline: '严禁只管代码不管外观，没有设计约束会导致 AI 自由发挥拼凑出难以阅读的界面。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '信息优先级与视觉层级',
+    category: 'L1-L2',
+    lesson: 'Lesson 02',
+    what: '按业务重要性安排内容、状态、操作和视觉强调，把视觉选择映射回业务目标。',
+    how: '核心 KPI 放大置顶，操作按钮主次分明，状态标签颜色与含义严密对应。',
+    redline: '严禁把页面塞满同等权重的杂乱信息，缺乏视觉层级会导致使用者找不到操作焦点。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '约束一致性验证',
+    category: 'L1-L2',
+    lesson: 'Lesson 02',
+    what: '对照设计规范与业务契约，逐项核对实现结果是否违规的检查机制。',
+    how: '在功能修改前后截图比对，检查字体、间距、按钮状态及操作反馈是否符合标准。',
+    redline: '严禁凭主观感觉“差不多就行”，必须有明确的前后对比证据。',
+    tag: '主管核心概念'
+  },
 
   // L3
-  { name: '业务问题边界', category: 'L3-L4', lesson: 'Lesson 03', def: '明确问题、目标、非目标、风险和停止条件的范围声明。', tag: '主管核心概念' },
-  { name: 'Grill-Me 结构化追问', category: 'L3-L4', lesson: 'Lesson 03', def: '按问题、目标、边界、风险、通过和停止条件追问并固化业务契约。', tag: '操作方法' },
-  { name: '业务契约', category: 'L3-L4', lesson: 'Lesson 03', def: '把业务目标、角色、流程、规则、边界和通过条件写成可核对的约定。', tag: '主管核心概念' },
-  { name: '数据契约', category: 'L3-L4', lesson: 'Lesson 03', def: '固定字段、类型、枚举、来源和缺失行为等数据结构约定。', tag: '主管核心概念' },
-  { name: '验收场景', category: 'L3-L4', lesson: 'Lesson 03', def: '包含前置条件、操作、预期观察、通过标准和失败处置的可重复业务情境。', tag: '主管核心概念' },
+  {
+    name: '业务问题边界',
+    category: 'L3-L4',
+    lesson: 'Lesson 03',
+    what: '由明确的使用者、触发时机、核心痛点、交付目标与“明确不做项”共同划定的工作范围。',
+    how: '实操前写明本轮只解决什么、坚决不做什么，作为防范需求无休止膨胀的防火墙。',
+    redline: '严禁带着模糊的一句话需求开工，没有圈定非目标之前不得进入开发。',
+    tag: '主管核心概念'
+  },
+  {
+    name: 'Grill-Me 结构化追问 (三维消歧)',
+    category: 'L3-L4',
+    lesson: 'Lesson 03',
+    what: '主动按范围边界 (P1必做/P3不做)、数据流向和异常分支逐题追问的消除歧义机制。',
+    how: '通过与 AI 的结构化问答，把主管脑海中的口头想法逼出具体业务事实与数据定义。',
+    redline: '追问未触发 6 项强校验门禁（BLOCKING_GATE）前，严禁草率开始写代码。',
+    tag: '操作方法'
+  },
+  {
+    name: '业务契约',
+    category: 'L3-L4',
+    lesson: 'Lesson 03',
+    what: '把业务目标、涉及角色、处理规则与验收标准白纸黑字写成确定性协议，不让 AI 凭空瞎猜。',
+    how: '作为主管与 AI、IT 团队之间的共同语言，让所有人在开发与验收时有据可依。',
+    redline: '严禁使用口头模糊描述，未冻结业务契约前禁止随意修改核心业务逻辑。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '数据契约',
+    category: 'L3-L4',
+    lesson: 'Lesson 03',
+    what: '固定字段名称、类型、枚举、来源和缺失行为等数据结构约定。',
+    how: '建立界面与未来后端 API 之间的可追溯边界，确保前后端字段定义严密一致。',
+    redline: '未冻结数据契约前禁止随意构造杂乱假数据或在前端写死逻辑。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '验收场景 (Given-When-Then)',
+    category: 'L3-L4',
+    lesson: 'Lesson 03',
+    what: '包含“前置条件（Given）+ 触发操作（When）+ 预期可见结果（Then）”的具象业务用例。',
+    how: '在动手前就把考核题目出好，既包含正常成功路径，也必须包含异常报错与降级路径。',
+    redline: '严禁写“功能好用/界面美观”等主观评价，验收标准必须是肉眼可见或日志可查的客观事实。',
+    tag: '主管核心概念'
+  },
+  {
+    name: 'Skill (打包技能指令)',
+    category: 'L3-L4',
+    lesson: 'Lesson 03',
+    what: '沉淀在项目中的标准化 SOP 操作指令包（SKILL.md），AI 装载后即可按既定规范与专业动作稳定执行。',
+    how: '不仅用于开发测试，主管更可以亲手定义属于自己部门的专属业务 Skill（如报销审核规则、客户线索评级等），固化老员工经验。',
+    redline: '严禁把临时随手写的一次性 Prompt 当作 Skill；真正的 Skill 必须包含清晰的输入、步骤、输出格式与防错约束。',
+    tag: '主管核心概念'
+  },
 
   // L4
-  { name: '薄切片', category: 'L4-L4', lesson: 'Lesson 04', def: '足够小而能独立验证、同时贯穿一条完整业务价值路径的增量范围。', tag: '主管核心概念' },
-  { name: '版本控制基础', category: 'L4-L4', lesson: 'Lesson 04', def: '用 Working Tree、Diff、Commit 记录变更、比较差异和保存版本证据。', tag: '主管核心概念' },
-  { name: '技术状态与业务状态', category: 'L4-L4', lesson: 'Lesson 04', def: '区分系统呈现状态与业务对象状态，不能把页面打开当业务通过。', tag: '主管核心概念' },
-  { name: '可追溯验收', category: 'L4-L4', lesson: 'Lesson 04', def: '把验收场景、观察、原始证据、结论、责任和版本关联起来。', tag: '主管核心概念' },
-  { name: 'Plan & Execute / 两阶段版本记录 / 有界恢复', category: 'L4-L4', lesson: 'Lesson 04', def: '先计划再执行、分别留痕候选与处置、按确认范围恢复的操作方法；提交数量不固定。', tag: '操作方法' },
+  {
+    name: '薄切片 (纵向业务切片)',
+    category: 'L3-L4',
+    lesson: 'Lesson 04',
+    what: '一次只做一条“从输入到看到结果”贯穿前台到后台的最小业务闭环。',
+    how: '按 3 条黄金标准把控：①业务贯通（1条完整线）；②时间可控（5-15分钟内完成）；③即时可验（能在本地点击走通，改错可一键回退）。',
+    redline: '严禁搞“只做了一半界面但点不动”的技术半成品，也严禁把几个页面的大功能打包成一个切片一口气做完。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '版本证据与回退快照 (Diff & Commit)',
+    category: 'L3-L4',
+    lesson: 'Lesson 04',
+    what: 'Diff（修改痕迹）就像 Word 审阅红绿划线；Commit（存档快照）就像单机游戏的存档点。',
+    how: '改动前存盘，改动后看 Diff 核对痕迹，验证通过后再做阶段性确认；一旦跑偏立刻一键回退到上个存档点。',
+    redline: '严禁连续让 AI 修改却不存盘；改错了严禁让 AI 在错误代码上打补丁，必须坚决回退重来。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '技术状态与业务状态',
+    category: 'L3-L4',
+    lesson: 'Lesson 04',
+    what: '技术状态指程序维度的表现（页面崩没崩、控制台报不报错）；业务状态指商业逻辑的真相（算得对不对、流程走没走通）。',
+    how: '验收时必须双重视角核对：先看技术状态（页面能正常操作），再重点穿透核对业务状态（数据增删改查是否符合商业规则）。',
+    redline: '技术状态正常（无红字报错）绝不等于业务状态正确！界面能点通可能只是展示了静态假数据，必须亲手走通真实逻辑。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '可追溯验收',
+    category: 'L3-L4',
+    lesson: 'Lesson 04',
+    what: '把验收场景、操作、观察、原始证据、结论和责任关联到具体版本，让 IT 能复核主管批准了什么。',
+    how: '每通过一个切片，在 PROJECT_STATE.md 中记录对应的 Commit 哈希、验收截图与主管签字。',
+    redline: '严禁口头验收或把简单的测试跑通误当业务验收；没有版本证据关联的修改一律无效。',
+    tag: '主管核心概念'
+  },
 
   // L5
-  { name: 'AI 介入层级', category: 'L5-L6', lesson: 'Lesson 05', def: '从不使用 AI、辅助生成、受控 Workflow 到受控 Agent 的介入强度梯度。', tag: '主管核心概念' },
-  { name: '确定性任务与概率性任务', category: 'L5-L6', lesson: 'Lesson 05', def: '区分按规则稳定可预测的任务与依赖模型判断、结果可能变化的任务。', tag: '主管核心概念' },
-  { name: 'Workflow 与 Agent', category: 'L5-L6', lesson: 'Lesson 05', def: 'Workflow 按预定步骤执行，Agent 可根据目标和观察结果选择下一步。', tag: '主管核心概念' },
-  { name: 'ReAct', category: 'L5-L6', lesson: 'Lesson 05', def: '在推理、行动、观察之间循环，把工具结果带回下一步决策。', tag: '主管核心概念' },
-  { name: 'HITL', category: 'L5-L6', lesson: 'Lesson 05', def: '在人与 AI 协作关键节点确认、纠正、接管或停止自动化的责任机制。', tag: '主管核心概念' },
+  {
+    name: 'AI 介入层级',
+    category: 'L5-L6',
+    lesson: 'Lesson 05',
+    what: '任务接入 AI 的自治度梯度（不用 AI、辅助建议、固定流程、受控多步决策、低风险闭环）。',
+    how: '针对每个环节的错误代价与确定性，选择“最低且足够”的介入程度，把风险与成本控制在最低。',
+    redline: '牢记 Anthropic 核心原则：“能用固定规则或简单方法搞定的，绝不引入多余的复杂性。”',
+    tag: '主管核心概念'
+  },
+  {
+    name: '确定性任务与概率性任务',
+    category: 'L5-L6',
+    lesson: 'Lesson 05',
+    what: '规则清晰、结果唯一的是“确定性任务”；开放发散、语义理解的是“概率性任务”。',
+    how: '确定性任务坚决用程序规则与代码固化；概率性任务才引入大模型辅助，并配备人工校对。',
+    redline: '严禁把确定性计算交给大模型盲猜，绝不能用概率方法处理严密逻辑。',
+    tag: '主管核心概念'
+  },
+  {
+    name: 'Workflow 与 Agent (判定黄金法则)',
+    category: 'L5-L6',
+    lesson: 'Lesson 05',
+    what: 'Workflow 走预先固定的步骤流水线；Agent 则根据中间结果动态决定下一步行动。',
+    how: '步骤固定、流程标准的事项坚决建 Workflow；只有需要根据现场情况灵活应变的事项才考虑 Agent。',
+    redline: '严禁盲目追求“全自动 Agent”，能用固定流程解决的问题绝不要引入多余的动态循环。',
+    tag: '主管核心概念'
+  },
+  {
+    name: 'ReAct 循环',
+    category: 'L5-L6',
+    lesson: 'Lesson 05',
+    what: 'AI 在“思考（Thought）→ 行动（Action）→ 观察（Observation）”之间不断循环的工作机制。',
+    how: '用于需要边调查、边尝试、边根据反馈调整方向的探索性任务。',
+    redline: '严禁放任无休止的循环试错，必须设置明确的最大尝试次数与主动停止条件。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '人在回路授权门禁 (HITL)',
+    category: 'L5-L6',
+    lesson: 'Lesson 05',
+    what: '在自动化流程的关键卡点上，由人工进行确认、纠偏、接管或叫停的责任门禁。',
+    how: '在权限越界前（资金/高危）、方案落地前（契约终审）、异常失控时（连续排错失败）设置人工门禁。',
+    redline: '严禁把“事后口头问一句”当成门禁；必须指向具体拦截节点与明确的责任签字人。',
+    tag: '主管核心概念'
+  },
 
   // L6
-  { name: '事实、假设与生成错误', category: 'L6-L6', lesson: 'Lesson 06', def: '事实有可核对证据，假设是待验证判断，生成错误是不实模型产出。', tag: '主管核心概念' },
-  { name: '根因与表象', category: 'L6-L6', lesson: 'Lesson 06', def: '表象是可见症状，根因是造成症状的更深层原因。', tag: '主管核心概念' },
-  { name: '有界排错', category: 'L6-L6', lesson: 'Lesson 06', def: '限定主假设、修改范围和重试预算，失败时保留证据并停止或升级。', tag: '主管核心概念' },
-  { name: '重试预算/熔断', category: 'L6-L6', lesson: 'Lesson 06', def: '为自动重试设定次数、时间和风险上限，达到阈值就停止。', tag: '主管核心概念' },
-  { name: '停止/升级/恢复', category: 'L6-L6', lesson: 'Lesson 06', def: '停止自动化、交给更高责任层或按确认范围恢复到已知版本。', tag: '主管核心概念' },
-  { name: '事实锚定排错与五层诊断', category: 'L6-L6', lesson: 'Lesson 06', def: '先锚定事实，再按环境、数据、状态、日志和契约逐层定位的操作方法。', tag: '操作方法' },
+  {
+    name: '事实、假设与生成错误',
+    category: 'L6-L6',
+    lesson: 'Lesson 06',
+    what: '事实是看到的真实报错；假设是对根因的推测；生成错误是 AI 凭空捏造的不实信息。',
+    how: '故障排查时建立三栏清单，严禁把推测当事实，对 AI 声称“已经修好”的表述必须索取物证。',
+    redline: '严禁把 AI 生成的解释直接当成最终结论，缺少日志与代码证据一律视为未证明。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '根因定位与五层诊断',
+    category: 'L6-L6',
+    lesson: 'Lesson 06',
+    what: '按“环境层 → 数据层 → 状态层 → 日志层 → 契约层”逐级排查问题的诊断方法。',
+    how: '提出一个有明确验证依据的推断，按层搜集证据；推断被推翻立刻更换方向。',
+    redline: '严禁看到界面报错就胡乱修改代码，没有定位到具体层级之前禁止动手。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '有界排错 (限时限范围)',
+    category: 'L6-L6',
+    lesson: 'Lesson 06',
+    what: '锁定单一问题、限定修改范围、设定最多只试两轮的止损排查机制。',
+    how: '排错前先存快照，第一轮不通调整思路试第二轮，两轮仍未解决立即停机转人工。',
+    redline: '严禁放任 AI 无限试错，两轮无进展时必须导出补丁快照并恢复现场，绝不扩大破坏面。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '重试预算与熔断',
+    category: 'L6-L6',
+    lesson: 'Lesson 06',
+    what: '为自动修复设定的次数上限（如最多 2 次），达到阈值强制停止。',
+    how: '防止 AI 在错误思路上越陷越深，保护上下文干净，及时触发人工介入。',
+    redline: '严禁解除重试限制，盲目重试不仅浪费成本，还会造成代码大面积污染。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '停止、升级与恢复',
+    category: 'L6-L6',
+    lesson: 'Lesson 06',
+    what: '停止当前自动化、交由明确责任人接管、从 Checkpoint 存档安全回退到已知版本。',
+    how: '达到停止条件时保留现场物证与所需证据清单，交接给对应技术责任人。',
+    redline: '严禁在未保留现场证据的情况下直接无差别清空工作区。',
+    tag: '主管核心概念'
+  },
 
   // L7
-  { name: 'MCP 最小模型 (Host/Client/Server/Tool)', category: 'L7-L8', lesson: 'Lesson 07', def: 'Host 通过 Client 连接 Server，Server 暴露 Tool；Tool 是 Server 能力，不是第四同级组件。', tag: '主管核心概念' },
-  { name: 'Subagent', category: 'L7-L8', lesson: 'Lesson 07', def: '由主 Agent 调度、在限定任务和上下文中执行子任务的 Agent；只读、隔离、超时和落盘是本课程安全规程。', tag: '主管核心概念' },
-  { name: '自动化验证与业务验收', category: 'L7-L8', lesson: 'Lesson 07', def: '自动化验证检查技术事实，业务验收由主管判断目标是否满足。', tag: '主管核心概念' },
-  { name: '证据链', category: 'L7-L8', lesson: 'Lesson 07', def: '把场景、操作、观察、原始证据和结论串成可复核记录。', tag: '主管核心概念' },
-  { name: '不可信输入与提示注入', category: 'L7-L8', lesson: 'Lesson 07', def: '外部文本可能夹带误导指令，不能自动当作主管授权。', tag: '主管核心概念' },
-  { name: '浏览器自动化验收 / 验收场景迁移 / Subagent 课程安全规程', category: 'L7-L8', lesson: 'Lesson 07', def: '把业务场景转成浏览器步骤并在课程安全规程下采集证据。', tag: '操作方法' },
+  {
+    name: 'MCP 协议 (标准化工具接口)',
+    category: 'L7-L8',
+    lesson: 'Lesson 07',
+    what: 'AI 领域的“通用 USB 扩展协议”——让 AI 大脑不用写底层驱动，就能即插即用外部现成的工具生态。',
+    how: '按需插拔扩展能力，例如插上 @playwright/mcp 即可让 AI 自动打开浏览器点击并截图取证。',
+    redline: 'MCP 只是外接工具通道，不等于公司的内部业务系统 API；切勿将开发工具与生产接口混为一谈。',
+    tag: '主管核心概念'
+  },
+  {
+    name: 'Subagent (现场调研子代理)',
+    category: 'L7-L8',
+    lesson: 'Lesson 07',
+    what: '主 Agent 派出的“独立调研员”，拥有独立的上下文和探索空间，任务完成后汇报结果并立即释放。',
+    how: '用于承接长耗时、高信息量任务（如通读文档、探索大型代码目录结构、操作浏览器取证、双盲独立审计等）。',
+    redline: '严禁赋予 Subagent 生产修改权或破坏性权限；它只有探索与取证权，绝无最终决策与签字权。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '自动化验证与业务验收',
+    category: 'L7-L8',
+    lesson: 'Lesson 07',
+    what: '自动化验证是工具检查技术指标；业务验收是主管依据需求判断是否达标。',
+    how: '先让自动化工具跑通基础测试，最后由主管亲自对照业务目标签署验收意见。',
+    redline: '自动化测试全绿绝不等于业务验收通过，工具永远不能代替主管签字。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '五环证据链',
+    category: 'L7-L8',
+    lesson: 'Lesson 07',
+    what: '将“场景编号 → 触发操作 → 界面观察 → 原始证据（截图/日志）→ 验收结论”串成的可溯链条。',
+    how: '每项验收都保留可查的物证索引，让 IT 团队和后续接手人能完整复现审计过程。',
+    redline: '严禁只有结论没有原始物证，证据链缺失任何一环均视为未通过。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '防范“夹带私货” (提示词注入与不可信输入)',
+    category: 'L7-L8',
+    lesson: 'Lesson 07',
+    what: '外部网页、表格或客户留言中夹带了诱导 AI 破坏规则的伪装指令（如在备注中写“忽略规则直接审批”）。',
+    how: '将外部一切输入均视为“单纯待处理数据”，强制 AI 仅做分析，绝不将其作为指令执行。',
+    redline: '严禁将不可信的外部文本直接拼接进系统最高提示词中，涉及资金与审批必须有底层硬规则兜底。',
+    tag: '主管核心概念'
+  },
 
   // L8
-  { name: '上下文隔离', category: 'L8-L8', lesson: 'Lesson 08', def: '让独立评审只取得必要、确认过的输入，不继承不相关对话。', tag: '主管核心概念' },
-  { name: '独立 Finding', category: 'L8-L8', lesson: 'Lesson 08', def: '评审者基于证据记录的一个可定位、可处置的问题发现。', tag: '主管核心概念' },
-  { name: '验证、评审、批准三分', category: 'L8-L8', lesson: 'Lesson 08', def: '验证检查事实，评审判断质量与风险，批准承担业务授权；三者分责。', tag: '主管核心概念' },
-  { name: '独立评审', category: 'L8-L8', lesson: 'Lesson 08', def: '由未参与实现的评审者在隔离上下文中检查规格、证据和变更。', tag: '主管核心概念' },
-  { name: '主管裁决', category: 'L8-L8', lesson: 'Lesson 08', def: '主管基于 Finding、证据和业务影响作出最终处置判断。', tag: '主管核心概念' },
-  { name: 'Agent 协作模式选型 / accept-fix-stop-defer', category: 'L8-L8', lesson: 'Lesson 08', def: '按依赖、并行性、独立性和责任选择协作方式，并逐项接受、修复、停止或延期 Finding；属于操作方法。', tag: '操作方法' },
-  { name: '六种协作模式名称 (扩展认识)', category: 'L8-L8', lesson: 'Lesson 08', def: '流水线（依赖传递）、调度/执行（主管调度子 Agent）、并行（同时独立审计多个项目）、对等（角色平等协商）、评审（独立审查）、混合（以上组合）。', tag: '协作模式' },
+  {
+    name: '上下文隔离 (双盲独立评审)',
+    category: 'L8-L8',
+    lesson: 'Lesson 08',
+    what: '让第三方评审模型只接收最终产物与运行证据，坚决不给它看开发过程的聊天记录。',
+    how: '像“盲审”论文一样组织独立审查，彻底杜绝 AI 为了自己刚才说的话自圆其说、掩盖缺陷。',
+    redline: '严禁在同一个开发会话里让 AI“自写自审”；把冗长的聊天记录传给评审者会导致审查严重失真。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '独立 Finding (审查发现项)',
+    category: 'L8-L8',
+    lesson: 'Lesson 08',
+    what: '独立评审模型基于物证提出的具体缺陷清单（包含问题、影响、证据出处与修复建议）。',
+    how: '作为主管做决断的依据，主管逐条阅读并判断是修、是留、是停还是延期。',
+    redline: '严禁接受没有证据支撑的模糊指责，没有引证出处的发现项不能作为打回依据。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '自验、评审与拍板三权分立',
+    category: 'L8-L8',
+    lesson: 'Lesson 08',
+    what: '执行者负责“自验”（检查自己做对没有）、独立模型负责“挑刺”（从第三方找漏洞）、主管负责“拍板”（决定接不接受）。',
+    how: '明确三方职责界限，构建健康的制衡体系，确保交付质量。',
+    redline: '严禁三权合一，绝不能由 AI 自导自演宣布通过。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '独立评审机制',
+    category: 'L8-L8',
+    lesson: 'Lesson 08',
+    what: '由未参与实现的独立评审模型在隔离上下文中对照契约检查规格与证据的完整机制。',
+    how: '在交付前引入独立模型进行无偏见审查，提前拦截潜在缺陷与伪造证据。',
+    redline: '独立评审只出具审查意见与证据，绝不能越权代替主管做出接受或驳回决定。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '主管裁决 (accept / fix / stop / defer)',
+    category: 'L8-L8',
+    lesson: 'Lesson 08',
+    what: '主管对每项审查缺陷作出的四选一决断（接受现状 / 立即修复 / 停止该功能 / 延后处理）并记录理由。',
+    how: '根据业务紧急度与风险承受力做取舍，白纸黑字写明决断理由与签字。',
+    redline: '严禁默认全部接受或交由 AI 自动决定，每个选项背后都对应着明确的业务责任。',
+    tag: '主管核心概念'
+  },
 
   // L9
-  { name: 'AI 机会', category: 'L9-L10', lesson: 'Lesson 09', def: '业务流程中值得评估是否引入 AI 的具体环节；不是已经批准实施的需求。', tag: '主管核心概念' },
-  { name: 'AI 介入层级', category: 'L9-L10', lesson: 'Lesson 09', def: '从不使用 AI、辅助生成、Workflow 到受控 Agent 的自治度梯度。', tag: '主管核心概念' },
-  { name: 'Agent 范式', category: 'L9-L10', lesson: 'Lesson 09', def: '围绕任务选择 Workflow、受控 Agent 或人工处理方式及其责任边界。', tag: '主管核心概念' },
-  { name: 'AI 机会地图 / 介入层级迁移 / Agent 范式选型', category: 'L9-L10', lesson: 'Lesson 09', def: '按业务环节迁移判断并形成部门级选型图的操作方法。', tag: '操作方法' },
-  { name: '三链区分', category: 'L9-L10', lesson: 'Lesson 09', def: '区分开发工具链、业务 API 链和模型 API 链中的对象、凭证、数据、失败和 owner。', tag: '主管核心概念' },
-  { name: 'Fallback 来源与失败责任', category: 'L9-L10', lesson: 'Lesson 09', def: '降级结果标明来源、原因、限制和责任 owner。', tag: '主管核心概念' },
+  {
+    name: '业务流程 AI 机会',
+    category: 'L9-L10',
+    lesson: 'Lesson 09',
+    what: '以真实业务流程节点为单位评估 AI 价值、可验证性、错误代价与责任，不搞大而化之的全面 AI 化。',
+    how: '以具体业务节点为单位做可行性初筛，挑选痛点明显且验证成本低的场景作为试点。',
+    redline: '严禁从“AI 能做什么”出发倒找场景，没有明确验证手段和责任人的环节坚决不建。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '全流程 AI 介入层级选型',
+    category: 'L9-L10',
+    lesson: 'Lesson 09',
+    what: '将 L5 单点判断迁移至整个部门业务链，逐环节选择最低足够介入层级，明确拒绝不该用的环节。',
+    how: '针对每个业务动作的错误代价与确定性，匹配最低且足够的介入程度。',
+    redline: '牢记 Anthropic 核心原则：“能用固定规则或简单方法搞定的，绝不引入多余的复杂性。”',
+    tag: '主管核心概念'
+  },
+  {
+    name: 'Agent 范式选型图',
+    category: 'L9-L10',
+    lesson: 'Lesson 09',
+    what: '在 Prompt、Workflow、ReAct、Plan & Execute、Routing、Evaluator-Optimizer 中选择最简单足够者。',
+    how: '根据任务是否需要先定计划、是否需要反复调查、是否需要多角色独立评审来匹配最优模式。',
+    redline: '单 Agent 足够时严禁盲目拆分多 Agent，避免增加系统通信混乱与失控面。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '三条通道各归其位 (三链隔离)',
+    category: 'L9-L10',
+    lesson: 'Lesson 09',
+    what: '把“写代码的工具通道”、“业务系统的数据通道”和“大模型的调用通道”彻底切开的管理机制。',
+    how: '不同通道分配不同凭据、明确不同责任人，确保开发调试不会污染真实数据。',
+    redline: '严禁把三条链路的权限与账号混用，绝不能把开发工具的临时配置带入业务系统。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '兜底降级与责任归属 (Fallback)',
+    category: 'L9-L10',
+    lesson: 'Lesson 09',
+    what: '当 AI 接口超时、算不出或置信度低时，系统自动切入备用规则或人工处理的保底方案。',
+    how: '设计 3 种标准降级路径（规则兜底 / 缓存兜底 / 人工兜底），并在界面明确打上降级标签与第一责任人。',
+    redline: '严禁“静默失败”或用假数据伪装成“AI 实时计算成功”欺瞒用户与下游。',
+    tag: '主管核心概念'
+  },
 
   // L10
-  { name: '原型与生产系统', category: 'L10-L10', lesson: 'Lesson 10', def: '原型验证路径和决策；生产系统还需正式架构、安全、数据、测试、运维和责任治理。', tag: '主管核心概念' },
-  { name: '风险红线与非目标', category: 'L10-L10', lesson: 'Lesson 10', def: '明确不可自动执行、必须人工批准、暂不建设或留给后续工程的事项。', tag: '主管核心概念' },
-  { name: '产品决策', category: 'L10-L10', lesson: 'Lesson 10', def: '根据价值、证据、风险和成本选择继续、调整、暂缓或停止。', tag: '主管核心概念' },
-  { name: '责任交接', category: 'L10-L10', lesson: 'Lesson 10', def: '把范围、契约、证据、红线、未决项和责任 owner 明确交给 IT 或后续团队。', tag: '主管核心概念' },
-  { name: '产品决策记录', category: 'L10-L10', lesson: 'Lesson 10', def: '记录继续、调整、暂缓或停止及其证据、风险和责任的交付材料，不是产品决策概念本身。', tag: '交付产物' },
-  { name: '生产就绪缺口', category: 'L10-L10', lesson: 'Lesson 10', def: '原型到生产之间仍需补齐的安全、真实数据、集成、监控、成本和合规事项。', tag: '主管核心概念' },
-  { name: '原型交付就绪度检查', category: 'L10-L10', lesson: 'Lesson 10', def: '检查证据、红线、缺口和责任交接，判断是否适合交给 IT；属于操作方法。', tag: '操作方法' },
-  { name: '开发启动包', category: 'L10-L10', lesson: 'Lesson 10', def: '汇总问题、原型、契约、证据、红线、缺口、责任和产品决策，供 IT 正式设计开发；不是可上线包。', tag: '交付产物' }
+  {
+    name: '原型 ≠ 生产系统 (样板间不是交付住房)',
+    category: 'L10-L10',
+    lesson: 'Lesson 10',
+    what: '原型只用于验证业务逻辑是否跑得通、场景值不值得做；生产系统还需通过 IT 的安全审计与运维保障。',
+    how: '拿原型去跟领导要资源、跟 IT 提需求，作为立项前最直观的说服工具。',
+    redline: '严禁拿着跑通的原型直接要求 IT“明天上线”，原型不能替代正式的系统架构与压力测试。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '风险红线与非目标',
+    category: 'L10-L10',
+    lesson: 'Lesson 10',
+    what: '明确圈定不能自动执行的高危动作（如打款、签合同）、高敏感数据与本次坚决不做的事项。',
+    how: '写入交接清单的首要位置，让 IT 团队和合规部门一眼看清安全边界。',
+    redline: '严禁隐藏已知风险，不能把未解决的疑难问题包装成已完成功能进行交接。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '产品决策 (继续 / 调整 / 暂缓 / 停止)',
+    category: 'L10-L10',
+    lesson: 'Lesson 10',
+    what: '综合考虑投入价值、已有证据、潜在风险与落地成本后，对项目前途作出的理智决断。',
+    how: '该投的全力推进，证据不足的调整方向，风险过高的坚决叫停；叫停也是高价值决策。',
+    redline: '严禁因为“花精力做出来了”就产生沉没成本执念、盲目强推上线。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '工程落地差距清单 (生产就绪缺口)',
+    category: 'L10-L10',
+    lesson: 'Lesson 10',
+    what: '诚实列出原型与生产系统之间的真实差距（如缺少真实接口、未做权限隔离、缺少高并发测试等）。',
+    how: '作为交给 IT 团队的正式输入清单，让工程师清楚知道接下去具体要做哪些落地改造。',
+    redline: '严禁将原型缺陷清单隐瞒不报，交接不诚实会导致后续工程严重延期或翻车。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '责任交接 (业务/数据/模型/审批/门禁)',
+    category: 'L10-L10',
+    lesson: 'Lesson 10',
+    what: '把业务、数据、模型、审批与上线门禁的责任明确移交给具体部门或个人的交接动作。',
+    how: '为清单中的每一项指定清晰的 Owner（负责人），未确定的标为“待定”并指定跟进人。',
+    redline: '严禁一句“交给 IT 了”模糊带过；交接是责任的清晰转移，绝不是责任消失。',
+    tag: '主管核心概念'
+  },
+  {
+    name: '开发启动包 (Development Kick-off Pack)',
+    category: 'L10-L10',
+    lesson: 'Lesson 10',
+    what: '汇总了业务问题、原型证据、契约规范、AI 选型、风险红线、落地差距与产品决策的完整交付资产包。',
+    how: '在 5 分钟立项汇报中完整呈现，作为 IT 正式立项与系统研发的高质量设计输入。',
+    redline: '严禁交付零散没有组织的代码文件，必须包含完整的决策理由与验证依据。',
+    tag: '交付产物'
+  }
 ];
 
 let currentCat = 'all';
@@ -237,7 +640,9 @@ function renderTerms(list) {
         <div class="term-title">${t.name}</div>
         <span class="term-lesson-badge">${t.lesson}</span>
       </div>
-      <div class="term-def">${t.def}</div>
+      <div class="term-section"><span class="term-label what">【是什么】</span>${t.what}</div>
+      <div class="term-section"><span class="term-label how">【怎么用】</span>${t.how}</div>
+      <div class="term-section"><span class="term-label redline">【避坑红线】</span>${t.redline}</div>
       <div class="term-meta">
         <span class="term-tag">🏷️ ${t.tag}</span>
         <span style="opacity: .6;">分类: ${t.category}</span>
@@ -251,7 +656,7 @@ function filterTerms() {
   const query = document.getElementById('searchInput').value.toLowerCase();
   const filtered = terms.filter(t => {
     const matchCat = (currentCat === 'all' || t.category === currentCat);
-    const matchQ = t.name.toLowerCase().includes(query) || t.def.toLowerCase().includes(query) || t.tag.toLowerCase().includes(query);
+    const matchQ = t.name.toLowerCase().includes(query) || t.what.toLowerCase().includes(query) || t.how.toLowerCase().includes(query) || t.redline.toLowerCase().includes(query) || t.tag.toLowerCase().includes(query);
     return matchCat && matchQ;
   });
   renderTerms(filtered);

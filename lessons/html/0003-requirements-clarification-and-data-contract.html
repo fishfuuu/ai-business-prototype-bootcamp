@@ -344,7 +344,7 @@
     <p><b>记住这句话：</b><br>
     第三课只完成"定义正确"，不同时承担大规模实施。用 <code>grill-me</code> 把主管的口语想法追问成可核对的业务、数据与验收约定，为第四课薄切片实施提供冻结输入。</p>
   </div>
-  <p>先定义清楚，后面每一课的切片、智能行为和验收才有锚点。跳过定义直接实施，等于在没有户型图的情况下开工装修。</p>
+  <p>先定义清楚，后面每一课的切片、智能行为和验收才有锚点。跳过定义直接实施，就会失去可核对的范围和通过条件。</p>
 </section>
 <!-- SECTION 01: INTERACTIVE TIER SIMULATOR -->
 <section>
@@ -391,16 +391,13 @@
       <summary class="concept-head">1. 业务问题边界</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>使用者、触发、问题、目标和明确非目标共同限定本次业务；不是一句话需求，也不是全部部门需求。
+          <span class="pill-label">📌 【是什么】</span>由明确的使用者、触发时机、核心痛点、交付目标与“明确不做项”共同划定的工作范围。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>回答谁遇到什么问题、为什么要做、目标是什么、边界在哪里；缺少任何一项都会让后续实施失去锚点。
+          <span class="pill-label">⚙️ 【怎么用】</span>实操前写明本轮只解决什么、坚决不做什么，作为防范需求无休止膨胀的防火墙。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>装修前的户型确认图——在敲墙前必须确认哪些房间在范围内、哪些不在；不能只说"装修一下"就开工。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 1 你会选定一条路径并写下使用者、动作和结果；Task 2 的前两轮追问进一步固定边界。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁带着模糊的一句话需求开工，没有圈定非目标之前不得进入开发。
         </div>
       </div>
     </details>
@@ -409,16 +406,13 @@
       <summary class="concept-head">2. 业务契约</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>把 User & Problem、Goal、Boundary、Risk、Acceptance、Stop/Escalation 固定为可执行约定；不是口头共识，也不是大而全 PRD。
+          <span class="pill-label">📌 【是什么】</span>把业务目标、涉及角色、处理规则与验收标准白纸黑字写成确定性协议，不让 AI 凭空瞎猜。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>已确认的追问结果收敛为一份业务功能卡，未确认项显式保留；契约一旦冻结，后续实施只能在其范围内选择薄片。
+          <span class="pill-label">⚙️ 【怎么用】</span>作为主管与 AI、IT 团队之间的共同语言，让所有人在开发与验收时有据可依。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>装修合同——口头意图变成书面条款，每条都有明确约定和违约处理；不能只靠"我们说好了"。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3 你会把追问结果收敛为业务功能卡，并通过只读预览门禁后授权落盘。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁使用口头模糊描述，未冻结业务契约前禁止随意修改核心业务逻辑。
         </div>
       </div>
     </details>
@@ -427,34 +421,43 @@
       <summary class="concept-head">3. 数据契约</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>固定字段、含义、类型、枚举、来源状态和 Mock 规则，避免前后口径漂移；不是 TypeScript 工程任务，主管只需核对业务含义。
+          <span class="pill-label">📌 【是什么】</span>固定字段名称、类型、枚举、来源和缺失行为等数据结构约定。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>为每条业务路径列出字段字典，标注含义、类型、是否必填、Mock 样例和敏感等级；工程师可据此写类型或 Schema。
+          <span class="pill-label">⚙️ 【怎么用】</span>建立界面与未来后端 API 之间的可追溯边界，确保前后端字段定义严密一致。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>海关进口商品的标准报关单——商品名称、编码、数量和来源必须统一申报；不能前端叫"工单号"、后端叫"订单号"。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 4 你会填写字段字典并标注敏感等级，确认 Mock 样例与字段类型匹配。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>未冻结数据契约前禁止随意构造杂乱假数据或在前端写死逻辑。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">4. 验收场景</summary>
+      <summary class="concept-head">4. 验收场景 (Given-When-Then)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>用给定条件、动作和可观察结果说明怎样算通过；不只列功能名称，也不依赖主观判断。
+          <span class="pill-label">📌 【是什么】</span>包含“前置条件（Given）+ 触发操作（When）+ 预期可见结果（Then）”的具象业务用例。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>描述前置条件存在时，执行什么动作，应观察到什么结果；遇到数据缺失或规则冲突时触发停止并升级。
+          <span class="pill-label">⚙️ 【怎么用】</span>在动手前就把考核题目出好，既包含正常成功路径，也必须包含异常报错与降级路径。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>工厂流水线的紧急拉绳熔断阀——组装顺畅时按流程运转，发现零部件开裂时拉绳停机并升阶给车间主任。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁写“功能好用/界面美观”等主观评价，验收标准必须是肉眼可见或日志可查的客观事实。
         </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 5 你会写出 1—2 条可观察的验收场景，并由主管做最终确认。
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. Skill (打包技能指令)</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>沉淀在项目中的标准化 SOP 操作指令包（SKILL.md），AI 装载后即可按既定规范与专业动作稳定执行。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>不仅用于开发测试，主管更可以亲手定义属于自己部门的专属业务 Skill（如报销审核规则、客户线索评级等），固化老员工经验。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁把临时随手写的一次性 Prompt 当作 Skill；真正的 Skill 必须包含清晰的输入、步骤、输出格式与防错约束。
         </div>
       </div>
     </details>
@@ -791,6 +794,12 @@
     <div class="ans-box" id="ans5">
       <b>参考答案解析：</b><br>
       验收场景用给定条件、动作和可观察结果说明怎样算通过；功能名称列表只列名称，无法判断是否通过。三个部分：Given（给定条件）、When（动作）、Then（可观察结果）。
+    </div>
+    <div class="exit-q-title">❓ 退出门禁题 6：Skill 和一次性 Prompt 有什么区别？为什么 grill-me 是 Skill？</div>
+    <button class="btn secondary" style="font-size: .8rem; padding: .4rem .9rem;" onclick="toggleAns('ans6')">💡 点击展开 / 折叠 参考答案</button>
+    <div class="ans-box" id="ans6">
+      <b>参考答案解析：</b><br>
+      Skill 是可复用的打包指令（SKILL.md），把一套方法固化、跨项目重用；一次性 Prompt 是临时写的单次指令。grill-me 把“逐题追问”这套方法固化下来重复使用，所以是 Skill。
     </div>
   </div>
 

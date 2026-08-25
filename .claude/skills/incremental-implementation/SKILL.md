@@ -31,7 +31,7 @@ description: Delivers multi-file changes incrementally using contract-first thin
 
 - 接收学员授权口令：`同意保存实施计划` (或 `授权保存 Lesson 04 实施计划`)
 - **步骤状态枚举**：`PENDING` (后续未开始步骤) | `READY` (等待授权执行) | `IN_PROGRESS` (正在编码) | `COMPLETED` (两层验收通过并归档) | `BLOCKED` (页面异常或主管拒绝)。
-- 将实施计划写入 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`（`allowed_files` 必须为具体文件路径，禁止写文件夹）：
+- 将实施计划写入 `docs/LESSON_04_IMPLEMENTATION_PLAN.md`（`allowed_files` 必须为具体文件路径，禁止写文件夹；吸收 Spec-Kit Tasks 机制补充 `depends_on` 与通俗自检清单 `acceptance_checklist`）：
   ```markdown
   # Lesson 04 实施计划 (Implementation Plan)
 
@@ -43,19 +43,28 @@ description: Delivers multi-file changes incrementally using contract-first thin
     - id: 1
       name: "组件骨架与页面技术状态调试切片"
       status: READY
+      depends_on: []
       allowed_files:
         - "src/pages/HomePage.vue"
         - "src/components/WorkOrderBoard.vue"
       acceptance: "支持页面技术状态调试器切换 (Loading / Empty / Error / Success)"
+      acceptance_checklist:
+        - "[ ] 本地预览页面成功加载组件骨架"
+        - "[ ] 调试按钮可正常切换 4 种技术状态"
+        - "[ ] 浏览器控制台无红字报错"
       failure_summary: ""
       verification_log: ""
       commit_sha: ""
     - id: 2
       name: "绑定 Mock 数据与渲染业务列表"
       status: PENDING
+      depends_on: [1]
       allowed_files:
         - "src/components/WorkOrderBoard.vue"
       acceptance: "成功渲染业务列表与交互"
+      acceptance_checklist:
+        - "[ ] 列表成功渲染 Mock 数据"
+        - "[ ] 业务状态标签展示与第三课契约一致"
       failure_summary: ""
       verification_log: ""
       commit_sha: ""

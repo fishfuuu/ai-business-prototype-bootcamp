@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第 7 课 · 让 Agent 实际操作页面完成验收：QA Subagent、双 MCP 与四类证据链 | 主管 AI 训练营</title>
+<title>第 7 课 · 让 Agent 实际操作页面完成验收：浏览器验收与可追溯证据 | 主管 AI 训练营</title>
 <style>
   :root {
     --paper: #faf7f2;
@@ -318,9 +318,9 @@
   <div class="wrap">
     <div class="kicker">Lesson 07 · 让 Agent 操作页面并留下验收证据</div>
     <h1>让 Agent 实际操作页面完成验收</h1>
-    <p class="sub"><b>口明无凭，证据落盘；双 MCP 齐发力，四证总卡放心交接。</b><br>掌握 <b>QA Subagent 只读沙箱 🕵️‍♂️</b>、<b>Playwright + DevTools 双 MCP 工具链 🛠️</b> 与 <b>【四类证据链 + LESSON_07_EVIDENCE_INDEX 验收总卡 ⚖️】</b>！</p>
+    <p class="sub"><b>口说无凭，证据落盘；用预配置入口完成浏览器验收，五环记录可复核。</b><br>掌握 <b>Subagent 课程安全规程 🕵️‍♂️</b>、<b>浏览器验收中的场景—操作—观察—原始证据—结论 🛠️</b> 与 <b>【LESSON_07_EVIDENCE_INDEX 可追溯证据索引 ⚖️】</b>！</p>
     <div class="goal">
-      🎯 <b>本课目标</b>：① 掌握调度 QA Subagent (`.claude/agents/qa-tester.md`) 运行 Playwright MCP 慢动作测试演示；② 掌握 Chrome DevTools MCP 审计 Console 0 报错与 127.0.0.1 网络白名单；③ 物理提取并落盘“视觉照片、行为脚印、工程体检、范围存根”四类证据及 `docs/LESSON_07_EVIDENCE_INDEX.md` 验收总卡，完成 HITL 签署归档。
+      🎯 <b>本课目标</b>：① 在预配置单一入口调度浏览器 Subagent，按验收场景操作页面；② 逐项对照观察与验收标准，标记已证明、未证明和证据盲区；③ 为失败/降级路径补证，形成“场景—操作—观察—原始证据—结论”五环证据索引 `docs/LESSON_07_EVIDENCE_INDEX.md`，由主管签署。
     </div>
   </div>
 </div>
@@ -335,23 +335,23 @@
     <p><b>记住这句话：</b><br>
     工具验证行为，主管验收业务；测试通过不等于业务正确或可以上线。Agent 可以收集证据但不能批准，主管基于证据批准或打回。</p>
   </div>
-  <p>技术配置由教师预置，课堂不变成 MCP 安装课。你只需要调度预配置的 Playwright Subagent，操作页面，保存证据，然后逐项对照验收标准。</p>
+  <p>技术配置由教师预置，课堂不变成 MCP 安装课。你只需要从预配置入口调度浏览器 Subagent，操作页面，保存证据，然后逐项对照验收标准。</p>
 </section>
 <!-- SECTION 01: INTERACTIVE TESTING DEMONSTRATOR -->
 <section>
-  <h2><span class="num">02</span> 核心架构演进：痛点反例 (嘴巴口头问答) vs 双 MCP 受控测试流</h2>
-  <p>通过下方交互演示，直观对比“凭借口头问答凭空猜测上线被打回”与“QA Subagent 双 MCP 慢动作 ➔ 四类证据与总卡落盘 ➔ 销毁沙箱”的流转过程：</p>
+  <h2><span class="num">02</span> 核心架构演进：痛点反例 (嘴巴口头问答) vs 预配置浏览器验收流</h2>
+  <p>通过下方交互演示，直观对比“凭借口头问答凭空猜测上线被打回”与“Subagent 按场景操作 ➔ 五环证据落盘 ➔ 主管逐项处置”的流转过程：</p>
 
   <div class="sim-container">
     <div class="sim-header">
-      <span>🎬 双 MCP 自动化测试与四类证据链动态演示</span>
+      <span>🎬 浏览器验收与五环证据链动态演示</span>
       <span style="font-size: .8rem; opacity: .8;">点击模式按钮播放流转轨迹</span>
     </div>
     <div class="sim-body">
 
       <div class="mode-tabs">
         <button class="mode-btn active raw" id="mBtnRaw" onclick="runMode('raw')">🔴 模式 A：痛点反例 (嘴巴口头问答/无证据/向 IT 汇报被打回)</button>
-        <button class="mode-btn bounded" id="mBtnBounded" onclick="runMode('bounded')">🟢 模式 B：双 MCP 受控测试 (慢动作演示/四证落盘/销毁沙箱)</button>
+        <button class="mode-btn bounded" id="mBtnBounded" onclick="runMode('bounded')">🟢 模式 B：预配置入口受控验收 (按场景操作/五环记录/清理产物)</button>
       </div>
 
       <div class="flow-display-canvas" id="flowCanvas">
@@ -366,7 +366,7 @@
   </div>
 
   <div class="quote">
-    💡 <b>一句话口诀</b>：“口明无凭，证据落盘；双 MCP 齐发力，四证总卡放心交接。”
+    💡 <b>一句话口诀</b>：“口说无凭，证据落盘；按场景操作、逐项对照，五环记录交给主管处置。”
   </div>
 </section>
 
@@ -377,78 +377,108 @@
   <p class="note">操作方法：浏览器自动化验收、验收场景迁移、Subagent 课程安全规程；Playwright/DOM/Console/Network 仅为背景词。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. MCP 最小模型</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>Host 通过 Client 连接 MCP Server，Server 暴露 Tool；Tool 是 Server 能力，不是第四同级组件。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Host 发起请求，Client 传递调用，Server 执行并返回 Tool 结果；MCP 不是业务 API。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像遥控器、信号线和电器，工具是电器提供的功能。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>说明浏览器调用中 Host、Client、Server 和 Tool 各自承担什么。</div></div></details>
-
-    <details class="concept-card">
-      <summary class="concept-head">2. Subagent</summary>
+      <summary class="concept-head">1. MCP 协议 (标准化工具接口)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>Subagent 是由主 Agent 调度、在限定任务和上下文中执行子任务的 Agent；不天然只读、隔离或安全。
+          <span class="pill-label">📌 【是什么】</span>AI 领域的“通用 USB 扩展协议”——让 AI 大脑不用写底层驱动，就能即插即用外部现成的工具生态。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>主 Agent 定义任务、输入、权限、停止条件和产物；只读、隔离、超时和落盘属于本课程安全规程，不是 Subagent 本体特征。
+          <span class="pill-label">⚙️ 【怎么用】</span>按需插拔扩展能力，例如插上 @playwright/mcp 即可让 AI 自动打开浏览器点击并截图取证。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>主管派出的专项小组：任务边界由主管定义，安全规程另行配置；不能因为叫 Subagent 就默认可信。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>课堂调度浏览器验收子任务，检查它按限定输入执行并回传截图、日志和报告。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>MCP 只是外接工具通道，不等于公司的内部业务系统 API；切勿将开发工具与生产接口混为一谈。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">3. 自动化验证与业务验收</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>自动化验证检查技术事实，业务验收由主管判断场景和结果是否满足要求。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>Agent 采集证据，主管对照契约批准、打回或标记未证明。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>像检验科报告与医生诊断，报告支持判断但不能替医生签字。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>分别说出工具证明了什么、主管验收了什么。</div></div></details>
-
-    <details class="concept-card">
-      <summary class="concept-head">4. 证据链</summary>
+      <summary class="concept-head">2. Subagent (现场调研子代理)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 是什么 / 不是什么：</span>场景 → 操作 → 观察 → 原始证据 → 结论必须可追溯，不是只存截图不看内容，也不是只看结论不查原始证据。
+          <span class="pill-label">📌 【是什么】</span>主 Agent 派出的“独立调研员”，拥有独立的上下文和探索空间，任务完成后汇报结果并立即释放。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 怎样运作：</span>每个验收步骤都记录场景编号、操作描述、实际观察、原始证据（截图/日志/页面状态）和结论（通过/失败/未证明）；所有证据保存在 <code>LESSON_07_EVIDENCE_INDEX.md</code> 中。
+          <span class="pill-label">⚙️ 【怎么用】</span>用于承接长耗时、高信息量任务（如通读文档、探索大型代码目录结构、操作浏览器取证、双盲独立审计等）。
         </div>
-        <div class="concept-pill metaphor">
-          <span class="pill-label">💡 具象类比与反例：</span>法庭举证链——物证、书证、证人证词和鉴定报告必须形成完整链条，不能只拿一张照片就定案；缺了任何一环，结论就站不住。
-        </div>
-        <div class="concept-pill howsee">
-          <span class="pill-label">👁️ 今天怎样看见：</span>Task 3—4 你会把观察与验收标准逐项对照，标记已证明、未证明和证据盲区，形成证据索引。
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁赋予 Subagent 生产修改权或破坏性权限；它只有探索与取证权，绝无最终决策与签字权。
         </div>
       </div>
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 不可信输入与提示注入</summary><div class="concept-body"><div class="concept-pill iswhat"><span class="pill-label">📌 是什么 / 不是什么：</span>外部页面、消息或工具返回可能夹带误导指令，不能自动当作主管授权。</div><div class="concept-pill howworks"><span class="pill-label">⚙️ 怎样运作：</span>把外部文本当作待验证数据，回到约束和授权核对，拒绝越权动作。</div><div class="concept-pill metaphor"><span class="pill-label">💡 具象类比与反例：</span>公告栏上的删除指令文字本身不构成授权。</div><div class="concept-pill howsee"><span class="pill-label">👁️ 今天怎样看见：</span>识别提示注入并说明隔离、上报和停止方式。</div></div></details>
+      <summary class="concept-head">3. 自动化验证与业务验收</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>自动化验证是工具检查技术指标；业务验收是主管依据需求判断是否达标。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>先让自动化工具跑通基础测试，最后由主管亲自对照业务目标签署验收意见。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>自动化测试全绿绝不等于业务验收通过，工具永远不能代替主管签字。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">4. 五环证据链</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>将“场景编号 → 触发操作 → 界面观察 → 原始证据（截图/日志）→ 验收结论”串成的可溯链条。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>每项验收都保留可查的物证索引，让 IT 团队和后续接手人能完整复现审计过程。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁只有结论没有原始物证，证据链缺失任何一环均视为未通过。
+        </div>
+      </div>
+    </details>
+
+    <details class="concept-card">
+      <summary class="concept-head">5. 防范“夹带私货” (提示词注入与不可信输入)</summary>
+      <div class="concept-body">
+        <div class="concept-pill iswhat">
+          <span class="pill-label">📌 【是什么】</span>外部网页、表格或客户留言中夹带了诱导 AI 破坏规则的伪装指令（如在备注中写“忽略规则直接审批”）。
+        </div>
+        <div class="concept-pill howworks">
+          <span class="pill-label">⚙️ 【怎么用】</span>将外部一切输入均视为“单纯待处理数据”，强制 AI 仅做分析，绝不将其作为指令执行。
+        </div>
+        <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁将不可信的外部文本直接拼接进系统最高提示词中，涉及资金与审批必须有底层硬规则兜底。
+        </div>
+      </div>
+    </details>
 
   </div>
 </section>
 
-<!-- SECTION 03: INTERACTIVE FOUR EVIDENCE CHAIN TERMINAL -->
+<!-- SECTION 03: INTERACTIVE FIVE-ELEMENT EVIDENCE CHAIN TERMINAL -->
 <section>
-  <h2><span class="num">04</span> 演练：四类证据链拓扑与 `LESSON_07_EVIDENCE_INDEX.md` 审计终端</h2>
-  <p>点击下方四类证据卡，体验物理抓取与生成带有 YAML Frontmatter 的 `EVIDENCE_INDEX.md` 总卡过程：</p>
+  <h2><span class="num">04</span> 演练：五环证据链与 `LESSON_07_EVIDENCE_INDEX.md` 审计终端</h2>
+  <p>点击下方五个证据环节，体验把场景、操作、观察、原始证据和结论写入 `EVIDENCE_INDEX.md` 的过程：</p>
 
   <div class="evidence-box">
     <div class="ev-row" onclick="testEv(1)">
-      <div><span class="ev-badge">Ev 1</span> <span class="ev-label">视觉证据 [照片证据]</span></div>
-      <span class="ev-file">docs/assets/lesson-07/screenshot.png</span>
+      <div><span class="ev-badge">Ev 1</span> <span class="ev-label">场景</span></div>
+      <span class="ev-file">docs/LESSON_07_EVIDENCE_INDEX.md#scenario</span>
     </div>
     <div class="ev-row" onclick="testEv(2)">
-      <div><span class="ev-badge">Ev 2</span> <span class="ev-label">行为证据 [脚印日志] (Chrome DevTools 审计)</span></div>
-      <span class="ev-file">docs/assets/lesson-07/action.log</span>
+      <div><span class="ev-badge">Ev 2</span> <span class="ev-label">操作</span></div>
+      <span class="ev-file">docs/LESSON_07_EVIDENCE_INDEX.md#action</span>
     </div>
     <div class="ev-row" onclick="testEv(3)">
-      <div><span class="ev-badge">Ev 3</span> <span class="ev-label">工程证据 [体检报告] (Typecheck & Lint)</span></div>
-      <span class="ev-file">docs/assets/lesson-07/typecheck.log</span>
+      <div><span class="ev-badge">Ev 3</span> <span class="ev-label">观察</span></div>
+      <span class="ev-file">docs/LESSON_07_EVIDENCE_INDEX.md#observation</span>
     </div>
     <div class="ev-row" onclick="testEv(4)">
-      <div><span class="ev-badge">Ev 4</span> <span class="ev-label">范围证据 [存根 diff] (Git 范围控制)</span></div>
-      <span class="ev-file">docs/assets/lesson-07/diff.patch</span>
+      <div><span class="ev-badge">Ev 4</span> <span class="ev-label">原始证据</span></div>
+      <span class="ev-file">docs/assets/lesson-07/screenshot.png · action.log</span>
     </div>
     <div class="ev-row" onclick="testEv(5)" style="border-color: var(--blue); background: var(--blue-soft);">
-      <div><span class="ev-badge" style="background: var(--blue);">INDEX</span> <span class="ev-label">📑 《四类证据链验收总卡》</span></div>
-      <span class="ev-file" style="background: var(--blue); color: #fff;">docs/LESSON_07_EVIDENCE_INDEX.md</span>
+      <div><span class="ev-badge" style="background: var(--blue);">Ev 5</span> <span class="ev-label">结论（写入证据索引）</span></div>
+      <span class="ev-file" style="background: var(--blue); color: #fff;">docs/LESSON_07_EVIDENCE_INDEX.md#conclusion</span>
     </div>
   </div>
 
@@ -467,7 +497,7 @@
 
 <!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
 <section>
-  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 3 自然授权口令卡</h2>
+  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然授权口令卡</h2>
 
 <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：从 L3/L4 选择一个验收场景，明确正常与失败/降级预期</div>
@@ -590,27 +620,27 @@
   <p style="margin-bottom: 1rem; color: var(--ink-soft);">请根据本课所学，在下拉框中选择正确的工程术语完成填空，并点击“核对答案”：</p>
 
   <div class="blank-card" id="bCard1">
-    1. <b>双 MCP 分工协作</b>：在质量验收中，负责深层审计 DevTools Console 0 报错与 127.0.0.1 网络白名单日志的工具是
+    1. <b>预配置入口验收</b>：本课要求从教师提供的单一入口按场景操作页面并保存证据；工具名称只是认识级背景，正确做法是
     <select class="blank-select" id="blank1">
       <option value="">-- 请选择 --</option>
-      <option value="devtools">Chrome DevTools MCP (Console & Network 审计)</option>
-      <option value="playwright">Playwright MCP (UI DOM 点击)</option>
+      <option value="devtools">从预配置入口按场景操作并保存截图、日志和页面状态</option>
+      <option value="playwright">自行安装并配置多套 MCP 服务</option>
     </select>。
     <div class="blank-feedback" id="bf1"></div>
   </div>
 
   <div class="blank-card" id="bCard2">
-    2. <b>验收总卡落盘</b>：专门用于为第 8 课 Codex 独立审查提供 4 行 YAML Header 结构化文本输入的汇总证据卡文件是
+    2. <b>证据索引落盘</b>：专门用于为第 8 课 Codex 独立评审提供结构化文本输入、并汇总五环证据的文件是
     <select class="blank-select" id="blank2">
       <option value="">-- 请选择 --</option>
-      <option value="index">docs/LESSON_07_EVIDENCE_INDEX.md (四类证据总卡)</option>
+      <option value="index">docs/LESSON_07_EVIDENCE_INDEX.md（五环证据索引）</option>
       <option value="temp">临时口头对话框聊天记录</option>
     </select>。
     <div class="blank-feedback" id="bf2"></div>
   </div>
 
   <div class="blank-card" id="bCard3">
-    3. <b>沙箱生命周期管理</b>：在 QA Subagent 完成测试并物理落盘四类证据与总卡后，系统会自动运行
+    3. <b>沙箱生命周期管理</b>：在 Subagent 完成测试并物理落盘五环证据索引后，系统会自动运行
     <select class="blank-select" id="blank3">
       <option value="">-- 请选择 --</option>
       <option value="destroy">销毁 QA Subagent 沙箱 (保持主 Agent Context 干净)</option>
@@ -669,8 +699,8 @@
   <!-- 4 Scenario Quiz -->
   <h3>1. 4 道概念选择测验</h3>
           <div class="quiz-q" data-q="1">
-    <div class="q">Q1 · 专门用于为第 8 课 Codex 独立审查提供结构化文本输入的汇总证据卡文件是什么？</div>
-    <label><input type="radio" name="q1" value="a"> docs/LESSON_07_EVIDENCE_INDEX.md (带 YAML Header 的四类证据总卡)</label>
+    <div class="q">Q1 · 专门用于为第 8 课 Codex 独立评审提供结构化文本输入、并汇总五环证据的文件是什么？</div>
+    <label><input type="radio" name="q1" value="a"> docs/LESSON_07_EVIDENCE_INDEX.md（五环证据索引）</label>
     <label><input type="radio" name="q1" value="b"> 聊天框里的临时文字明明</label>
     <label><input type="radio" name="q1" value="c"> package.json 依赖配置文件</label>
     <div class="feedback"></div>
@@ -678,10 +708,10 @@
   </div>
 
           <div class="quiz-q" data-q="2">
-    <div class="q">Q2 · 在 QA Subagent 中，用于深层审计 DevTools Console 0 报错与 127.0.0.1 网络白名单的 MCP 工具是什么？</div>
-    <label><input type="radio" name="q2" value="a"> Chrome DevTools MCP</label>
-    <label><input type="radio" name="q2" value="b"> Playwright MCP</label>
-    <label><input type="radio" name="q2" value="c"> Git MCP</label>
+    <div class="q">Q2 · Playwright、DOM、Console、Network 在本课中是什么定位？</div>
+    <label><input type="radio" name="q2" value="a"> 认识级背景词；不要求学员安装、配置或把它们当作核心交付</label>
+    <label><input type="radio" name="q2" value="b"> 五个必须掌握的核心概念</label>
+    <label><input type="radio" name="q2" value="c"> 连接真实生产系统的必备服务</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="a">提交答案</button>
   </div>
@@ -698,7 +728,7 @@
           <div class="quiz-q" data-q="4">
     <div class="q">Q4 · 当 IT 部门质疑非技术主管制作的 AI 原型“未经测试、缺乏质量保障”时，你应该如何汇报？</div>
     <label><input type="radio" name="q4" value="a"> “AI 告诉我页面已经做好了，应该没问题。”</label>
-    <label><input type="radio" name="q4" value="b"> “我们调度了 QA Subagent 挂载双 MCP 运行了剧本，物理落盘了照片、DevTools 脚印、typecheck 体检与 diff 存根及 EVIDENCE_INDEX 总卡，逐项通过/失败/未证明，证据可复核。”</label>
+    <label><input type="radio" name="q4" value="b"> “我们从预配置入口调度 Subagent 按场景操作，记录场景、操作、观察、原始证据和结论，逐项标记通过/失败/未证明，证据可复核。”</label>
     <label><input type="radio" name="q4" value="c"> “我自己用手点了几下，感觉挺顺畅。”</label>
     <div class="feedback"></div>
     <button class="btn q-btn" data-a="b">提交答案</button>
@@ -767,8 +797,8 @@
   <div class="card tinted" style="margin-top: 1.5rem;">
     <b>三句话带走 (Key Takeaways)：</b>
     <ol style="margin-top: .5rem;">
-      <li><b>口明无凭，证据落盘；拒绝无证据交接，四证合一才算终点。</b></li>
-      <li><b>双 MCP 配合好：Playwright 点 DOM 抓照片，DevTools 审日志测白名单。</b></li>
+      <li><b>口说无凭，证据落盘；场景、操作、观察、原始证据和结论五环齐全才可复核。</b></li>
+      <li><b>工具名称只是背景；课堂按预配置入口操作页面，不要求安装或配置多套 MCP。</b></li>
       <li><b>沙箱隔离不混淆，测试完即刻销毁子进程，落盘 EVIDENCE_INDEX 供 Codex 独立审查。</b></li>
     </ol>
   </div>
@@ -779,11 +809,11 @@
     <div class="chk-list">
       <label class="chk-item">
         <input type="checkbox" id="c1" onchange="chkUpdate()">
-        <span>1. 已在 Headed 视窗慢动作中亲眼观看 Playwright MCP 自动点击 DOM？</span>
+        <span>1. 已从预配置入口按验收场景操作页面并保存证据？</span>
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c2" onchange="chkUpdate()">
-        <span>2. 已成功在物理磁盘落盘“照片、脚印、体检、存根”四类证据及 `docs/LESSON_07_EVIDENCE_INDEX.md` 总卡？</span>
+        <span>2. 已在物理磁盘落盘场景、操作、观察、原始证据和结论五环及 `docs/LESSON_07_EVIDENCE_INDEX.md`？</span>
       </label>
       <label class="chk-item">
         <input type="checkbox" id="c3" onchange="chkUpdate()">
@@ -798,12 +828,12 @@
   <!-- Knowledge Expansion Grid 2x2 Array -->
   <div class="next-grid-2x2">
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
-      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 Playwright MCP 自动化</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);">SlowMo 慢动作与 Headless 静默端到端 UI 自动化。</p>
+      <h4 style="color: var(--blue); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">📖 Playwright（认识级）</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">浏览器自动操作的工程能力；本课不要求学员自行配置。</p>
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
-      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 Chrome DevTools 协议</h4>
-      <p style="font-size: .88rem; color: var(--ink-soft);">Console Error 捕抓与 127.0.0.1 网络请求白名单。</p>
+      <h4 style="color: var(--plum); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">🧠 DOM / Console / Network（认识级）</h4>
+      <p style="font-size: .88rem; color: var(--ink-soft);">页面结构、控制台日志和网络记录的名称；不作为本课配置考点。</p>
     </div>
     <div class="next-card" style="background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.3rem;">
       <h4 style="color: var(--teal); font-weight:800; font-size: .95rem; margin-bottom:.4rem;">⚡ YAML Frontmatter 格式</h4>
@@ -818,7 +848,7 @@
   <!-- Interactive Ask AI Box -->
   <div class="ask-me" style="margin-top: 2rem; border: 2px dashed var(--blue); border-radius: 14px; padding: 1.3rem 1.5rem; background: var(--blue-soft); text-align: center;">
     <b style="font-size: 1.05rem; color: var(--blue);">💡 有疑问？直接问你的 AI 老师。</b><br>
-    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用法庭举证的比喻，帮我复习四类证据链分别对应哪些物理文件”——它会为您详细拆解。</span>
+    <span style="font-size: .92rem; color: var(--ink-soft);">回到对话终端里问它：“用本课 Task 3—4 的证据索引，帮我复习每条证据链分别对应哪些物理文件”——它会为您详细拆解。</span>
   </div>
 </section>
 
@@ -834,29 +864,29 @@ const testScenarios = {
   raw: {
     steps: [
       { title: 'Step 1 · 口头问答“做好了吗” ➔ AI 口头答“做好了”', desc: '无 Playwright 自动化剧本 ➔ 无肉眼慢动作观察 ➔ 口头凭空承诺...', cls: 'error' },
-      { title: 'Step 2 · 无物理证据落盘 ➔ 向 IT 部门提交汇报', desc: '缺少 DevTools 日志与 typecheck 报告 ➔ 仅贴一张静态截屏...', cls: 'error' },
+      { title: 'Step 2 · 无原始证据落盘 ➔ 向 IT 部门提交汇报', desc: '缺少可回看的截图、日志或页面状态 ➔ 仅贴一张静态截屏...', cls: 'error' },
       { title: 'Step 3 · 💥 控制台底层报错，文件修改超界被打回', desc: '【崩溃】IT 部门复核发现控制台 12 条 Error 报错，文件擅自改动 20 个！项目惨遭打回重做！', cls: 'error' }
     ],
     logs: [
       '> [User Input]: "Is the prototype finished?"',
       '> [AI Reply]: "Yes, everything is completely done!" (Probability guess without verification)',
-      '🚨 [IT Department Review]: DevTools Console Uncaught TypeError x 12!',
-      '💥 [Result]: 缺少四类证据链，口头交付 100% 被击穿打回！'
+      '🚨 [IT Department Review]: 原始证据缺失，无法复核实际观察。',
+      '💥 [Result]: 缺少五环证据链，口头交付被打回补证！'
     ]
   },
   bounded: {
     steps: [
-      { title: 'Step 1 · 唤醒 QA Subagent ➔ Headed 慢动作视窗演示', desc: '调出 Chrome 视窗，以 500ms slowMo 慢动作肉眼观摩 Playwright 自动点击。', cls: '' },
-      { title: 'Step 2 · 挂载 Chrome DevTools MCP 静默抓取日志', desc: '切入 Headless 模式 ➔ 审计 Console 0 报错 ➔ 锁定 127.0.0.1 网络白名单。', cls: 'working' },
-      { title: 'Step 3 · 物理落盘四类证据与 LESSON_07_EVIDENCE_INDEX', desc: '抓取照片 `screenshot.png` + 脚印 `action.log` + 体检 `typecheck.log` + 存根 `diff.patch` + 总卡！', cls: 'success' },
-      { title: 'Step 4 · 🎉 主管 HITL 盖章 ➔ 自动销毁 QA Subagent 沙箱', desc: '复核逐项 PASS ➔ 更新 PROJECT_STATE ➔ 自动 Kill 测试沙箱，保持主 Context 干净！', cls: 'success' }
+      { title: 'Step 1 · 从预配置入口调度 Subagent', desc: '按验收场景操作页面，记录实际动作和停止条件；工具名称只是背景。', cls: '' },
+      { title: 'Step 2 · 保存观察与原始证据', desc: '把页面状态、截图、日志或其他可回看原件写入证据索引。', cls: 'working' },
+      { title: 'Step 3 · 形成五环证据索引', desc: '依次写清场景、操作、观察、原始证据和结论，并标记通过/失败/未证明。', cls: 'success' },
+      { title: 'Step 4 · 🎉 主管签署验收卡', desc: '主管逐项复核证据，批准、打回或标记未证明；清理不再需要的测试产物。', cls: 'success' }
     ],
     logs: [
-      '> [QA Subagent]: Process spawned in read-only sandbox mode',
-      '> [Playwright MCP]: Headed SlowMo (500ms) DOM interaction completed',
-      '> [Chrome DevTools MCP]: Console Error: 0, Network domain: 127.0.0.1 only (Auth: <REDACTED>)',
-      '📄 [Index Created]: docs/LESSON_07_EVIDENCE_INDEX.md generated with YAML Frontmatter',
-      '🎉 [Result]: HITL signed off, QA Subagent sandbox automatically destroyed!'
+      '> [Subagent]: 按预配置入口完成浏览器操作，权限和超时规程已生效',
+      '> [Observation]: 页面状态、截图和日志已保存',
+      '> [Evidence Index]: 场景 → 操作 → 观察 → 原始证据 → 结论已关联',
+      '📄 [Index Created]: docs/LESSON_07_EVIDENCE_INDEX.md',
+      '🎉 [Result]: 主管已逐项签署或标记未证明，测试产物按规程清理。'
     ]
   }
 };
@@ -881,7 +911,7 @@ function runMode(mode) {
 
   const data = testScenarios[mode];
   canvas.innerHTML = '';
-  consoleLog.innerHTML = '<span style="color: #94a3b8;">> 正在启动 ' + (mode === 'raw' ? '🔴 痛点反例' : '🟢 双 MCP 受控测试') + ' 动态轨迹推演...</span>';
+  consoleLog.innerHTML = '<span style="color: #94a3b8;">> 正在启动 ' + (mode === 'raw' ? '🔴 痛点反例' : '🟢 预配置入口受控验收') + ' 动态轨迹推演...</span>';
 
   data.steps.forEach((s, idx) => {
     const node = document.createElement('div');
@@ -918,49 +948,50 @@ function runMode(mode) {
 }
 runMode('bounded');
 
-// ---------- Section 03 Four Category Evidence Simulator ----------
+// ---------- Section 03 Five-Element Evidence Chain Simulator ----------
 function testEv(n) {
   const term = document.getElementById('evTerminal');
   if (n === 1) {
     term.innerHTML = `
-📷 <b>[Ev 1 视觉证据 · 照片]:</b><br>
-物理文件：\`docs/assets/lesson-07/screenshot.png\`<br>
-明明：Playwright MCP 抓取的高分辨率 1080p 界面渲染全页快照，校验 UI 布局与文字无错位。
+🧩 <b>[Ev 1 场景]:</b><br>
+记录位置：\`docs/LESSON_07_EVIDENCE_INDEX.md#scenario\`<br>
+说明：写清本次验收对应的 L3/L4 场景、正常预期和失败/降级预期。
     `;
   } else if (n === 2) {
     term.innerHTML = `
-👣 <b>[Ev 2 行为证据 · 脚印日志]:</b><br>
-物理文件：\`docs/assets/lesson-07/action.log\`<br>
-明明：Chrome DevTools MCP 审计结果：Console Uncaught Error: 0，网络请求仅限 127.0.0.1 域名，Auth Key 已打码 &lt;REDACTED&gt;。
+🖱️ <b>[Ev 2 操作]:</b><br>
+记录位置：\`docs/LESSON_07_EVIDENCE_INDEX.md#action\`<br>
+说明：记录按场景执行的浏览器操作和停止条件；工具名称只是背景。
     `;
   } else if (n === 3) {
     term.innerHTML = `
-🩺 <b>[Ev 3 工程证据 · 体检报告]:</b><br>
-物理文件：\`docs/assets/lesson-07/typecheck.log\`<br>
-说明：运行 \`npm run typecheck\`，TypeScript 类型检测通过，0 错误。
+👁️ <b>[Ev 3 观察]:</b><br>
+记录位置：\`docs/LESSON_07_EVIDENCE_INDEX.md#observation\`<br>
+说明：写下页面实际呈现、状态变化和工具失败，不用结论替代观察。
     `;
   } else if (n === 4) {
     term.innerHTML = `
-📜 <b>[Ev 4 范围证据 · 存根 diff]:</b><br>
-物理文件：\`docs/assets/lesson-07/diff.patch\`<br>
-明明：Git 变更范围审计，确认只修改了许可文件，包含 0 危险超界文件修改。
+📎 <b>[Ev 4 原始证据]:</b><br>
+物理文件：\`docs/assets/lesson-07/screenshot.png\`、\`action.log\`<br>
+说明：保存能够回看观察的截图、日志或页面状态原件。
     `;
   } else {
     term.innerHTML = `
-📑 <b>[INDEX 《四类证据链验收总卡》]:</b><br>
+📑 <b>[Ev 5 结论与证据索引]:</b><br>
 物理文件：\`docs/LESSON_07_EVIDENCE_INDEX.md\`<br>
 <pre style="background: #020617; padding: .6rem; border-radius: 6px; color: #38bdf8; font-size: .8rem; margin-top: .4rem;">
 ---
 title: Lesson 07 Evidence Index
 verified: true
-qa_subagent: destroyed
-candidate_commit: "909dcab"
+scenario: lesson-03-acceptance-01
+conclusion: proven / unproven
 ---
-# 四类证据链验收总卡
-- [x] screenshot.png (PASS)
-- [x] action.log (PASS 0 Error)
-- [x] typecheck.log (PASS)
-- [x] diff.patch (Clean)
+# 五环证据链索引
+- [x] 场景
+- [x] 操作
+- [x] 观察
+- [x] 原始证据
+- [x] 结论
 </pre>
     `;
   }
@@ -1007,11 +1038,11 @@ function checkAllBlanks() {
 
   bf1.className = 'blank-feedback show';
   bf1.style.color = ok1 ? 'var(--green)' : 'var(--red)';
-  bf1.innerHTML = ok1 ? '✅ 填空 1 正确！Chrome DevTools MCP 专门用于深层 Console 0 报错与 127.0.0.1 网络白名单审计。' : '❌ 填空 1 错误：应选择 Chrome DevTools MCP。';
+  bf1.innerHTML = ok1 ? '✅ 填空 1 正确！本课从预配置单一入口按场景操作并保存证据，不要求学员自行配置工具。' : '❌ 填空 1 错误：应选择从预配置入口按场景操作并保存证据。';
 
   bf2.className = 'blank-feedback show';
   bf2.style.color = ok2 ? 'var(--green)' : 'var(--red)';
-  bf2.innerHTML = ok2 ? '✅ 填空 2 正确！docs/LESSON_07_EVIDENCE_INDEX.md 包含了 4 行 YAML Header 供 Codex 独立审查解析。' : '❌ 填空 2 错误：应选择 LESSON_07_EVIDENCE_INDEX.md。';
+  bf2.innerHTML = ok2 ? '✅ 填空 2 正确！docs/LESSON_07_EVIDENCE_INDEX.md 汇总五环证据，供下一课独立评审读取。' : '❌ 填空 2 错误：应选择 LESSON_07_EVIDENCE_INDEX.md。';
 
   bf3.className = 'blank-feedback show';
   bf3.style.color = ok3 ? 'var(--green)' : 'var(--red)';
@@ -1033,9 +1064,9 @@ function toggleAns(id) {
 // ---------- Quiz Logic ----------
 const explain = {
   q1: '正确答案：A。docs/LESSON_07_EVIDENCE_INDEX.md 带有 4 行 YAML Header，专门为第 8 课 Codex 审查提供结构化文本解析。',
-  q2: '正确答案：A。Chrome DevTools MCP 专门用于从底座捕获 Console Error 与审计 Network 127.0.0.1 域名白名单。',
-  q3: '正确答案：C。测试 Subagent 沙箱隔离防止了海量 DOM 与 DevTools 原始日志污染主开发环境的 Context。',
-  q4: '正确答案：B。最强硬的交接汇报是物理出示包含照片、脚印、体检、存根与 EVIDENCE_INDEX 总卡的证据包。',
+  q2: '正确答案：A。Playwright、DOM、Console、Network 在本课只是认识级背景，不要求学员配置或把它们当作核心交付。',
+  q3: '正确答案：C。测试产物应按规程清理，避免无关上下文和原始日志继续污染主会话。',
+  q4: '正确答案：B。最强硬的交接汇报是说明场景、操作、观察、原始证据和结论均可复核，并标出未证明内容。',
   q5: '正确答案：B。验收场景迁移不变的是业务含义（给定条件、动作、可观察结果），变的是把它们翻译成浏览器可执行步骤与真实页面元素。'
 };
 
@@ -1087,7 +1118,7 @@ function chkUpdate() {
   const res = document.getElementById('chkResult');
   if(count === 3) {
     res.style.color = 'var(--blue)';
-    res.innerHTML = '🎉 恭喜完成第七课全量退场自查！你已熟练掌握 QA Subagent 双 MCP 测试与四类证据链落盘！';
+    res.innerHTML = '🎉 恭喜完成第七课全量退场自查！你已完成预配置浏览器验收和五环证据索引！';
   } else {
     res.style.color = 'var(--blue)';
     res.innerHTML = '已自查：' + count + ' / 3';
