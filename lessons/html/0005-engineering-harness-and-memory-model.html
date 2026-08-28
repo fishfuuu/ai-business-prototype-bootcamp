@@ -467,13 +467,20 @@
 
 <!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
 <section>
-  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然口令卡</h2>
+  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然口令卡（三类原型适配）</h2>
 
-<div class="card focus">
+  <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：把第四课薄片拆成具体业务动作</div>
+    <div style="background: #f1f5f9; border-radius: 8px; padding: .8rem 1rem; margin-bottom: .8rem; font-size: .88rem; line-height: 1.6; color: #334155;">
+      <b>三类原型决策闭环对照：</b><br>
+      • <b>A. 监控决策型（ROI/看板）</b>：1.多维数据聚合 → 2.规则计算与阈值报警 → <b>3.[AI] 异动归因诊断分析</b> → <b>4.[AI] 起草止损调优策略</b> → 5.主管确认下发。<br>
+      • <b>B. 任务流程型（工单/审批）</b>：1.接收工单详情 → 2.基础字段校验 → <b>3.[AI] 提炼诉求与异常信息</b> → <b>4.[AI] 起草处理建议与回复</b> → 5.主管审批改状态。<br>
+      • <b>C. 操作工具型（文案/清洗）</b>：1.输入原始参数 → 2.格式与敏感词硬过滤 → <b>3.[AI] 批量发散生成多版本</b> → <b>4.[AI] 语义合规初筛</b> → 5.主管挑选导出。
+    </div>
     <div class="prompt-copy-box">
       <span class="prompt-copy-text" id="p1">请读取我的第四课薄切片原型和 docs/PROJECT_STATE.md，
-把这个薄切片拆成 4—6 个具体业务动作。
+根据我的业务原型类型（A.监控与决策型 / B.任务与流程型 / C.操作工具型），
+把这个薄切片拆成 4—6 个完整的业务决策动作。
 
 每个动作写清：
 1. 动作名称
@@ -482,11 +489,14 @@
 4. 输入是什么
 5. 输出是什么
 
-先不要建议加 AI，只如实拆解和标注当前处理方式。
-不要修改任何代码。</span>
+【硬线约束】：
+- 严禁只拆解“点击筛选、请求接口、数学计算、画折线图”等纯 UI/技术步骤！
+- 必须包含业务主管在“看完数据/信息后所做的推演、分析、判断或处置动作”。
+- 先不要建议加 AI，只如实拆解和标注当前处理方式。
+- 不要修改任何代码。</span>
       <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了 4—6 个具体业务动作，每个有当前处理方式标注，但没有修改代码。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了 4—6 个覆盖业务决策闭环的具体动作，每个有当前处理方式标注，但没有修改代码。</div>
   </div>
 
   <div class="card focus">
@@ -499,19 +509,24 @@
 2. 结果唯一吗？（是/否）
 3. 错了能恢复吗？（是/否）
 4. 建议层级：不用 AI / AI 辅助 / Workflow / 受控 Agent
-5. 理由
+5. 理由（基于任务性质：确定性 vs 概率性）
 6. 错误代价（错了会造成什么后果）
 
-原则：能用规则解决的不用 AI，能用 Workflow 的不用 Agent。
-最简单足够优先，不要追求最高自主程度。
-先不要修改代码，只输出初筛表。</span>
+【判定标尺】：
+- 严密算数（如 ROI 运算）、SQL/接口查数、状态流转、格式校验：100% 规则（不用 AI）。
+- 异动归因分析、策略起草、诉求提炼、创意生成：100% 概率性（建议 AI 辅助 + 人工确认）。
+- 最简单足够优先，不要追求最高自主程度。
+- 先不要修改代码，只输出初筛表。</span>
       <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一张初筛表，每个动作有层级判断、理由和错误代价，但没有修改代码。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一张初筛表，确定性与概率性动作被清晰切开，每个动作有层级判断、理由和错误代价。</div>
   </div>
 
   <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：选一个低风险、可验证、能人工接管的候选</div>
+    <div style="background: #f1f5f9; border-radius: 8px; padding: .6rem 1rem; margin-bottom: .8rem; font-size: .85rem; color: #334155;">
+      💡 <b>推荐候选</b>：A类选择【异动归因与策略起草】；B类选择【诉求提炼与处理方案】；C类选择【多版本文案生成与合规初筛】。
+    </div>
     <div class="prompt-copy-box">
       <span class="prompt-copy-text" id="p3">请从初筛结果中推荐一个最适合的候选机会。
 
@@ -533,12 +548,16 @@
   <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3 收尾：写下你的拒绝理由（2 分钟）</div>
     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0; font-size: .92rem; line-height: 1.7; color: #1e293b;">
-<p style="margin:.4rem 0;"><b>本步目的</b>：把你的判断写下来，变成可存档的证据。用两句话写下为什么你选的这个环节不能只用确定性规则，或者为什么你拒绝的环节不应该用 Agent。写下来贴在你的智能机会卡上。</p>
-<p style="margin:.4rem 0;"><b>你应该做</b>：用两句话写下你的拒绝理由，贴在智能机会卡上。不是口头说——是写下来。</p>
-<p style="margin:.4rem 0;"><b>本步检查</b>：写下了至少一条拒绝理由；理由基于任务性质和错误代价；是写下来而非口头表达。</p>
-<p style="margin:.4rem 0;"><b>必须停止</b>：如果只写了选的理由没写拒绝理由，追问"你没选的那些为什么不用 AI"。</p>
+      <p style="margin:.4rem 0;"><b>本步目的</b>：把你的判断写下来，变成可存档的证据。用两句话写下为什么你选的这个环节不能只用确定性规则，或者为什么你拒绝的环节不应该用 Agent。写下来贴在你的智能机会卡上。</p>
+      <div style="margin: .6rem 0; padding: .6rem .8rem; background: #fff; border-left: 3px solid var(--blue); font-size: .85rem; color: #475569;">
+        <b>三类标杆拒绝理由参考：</b><br>
+        • <b>A类</b>：拒绝用 AI 计算 ROI，因为 ROI 是严密数学公式属于确定性计算；选择用 AI 分析归因，因为多维异动归因属于概率性推断。<br>
+        • <b>B类</b>：拒绝在工单流转中使用 Agent 全自动闭环，因为涉及责任确权误判代价高；选择在诉求提炼中使用 AI 辅助。<br>
+        • <b>C类</b>：拒绝在敏感词过滤中使用 AI，因为黑名单是布尔逻辑；选择在创意文案中使用 AI 辅助。
+      </div>
+      <p style="margin:.4rem 0;"><b>本步检查</b>：写下了至少一条拒绝理由；理由基于任务性质和错误代价；是写下来而非口头表达。</p>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：在本地预览中观察并验收结果。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：在智能机会卡上写明基于任务性质和错误代价的拒绝理由。</div>
   </div>
 
   <div class="card focus">
@@ -551,14 +570,14 @@
 请回答以下内容：
 
 1. 范式选择：Workflow / ReAct / 增量实施范式（Plan & Execute）
-   - 选择理由（路径是否预先确定？任务是否需要动态调查？）
+   - 选择理由（A类看板推荐 Workflow 或单步 ReAct；B类推荐 ReAct；C类推荐 Workflow）
    - 如果选 ReAct，说明 Thought → Action → Observation 循环如何运作
    - 如果选 增量实施范式（Plan & Execute），说明与第四课的 增量实施范式（Plan & Execute） 有什么不同
 
 2. 智能机会卡：
    - 数据：需要什么输入数据（标明 Mock 来源）
    - 工具：需要调用什么工具或读取什么信息
-   - HITL 检查点：在哪个具体节点需要人批准、纠正或停止
+   - HITL 检查点：在哪个具体节点需要人批准、纠正或停止（如：严禁自动修改投放预算，必须由主管勾选确认）
    - 停止条件：什么情况下停止智能行为
    - 降级条件：AI 不可用时降为什么方式
 
@@ -570,6 +589,9 @@
 
   <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：在原型中模拟正常与不确定/失败结果</div>
+    <div style="background: #f1f5f9; border-radius: 8px; padding: .6rem 1rem; margin-bottom: .8rem; font-size: .85rem; color: #334155;">
+      💡 <b>交互形态</b>：A类看板推荐【右侧抽屉 AI 归因诊断卡】；B类流程推荐【详情右侧 AI 处置助理】；C类工具推荐【右侧双栏生成比对区】。
+    </div>
     <div class="prompt-copy-box">
       <span class="prompt-copy-text" id="p6">请在我的原型中模拟一个智能行为。
 
@@ -578,9 +600,9 @@
 智能机会卡内容：【填写或粘贴 Task 4 的智能机会卡】
 
 要求：
-1. 在原型中添加一个标记为"模拟AI"的智能行为组件
+1. 在原型中添加一个标记为"模拟AI"的智能行为组件（符合业务交互形态）
 2. 模拟正常结果（智能行为正常运作时的表现）
-3. 模拟至少一种不确定/失败结果（如输入不完整、数据异常时）
+3. 模拟至少一种不确定/失败结果（如输入不完整、数据异常、波动不显著时提示无法归因）
 4. 所有模拟结果必须明确标注"模拟"，不冒充真实 AI 能力
 5. 保持原业务路径仍可操作
 6. 不连接真实模型、业务 API 或生产数据
