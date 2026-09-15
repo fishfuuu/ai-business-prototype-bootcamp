@@ -116,7 +116,7 @@ description: Delivers multi-file changes incrementally using contract-first thin
 
 ## 页面技术状态调试器规范
 
-- 三类原型必须统一保留 `prototypeState` 可视化调试按钮 (`showPrototypeDebug = import.meta.env.DEV`):
+- 四类原型必须统一保留 `prototypeState` 可视化调试按钮 (`showPrototypeDebug = import.meta.env.DEV`):
   ```typescript
   const showPrototypeDebug = import.meta.env.DEV
   const prototypeState = ref<'loading' | 'empty' | 'error' | 'success'>('success')
