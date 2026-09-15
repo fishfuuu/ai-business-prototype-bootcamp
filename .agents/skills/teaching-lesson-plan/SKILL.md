@@ -25,7 +25,7 @@ Before writing the Brief, read all four input types. Missing any one is a fail-c
 
 ### 1. Frozen baseline & optimization proposal
 - `lessons/TEN_LESSON_FROZEN_BASELINE.md`: Course direction, per-lesson positioning, concept distribution, and acceptance boundaries.
-- `lessons/CURRICULUM_REBALANCING_AND_DUAL_TRACK_OPTIMIZATION_PROPOSAL.md`: The approved dual-track architecture (v1.3 approved baseline), including 35+35+10+10 time allocation, 35-min hard cutoff gate (P-01), desk runtime guides (P-02), cold-start scaffolds (P-03), TPA evidence independence (P-04), and `intent-to-outcome-loop` integration.
+- `lessons/CURRICULUM_REBALANCING_AND_DUAL_TRACK_OPTIMIZATION_PROPOSAL.md`: The approved dual-track architecture (v1.4 Approved & Frozen Baseline · 2026-09-15), including 35+35+10+10 time allocation, 35-min hard cutoff gate (P-01), desk runtime guides (P-02), cold-start scaffolds (P-03), TPA evidence independence (P-04), and `intent-to-outcome-loop` integration.
 - `lessons/COURSE_ROADMAP.md`: Current course roadmap and four business archetype definitions (A/B/C/D).
 
 ### 2. Current lesson materials

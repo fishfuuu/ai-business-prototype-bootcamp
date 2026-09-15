@@ -10,7 +10,7 @@ This file is the only owner of the Brief schema and contract version. `HANDOFF_R
 | --- | --- | --- |
 | `lesson_number` | Yes | Exact L1—L10 lesson |
 | `course_context` | Yes | Audience, prior knowledge, modality, group/support, session limit |
-| `authority_refs` | Yes | Current locked/frozen/approved inputs: `TEN_LESSON_FROZEN_BASELINE.md`, `COURSE_ROADMAP.md`, `CURRICULUM_REBALANCING_AND_DUAL_TRACK_OPTIMIZATION_PROPOSAL.md` (v1.3 approved baseline), `GLOSSARY.md` |
+| `authority_refs` | Yes | Current locked/frozen/approved inputs: `TEN_LESSON_FROZEN_BASELINE.md`, `COURSE_ROADMAP.md`, `CURRICULUM_REBALANCING_AND_DUAL_TRACK_OPTIMIZATION_PROPOSAL.md` (v1.4 Approved & Frozen Baseline · 2026-09-15), `GLOSSARY.md` |
 | `contract_version` | Yes | Must equal `2.1` |
 | `candidate_version` | Yes | Version being designed, without overwriting history |
 | `comparison_baseline` | No | Historical artifact used only for explicit comparison under `lessons/` |
