@@ -80,6 +80,7 @@ This file is the only owner of the Brief schema and contract version. `HANDOFF_R
 | `misconceptions` | Yes | 0-5 items |
 | `troubleshooting_categories` | Yes | 0-5 root-cause categories with fallback |
 | `support_scaffolds` | Yes | Specific scaffolds referenced:<br>• L6: `student-package/templates/SIGNOFF_VERIFICATION_TEMPLATE.md` & `student-package/cases/cross_department_delay_case.md` (含待签发草案与原始物证素材) & `student-package/cases/signoff_practice_packs.md`<br>• L7: `student-package/templates/FIND_SKILLS_VETTING_CHECKLIST.md` & `student-package/cases/monthly_expense_sample.csv` & 预审分析技能 `student-package/templates/skills/csv-data-analyzer/SKILL.md`<br>• L8: `student-package/templates/RED_BLUE_AUDIT_CARD.md` & Reviewed-Change 独立审查框架<br>• L9: `student-package/templates/SKILL_TEMPLATE_BUSINESS.md` & 3 套 Golden Sample (`fin-invoice-audit`, `hr-interview-screener`, `ops-supplier-quote-compare`) & `/shape`<br>• L10: 结业综合评估与交接套件（`student-package/templates/IT_DEVELOPMENT_STARTER_PACK_TEMPLATE.md` & `student-package/templates/DEPARTMENT_AGENT_DEPLOYMENT_SOP_TEMPLATE.md` & `/evaluate` / HITL / `/coordinate` 导出规范） |
+| `between_lesson_task` | Yes | 10–15 min between-lesson micro-task aligning with COURSE_ROADMAP (e.g. L7: mark an evidence blind spot and remediation plan), verified at the start of the next lesson |
 
 ## 8. Output rendering contracts
 
