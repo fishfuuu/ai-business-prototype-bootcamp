@@ -122,7 +122,7 @@ Rules:
 ## Evidence and truthfulness (P-04 Enforcement)
 
 - **Prototype progress line**: Visual/behavioral evidence from Track A (Git commit, Vite UI state, Playwright screenshot).
-- **Supervisor judgment line**: Evidence from Track B (L6: Fact report, L7: Skill vetting checklist + table analysis, L8: Audit card + handoff pack, L9: custom `SKILL.md` + test record, L10: Defense slides/script + Department Deployment Checklist).
+- **Supervisor judgment line**: Evidence from Track B (L6: Signoff verification report, L7: Skill vetting checklist + table analysis, L8: Audit card + handoff pack, L9: custom `SKILL.md` + test record, L10: Defense slides/script + Department Deployment Checklist).
 - **Non-offsetting rule**: Prototype evidence CANNOT offset judgment evidence, and vice-versa. Both lines must independently pass.
 - Never claim text guidance is a runtime hard control; never claim automatic repair, compliance, zero error, real API/database/model integration, or a tool/script not supported by evidence.
 

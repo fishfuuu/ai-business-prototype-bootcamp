@@ -25,7 +25,7 @@ Before writing the Brief, read all four input types. Missing any one is a fail-c
 
 ### 1. Frozen baseline & optimization proposal
 - `lessons/TEN_LESSON_FROZEN_BASELINE.md`: Course direction, per-lesson positioning, concept distribution, and acceptance boundaries.
-- `lessons/CURRICULUM_REBALANCING_AND_DUAL_TRACK_OPTIMIZATION_PROPOSAL.md`: The approved dual-track architecture (v1.4 Approved & Frozen Baseline · 2026-09-15), including 35+35+10+10 time allocation, 35-min hard cutoff gate (P-01), desk runtime guides (P-02), cold-start scaffolds (P-03), TPA evidence independence (P-04), and `intent-to-outcome-loop` integration.
+- `lessons/CURRICULUM_REBALANCING_AND_DUAL_TRACK_OPTIMIZATION_PROPOSAL.md`: The approved dual-track architecture (v1.4.1 Approved & Frozen Baseline · 2026-09-16), including 35+35+10+10 time allocation, 35-min hard cutoff gate (P-01), desk runtime guides (P-02), cold-start scaffolds (P-03), TPA evidence independence (P-04), and `intent-to-outcome-loop` integration.
 - `lessons/COURSE_ROADMAP.md`: Current course roadmap and four business archetype definitions (A/B/C/D).
 
 ### 2. Current lesson materials
@@ -92,13 +92,13 @@ For lessons L6 through L10, the Brief MUST enforce the approved dual-track model
 1. **35+35+10+10 Time Budget**:
    - `00–35 min`: **Track A (Prototype Sandpit)** — Hands-on code prototype milestone.
    - `35 min`: **Hard Cutoff Gate (硬切门禁)** — Any student blocked at 35 min must be given a pre-built snapshot by the TA and transitioned to Track B immediately.
-   - `35–70 min`: **Track B (Management Practice & Skills)** — Hands-on non-code management exercise (L6: Business fact debugging, L7: Find Skills + 办公数据分析实操, L8: Dual-Agent red-blue audit & Reviewed-Change, L9: Find ➔ Critique ➔ /shape 定型 ➔ Create 创造四步闭环, L10: /evaluate 全量评估 ➔ HITL 整改 ➔ /coordinate 双轨交接与抽签答辩).
+   - `35–70 min`: **Track B (Management Practice & Skills)** — Hands-on non-code management exercise (L6: Pre-signature verification & management sign-off, L7: Find Skills + 办公数据分析实操, L8: Dual-Agent red-blue audit & Reviewed-Change, L9: Find ➔ Critique ➔ /shape 定型 ➔ Create 创造四步闭环, L10: /evaluate 全量评估 ➔ HITL 整改 ➔ /coordinate 双轨交接与抽签答辩).
    - `70–80 min`: **Isomorphic Synthesis & Sign-off** — Conceptual bridge between code sandpit and management practice; sign checklist/audit card.
    - `80–90 min`: **Closing & Archival** — Git commit, `PROJECT_STATE.md` update, buffer.
 
 2. **TPA Dual-Line Minimum Evidence Independence (P-04)**:
    - `prototype_progress_line`: Minimum evidence from Track A (Git commit, Vite UI state, Playwright screenshot).
-   - `supervisor_judgment_line`: Minimum evidence from Track B (L6: 客观事实事故调查单; L7: 外部技能体检表+表格对账实测; L8: 重大方案内审卡+交接包; L9: 部门专属SKILL.md+测试记录; L10: 答辩讲稿/PPT+部门落地清单与HITL责任人).
+   - `supervisor_judgment_line`: Minimum evidence from Track B (L6: 签发前核验与裁决单; L7: 外部技能体检表+表格对账实测; L8: 重大方案内审卡+交接包; L9: 部门专属SKILL.md+测试记录; L10: 答辩讲稿/PPT+部门落地清单与HITL责任人).
    - **Non-offsetting rule**: Prototype evidence CANNOT offset judgment evidence, and vice-versa. Both lines must independently pass.
 
 3. **Four Archetypes Decision Loop Adaptation (`a665ff4`)**:

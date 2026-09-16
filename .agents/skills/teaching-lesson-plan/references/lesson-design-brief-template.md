@@ -10,7 +10,7 @@ This file is the only owner of the Brief schema and contract version. `HANDOFF_R
 | --- | --- | --- |
 | `lesson_number` | Yes | Exact L1—L10 lesson |
 | `course_context` | Yes | Audience, prior knowledge, modality, group/support, session limit |
-| `authority_refs` | Yes | Current locked/frozen/approved inputs: `TEN_LESSON_FROZEN_BASELINE.md`, `COURSE_ROADMAP.md`, `CURRICULUM_REBALANCING_AND_DUAL_TRACK_OPTIMIZATION_PROPOSAL.md` (v1.4 Approved & Frozen Baseline · 2026-09-15), `GLOSSARY.md` |
+| `authority_refs` | Yes | Current locked/frozen/approved inputs: `TEN_LESSON_FROZEN_BASELINE.md`, `COURSE_ROADMAP.md`, `CURRICULUM_REBALANCING_AND_DUAL_TRACK_OPTIMIZATION_PROPOSAL.md` (v1.4.1 Approved & Frozen Baseline · 2026-09-16), `GLOSSARY.md` |
 | `contract_version` | Yes | Must equal `2.1` |
 | `candidate_version` | Yes | Version being designed, without overwriting history |
 | `comparison_baseline` | No | Historical artifact used only for explicit comparison under `lessons/` |
@@ -22,7 +22,7 @@ This file is the only owner of the Brief schema and contract version. `HANDOFF_R
 | `classroom_main_result` | Yes | One integrated classroom result combining prototype progress and supervisor judgment |
 | `dual_track_structure` | Yes (L6–L10) | Explicit partition: `track_a_sandpit` (0–35 min, Tasks 1–2) and `track_b_management` (35–70 min, Tasks 3–4) |
 | `prototype_progress_line` | Yes | Visible prototype increment + minimum evidence (Track A: Git commit, Vite UI state, Playwright screenshot) |
-| `supervisor_judgment_line` | Yes | Judgment increment + minimum evidence (Track B: Fact report, Skill vetting checklist, Audit card, custom `SKILL.md`) |
+| `supervisor_judgment_line` | Yes | Judgment increment + minimum evidence (Track B: Signoff verification report, Skill vetting checklist, Audit card, custom `SKILL.md`) |
 | `line_merge` | Yes | How both lines form one result. **Enforce P-04 non-offsetting rule**: Prototype evidence and Judgment evidence are strictly independent and CANNOT mutually offset |
 | `non_goals` | Yes | Explicit lesson exclusions |
 | `next_ai_integration_boundary` | Yes | Whether business AI/Agent integration is absent, introduced, or revisited |
@@ -79,7 +79,7 @@ This file is the only owner of the Brief schema and contract version. `HANDOFF_R
 | `extension_questions` | Yes | 0-2, with answer/judgment points |
 | `misconceptions` | Yes | 0-5 items |
 | `troubleshooting_categories` | Yes | 0-5 root-cause categories with fallback |
-| `support_scaffolds` | Yes | Specific scaffolds referenced:<br>• L6: `student-package/templates/ACCIDENT_INVESTIGATION_TEMPLATE.md` & `student-package/cases/cross_department_delay_case.md`<br>• L7: `student-package/templates/FIND_SKILLS_VETTING_CHECKLIST.md` & `student-package/cases/monthly_expense_sample.csv` & 预审分析技能 `student-package/templates/skills/csv-data-analyzer/SKILL.md`<br>• L8: `student-package/templates/RED_BLUE_AUDIT_CARD.md` & Reviewed-Change 独立审查框架<br>• L9: `student-package/templates/SKILL_TEMPLATE_BUSINESS.md` & 3 套 Golden Sample (`fin-invoice-audit`, `hr-interview-screener`, `ops-supplier-quote-compare`) & `/shape`<br>• L10: 结业综合评估与交接套件（`student-package/templates/IT_DEVELOPMENT_STARTER_PACK_TEMPLATE.md` & `student-package/templates/DEPARTMENT_AGENT_DEPLOYMENT_SOP_TEMPLATE.md` & `/evaluate` / HITL / `/coordinate` 导出规范） |
+| `support_scaffolds` | Yes | Specific scaffolds referenced:<br>• L6: `student-package/templates/SIGNOFF_VERIFICATION_TEMPLATE.md` & `student-package/cases/cross_department_delay_case.md` (含待签发草案与原始物证素材) & `student-package/cases/signoff_practice_packs.md`<br>• L7: `student-package/templates/FIND_SKILLS_VETTING_CHECKLIST.md` & `student-package/cases/monthly_expense_sample.csv` & 预审分析技能 `student-package/templates/skills/csv-data-analyzer/SKILL.md`<br>• L8: `student-package/templates/RED_BLUE_AUDIT_CARD.md` & Reviewed-Change 独立审查框架<br>• L9: `student-package/templates/SKILL_TEMPLATE_BUSINESS.md` & 3 套 Golden Sample (`fin-invoice-audit`, `hr-interview-screener`, `ops-supplier-quote-compare`) & `/shape`<br>• L10: 结业综合评估与交接套件（`student-package/templates/IT_DEVELOPMENT_STARTER_PACK_TEMPLATE.md` & `student-package/templates/DEPARTMENT_AGENT_DEPLOYMENT_SOP_TEMPLATE.md` & `/evaluate` / HITL / `/coordinate` 导出规范） |
 
 ## 8. Output rendering contracts
 
