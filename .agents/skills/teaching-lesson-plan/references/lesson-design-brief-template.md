@@ -68,7 +68,7 @@ This file is the only owner of the Brief schema and contract version. `HANDOFF_R
 | `time_budget` | Yes | Integer minute arithmetic and compression order |
 | `tasks` | Yes | Shared Task semantics with teacher and learner cards.<br>For L6–L10: Tasks 1–2 map to Track A (Prototype Sandpit); Tasks 3–4 map to Track B (Management & Skills Practice) |
 | `tasks[].teacher_card` | Yes | demonstration / cue / patrol_judgment / failure_fallback |
-| `tasks[].learner_card` | Yes | purpose / copy_or_execute / expected_observation / check / mandatory_stop |
+| `tasks[].learner_card` | Yes | purpose / copy_or_execute / expected_observation / check / mandatory_stop.<br>**杜绝答案代写**：学员提示词不得预写、示例或代生成主管判断线的任何裁决内容（含裁决选项倾向、主管理由、根因结论、答案单号）；判断类内容必须由学员先手写产生，Agent 只做排版与填模。 |
 | `branching` | Yes | Branches and reconvergence; one GUIDE only |
 
 ## 7. Assessment and support
@@ -119,4 +119,5 @@ This file is the only owner of the Brief schema and contract version. `HANDOFF_R
 - **Concept format drift**: Using unaligned formats instead of the actionable 3-part framework (是什么 / 怎么用 / 避坑红线) -> stop.
 - **Missing inheritance table**: Brief produced without content inheritance table -> stop.
 - **Unsupported deletion**: Original content deleted without a reason from the default-retain list -> stop.
+- **Judgment ghostwriting**: Detecting learner prompts pre-filling supervisor adjudication, reasons, root causes, or answer keys -> stop.
 - **Placeholders**: Detecting `TODO`, `...`, or empty prompts in Task cards -> stop.

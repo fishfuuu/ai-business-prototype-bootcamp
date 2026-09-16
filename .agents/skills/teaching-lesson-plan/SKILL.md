@@ -110,6 +110,7 @@ For lessons L6 through L10, the Brief MUST enforce the approved dual-track model
 Before setting `HANDOFF_READY`, verify:
 - Is there sufficient teacher exposition content (not just headings)?
 - Are there directly usable demonstrations and prompts (zero placeholders)?
+- **No Judgment Ghostwriting (杜绝答案代写)**: 学员提示词不得预写、示例或代生成主管判断线的任何裁决内容（含裁决选项倾向、主管理由、根因结论、答案单号）；判断类内容必须由学员先手写产生，Agent 只做排版与填模。
 - Does the learner know how to do each step specifically?
 - Is there a complete core-concept relationship diagram (not a timetable)?
 - For L6–L10: Are Track A (Tasks 1-2) and Track B (Tasks 3-4) explicitly mapped with time bounds?
@@ -130,4 +131,5 @@ Stop and report when:
 - L6–L10 fails to implement the 35+35+10+10 dual-track budget or lacks the 35-min hard cutoff gate;
 - Dual-line evidence allows cross-offsetting (violating P-04);
 - Concepts use obsolete unaligned formats instead of the actionable 3-part framework;
+- Judgment ghostwriting detected: learner prompts pre-filling supervisor adjudication, reasons, root causes, or answer keys;
 - Teaching thickness checks fail or placeholders are detected.
