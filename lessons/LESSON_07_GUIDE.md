@@ -422,9 +422,9 @@ git commit -m "feat(lesson-07): complete browser acceptance evidence and csv dat
 ```
 确认终端输出 `nothing to commit, working tree clean`，确保工作区干净退场。
 
-### 6.3 课后微任务：证据盲区排查与补证计划 (10–15 min)
+### 6.3 课后微任务：证据盲区排查与补证计划
 
-课后请结合你在 Task 2 整理的证据索引，完成以下微任务：
+课后请结合你在 Task 2 整理的证据索引（建议用时 10–15 min），完成以下微任务：
 - **微任务内容**：
   > 在你的 `docs/LESSON_07_EVIDENCE_INDEX.md` 中，明确标注出**至少 1 处当前端到端验收仍未覆盖的“证据盲区”**（如：多浏览器兼容性、极端网络延迟、超大数值边界或特定异常流），并写出对应的**补证方式建议**（需补充哪类数据或测试用例）；
 - **闭环机制**：
