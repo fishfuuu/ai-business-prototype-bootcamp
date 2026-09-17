@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第 6 课 · 学会定位和修复问题：五层诊断卡、$diagnose Skill 与有界排错 Loop | 主管 AI 训练营</title>
+<title>第 6 课 · 事实锚定排错、有界自修与签发前核验（双轨实战 35+35+10+10）| 主管 AI 训练营</title>
 <style>
   :root {
     --paper: #faf7f2;
@@ -317,7 +317,7 @@
 <div class="hero">
   <div class="wrap">
     <div class="kicker">Lesson 06 · 用事实找 Bug，在边界内修复</div>
-    <h1>学会定位和修复问题</h1>
+    <h1>学会定位和修复问题<br><span style="font-size:1.4rem;font-weight:600;opacity:.9;">代码沙盘排错 35min + 管理签发前核验 35min 双轨实操</span></h1>
     <p class="sub"><b>排错前先存档，不盲猜、先断言；日志脱敏写报告，两轮不通安全熔断。</b><br>掌握 <b>事实卡与五层诊断</b>、<b>日志脱敏与 DEBUG_REPORT 落盘</b> 与 <b>Checkpoint 和本课两轮上限</b>！</p>
     <div class="goal">
       🎯 <b>本课目标</b>：① 掌握排错前保存 Checkpoint 并唤醒 `$diagnose`，构建可核对的 PASS/FAIL 反馈闭环；② 掌握五层诊断卡口语化排查与落盘 `docs/LESSON_06_DEBUG_REPORT.md`；③ 掌握“2 轮硬熔断机制”，在自修 2 轮未 PASS 时停止自动修改，由指定人员按确认范围恢复 Checkpoint。
@@ -330,12 +330,14 @@
 <!-- SECTION 00: COURSE CONTEXT -->
 <section>
   <h2><span class="num">01</span> 找 Bug 为什么不能靠猜？</h2>
-  <p>原型有了、契约有了、智能薄片也有了——但页面打开是白屏，按钮点了没反应。让 Agent 自己反复改？两轮没修好反而越改越乱。第六课解决的就是"怎么从事实出发找 Bug，在边界内修复，修不好就停下来交给合适的人"。</p>
+  <p>原型有了、契约有了、智能薄片也有了——但页面打开是白屏，按钮点了没反应。让 Agent 自己反复改？两轮没修好反而越改越乱。从本课起，课程全面推行 <b>35+35+10+10 双轨制</b>：不仅教你在代码沙盘中用事实定位代码故障，更将“说法-物证对照”的心智平移至企业日常管理，开展<b>《签发前核验与裁决单》</b>实战！</p>
   <div class="card focus">
-    <p><b>记住这句话：</b><br>
-    不盲目让 Agent 反复试，而是从复现、输入、契约、日志和实际状态缩小原因。一个故障、一个主假设、最多两轮——失败也必须留下证据。</p>
+    <p><b>⚖️ 双轨考核互不顶替铁律：</b><br>
+    <b>轨道 A（代码沙盘排错 · 35 min）</b>：五层诊断定位，Checkpoint 存档，2 轮预算内完成有界单点修复；<br>
+    <b>轨道 B（管理签发核验 · 35 min）</b>：逐条对照说法与物证，剔除道德臆测，签署《签发前核验与裁决单》；<br>
+    <b>两线分别考核、互不顶替</b>。到点立即准时硬切轨道，捍卫日常管理实操时间！</p>
   </div>
-  <p>排错不是比谁改得快，而是比谁的证据链完整、谁的停止判断准确。</p>
+  <p>排错不是比谁改得快，而是比谁的证据链完整、谁的停止判断准确、谁能在管理签字时守住事实底线。</p>
 </section>
 <!-- SECTION 01: INTERACTIVE DEBUGGING DEMONSTRATOR -->
 <section>
@@ -366,7 +368,17 @@
   </div>
 
   <div class="quote">
-    💡 <b>一句话口诀</b>：“排错前保存 Checkpoint；未通过时只按确认范围恢复本轮改动，已确认基线不变。”
+    💡 <b>一句话口诀</b>：“排错前保存 Checkpoint；未通过时只按确认范围恢复本轮改动；签发前逐条核验物证，无证据不签字！”
+  </div>
+  <div class="card green" style="margin-top: 1.2rem;">
+    <b>⏱️ 本课时间分配模型 (35 + 35 + 10 + 10 min)：</b>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:.6rem;">
+      <span style="background:#0f172a; color:#fff; padding:4px 10px; border-radius:6px; font-weight:700; font-size:.85rem;">Track A 沙盘技术排错 35 min</span>
+      <span style="background:#b91c1c; color:#fff; padding:4px 10px; border-radius:6px; font-weight:700; font-size:.85rem;">硬切门禁 35min到点换轨</span>
+      <span style="background:#15803d; color:#fff; padding:4px 10px; border-radius:6px; font-weight:700; font-size:.85rem;">Track B 管理签发核验 35 min</span>
+      <span style="background:#d97706; color:#fff; padding:4px 10px; border-radius:6px; font-weight:700; font-size:.85rem;">课间 10 min</span>
+      <span style="background:#7c3aed; color:#fff; padding:4px 10px; border-radius:6px; font-weight:700; font-size:.85rem;">答辩与闭环 10 min</span>
+    </div>
   </div>
 </section>
 
@@ -377,16 +389,16 @@
   <p class="note">操作方法：事实锚定排错与五层诊断；它们支持核心概念落地，不替代事实、根因、边界、预算和处置概念。</p>
   <div class="concept-list">
     <details class="concept-card">
-      <summary class="concept-head">1. 事实、假设与生成错误</summary>
+      <summary class="concept-head">1. 说法-物证对照 (Say-vs-Evidence Mapping)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 【是什么】</span>事实是看到的真实报错；假设是对根因的推测；生成错误是 AI 凭空捏造的不实信息。
+          <span class="pill-label">📌 【是什么】</span>将待签材料中的所有陈述（时间、动作、责任、系统状态）逐条拆解，在客观物证（单据、日志、时间戳）中寻找对应证据的比对方法。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 【怎么用】</span>故障排查时建立三栏清单，严禁把推测当事实，对 AI 声称“已经修好”的表述必须索取物证。
+          <span class="pill-label">⚙️ 【怎么用】</span>将陈述标注为三类：物证支持（给出证据出处）、无物证（归入待验证假设）、与物证矛盾（标红并给出反证）。
         </div>
         <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
-          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁把 AI 生成的解释直接当成最终结论，缺少日志与代码证据一律视为未证明。
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁把口头汇报或推测当成事实；严禁 Agent 编造不存在的单据与日志。
         </div>
       </div>
     </details>
@@ -437,16 +449,16 @@
     </details>
 
     <details class="concept-card">
-      <summary class="concept-head">5. 停止、升级与恢复</summary>
+      <summary class="concept-head">5. 签发前核验与裁决单 (Pre-signature Verification)</summary>
       <div class="concept-body">
         <div class="concept-pill iswhat">
-          <span class="pill-label">📌 【是什么】</span>停止当前自动化、交由明确责任人接管、从 Checkpoint 存档安全回退到已知版本。
+          <span class="pill-label">📌 【是什么】</span>主管在向外部或高层签发呈批件/事故报告前，建立的结构化物证审查与责任裁决底稿。
         </div>
         <div class="concept-pill howworks">
-          <span class="pill-label">⚙️ 【怎么用】</span>达到停止条件时保留现场物证与所需证据清单，交接给对应技术责任人。
+          <span class="pill-label">⚙️ 【怎么用】</span>依托 student-package/templates/SIGNOFF_VERIFICATION_TEMPLATE.md 导出核验报告，完成事实认定与处置签署。
         </div>
         <div class="concept-pill redline" style="background:#fdecec;border-color:#fca5a5;">
-          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁在未保留现场证据的情况下直接无差别清空工作区。
+          <span class="pill-label" style="color:#b91c1c;">🚨 【避坑红线】</span>严禁盲目信任下属递交的一面之词；核验底稿严禁带有道德评判与主观臆断。
         </div>
       </div>
     </details>
@@ -497,112 +509,121 @@
 
 <!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
 <section>
-  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然授权口令卡</h2>
+  <h2><span class="num">05</span> 学员双轨实操口令卡 (Track A 沙盘排错 + Track B 管理签发核验)</h2>
 
-<div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：激活 $diagnose，确认故障现象，审查 Agent 的事实报告</div>
+  <!-- TRACK A -->
+  <div style="background:#eff6ff; border:2px solid #3b82f6; border-radius:12px; padding:1rem 1.4rem; margin-bottom:1.5rem;">
+    <h3 style="color:#1e40af; margin:0 0 .5rem;">🚀 轨道 A：沙盘技术排错 (Tasks 1–2 · 建议限时 35 min)</h3>
+    <p style="font-size:.9rem; color:#1e3a8a; margin:0;">在本地受控沙盘中，运用五层诊断与有界排错自修循环，定位预置故障并完成单点修复。</p>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：激活 $diagnose，确认故障现象，审查事实报告</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p1">我已确认故障现象存在（看了一眼页面）。现在激活 $diagnose Skill，请按 Phase 1—2 执行：
+      <span class="prompt-copy-text" id="p1">我已在本地预览确认页面故障存在。现在激活 $diagnose，请按 Phase 1—2 执行：
+1. 检查当前本地开发服务（127.0.0.1:8888）与页面可见状态；
+2. 生成一张事实卡，严格只记录可观察事实（页面报什么、数据显示什么、控制台报错第一行）；
+3. 严禁写入任何猜测原因（假设下一步再做）；
+4. 严禁修改任何代码文件；
+5. 日志中若出现 Token/Key 等敏感信息，必须脱敏为 &lt;REDACTED&gt;。
 
-1. 构建可重复的 PASS/FAIL 信号
-2. 复现预置故障
-3. 生成一张事实卡，只记录可观察事实（页面报什么、数据显示什么、控制台报什么）
-4. 不要写猜测原因（那是假设，下一步再做）
-5. 不要修改任何代码
-6. 日志中有敏感信息（Token、Key、账号）的先脱敏为 <REDACTED>
-
-事实卡格式：
-- 故障现象：（只写看到什么）
-- 复现步骤：（怎样触发）
-- 控制台信息：（脱敏后第一行报错，如有）
-- 数据状态：（字段值是什么）</span>
+输出格式：
+- 故障现象：（肉眼看到什么）
+- 复现路径：（点击哪一步触发）
+- 控制台关键信息：（脱敏后第一行）
+- 数据状态：（组件接收到的具体字段名与值）</span>
       <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一张事实卡，只记录可观察现象，不含猜测或编造，没有修改代码。你审查事实卡后确认只含现象，签确认。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：Agent 输出了一份结构化事实卡，清晰记录了故障现象与数据状态，没有任何推测原因，且未修改任何代码。</div>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：审查 Agent 的五层诊断报告，选定一个可证伪主假设</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：运行五层诊断，存 Checkpoint，在 2 轮预算内完成有界修复</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p2">$diagnose 已激活，请按 Phase 3 执行五层诊断。
-
-故障现象：【粘贴 Task 1 的事实卡】
-
-按以下口语标签逐层检查，从 Layer 1 开始逐层排除：
-- Layer 1 环境：网页跑得起来吗？
-- Layer 2 数据：有数据吗？拿到的是 null 吗？
-- Layer 3 状态：数据变了界面动了吗？
-- Layer 4 日志：控制台第一行红字报什么？（脱敏后）
-- Layer 5 契约：字段名和契约配得上吗？
-
-输出：
-1. 每层的排查结论（PASS / FAIL / 不适用）
-2. 定位到最可能的问题层（只选一层）
-3. 生成 3—5 个可证伪假设并排序，标明最可能的主假设
-
-不要同时提多个主假设。不要修改代码。</span>
-      <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
+      <span class="prompt-copy-text" id="p2_1">$diagnose 处于运行中，请按 Phase 3—5 执行：
+1. 执行五层诊断（环境 -> 数据 -> 状态 -> 日志 -> 契约），给出每一层 PASS/FAIL 判定；
+2. 定位到具体问题层，提出 1 个可证伪主假设；
+3. 先运行 git commit -m "checkpoint: before lesson 6 debug" 建立存档快照；
+4. 读取最小证据，提出修复方案（明确列出拟修改文件名、行号与修改内容），等待我核准；
+5. 未经我核准修改范围前，绝对禁止修改文件。</span>
+      <button class="btn-copy" onclick="copyText('p2_1')">📋 复制口令 1 (排查与存档)</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 逐层排查后定位到一层，生成了排序的假设列表并标明主假设，没有修改代码。你审查报告后确认定位合理，选定主假设。</div>
+    <div class="prompt-copy-box" style="margin-top:.8rem;">
+      <span class="prompt-copy-text" id="p2_2">批准上述修复范围。请执行单点修复，并自动刷新验证结果。若 1 轮未通过，允许微调假设再试 1 轮；若 2 轮仍未通过，必须立即停止并报告！</span>
+      <button class="btn-copy" onclick="copyText('p2_2')">📋 复制口令 2 (授权修复)</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：Agent 逐层判定并定位问题层，自动 git commit 存档，单点修改 1 个文件，2 轮预算内完成修复。</div>
+  </div>
+
+  <!-- GATE NOTICE -->
+  <div class="card warn" style="border-left: 5px solid #d97706;">
+    <b>🚪 门禁规则：第 35 分钟准时切换轨道（硬切门禁）</b><br>
+    无论你的沙盘是否修好，35 分钟时间一到必须强制停手。未修好者由助教统一下发标准已修复快照（<code>STATUS: RECOVERED_BY_SNAPSHOT</code>），全员准时切入轨道 B 开展管理实操，绝不拖堂！
+  </div>
+
+  <!-- TRACK B -->
+  <div style="background:#f0fdf4; border:2px solid #22c55e; border-radius:12px; padding:1rem 1.4rem; margin:1.5rem 0 1rem;">
+    <h3 style="color:#15803d; margin:0 0 .5rem;">🛡️ 轨道 B：签发前物证核验管理实战 (Tasks 3–4 · 建议限时 35 min)</h3>
+    <p style="font-size:.9rem; color:#14532d; margin:0;">面对待签材料，指挥 Agent 扮演物证核验员，对照单据日志进行说法-物证对照，签署《签发前核验与裁决单》。</p>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：存 Checkpoint，审查 Agent 的修复方案，核对范围后授权</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：载入待签材料与物证素材包，指挥说法-物证对照核验</div>
+    <p style="font-size:.85rem; color:#475569; margin-bottom:.5rem;">💡 提示：若你的原型为 A/C/D 类，请打开 <code>student-package/cases/signoff_practice_packs.md</code> 替换材料与素材两段；Type B 原型直接复制下述提示词：</p>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p3">排错前先存 Checkpoint 存档。$diagnose 已在运行中，请按 Phase 4—5 执行：
+      <span class="prompt-copy-text" id="p3">我即将签发一份结论性材料，在签字前需要你做物证核验。
+【待核验材料】：
+《关于 8.10 订单延误的情况说明（草案）》
+1. 销售部于 8 月 10 日 14:00 获悉客户次日达加急需求后，已在 14:05 通过正规发货协同渠道向仓储部下达了加急发货指令；
+2. 仓储部未能及时安排当晚加急出库，承运商已于 8 月 11 日按加急物流通道全力组织赶发，但受陆运干线周转影响发生滞留；
+3. 8 月 11 日下午客服跟单排查期间，适逢后台业务系统偶发故障宕机，导致技术人员与客服均无法调取在途流水向客户反馈；
+4. 本次延误系跨部门协同衔接与外部系统偶发故障叠加所致，销售人员已尽到尽职通知义务。特此说明，请予签发上报。
 
-1. 运行 git commit -m "checkpoint: before lesson 6 debug" 存档
-2. 读取最小证据：只读契约文件和故障相关的页面代码
-3. 确认主假设（字段名与契约不一致）
-4. 提出修复方案：只改一个字段名，不碰其他文件
-5. 等待主管核对范围后才执行修改
+【物证素材】：
+1. 销售 A 14:05 仅在微信协作大群发消息“这单急”，未在 ERP 系统勾选【加急】标签；
+2. ERP 订单 #ORD-20260810-092 原始记录：is_urgent: false, shipping_method: standard_ground，录入时间 14:10；
+3. 仓库 8 月 10 日 16:30 依 ERP 单据按普通件排期，承运商 8 月 11 日按普通陆运装车，无航空专线记录；
+4. IT 运维日志证实 ERP 与客服系统全天正常运行，无服务宕机或断流记录，客服未执行流水查询；
+5. 货物 8 月 13 日 11:00 送达，延误 48 小时。
 
-不要扩大修改范围。不要读取不必要的文件。不要重新激活 $diagnose。</span>
+请严格执行：
+1. 从待核验材料中逐条提取可核验的说法（数据、时间、责任归属、"已通知/已完成"类断言）；
+2. 对每条说法在物证素材中寻找支持或反证，标注三项之一：物证支持（给出出处）/ 无物证（归入待验证假设）/ 与物证矛盾（标红并给出反证出处）；
+3. 重建关键事件时间线，标出材料中与时间线冲突的表述；
+4. 你自己严禁编造物证：找不到就写"未在素材中找到"，严禁推测补全；
+5. 输出核验底稿：说法-物证对照表 + 时间线 + 存疑清单。不做责任评判，不写"谁错"，只报事实与冲突。</span>
       <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 先存了 Checkpoint，读了契约和页面代码，提出了一个只改字段名的修复方案，等待你核对。你审查方案后确认范围没有扩散，授权执行。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：Agent 输出了结构化核验底稿（说法-物证对照表、时间线、存疑清单），标出客服谎报系统故障与销售口头通知缺乏单据支持。</div>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：验证结果，必要时进行第二轮，否则停止</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：主管出处抽查，起草裁决并签署《签发前核验与裁决单》</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p4">请验证修复结果。
+      <span class="prompt-copy-text" id="p4">请读取 student-package/templates/SIGNOFF_VERIFICATION_TEMPLATE.md，结合刚才的核验底稿，协助我起草签署文件：
 
-1. 刷新本地预览，观察故障是否消失
-2. 基于实际观察（不是 AI 自称"已修复"）判断：
-   - 通过：故障现象消失，进入 Task 5 记录
-   - 不通过：调整假设，进行第二轮修复（仍限定范围）
-   - 两轮都不通：停止，记录停止原因
+1. 将核验底稿内容规范填入模板对应章节；
+2. 呈现两项关键裁决草案供我审核：
+   - 裁决一：关于销售部责任认定（口头通知是否符合规范渠道）；
+   - 裁决二：关于客服部系统故障说法（日志已证实无宕机，如何定性与处置）；
+3. 标注待我亲手签署的结论位置与日期；
+4. 将最终文件完整保存至 docs/SIGNOFF_VERIFICATION_REPORT.md。
 
-不要继续试第三轮。不要相信"AI 说修好了"，必须实际看效果。</span>
+在我确认前，不要擅自代表我做出签字决定。</span>
       <button class="btn-copy" onclick="copyText('p4')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 刷新了页面，基于实际观察判断通过或不通过，没有自称"已修复"就算数。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：落盘 `docs/SIGNOFF_VERIFICATION_REPORT.md`，由业务主管本人完成签字确认。</div>
   </div>
 
-  <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：记录修复后状态，或记录停止/升级原因和恢复责任人</div>
-    <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p5">请帮我完成诊断与修复/停止证据包，写入 docs/LESSON_06_DEBUG_REPORT.md。
-
-证据包必须包含以下六项：
-1. 事实卡：（Task 1 的可观察现象）
-2. 主假设：（Task 2 的可证伪主假设）
-3. 诊断过程：（五层排查结论，定位到哪一层）
-4. 修复结果：（改了什么，验证是否通过）或 停止原因：（两轮无进展 / 证据不足 / 风险越界）
-5. 新证据需求：（如果停止，需要什么新证据才能继续）
-6. 恢复责任人：（谁来接手，名字和角色）
-
-如果修复成功：记录修复结果和恢复责任人。
-如果停止：记录停止原因、新证据需求和恢复责任人。</span>
-      <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
-    </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：<code style="background:#f1f5f9; border:1px solid #cbd5e1; padding:2px 5px; border-radius:4px; font-size:.88em; color:#0f172a;">LESSON_06_DEBUG_REPORT.md</code> 包含六项完整内容，事实和假设分开记录，停止时有停止原因和恢复责任人。</div>
+  <!-- CLOSING -->
+  <div class="card tinted" style="margin-top:1.2rem;">
+    <b>🎤 现场抽签答辩与全员提交 (Task 5 · 10 min)</b><br>
+    由教师现场随机抽签 2–3 名代表上台汇报：分享五层诊断排查路径与签发核验裁决依据；未抽中学员同步在座席提交双轨产物（代码排错报告 + 签发裁决单）。
   </div>
 
 </section>
 
-<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<!-- SECTION 06 -->
 <section>
   <h2><span class="num">06</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
 

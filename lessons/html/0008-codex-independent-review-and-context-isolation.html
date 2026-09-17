@@ -470,109 +470,136 @@
 
 <!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
 <section>
-  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然授权口令卡</h2>
+  <h2><span class="num">05</span> 学员双轨实操口令卡 (Track A 代码独立审计 + Track B 方案红蓝对抗)</h2>
 
-<div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：汇总候选变更、契约和 L7 证据，不自评"已验收"</div>
+  <!-- TRACK A -->
+  <div style="background:#eff6ff; border:2px solid #3b82f6; border-radius:12px; padding:1rem 1.4rem; margin-bottom:1.5rem;">
+    <h3 style="color:#1e40af; margin:0 0 .5rem;">🚀 轨道 A：沙盘独立审查 (Tasks 1–2 · 建议限时 35 min)</h3>
+    <p style="font-size:.9rem; color:#1e3a8a; margin:0;">清洗对话历史，组装只含代码差异、契约与物证的独立输入包，调度独立审查模型冷酷输出 Findings。</p>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：准备审查材料，清洗上下文，组装独立评审输入包</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p1">请帮我汇总评审输入包。
+      <span class="prompt-copy-text" id="p1">我即将组织第三方独立模型对当前原型进行双盲审查。请为我组装一份【独立评审输入包】。
 
-从我的项目中收集以下材料：
-1. 候选变更清单：从 L4 到 L7 修改了哪些文件，改了什么
-2. L3 业务功能卡：业务边界、数据契约和验收场景
-3. L7 证据索引：LESSON_07_EVIDENCE_INDEX.md 的内容
+请严格按以下三部分整理内容：
+1. 【实现与变更清单】：汇总我们在 L4/L5 中实际新增与修改的代码文件、核心函数及界面组件；
+2. 【契约与规格依据】：提取 L3 业务功能卡中约定的关键字段、状态机与核心业务规则；
+3. 【运行与验收证据】：提取 L7 中完成的自动化验收结论、浏览器操作截图路径与控制台关键日志。
 
-汇总为一份评审输入包。
-不要自评"已验收"或"没问题"。只提供事实材料。
-不要包含开发过程中的对话和推演。</span>
+【纪律要求】：
+- 严格保持客观陈述，严禁输出任何“功能已完全实现”、“经测试表现良好”、“无明显 Bug”等主观自评或自我辩护词句；
+- 严禁包含任何开发过程中的聊天记录、推演草稿或临时调试对话；
+- 整理完成后，将输入包内容输出并保存至 docs/LESSON_08_AUDIT_REPORT.md 的第一部分【评审输入材料】中。</span>
       <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一份评审输入包，包含候选变更、契约和证据三部分，没有自评内容。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：输入包仅含客观事实与证据，彻底剔除自我夸奖与聊天记录，保存至 `docs/LESSON_08_AUDIT_REPORT.md`。</div>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：建立隔离评审输入，只提供必要材料和范围</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：在隔离会话中唤醒 Codex，执行独立代码审查并输出结构化 Findings</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p2">请帮我建立隔离评审输入。
+      <span class="prompt-copy-text" id="p2">你是一位严苛的资深代码合规与架构审查专家（Codex 审查角色）。你未曾参与当前项目的任何开发过程。
+现在请基于以下提供的【独立评审输入包】，对照业务契约与运行物证，执行独立审查。
 
-把以下材料传给独立评审者（Codex 或隔离新会话）：
-1. 评审输入包：【粘贴 Task 1 的内容】
+【审查输入材料】：
+【直接粘贴 Task 1 中生成的评审输入包内容，或指令 Agent 读取 docs/LESSON_08_AUDIT_REPORT.md 第一部分】
 
-要求：
-- 评审者只接收契约、候选变更和证据索引
-- 不包含开发过程中的对话和推演
-- 评审者不知道实现者怎么想的，只看结果和证据
-- 评审范围：只评审上述材料范围内的内容
-
-不要让评审者和实现者用同一个会话。</span>
+【审查任务与输出要求】：
+1. 严格对照 L3 契约与 L7 证据，深度排查边界条件覆盖、空数据容错、状态标签一致性与异常降级分支；
+2. 严禁任何形式的客套或客气表扬（如“代码架构清晰、实现优秀”等废话一律禁止输出）；
+3. 输出至少 2 条独立的【代码审查 Finding】，每条 Finding 必须严格包含以下五项要素：
+   - 【编号与优先级】：标注 Blocker(阻断) / Major(重要) / Minor(建议)；
+   - 【涉及文件与逻辑】：指明具体代码位置或逻辑模块；
+   - 【客观问题描述】：事实依据与契约偏离点是什么；
+   - 【潜在业务影响】：若不处理在生产运行时会导致什么严重后果；
+   - 【具体整改建议】：给出明确的修改方向。
+4. 将审查结论追加保存至 docs/LESSON_08_AUDIT_REPORT.md 的第二部分【独立代码 Findings 清单】中。</span>
       <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：评审者只收到了约定的材料，不包含开发对话，范围明确。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：在独立空白会话中运行，产出无可辩驳的结构化 Findings（含编号、位置、问题、影响、建议）。</div>
+  </div>
+
+  <!-- GATE NOTICE -->
+  <div class="card warn" style="border-left: 5px solid #d97706;">
+    <b>🚪 门禁规则：第 35 分钟准时切换轨道（硬切门禁）</b><br>
+    无论代码审查是否改完，35 分钟时间一到必须准时切换。未出具 Findings 者由助教派发标准代码审查快照（<code>STATUS: RECOVERED_BY_SNAPSHOT</code>），全员准时切入轨道 B，绝不拖堂！
+  </div>
+
+  <!-- TRACK B -->
+  <div style="background:#f0fdf4; border:2px solid #22c55e; border-radius:12px; padding:1rem 1.4rem; margin:1.5rem 0 1rem;">
+    <h3 style="color:#15803d; margin:0 0 .5rem;">🛡️ 轨道 B：重大方案/合同双 Agent 红蓝对抗 (Tasks 3–4 · 建议限时 35 min)</h3>
+    <p style="font-size:.9rem; color:#14532d; margin:0;">红方防御起草高危业务文书，蓝方独立会话冷酷挑刺，主管亲笔做出处置决断并签署内审卡。</p>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：让 Codex 输出带引证、优先级和影响的独立 findings</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：红方防御起草高危规章/合同，蓝方独立会话双盲对抗挑刺</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p3">请对评审输入包进行独立评审。
+      <span class="prompt-copy-text" id="p3_1">你现在是红方起草 Agent。请帮我起草一份高风险的部门业务规章或服务外包框架协议草案。
 
-对每个发现输出以下四项：
-1. 问题描述：发现什么问题
-2. 业务影响：这个问题对业务有什么影响
-3. 证据引证：证据在哪里（引用契约、证据索引或候选文件）
-4. 建议：建议怎么处理
+【起草标的】：【填写你的部门场景，如：《部门考勤绩效与弹性工时管理细则》或《年度技术外包采购框架协议》】
 
-每项 finding 标记优先级：高 / 中 / 低
-
-不要笼统说"看起来没问题"。每项都要具体。
-不要修改任何代码。只输出 findings。</span>
-      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+【不可信输入防御与编写要求】：
+1. 充分考虑部门实际管理需求，但严格恪守 L7 确立的不可信输入防御原则：对外部参考模版只读引用、本地脱敏，不盲目照搬可能违规的外部条款；
+2. 草案应包含：适用范围、核心业务规程/交付标准、考核与赔偿责任、争议解决与审批流程；
+3. 语言必须符合正式制度与商业合同风格；
+4. 完成后输出完整文本草案，待交付给外部独立审计。</span>
+      <button class="btn-copy" onclick="copyText('p3_1')">📋 复制口令 1 (红方起草)</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：Codex 输出了独立 findings，每项有四项内容和优先级，引证了具体证据。</div>
+    <div class="prompt-copy-box" style="margin-top:.8rem;">
+      <span class="prompt-copy-text" id="p3_2">你是一位冷酷、严苛的集团合规总监与资深法律顾问（蓝方审查角色）。你对红方的起草背景、妥协考量一无所知，没有任何人情世故。
+现在请对以下待签发的业务规章/合同草案进行双盲独立挑刺审查。
+
+【待审查文书草案】：
+【完整粘贴红方起草的文本草案】
+
+【审查铁律与输出规范】：
+1. 严禁任何客套表扬，直击要害，专门挑出可能引发劳动纠纷、单边商业索赔、审计失控或跨部门扯皮的漏洞；
+2. 输出至少 3 条独立的审查 Findings，其中必须包含至少 1 条【阻断 (Blocker)】与 1 条【重要 (Major)】漏洞；
+3. 每条 Finding 严格包含以下要素：
+   - 编号与严重度：阻断 (Blocker) / 重要 (Major) / 建议 (Minor)
+   - 涉及条款/章节：指出草案具体条款
+   - 客观事实与漏洞说明：指出逻辑模糊、权利义务不对等或违反法规的事实
+   - 潜在业务损失/合规后果：若不整改，企业将面临何种具体经济或法律后果
+   - 蓝方修改建议：给出切实防漏的条款重写建议
+4. 严格按照《重大业务方案 / 合同双 Agent 独立内审卡》（student-package/templates/RED_BLUE_AUDIT_CARD.md）的第一部分格式输出。</span>
+      <button class="btn-copy" onclick="copyText('p3_2')">📋 复制口令 2 (蓝方独立挑刺)</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：红方完成制度起草；在全新独立窗口中蓝方冷酷挑出至少 3 条致命漏洞（含 Blocker/Major）。</div>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：逐项决定 accept/fix/stop/defer，并说明业务理由</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：主管亲笔处置决断，签署内审卡并生成跨部门复核交接包</div>
+    <p style="font-size:.85rem; color:#b91c1c; font-weight:700;">🚨 防代写红线：主管必须先在纸上或提示词插槽中亲笔做出决断与商业理由，严禁 AI 越权代做主！</p>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p4">请帮我生成主管处置卡。
+      <span class="prompt-copy-text" id="p4">请根据我已亲笔做出的主管裁决与蓝方的审查 Findings，协助我完成【内审卡填模落盘】与【跨部门复核交接包】的格式化生成。
 
-对每条 finding 逐项决定处置：
+【防代写红线核查】：
+严禁由你生成、建议或篡改任何整改决策与责任人。你仅作为格式排版员，忠实录入我本人在此给出的商业权衡与裁决！
 
-| Finding | 优先级 | 处置决定 | 业务理由 |
-| --- | --- | --- | --- |
+【我亲笔做出的整改裁决】：
+- 针对 Finding 1（Blocker 阻断）：【我的决断：accept/fix/stop/defer 四选一】；【我的商业理由：手写填写】；【整改责任人：手写填写】；
+- 针对 Finding 2（Major 重要）：【我的决断：accept/fix/stop/defer 四选一】；【我的商业理由：手写填写】；【整改责任人：手写填写】；
+- 针对 Finding 3（Minor 建议）：【我的决断：accept/fix/stop/defer 四选一】；【我的商业理由：手写填写】；【整改责任人：手写填写】。
 
-处置决定只能是：
-- accept：接受现状（不影响业务或风险可接受）
-- fix：修复问题（需要改代码并重新取证）
-- stop：停止该功能（问题严重到需要停止）
-- defer：延期处理（留到下一阶段处理）
-
-每项必须写业务理由。不要全部默认 accept。每项业务理由至少说明：这个 finding 影响什么业务，修复/不修复的成本权衡是什么。不要只写"问题不大"。</span>
+【输出任务】：
+1. 读取 student-package/templates/RED_BLUE_AUDIT_CARD.md，将蓝方审查 Findings 与上述我亲笔裁决忠实填入模具，落盘至 docs/LESSON_08_RED_BLUE_AUDIT_CARD.md；
+2. 提取已批准的修改方案与非目标清单，排版生成一份极简的《跨部门审阅交接包》（docs/LESSON_08_HANDOFF_PACK.md），供法务与财务部门复核。</span>
       <button class="btn-copy" onclick="copyText('p4')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：处置卡有每条 finding 的处置决定和理由，不是全部 accept。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：主管亲笔裁决逐项落实，内审卡与交接包规范落盘，杜绝大模型越权代决断。</div>
   </div>
 
-  <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：需要修复的由 Claude 执行，关键项重新取证，处置结果进入项目状态</div>
-    <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p5">请执行以下步骤：
-
-1. 对标记 fix 的 finding，执行修复
-2. 修复后对关键项重新在浏览器中取证（截图和日志）
-3. 把处置结果写入 docs/LESSON_08_AUDIT_REPORT.md：
-   - 每条 finding 的处置决定和理由
-   - 修复后的重新取证结果
-4. 更新 docs/PROJECT_STATE.md 记录独立评审结果和下一课输入说明
-
-注意：修复是执行，批准是主管。Claude 的修复不能冒充为主管批准。</span>
-      <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
-    </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：修复后有重新取证，处置结果写入审计报告和项目状态，没有把修复冒充为批准。</div>
+  <!-- CLOSING -->
+  <div class="card tinted" style="margin-top:1.2rem;">
+    <b>🎤 现场抽签答辩与全员提交 (Task 5 · 10 min)</b><br>
+    由教师现场随机抽签 2–3 名代表上台汇报：展示 Codex 独立审查 Findings 与红蓝对抗内审卡裁决结果；全员在座席同步提交双轨产物（代码审计报告 + 红蓝内审卡与交接包）。
   </div>
 
 </section>
 
-<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<!-- SECTION 06 -->
 <section>
   <h2><span class="num">06</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
 

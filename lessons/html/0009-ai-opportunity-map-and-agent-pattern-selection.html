@@ -302,7 +302,7 @@
 <div class="hero">
   <div class="wrap">
     <div class="kicker">Lesson 09 · 流程级 AI 选型与三链责任</div>
-    <h1>画出部门 AI 机会与 Agent 范式选型图</h1>
+    <h1>画出部门 AI 机会与 Agent 范式选型图<br><span style="font-size:1.4rem;font-weight:600;opacity:.9;">流程三链图选型 35min + Create Skills 创制专属技能 35min 双轨实操</span></h1>
     <p class="sub"><b>不是“我的部门能不能用 Agent”，而是逐环节判断任务性质、可验证性、风险和合适范式。</b><br>从单点初筛扩展至流程级选型，明确拒绝不该用 AI 的环节，坚持最简单足够原则，搞清三链（开发工具链/业务 API 链/模型 API 链）责任与 Fallback 降级来源！</p>
     <div class="goal">
       🎯 <b>本课目标</b>：① 画出部门真实业务流程（6—10 个动作）；② 逐环节记录任务性质、可验证性、错误代价与数据风险；③ 选择 AI 介入层级并给出至少 1 个“明确不用 AI”的硬理由；④ 选择最简单足够的范式，画出三链责任与 Fallback 降级源，形成《部门 AI 机会与 Agent 范式选型图》。
@@ -467,120 +467,150 @@
 
 <!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
 <section>
-  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然授权口令卡</h2>
+  <h2><span class="num">05</span> 学员双轨实操口令卡 (Track A 流程三链图选型 + Track B Create Skills 创制)</h2>
 
-<div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：画出部门一条真实业务流程，拆成具体人工/系统动作</div>
+  <!-- TRACK A -->
+  <div style="background:#eff6ff; border:2px solid #3b82f6; border-radius:12px; padding:1rem 1.4rem; margin-bottom:1.5rem;">
+    <h3 style="color:#1e40af; margin:0 0 .5rem;">🚀 轨道 A：沙盘流程三链图与选型 (Tasks 1–2 · 建议限时 35 min)</h3>
+    <p style="font-size:.9rem; color:#1e3a8a; margin:0;">拆解 6–10 个具体动作，区分确定性与概率性，立下刚性拒绝 AI 红线，完成三链凭据隔离设计与 Fallback 兜底方案。</p>
+  </div>
+
+  <div class="card focus">
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：部门业务流程梳理与三链全景图绘制</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p1">请帮我画出我部门的一条真实业务流程，拆成具体动作。
+      <span class="prompt-copy-text" id="p1">请协助我梳理并评估部门的一条核心业务流程链。
 
-业务流程名称：【填写你的部门流程，如"收货→质检→上架→拣货→发货"】
+【业务场景与输入痛点】：
+【在此粘贴你上节课准备的一句话部门痛点，如：售后退换货审批流程卡顿 / 供应商比价与发票审核繁琐】
 
-要求：
-1. 画出完整流程，拆成 6—10 个具体人工/系统动作
-2. 每个动作写清：
-   - 动作名称
-   - 输入是什么
-   - 输出是什么
-   - 当前谁在做（人工/系统/混合）
-3. 先不要想 AI，只画现状</span>
+【梳理要求与评估指标】：
+1. 请帮我拆解出该业务流程的 6 到 10 个端到端具体操作动作；
+2. 针对每个操作动作，严格按表格列出以下评估要素：
+   - 动作名称与当前执行人角色；
+   - 输入材料与输出产物；
+   - 任务性质：标注为【确定性（规则明确）】还是【概率性（需要主观判断）】；
+   - 错误代价与数据风险：标注为【高 / 中 / 低】；
+   - 建议 AI 介入层级：【不用 AI / 辅助建议 / 固定流程 / 受控决策】。
+3. 【刚性拒绝红线】：必须从流程中明确挑出至少 1 个【坚决不使用 AI/Agent】的环节，并结合我部门的特定商业责任、法律法规或安全风险，给出不可反驳的具体拒绝理由！
+4. 整理完成后，将表格输出，准备合并存入 docs/LESSON_09_PROCESS_THREE_CHAINS.md 的第一部分。</span>
       <button class="btn-copy" onclick="copyText('p1')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一条完整业务流程，拆成了 6—10 个具体动作，每个有输入、输出和当前做法。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：表格拆解 6–10 个动作，定性性质与代价，必须包含至少 1 个坚决不用 AI 的拒绝节点及理由。</div>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：对每个动作记录输入、判断性质、可验证性、错误代价和数据风险</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 2：梳理三链关系与凭据责任，设计显性化兜底方案</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p2">请对我在 Task 1 中拆解的每个业务动作做逐环节评估。
+      <span class="prompt-copy-text" id="p2">请基于 Task 1 的流程评估结果，协助我完成【三链隔离架构设计】与【显性化 Fallback 兜底方案】。
 
-对每个动作回答以下五项：
-1. 输入：需要什么输入数据或信息
-2. 任务性质：确定性（规则清晰、结果唯一）还是概率性（需要判断、语言理解）
-3. 可验证性：结果是否容易验证（高/中/低），验证标准是什么
-4. 错误代价：错了会造成什么后果（高/中/低），是否可逆
-5. 数据风险：涉及什么数据，是否敏感
-
-输出为一张评估表，不要只标"适合AI"。</span>
+【架构梳理要求】：
+1. 【三链物理隔离】：明确区分并列出本业务系统涉及的三条独立链路：
+   - 【开发工具链】：涉及的本地开发辅助工具或 MCP 扩展（如：文件读取、浏览器测试）；
+   - 【业务 API 链】：企业内部核心业务系统与数据库接口（如：ERP 订单查询、财务结算系统）；
+   - 【模型 API 链】：外部大模型调用通道与中继网关。
+   明确写明每条链路的凭据保管人角色与调用安全权限。
+2. 【显性化 Fallback 设计】：针对保留的 AI 介入节点，设计明确的异常降级处理规约：
+   - 当遇到模型超时、断网或返回格式异常时，系统自动切入哪种兜底模式（规则兜底 / 缓存兜底 / 人工接管）；
+   - 降级发生时，必须向用户或下游系统显式输出何种来源标识（如：[系统已降级为基础规则审核 · 责任人: XX]）；
+   - 明确指定该异常环节的第一业务责任人 (Owner)。
+3. 整理完成后，将 Task 1 与 Task 2 的全部成果整合，以规范的 Markdown 格式保存至 docs/LESSON_09_PROCESS_THREE_CHAINS.md。</span>
       <button class="btn-copy" onclick="copyText('p2')">📋 一键复制口令</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了一张评估表，每个动作有五项评估，任务性质区分了确定性和概率性。</div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：三链物理隔离表、显性化 Fallback 机制与第一责任人明确，成功落盘至 `docs/LESSON_09_PROCESS_THREE_CHAINS.md`。</div>
+  </div>
+
+  <!-- GATE NOTICE -->
+  <div class="card warn" style="border-left: 5px solid #d97706;">
+    <b>🚪 门禁规则：第 35 分钟准时切换轨道（硬切门禁）</b><br>
+    时钟到达第 35 分钟整，沙盘流程三链梳理必须立即叫停。未完成者由助教派发标准快照（<code>STATUS: RECOVERED_BY_SNAPSHOT</code>），全员准时切入轨道 B 开展工位专属技能创制，绝不拖堂！
+  </div>
+
+  <!-- TRACK B -->
+  <div style="background:#f0fdf4; border:2px solid #22c55e; border-radius:12px; padding:1rem 1.4rem; margin:1.5rem 0 1rem;">
+    <h3 style="color:#15803d; margin:0 0 .5rem;">🛡️ 轨道 B：Create Skills 模具解剖、/shape 定型与规则注入 (Tasks 3–4 · 建议限时 35 min)</h3>
+    <p style="font-size:.9rem; color:#14532d; margin:0;">解剖工业级 Golden Sample，运用 /shape 定型需求，注入部门真实规章与红线，创制可运行专属 SKILL.md。</p>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：选择 AI 介入层级，明确拒绝 AI/Agent 的环节及理由</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 3：调研 Find、剖析 Critique & Retain 与 /shape 定型</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p3">请基于评估表，对每个动作选择 AI 介入层级。
+      <span class="prompt-copy-text" id="p3_1">请帮我读取并解剖以下三套工业级 Golden Sample 技能模具中的任意一套（依据我的业务方向选择）：
+- 财务审核模具：student-package/templates/skills/fin-invoice-audit/SKILL.md
+- 人事初筛模具：student-package/templates/skills/hr-interview-screener/SKILL.md
+- 采购比价模具：student-package/templates/skills/ops-supplier-quote-compare/SKILL.md
 
-AI 介入层级：
-- 不用 AI：能用规则解决
-- AI 辅助：AI 提供建议但不自动执行
-- AI 建议：AI 生成内容但不直接修改
-- 单步执行：AI 执行一个动作
-- 受控 Agent：AI 多步调查，有人工检查点
-- 受控闭环：低风险可自动闭环
-
-要求：
-1. 对每个动作选一个层级
-2. 明确写出拒绝 AI/Agent 的环节及理由（至少一个"不用AI"）
-3. 理由要基于你自己部门的具体业务约束（如特定风险、责任归属、法规或操作约束），不是泛化的"觉得不需要"或照搬教师案例的逻辑
-4. 遵循最简单足够原则</span>
-      <button class="btn-copy" onclick="copyText('p3')">📋 一键复制口令</button>
+【解剖分析要求】：
+请拆解并提炼该模具的五大核心标准结构，向我汇报：
+1. 【元数据定义】：它的 name 与 description 是如何编写以确保准确触发的？
+2. 【前置输入契约】：它约定了哪些必须具备的材料，缺少时如何主动索取？
+3. 【SOP 执行步骤】：它分成了哪几个不可跳步的检查阶段？
+4. 【刚性红线与 HITL 门禁】：它定义了哪些绝对禁止动作和强制人工暂停条件？
+5. 【结构化输出格式】：它的 Markdown 输出模板是如何规范的？</span>
+      <button class="btn-copy" onclick="copyText('p3_1')">📋 复制口令 1 (解剖模具)</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了每个动作的 AI 介入层级，有明确的拒绝理由。</div>
+    <div class="prompt-copy-box" style="margin-top:.8rem;">
+      <span class="prompt-copy-text" id="p3_2">你现在是严苛的需求定型器（执行 /shape 规约）。请根据我所在部门的高频业务痛点，在 2 到 3 轮追问预算内协助我完成《Shape Brief》定型。
+
+【我的部门业务痛点与场景】：
+【在此简要描述你的部门高频业务痛点，如：每月供应商报价单格式各异、比价繁琐且容易漏看隐藏运费条款】
+
+【追问预算与定型规则】：
+1. 追问轮次严格限制在 2 到 3 轮，聚焦业务核心矛盾，严禁漫无边际的开放式闲聊；
+2. 请向我连续追问以下三类关键边界问题：
+   - 【真实问题到底是什么】：痛点是在格式整理上，还是在规则比对上？谁是最终责任人？
+   - 【最小充分解包含什么】：本技能第一版必须解决哪 2 到 3 个核心规则校验？
+   - 【明确非目标（坚决不做项）】：本技能绝对不做什么？遇到什么情况必须踢回人工？
+3. 在我回答后，请立即收敛并生成一份标准的《Shape Brief》，包含：真实问题描述、最小充分解功能清单、明确非目标列表与强制 HITL 门禁。</span>
+      <button class="btn-copy" onclick="copyText('p3_2')">📋 复制口令 2 (/shape 定型)</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：提炼金样 5 大结构；在 2–3 轮追问内收敛输出边界极其清晰的《Shape Brief》。</div>
   </div>
 
   <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：对保留候选选择范式，补数据、工具、HITL 和停止条件</div>
+    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 4：注入部门真实制度与红线，创制专属 SKILL.md 并完成工位自测</div>
     <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p4">请对保留 AI 候选的环节选择范式并补充完整方案。
+      <span class="prompt-copy-text" id="p4_1">请基于我们刚刚定型的《Shape Brief》和模具模板（student-package/templates/SKILL_TEMPLATE_BUSINESS.md），协助我完成部门专属业务技能文件的正式编写。
 
-对每个候选环节回答：
-1. 范式选择：Prompt / Skill / Workflow / ReAct / 增量实施范式（Plan & Execute） / Evaluator-Optimizer / 多 Agent
-   - 选择理由（路径是否确定？是否需动态调查？是否需规划？）
-2. 数据：需要什么输入数据（标明 Mock 来源）
-3. 工具：需要调用什么工具
-4. HITL：在哪个具体节点需要人批准或停止
-5. 停止条件：什么情况下停止
-6. owner：谁负责这个环节的运行和失败
+【我注入的部门真实业务制度与核心红线】：
+1. 【技能全称与英文目录名】：【如：发票合规初审专家 / fin-invoice-audit】
+2. 【必须严格执行的 3 条业务核验硬规则】：
+   - 规则 1：【手写录入真实规则，如：单笔金额超过 5000 元必须有总监签字】
+   - 规则 2：【手写录入真实规则，如：发票抬头税号必须与公司主体完全一致】
+   - 规则 3：【手写录入真实规则，如：跨月发票必须附带逾期说明函】
+3. 【坚决不准触碰的 2 条管理安全红线】：
+   - 红线 1：【如：严禁代表财务部门自动出具“审核通过同意付款”结论】
+   - 红线 2：【如：发现疑似假发票或涂改痕迹，必须强制阻断并提示联系内控】
+4. 【第一责任人】：【填写你的工位角色与姓名】
 
-单 Agent 足够时不拆多 Agent。选最简单足够的范式。</span>
-      <button class="btn-copy" onclick="copyText('p4')">📋 一键复制口令</button>
+【编写与落盘任务】：
+请将上述内容严密融入模具模板，输出完整且无任何 TODO 占位符的规范文档，保存至 docs/skills/【你的英文目录名】/SKILL.md。</span>
+      <button class="btn-copy" onclick="copyText('p4_1')">📋 复制口令 1 (创制专属技能)</button>
     </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：AI 输出了每个候选环节的范式选型和完整方案，六项都有明确答案。</div>
+    <div class="prompt-copy-box" style="margin-top:.8rem;">
+      <span class="prompt-copy-text" id="p4_2">现在请激活并挂载我们刚刚编写的专属技能 docs/skills/【你的英文目录名】/SKILL.md，执行离线自测验收：
+
+【自测输入测试数据】：
+【提供一段包含故意制造违规点的测试文本或表格明细，如：单笔 6800 元但无总监签字的发票清单】
+
+【验证执行要求】：
+1. 严格按照你刚刚定义的 SOP 执行三阶段审查；
+2. 验证你是否精准命中了我们设定的业务核验规则与刚性红线；
+3. 输出结构化审查报告，并生成一段简要的自测成功日志；
+4. 将自测记录追加存入 docs/skills/【你的英文目录名】/TEST_RUN.md。</span>
+      <button class="btn-copy" onclick="copyText('p4_2')">📋 复制口令 2 (离线自测验收)</button>
+    </div>
+    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：专属 `SKILL.md` 成功落盘，注入真实制度与红线，离线自测精准拦截违规并生成 `TEST_RUN.md`。</div>
   </div>
 
-  <div class="card focus">
-    <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 5：画三链责任与 fallback，选出一个优先候选和一个明确不做项</div>
-    <div class="prompt-copy-box">
-      <span class="prompt-copy-text" id="p5">请帮我完成三链责任与 fallback，并作出决策。
-
-1. 画三链区分：
-   - 开发工具链：用了什么开发工具（如 Claude/Playwright），owner 是谁
-   - 业务 API 链：产品运行时调什么业务接口，owner 是谁
-   - 模型 API 链：产品运行时调什么 AI 模型，owner 是谁
-   确保三条链的对象和责任不混淆
-
-2. 对每个 AI 候选环节写 fallback：
-   - 降级方式（人工接管/规则降级/缓存回退）
-   - 降级来源标签（模拟/缓存/人工）
-   - 降级原因类型
-   - 失败责任人
-
-3. 作出决策：
-   - 选出一个优先候选（最值得验证的环节）
-   - 选出一个明确不做项（明确不用 AI 的环节，写理由）
-   - 回写原型产品决策
-
-更新 docs/PROJECT_STATE.md 记录选型图摘要和优先候选。</span>
-      <button class="btn-copy" onclick="copyText('p5')">📋 一键复制口令</button>
-    </div>
-    <div style="font-size: .88rem; color: var(--ink-soft); margin-top: .5rem; font-weight: 600;">🎯 预期输出：三链责任图、每个候选的 fallback、一个优先候选和一个明确不做项。</div>
+  <!-- CLOSING -->
+  <div class="card tinted" style="margin-top:1.2rem;">
+    <b>🎤 现场抽签答辩与全员提交 (Task 5 · 10 min)</b><br>
+    由教师现场随机抽签 2–3 名代表上台汇报：展示流程三链全景图、AI 拒绝理由与专属业务 Skill 创制成果；全员在座席同步提交双轨产物（流程三链全景图 + 专属业务 SKILL.md 及自测记录）。
   </div>
 
 </section>
 
-<!-- SECTION 05: CONCEPT FILL-IN-THE-BLANKS & MISCONCEPTIONS TABLE -->
+<!-- SECTION 06 -->
 <section>
   <h2><span class="num">06</span> ✍️ 概念互动填空与 💡 常见误区 3 栏对照</h2>
 
