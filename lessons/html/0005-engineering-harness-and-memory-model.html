@@ -467,19 +467,20 @@
 
 <!-- SECTION 04: STUDENT TASKS WORKFLOW & COPYABLE PROMPTS -->
 <section>
-  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然口令卡（三类原型适配）</h2>
+  <h2><span class="num">05</span> 学员实操 Task 1 ~ Task 5 自然口令卡（四类原型适配）</h2>
 
   <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：把第四课薄片拆成具体业务动作</div>
     <div style="background: #f1f5f9; border-radius: 8px; padding: .8rem 1rem; margin-bottom: .8rem; font-size: .88rem; line-height: 1.6; color: #334155;">
-      <b>三类原型决策闭环对照：</b><br>
+      <b>四类原型决策闭环对照：</b><br>
       • <b>A. 监控决策型（ROI/看板）</b>：1.多维数据聚合 → 2.规则计算与阈值报警 → <b>3.[AI] 异动归因诊断分析</b> → <b>4.[AI] 起草止损调优策略</b> → 5.主管确认下发。<br>
       • <b>B. 任务流程型（工单/审批）</b>：1.接收工单详情 → 2.基础字段校验 → <b>3.[AI] 提炼诉求与异常信息</b> → <b>4.[AI] 起草处理建议与回复</b> → 5.主管审批改状态。<br>
-      • <b>C. 操作工具型（文案/清洗）</b>：1.输入原始参数 → 2.格式与敏感词硬过滤 → <b>3.[AI] 批量发散生成多版本</b> → <b>4.[AI] 语义合规初筛</b> → 5.主管挑选导出。
+      • <b>C. 操作工具型（文案/清洗）</b>：1.输入原始参数 → 2.格式与敏感词硬过滤 → <b>3.[AI] 批量发散生成多版本</b> → <b>4.[AI] 语义合规初筛</b> → 5.主管挑选导出。<br>
+      • <b>D. 研发创作工作台型（企划/规格）</b>：1.输入企划参数 → 2.尺寸与材质硬规则过滤 → <b>3.[AI] 变体生成与视觉对比推荐</b> → <b>4.[AI] 初拟技术规格单(Tech Pack)</b> → 5.设计主管人工评审定稿放行。
     </div>
     <div class="prompt-copy-box">
       <span class="prompt-copy-text" id="p1">请读取我的第四课薄切片原型和 docs/PROJECT_STATE.md，
-根据我的业务原型类型（A.监控与决策型 / B.任务与流程型 / C.操作工具型），
+根据我的业务原型类型（A.监控与决策型 / B.任务与流程型 / C.操作工具型 / D.研发创作工作台型），
 把这个薄切片拆成 4—6 个完整的业务决策动作。
 
 每个动作写清：
@@ -550,10 +551,11 @@
     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0; font-size: .92rem; line-height: 1.7; color: #1e293b;">
       <p style="margin:.4rem 0;"><b>本步目的</b>：把你的判断写下来，变成可存档的证据。用两句话写下为什么你选的这个环节不能只用确定性规则，或者为什么你拒绝的环节不应该用 Agent。写下来贴在你的智能机会卡上。</p>
       <div style="margin: .6rem 0; padding: .6rem .8rem; background: #fff; border-left: 3px solid var(--blue); font-size: .85rem; color: #475569;">
-        <b>三类标杆拒绝理由参考：</b><br>
+        <b>四类标杆拒绝理由参考：</b><br>
         • <b>A类</b>：拒绝用 AI 计算 ROI，因为 ROI 是严密数学公式属于确定性计算；选择用 AI 分析归因，因为多维异动归因属于概率性推断。<br>
         • <b>B类</b>：拒绝在工单流转中使用 Agent 全自动闭环，因为涉及责任确权误判代价高；选择在诉求提炼中使用 AI 辅助。<br>
-        • <b>C类</b>：拒绝在敏感词过滤中使用 AI，因为黑名单是布尔逻辑；选择在创意文案中使用 AI 辅助。
+        • <b>C类</b>：拒绝在敏感词过滤中使用 AI，因为黑名单是布尔逻辑；选择在创意文案中使用 AI 辅助。<br>
+        • <b>D类</b>：拒绝让 AI 直接决定物理材质厚度与尺寸公差，因为工程与打样物理参数必须 100% 确定且符合生产标准；选择在企划风格发散与多变体初稿生成中使用 AI 辅助。
       </div>
       <p style="margin:.4rem 0;"><b>本步检查</b>：写下了至少一条拒绝理由；理由基于任务性质和错误代价；是写下来而非口头表达。</p>
     </div>

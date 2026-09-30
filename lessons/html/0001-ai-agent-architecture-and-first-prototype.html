@@ -320,8 +320,8 @@
 <div class="hero">
   <div class="wrap">
     <div class="kicker">Lesson 01 · 从业务问题创建第一个系统页面</div>
-    <h1>从业务问题创建第一个系统页面<br>理解 LLM、Tools、Agent 与三类业务原型</h1>
-    <p class="sub">理解 LLM 大脑、Tools 手脚与 Agent 执行者的关系，用这套协作关系建立第一个受控业务原型。A/B/C 是三种业务启动分支，不是三版指南。</p>
+    <h1>从业务问题创建第一个系统页面<br>理解 LLM、Tools、Agent 与四类业务原型</h1>
+    <p class="sub">理解 LLM 大脑、Tools 手脚与 Agent 执行者的关系，用这套协作关系建立第一个受控业务原型。A/B/C/D 是四种业务启动分支，不是四版指南。</p>
     <div class="goal">
       🎯 <b>本课目标</b>：学完你能做到 ① 用工程语言向 IT 部门说出 Agent 与普通聊天机器人的物理区别；② 准确画出“思考 ➔ 行动 ➔ 观察 ➔ HITL盖章”循环；③ 在 90 分钟内跑出第一个受控业务原型雏形。
     </div>
@@ -420,6 +420,8 @@
       <div class="req-chips">
         <button class="chip" data-req="帮我生成一个商品履约预警看板原型">📊 商品履约预警 (A类: 监控型)</button>
         <button class="chip" data-req="创建一个退货工单审批流页面">📋 退货审批流 (B类: 流程型)</button>
+        <button class="chip" data-req="帮我生成一个批量文案与数据转换工具原型">🛠️ 数据与文案转换 (C类: 工具型)</button>
+        <button class="chip" data-req="帮我生成一个服装企划与变体对比工作台原型">🎨 企划与变体工作台 (D类: 研发创作型)</button>
         <button class="chip" data-req="你好，请问你是谁？">👋 基础问候</button>
       </div>
       <input type="text" id="freeReq" placeholder="或自己输入一段业务需求，观察 Agent 如何发起 Tool Call 与 HITL 盖章…">
@@ -445,7 +447,31 @@
 
 <!-- SECTION 04: PROTOTYPE SELECTION -->
 <section>
-  <h2><span class="num">04</span> 三类业务原型选型（选择你的战场）</h2>
+  <h2><span class="num">04</span> 四类业务原型选型（选择你的战场）</h2>
+  <p style="margin-bottom: .8rem;">主管可根据自己部门的业务形态，点击选择下方 <b>四类业务原型</b> 之一，实时查看落地推荐并一键切换 Task 1 的专属启动口令：</p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: .8rem; margin-bottom: 1rem;">
+    <div class="card proto-item selected" onclick="showProtoDetail('A', this)" style="cursor: pointer; padding: .8rem; border: 2px solid var(--teal); border-radius: 8px; margin: 0;">
+      <b style="color: var(--teal);">A. 监控与决策型</b>
+      <p style="font-size: .82rem; margin: .3rem 0 0; color: var(--ink-soft);">关注关键指标、同环比与异常预警，核心动作是下钻分析与派发预警。</p>
+    </div>
+    <div class="card proto-item" onclick="showProtoDetail('B', this)" style="cursor: pointer; padding: .8rem; border: 2px solid var(--border); border-radius: 8px; margin: 0;">
+      <b style="color: var(--plum);">B. 任务与流程型</b>
+      <p style="font-size: .82rem; margin: .3rem 0 0; color: var(--ink-soft);">关注工单与单据流转，核心动作是状态机推进、审批放行与驳回。</p>
+    </div>
+    <div class="card proto-item" onclick="showProtoDetail('C', this)" style="cursor: pointer; padding: .8rem; border: 2px solid var(--border); border-radius: 8px; margin: 0;">
+      <b style="color: var(--amber);">C. 操作工具型</b>
+      <p style="font-size: .82rem; margin: .3rem 0 0; color: var(--ink-soft);">关注单次即时加工，核心动作是批量输入、结构化提取与导出分发。</p>
+    </div>
+    <div class="card proto-item" onclick="showProtoDetail('D', this)" style="cursor: pointer; padding: .8rem; border: 2px solid var(--border); border-radius: 8px; margin: 0;">
+      <b style="color: #6366f1;">D. 研发创作工作台型</b>
+      <p style="font-size: .82rem; margin: .3rem 0 0; color: var(--ink-soft);">关注企划、变体对比与规格微调，核心动作是双卡对比与规格单定稿。</p>
+    </div>
+  </div>
+
+  <div class="proto-detail show" id="protoDetail" style="background: #f8fafc; border-left: 4px solid var(--teal); padding: .8rem 1rem; border-radius: 6px; margin-bottom: 1.2rem; font-size: .88rem; line-height: 1.6;">
+    <h5 style="color: var(--teal); margin-bottom: .4rem; font-weight:800;">A. 监控与决策型落地推荐：</h5><p><strong>核心组件：</strong> 4 项高亮 KPI 卡片（含同环比趋势与红标预警） + 异常明细下钻表格 + 右侧一键发送预警抽屉。<br><strong>适合场景：</strong> 经营分析、履约监控、库存预警。</p>
+  </div>
 
 <div class="card focus">
     <div style="font-weight: 800; font-size: 1.02rem; color: #0f172a; margin-bottom: .6rem;">Task 1：只让 LLM 理解和推演</div>
@@ -718,6 +744,22 @@ const simSteps = {
     { k: 'Observation 观察', v: '组件渲染成功，连通“同意/驳回”状态流转', cls: 'observe' },
     { k: '本地预览渲染', v: '127.0.0.1:8888 审批流组件测试通过', cls: 'reply' }
   ],
+  tool: [
+    { k: '用户需求', v: '"生成一个批量文案与数据转换工具原型"' },
+    { k: 'Thought 思考', v: '需要C类工具原型，设计左侧输入表单与右侧结构化解析预览', cls: 'think' },
+    { k: 'Action 工具调用', v: 'write_file(path: "src/pages/DataTool.vue")', cls: 'act' },
+    { k: 'HITL 盖章门禁', v: '触发写盘门禁 ➔ 主管口令盖章授权批准', cls: 'hitl' },
+    { k: 'Observation 观察', v: '组件渲染成功，输入输出转换测试通过', cls: 'observe' },
+    { k: '本地预览渲染', v: '127.0.0.1:8888 结构化数据工具页面渲染完成', cls: 'reply' }
+  ],
+  creative: [
+    { k: '用户需求', v: '"生成一个服装企划与变体对比工作台原型"' },
+    { k: 'Thought 思考', v: '需要D类研发创作工作台原型，构建三栏布局（参数输入+变体对比+规格抽屉）', cls: 'think' },
+    { k: 'Action 工具调用', v: 'write_file(path: "src/pages/DesignStudio.vue")', cls: 'act' },
+    { k: 'HITL 盖章门禁', v: '触发写盘门禁 ➔ 主管口令盖章授权批准', cls: 'hitl' },
+    { k: 'Observation 观察', v: '三栏组件渲染成功，静态 Mock 变体卡对比与规格抽屉正常联动', cls: 'observe' },
+    { k: '本地预览渲染', v: '127.0.0.1:8888 创作工作台原型渲染完成（杜绝 Canvas 复杂依赖）', cls: 'reply' }
+  ],
   hello: [
     { k: '用户需求', v: '"你好，请问你是谁？"' },
     { k: 'Thought 思考', v: '普通问候，无需工具，直接在内存中生成回答', cls: 'think' },
@@ -742,6 +784,22 @@ const logLines = {
     ['toolret', 'Observation：文件物理写入完成。数据契约匹配成功。'],
     ['final', '→ 最终输出：127.0.0.1:8888 本地预览已渲染退货审批流原型！']
   ],
+  tool: [
+    ['user', '用户 ➔ Agent：生成一个批量文案与数据转换工具原型'],
+    ['model', 'Agent (Thought)：识别为 C 类操作工具型需求，准备创建转换表单与导出组件…'],
+    ['tool', 'Tool Call：write_file(target: "src/pages/DataTool.vue")'],
+    ['hitl', '🛡️ HITL 门禁触发：等待主管 CEO 口令签字盖章批准… [已授权]'],
+    ['toolret', 'Observation：文件已写入。Mock 转换逻辑与导出动作正常。'],
+    ['final', '→ 最终输出：127.0.0.1:8888 本地预览已渲染转换工具！']
+  ],
+  creative: [
+    ['user', '用户 ➔ Agent：生成一个服装企划与变体对比工作台原型'],
+    ['model', 'Agent (Thought)：识别为 D 类研发创作工作台型需求，严守无 Canvas 红线，创建三面板工作台…'],
+    ['tool', 'Tool Call：write_file(target: "src/pages/DesignStudio.vue")'],
+    ['hitl', '🛡️ HITL 门禁触发：等待主管 CEO 口令签字盖章批准… [已授权]'],
+    ['toolret', 'Observation：文件写入成功。2 张静态变体卡与 Tech Pack 抽屉加载完毕。'],
+    ['final', '→ 最终输出：127.0.0.1:8888 研发创作工作台受控渲染完成！']
+  ],
   hello: [
     ['user', '用户 ➔ Agent：你好，请问你是谁？'],
     ['model', 'Agent (Thought)：普通问候，无需调用 Tools，直接在内存中推演回答。'],
@@ -755,6 +813,8 @@ let running = false;
 function classify(req) {
   if (/预警|监控|看板|A类|指标/i.test(req)) return 'monitor';
   if (/审批|工单|流程|退货|B类/i.test(req)) return 'flow';
+  if (/转换|工具|批量|文案|C类|提取/i.test(req)) return 'tool';
+  if (/企划|创作|设计|变体|D类|工作台|服装|图片/i.test(req)) return 'creative';
   return 'hello';
 }
 
@@ -836,19 +896,127 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
 });
 
-// ---------- 原型选型 Matrix ----------
+// ---------- 原型选型 Matrix 与 Task 1 自然口令联动 ----------
+const p1Prompts = {
+  A: `我要创建一个“A类：监控与决策型”业务原型。
+
+我的业务输入：
+- 原型名称：【填写】
+- 主要使用者：【填写】
+- 关注的业务对象：【填写】
+- 使用场景或触发条件：【填写】
+- 需要看到的状态、指标或异常：【填写】
+- 看到异常后要完成的一项动作：【填写】
+- 希望看到的最终结果：【填写】
+- 本轮明确不做：【填写】
+
+请先不要读取项目文件，不要调用修改或运行工具，也不要创建任何文件。
+请只完成以下内容：
+1. 用业务语言复述使用者、场景、核心动作和结果；
+2. 提出一条最小路径：查看状态或指标 → 发现对象 → 查看相关信息
+   → 记录一个判断或后续动作 → 显示结果；
+3. 指出仍不确定、需要我确认的内容；
+4. 列出本轮明确不做的内容。
+
+不要假装已经看过项目结构，也不要自行补充真实业务事实。`,
+  B: `我要创建一个“B类：任务与流程型”业务原型。
+
+我的业务输入：
+- 原型名称：【填写】
+- 主要使用者：【填写】
+- 关注的单据或任务：【填写】
+- 流转状态与触发条件：【填写】
+- 需要审批或处理的核心动作：【填写】
+- 处理完成后更新的状态与去向：【填写】
+- 希望看到的最终结果：【填写】
+- 本轮明确不做：【填写】
+
+请先不要读取项目文件，不要调用修改或运行工具，也不要创建任何文件。
+请只完成以下内容：
+1. 用业务语言复述使用者、场景、核心动作和结果；
+2. 提出一条最小路径：待办列表查看 → 选中单据详情 → 执行审批动作（同意/驳回） → 状态更新流转；
+3. 指出仍不确定、需要我确认的内容；
+4. 列出本轮明确不做的内容。
+
+不要假装已经看过项目结构，也不要自行补充真实业务事实。`,
+  C: `我要创建一个“C类：操作工具型”业务原型。
+
+我的业务输入：
+- 原型名称：【填写】
+- 主要使用者：【填写】
+- 加工或转换的原始输入：【填写】
+- 执行的校验或处理规则：【填写】
+- 处理完成后输出的结构化结果：【填写】
+- 结果分发或导出动作：【填写】
+- 希望看到的最终结果：【填写】
+- 本轮明确不做：【填写】
+
+请先不要读取项目文件，不要调用修改或运行工具，也不要创建任何文件。
+请只完成以下内容：
+1. 用业务语言复述使用者、输入、加工规则与导出结果；
+2. 提出一条最小路径：参数输入或文本粘贴 → 点击解析与规则校验 → 结构化结果预览 → 确认导出；
+3. 指出仍不确定、需要我确认的内容；
+4. 列出本轮明确不做的内容。
+
+不要假装已经看过项目结构，也不要自行补充真实业务事实。`,
+  D: `我要创建一个“D类：研发创作工作台型”业务原型（工位自闭环 / 部门级双用）。
+
+我的业务输入：
+- 原型名称：【填写，如服装企划与多变体工作台】
+- 主要使用者：【填写，如品牌企划主管、主设计师】
+- 关注的创作对象：【填写，如品类设计企划案、参考版型】
+- 企划输入与硬规则：【填写输入格式如文本/参考色卡，以及长宽尺寸/材质物理硬约束】
+- 变体生成与微调参数：【填写风格倾向、固定生成2-3张变体卡、抽屉微调字段】
+- 评审定稿与输出物：【填写版本状态机草稿->候选->定稿，以及导出简版Tech Pack规格单】
+- 希望看到的最终结果：【三栏工作台：左侧输入面板 + 中间静态变体卡对比 + 右侧/抽屉规格微调】
+- 本轮明确不做：【坚决不做在线Canvas手绘画板、不做接入真实文生图模型/SD API、不做海量渲染】
+
+请先不要读取项目文件，不要调用修改或运行工具，也不要创建任何文件。
+请只完成以下内容：
+1. 用业务语言复述使用者、场景、核心动作和结果；
+2. 提出一条最小三面板路径：左侧企划参数输入 → 中间对比 2 张静态 Mock 变体卡 → 抽屉微调规格参数 → 确认定稿并展示 Tech Pack 摘要；
+3. 指出仍不确定、需要我确认的内容；
+4. 列出本轮明确不做的内容（必须确认已锁定无 Canvas 与无外部 API 红线）。
+
+不要假装已经看过项目结构，也不要自行补充真实业务事实。`
+};
+
+function updateP1Prompt(type) {
+  const p1 = document.getElementById('p1');
+  if (p1 && p1Prompts[type]) {
+    p1.textContent = p1Prompts[type];
+  }
+}
+
 function showProtoDetail(type, el) {
-  document.querySelectorAll('.proto-item').forEach(i => i.classList.remove('selected'));
+  document.querySelectorAll('.proto-item').forEach(i => {
+    i.classList.remove('selected');
+    i.style.borderColor = 'var(--border)';
+  });
   el.classList.add('selected');
   const detail = document.getElementById('protoDetail');
   detail.className = 'proto-detail show';
 
   if (type === 'A') {
+    el.style.borderColor = 'var(--teal)';
+    detail.style.borderLeftColor = 'var(--teal)';
     detail.innerHTML = '<h5 style="color: var(--teal); margin-bottom: .4rem; font-weight:800;">A. 监控与决策型落地推荐：</h5><p><strong>核心组件：</strong> 4 项高亮 KPI 卡片（含同环比趋势与红标预警） + 异常明细下钻表格 + 右侧一键发送预警抽屉。<br><strong>适合场景：</strong> 经营分析、履约监控、库存预警。</p>';
+    updateP1Prompt('A');
   } else if (type === 'B') {
+    el.style.borderColor = 'var(--plum)';
+    detail.style.borderLeftColor = 'var(--plum)';
     detail.innerHTML = '<h5 style="color: var(--plum); margin-bottom: .4rem; font-weight:800;">B. 任务与流程型落地推荐：</h5><p><strong>核心组件：</strong> 顶部待办统计栏 + 带状态标签（待处理/审批中/已驳回）的单据列表 + 右侧盖章审批流与同意/驳回按钮。<br><strong>适合场景：</strong> 退货审批、预算申请、工单派发。</p>';
-  } else {
+    updateP1Prompt('B');
+  } else if (type === 'C') {
+    el.style.borderColor = 'var(--amber)';
+    detail.style.borderLeftColor = 'var(--amber)';
     detail.innerHTML = '<h5 style="color: var(--amber); margin-bottom: .4rem; font-weight:800;">C. 操作工具型落地推荐：</h5><p><strong>核心组件：</strong> 左侧参数设置表单 + 右侧实时渲染的生成结果预览框 + 底部导出 Excel / 复制结果按钮。<br><strong>适合场景：</strong> 营销文案生成、规则计算器、数据转换工具。</p>';
+    updateP1Prompt('C');
+  } else if (type === 'D') {
+    el.style.borderColor = '#6366f1';
+    detail.style.borderLeftColor = '#6366f1';
+    detail.innerHTML = '<h5 style="color: #6366f1; margin-bottom: .4rem; font-weight:800;">D. 研发创作工作台型落地推荐（个人工作台/部门级双用）：</h5><p><strong>核心组件：</strong> 左侧企划参数与设计规则输入面板 + 中间 2~3 款候选变体卡片对比区 + 右侧/抽屉技术规格微调与定稿放行按钮。<br><strong>适合场景：</strong> 品牌视觉、服装企划、工业打样、物料规格单生成。<br><strong>🚨 防失控红线：</strong> 原型仅支持参数与静态变体卡对比，严禁接入在线 Canvas 画板或真实外接生图 API。</p>';
+    updateP1Prompt('D');
   }
 }
 

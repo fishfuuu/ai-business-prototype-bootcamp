@@ -65,16 +65,16 @@ After ten lessons and assignments, you will be able to:
 
 | # | Topic | Outcome |
 | --- | --- | --- |
-| L1 | From business problem to first system page | Understand LLM / Tools / Agent; build the first controlled prototype page |
-| L2 | Make the prototype clear, credible, usable | Use reference images & design rules to craft a professional page |
-| L3 | Turn vague business into an executable contract | Freeze a business & data contract through structured questioning |
-| L4 | Slice the contract into implementable increments | Controlled agent loop + physical state machine, delivered incrementally |
-| L5 | First AI/Agent integration into business | Judge AI involvement level per step; pick an opportunity candidate |
-| L6 | Find bugs with facts, fix within bounds | Five-layer diagnosis + bounded debugging |
-| L7 | Agent drives the page and leaves evidence | Browser-automated acceptance + a four-category evidence chain |
-| L8 | Claude builds, Codex reviews, manager decides | Context-isolated independent review + accept/fix/stop/defer |
-| L9 | Department AI opportunity map & pattern selection | Scale one candidate into a department-level AI opportunity map |
-| L10 | Freeze the prototype, decide, and hand off | Inventory assets, make the product decision, deliver the starter package to IT |
+| L1 | From business problem to first system page | Business problem boundary card + runnable first prototype (controlled sidebar & mock data) |
+| L2 | Make the prototype clear, credible, usable | Use reference images & design rules to craft a professional page + visual decision baseline |
+| L3 | Turn vague business into an executable contract | Freeze business & data contract via structured questioning (business feature card) |
+| L4 | Slice the contract into implementable increments | Controlled agent loop + state machine, delivering first verifiable vertical slice |
+| L5 | First AI/Agent integration into business | Judge AI involvement level per step, producing AI opportunity card + prohibited AI checklist |
+| L6 | Find bugs with facts, fix within bounds | **Dual-Track**: Prototype 5-layer diagnosis & 2-round bounded fix \| Signed Pre-signature Verification & Signoff Decision |
+| L7 | Agent drives the page and leaves evidence | **Dual-Track**: Browser automated acceptance & evidence chain \| External Skill vetting checklist (with table data audit) |
+| L8 | Claude builds, Codex reviews, manager decides | **Dual-Track**: Codex context-isolated code review \| Major proposal/contract dual-agent red-blue audit card (with handoff pack) |
+| L9 | Department AI opportunity map & pattern selection | **Dual-Track**: Department AI opportunity panorama & 3 chains \| Golden sample dissection & custom business SKILL.md |
+| L10 | Freeze the prototype, decide, and hand off | **Dual Delivery**: Sandbox dual-channel choice (IT starter pack vs desk standalone utility) \| Department deployment SOP & 2–3 min defense |
 
 Each lesson ships with: a **learner guide** (concepts + hands-on labs), an **interactive HTML page** (demos / quizzes / exit checks), and a **teacher plan**.
 
